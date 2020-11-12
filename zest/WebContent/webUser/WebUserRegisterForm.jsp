@@ -9,50 +9,50 @@
 %>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>進行註冊</title>
+	<meta charset="UTF-8">
+	<title>進行註冊</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-	<h2>
-		註冊相關資料
-	</h2>
-	<form action="/zest/webUser/WebUserRegisterServlet" method="post">
+	<form action="/zest/webUser/WebUserRegisterServlet" method="post" onSubmit="return validate();">
+		<fieldset>
+			<legend>註冊相關資料</legend>
+			<hr />
+			<label>帳號名稱</label> 
+			<input type="text" name="user_id" id="user_id" size="40" maxlength="20" onblur = "checkUser_id()"
+				placeholder="請輸入帳號，至少6個字" />
+			<span id="user_idSpan"></span>
+			<hr />
+			<label>中文姓氏</label>
+			<input type="text" name="first_name" id="first_name" size="40" maxlength="3" onblur = "checkFirst_name()"
+			    placeholder="請輸入姓氏，1~3個中文字">
+			<span id="first_nameSpan"></span>
+			<hr />
+			<label>中文名字</label>
+			<input type="text" name="last_name" id="last_name" size="40" maxlength="3" onblur = "checkLast_name()"
+			    placeholder="請輸入名字，1~3個中文字">
+			<span id="last_nameSpan"></span>
+			<hr />
+			<label>稱呼方式</label>
+			<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur = "checkNickname()"
+			    placeholder="請輸入想要的稱呼(留白的話會設定為名字)">
+			<span id="nicknameSpan"></span>
+			<hr />
+			<label>生理性別</label>
+			<input type="radio" id="M" name="gender" value="M">
+		    <label for="male">男性</label>
+		    <input type="radio" id="F" name="gender" value="F">
+		    <label for="female">女性</label>
+		    <input type="radio" id="N" name="gender" value="N" checked="checked">
+		    <label for="other">不方便提供</label>
+		    <hr />
+		    <label>西元生日</label>
+			<input type="text" name="birthday" id="birthday" size="40" maxlength="10" onblur = "checkBirthday()"
+			    placeholder="請輸入如下格式:2020-01-01，民國1年=1912">
+			<span id="birthdaySpan"></span>
+			<hr />
+		</fieldset>
 		<table  style="border-spacing:2px; border-padding:1px; width:100%;" border="1">
-			<tr>
-			    <td>姓氏：</td>
-			    <td>
-			    	<input type="text" name="first_name" id="first_name" size="3" maxlength="3">
-			    </td>
-			</tr>
-			<tr>
-			    <td>名字：</td>
-			    <td>
-			    	<input type="text" name="last_name" id="last_name" size="3" maxlength="3">
-			    </td>
-			</tr>
-			<tr>
-			    <td>稱呼方式：</td>
-			    <td>
-			    	<input type="text" name="last_name" id="last_name" size="20" maxlength="20">
-			    </td>
-			</tr>
-			<tr>
-			    <td>性別：</td>
-			    <td>
-				    <input type="radio" id="M" name="gender" value="M">
-				    <label for="male">男姓</label>
-				    <input type="radio" id="F" name="gender" value="F">
-				    <label for="female">女性</label>
-				    <input type="radio" id="N" name="gender" value="N">
-				    <label for="other">不方便提供</label>
-			    </td>
-			</tr>
-			<tr>
-			    <td>生日：</td>
-			    <td>
-				    <input type="text" name="birthday" id="birthday" size="10" maxlength="10">
-			    </td>
-			</tr>
 			<tr>
 			    <td>偏好食物：</td>
 			    <td>
@@ -71,7 +71,7 @@
 			<tr>
 				<td>居住區域：</td>
 				<td>
-					<select>
+					<select name="location_code">
 						<option value="">請選擇目前您居住/生活的區域</option>
 						<option value="t01">臺北市</option>
 						<option value="t02">新北市</option>
@@ -122,5 +122,6 @@
 			<input type="submit" name="submit" value="送出">
 		</div>
 	</form>
+	<script src = "scripts/WebUserRegisterForm.js"></script>
 </body>
 </html>

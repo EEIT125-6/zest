@@ -27,27 +27,27 @@ public class WebUserBean implements Serializable {
 	private BigDecimal zest;
 
 	/* 無參數建構子 */
-	WebUserBean() {
+	public WebUserBean() {
 
 	}
 
 	/* 帶參數建構子 */
-	WebUserBean(String user_id, String first_name, String last_name, String nickname, Character gender, LocalDate birthday, String fervor, Boolean get_email, String location_code, LocalDate join_date, Integer lv, String addr0, String addr1 , String addr2, BigDecimal zest) {
-		this.user_id = user_id;
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.nickname = nickname;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.fervor = fervor;
-		this.get_email = get_email;
-		this.location_code = location_code;
-		this.join_date = join_date;
-		this.lv = lv;
-		this.addr0 = addr0;
-		this.addr1 = addr1;
-		this.addr2 = addr2;
-		this.zest = zest;
+	public WebUserBean(String pUser_id, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+		this.user_id = pUser_id;
+		this.first_name = pFirst_name;
+		this.last_name = pLast_name;
+		this.nickname = pNickname;
+		this.gender = pGender;
+		this.birthday = pBirthday;
+		this.fervor = pFervor;
+		this.get_email = pGet_email;
+		this.location_code = pLocation_code;
+		this.join_date = pJoin_date;
+		this.lv =pLv;
+		this.addr0 = pAddr0;
+		this.addr1 = pAddr1;
+		this.addr2 = pAddr2;
+		this.zest = pZest;
 	}
 
 	/* setter&getter */
