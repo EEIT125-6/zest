@@ -17,7 +17,7 @@
 		註冊相關資料
 	</h2>
 	<form action="/zest/webUser/WebUserRegisterServlet" method="post">
-		<table border="1">
+		<table  style="border-spacing:2px; border-padding:1px; width:100%;" border="1">
 			<tr>
 			    <td>姓氏：</td>
 			    <td>
@@ -118,6 +118,9 @@
 			    </td>
 			</tr>
 		</table>
+		<div align="center">
+			<input type="submit" name="submit" value="送出">
+		</div>
 	</form>
 </body>
 </html>
