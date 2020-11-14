@@ -14,13 +14,13 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-	<form action="/zest/webUser/WebUserRegisterServlet" method="post" onSubmit="return validate();">
+	<form action="/zest/webUser/WebUserRegisterServlet" method="post" onSubmit="return checkForm();">
 		<fieldset>
 			<legend>註冊相關資料</legend>
 			<hr />
 			<label>帳號名稱</label> 
-			<input type="text" name="user_id" id="user_id" size="40" maxlength="20" onblur = "checkUser_id()"
-				placeholder="請輸入帳號，至少6個字" />
+			<input type="text" name="account" id="account" size="40" maxlength="20" onblur = "checkUser_id()"
+				placeholder="請輸入帳號，6~20個字" />
 			<span id="user_idSpan"></span>
 			<hr />
 			<label>中文姓氏</label>
@@ -47,18 +47,15 @@
 		    <label for="other">不方便提供</label>
 		    <hr />
 		    <label>西元生日</label>
-			<input type="text" name="birthday" id="birthday" size="40" maxlength="10" onblur = "checkBirthday()"
-			    placeholder="請輸入如下格式:2020-01-01，民國1年=1912">
+			<input type="date" name="birthday" id="birthday" onblur = "checkBirthday()">
 			<span id="birthdaySpan"></span>
 			<hr />
+			<label>偏好食物</label>
+			<input type="text" name="fervor" id="fervor" size="40" maxlength="30" onblur = "checkFervor()"
+			    placeholder="請輸入偏好的食物類型，彼此間請空一格">
+			<span id="fervorSpan"></span>
 		</fieldset>
 		<table  style="border-spacing:2px; border-padding:1px; width:100%;" border="1">
-			<tr>
-			    <td>偏好食物：</td>
-			    <td>
-				    <input type="text" name="fervor" id="fervor" size="30" maxlength="30">
-			    </td>
-			</tr>
 			<tr>
 			    <td>是否願意接收促銷/優惠訊息：</td>
 			    <td>

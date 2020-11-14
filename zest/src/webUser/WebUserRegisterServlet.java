@@ -55,7 +55,7 @@ public class WebUserRegisterServlet extends HttpServlet {
 	public void doSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 參數宣告 */
-		String user_id, first_name, last_name, nickname, fervor, location_code, addr0, addr1, addr2;
+		String user_id = "1000001", account, first_name, last_name, nickname, fervor, location_code, addr0, addr1, addr2;
 		Character gender;
 		LocalDate birthday, join_date;
 		Boolean get_email;
@@ -63,7 +63,7 @@ public class WebUserRegisterServlet extends HttpServlet {
 		BigDecimal zest = new BigDecimal("0");
 		
 		/* 先從request取值，前端提供手動輸入的欄位可能要使用trim()去除頭尾的空白 */
-		user_id = request.getParameter("user_id").trim();
+		account = request.getParameter("account").trim();
 		first_name = request.getParameter("first_name").trim();
 		last_name = request.getParameter("last_name").trim();
 		nickname = request.getParameter("nickname").trim();
@@ -78,7 +78,7 @@ public class WebUserRegisterServlet extends HttpServlet {
 		/* 立即產生 */
 		join_date = LocalDate.now();
 		/* 使用JavaBean建構子 */
-		WebUserBean reg_webUser = new WebUserBean(user_id, first_name, last_name, nickname, gender, birthday, fervor,
+		WebUserBean reg_webUser = new WebUserBean(user_id, account, first_name, last_name, nickname, gender, birthday, fervor,
 				get_email, location_code, join_date, lv, addr0, addr1, addr2, zest);
 		/* 嘗試建立Session，如果沒有就建立一個，並將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
 		request.getSession(true).setAttribute("reg_webUser", reg_webUser);

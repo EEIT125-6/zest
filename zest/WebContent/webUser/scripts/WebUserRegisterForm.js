@@ -1,4 +1,4 @@
-function validate() {
+function checkForm() {
 	if (!checkUser_id()) {
 		return false;
 	} else if (!checkFirst_name()) {
@@ -8,6 +8,8 @@ function validate() {
 	} else if (!checkNickname()) {
 		return false;
 	} else if (!checkBirthday()) {
+		return false;
+	} else if (!checkFervor()) {
 		return false;
 	} else {
 		return true;
@@ -181,7 +183,6 @@ function checkBirthday() {
 
 	let birthdayIsOk = true;
 	let birthdayStr;
-	let dateReg = /[0-9]{4}[-]{1}[0-1]{1}[0-9]{1}[-][0-3]{1}[0-9]{1}/;
 	
 	if (birthdayObjValue == "" || birthdayObjValue.length == 0) {
 		birthdayStr = "生日不可為空白";
@@ -189,11 +190,27 @@ function checkBirthday() {
 	} else if (birthdayObjValue.length > 10 || birthdayObjValue.length < 8) {
 		birthdayStr = "日期長度不足";
 		birthdayIsOk = false;
-	} else if (!birthdayObjValue.match(dateReg)) {
-		birthdayStr = "日期格式錯誤";
-		birthdayIsOk = false;
 	} else {
+		let inputYear = parseInt(birthdayObjValue.split("-")[0]);
+		let inputMonth = parseInt(birthdayObjValue.split("-")[1]);
+		let inputDate = parseInt(birthdayObjValue.split("-")[2]);
+		let todayYear = new Date().getFullYear();
+		let todayMonth = new Date().getMonth() + 1;
+		let todayDate = new Date().getDate();
 		
+		if (todayYear < inputYear) {
+			birthdayStr = "無效的出生時間";
+			birthdayIsOk = false;
+		} else if (todayYear == inputYear && todayMonth < inputMonth) {
+			birthdayStr = "無效的出生時間";
+			birthdayIsOk = false;
+		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
+			birthdayStr = "無效的出生時間";
+			birthdayIsOk = false;
+		}  else {
+			birthdayStr = "有效的出生時間";
+			birthdayIsOk = true;
+		}
 	}
 	if (!birthdayIsOk) {
 		birthdaySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + birthdayStr;
@@ -205,6 +222,32 @@ function checkBirthday() {
 		birthdaySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + birthdayStr;
 		birthdaySpan.style.color = "black";
 		birthdaySpan.style.fontStyle = "normal";
+		return true;
+	} 
+}
+
+function checkFervor() {
+	let fervorObjValue = document.getElementById("fervor").value;
+	let fervorSpan = document.getElementById("fervorSpan");
+	
+	let fervorIsOk = true;
+	let fervorStr;
+	
+	if (fervorObjValue.trim() == "" || fervorObjValue.length == 0) {
+		fervorStr = "偏好食物將設為「無」";
+		document.getElementById("fervor").value = "無";
+		fervorIsOk = true;
+	}
+	if (!fervorIsOk) {
+		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
+		fervorSpan.style.color = "red";
+		fervorSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
+		fervorSpan.style.color = "black";
+		fervorSpan.style.fontStyle = "normal";
 		return true;
 	} 
 }

@@ -11,6 +11,7 @@ public class WebUserBean implements Serializable {
 
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	private String user_id;
+	private String account;
 	private String first_name;
 	private String last_name;
 	private String nickname;
@@ -32,8 +33,9 @@ public class WebUserBean implements Serializable {
 	}
 
 	/* 帶參數建構子 */
-	public WebUserBean(String pUser_id, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+	public WebUserBean(String pUser_id, String pAccount, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
 		this.user_id = pUser_id;
+		this.account = pAccount;
 		this.first_name = pFirst_name;
 		this.last_name = pLast_name;
 		this.nickname = pNickname;
@@ -57,6 +59,14 @@ public class WebUserBean implements Serializable {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 
 	public String getFirst_name() {
