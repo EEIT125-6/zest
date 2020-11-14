@@ -6,93 +6,71 @@
 	response.setHeader("Pragma","no-cache"); // HTTP 1.0
 	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
 %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>註冊資料確認</title>
+<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
 </head>
 <body>
 <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 <jsp:useBean id="reg_webUser" class="webUser.WebUserBean" scope="session" />
-<h2>
-註冊資料如下，如果無誤請按「確認」
-</h2>
 <form action="/zest/webUser/WebUserRegisterServlet" method="post">
-	<table  style="border-spacing:2px; border-padding:1px; width:100%;" border="1">
-		<tr>
-			    <td>帳號：</td>
-			    <td>
-			    	<jsp:getProperty name="reg_webUser" property="user_id" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>姓氏：</td>
-			    <td>
-			    	<jsp:getProperty name="reg_webUser" property="first_name" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>名字：</td>
-			    <td>
-			    	<jsp:getProperty name="reg_webUser" property="last_name" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>稱呼方式：</td>
-			    <td>
-			    	<jsp:getProperty name="reg_webUser" property="nickname" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>性別：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="gender" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>生日：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="birthday" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>偏好食物：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="fervor" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>是否願意接收促銷/優惠訊息：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="get_email" />
-			    </td>
-			</tr>
-			<tr>
-				<td>居住區域：</td>
-				<td>
-					<jsp:getProperty name="reg_webUser" property="location_code" />
-				</td>
-			</tr>
-			<tr>
-			    <td>活動地點一：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="addr0" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>活動地點二：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="addr1" />
-			    </td>
-			</tr>
-			<tr>
-			    <td>活動地點三：</td>
-			    <td>
-				    <jsp:getProperty name="reg_webUser" property="addr2" />
-			    </td>
-			</tr>
-	</table>
+	<fieldset>
+		<legend>註冊資料如下，如果無誤請按「確認」</legend>
+		<hr />
+		<label>帳號名稱：</label> 
+		<jsp:getProperty name="reg_webUser" property="account" />
+		<hr />
+		<label>中文姓氏：</label>
+		<jsp:getProperty name="reg_webUser" property="first_name" />
+		<hr />
+		<label>中文名字：</label>
+		<jsp:getProperty name="reg_webUser" property="last_name" />
+		<hr />
+		<label>稱呼方式：</label>
+		<jsp:getProperty name="reg_webUser" property="nickname" />
+		<hr />
+		<label>生理性別：</label>
+		<!--<c:choose>
+			<c:when test="${gender == M}">男性</c:when>
+			<c:when test="${gender == F}">女性</c:when>
+			<c:otherwise>不方便提供</c:otherwise>
+		</c:choose>-->
+		<jsp:getProperty name="reg_webUser" property="gender" />
+		<hr />
+		<label>西元生日：</label>
+		<jsp:getProperty name="reg_webUser" property="birthday" />
+		<hr />
+		<label>偏好食物：</label>
+		<jsp:getProperty name="reg_webUser" property="fervor" />
+		<hr />
+		<label>是否願意接收促銷/優惠訊息：</label>
+		<!--<c:choose>
+			<c:when test="${get_email == false}">不願意</c:when>
+			<c:otherwise>願意</c:otherwise>
+		</c:choose>-->
+		<jsp:getProperty name="reg_webUser" property="get_email" />
+	    <hr />
+	    <label>居住區域：</label>
+		<!--<c:choose>
+			<c:when test="${location_code == 't01'}">臺北市</c:when>
+			<c:otherwise>其他區</c:otherwise>
+		</c:choose>-->
+		<jsp:getProperty name="reg_webUser" property="location_code" />
+	    <hr />
+	    <label>生活地點一：</label>
+		<jsp:getProperty name="reg_webUser" property="addr0" />
+		<hr />
+		<label>生活地點二：</label>
+		<jsp:getProperty name="reg_webUser" property="addr1" />
+		<hr />
+		<label>生活地點三：</label>
+		<jsp:getProperty name="reg_webUser" property="addr2" />
+		<hr />
+	</fieldset>
 	<div align="center">
 		<input type="submit" name="confirm" value="確認">
 	</div>

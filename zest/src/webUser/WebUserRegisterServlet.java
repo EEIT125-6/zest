@@ -55,7 +55,7 @@ public class WebUserRegisterServlet extends HttpServlet {
 	public void doSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 參數宣告 */
-		String user_id = "1000001", account, first_name, last_name, nickname, fervor, location_code, addr0, addr1, addr2;
+		String user_id = "", account, first_name, last_name, nickname, fervor, location_code, addr0, addr1, addr2;
 		Character gender;
 		LocalDate birthday, join_date;
 		Boolean get_email;

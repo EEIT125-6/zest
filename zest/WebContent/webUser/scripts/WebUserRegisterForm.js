@@ -1,5 +1,5 @@
 function checkForm() {
-	if (!checkUser_id()) {
+	if (!checkAccount()) {
 		return false;
 	} else if (!checkFirst_name()) {
 		return false;
@@ -11,52 +11,56 @@ function checkForm() {
 		return false;
 	} else if (!checkFervor()) {
 		return false;
+	} else if (!checkLocation_code()) {
+		return false;
+	} else if (!checkAddr0()){
+		return false;
 	} else {
 		return true;
 	}
 }
 
-function checkUser_id() {
-	let user_idObjValue = document.getElementById("user_id").value;
-	let user_idSpan = document.getElementById("user_idSpan");
+function checkAccount() {
+	let accountObjValue = document.getElementById("account").value;
+	let accountSpan = document.getElementById("accountSpan");
 
-	let user_idIsOk = true;
-	let user_idStr;
+	let accountIsOk = true;
+	let accountStr;
 	let startCharReg = /[0-9]/;
 
-	if (user_idObjValue == "" || user_idObjValue.length == 0) {
-		user_idStr = "帳號不可為空白";
-		user_idIsOk = false;
-	} else if (user_idObjValue.length < 6) {
-		user_idStr = "帳號長度不足";
-		user_idIsOk = false;
-	} else if (user_idObjValue.length > 20) {
-		user_idStr = "帳號長度過長";
-		user_idIsOk = false;
-	} else if (user_idObjValue.charAt(0).match(startCharReg)) {
-		user_idStr = "帳號不可以數字開頭";
-		user_idIsOk = false;
+	if (accountObjValue == "" || accountObjValue.length == 0) {
+		accountStr = "帳號不可為空白";
+		accountIsOk = false;
+	} else if (accountObjValue.length < 6) {
+		accountStr = "帳號長度不足";
+		accountIsOk = false;
+	} else if (accountObjValue.length > 20) {
+		accountStr = "帳號長度過長";
+		accountIsOk = false;
+	} else if (accountObjValue.charAt(0).match(startCharReg)) {
+		accountStr = "帳號不可以數字開頭";
+		accountIsOk = false;
 	} else {
-		let user_idReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
+		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
 
-		if (!user_idObjValue.match(user_idReg)) {
-			user_idStr = "帳號不符合格式";
-			user_idIsOk = false;
+		if (!accountObjValue.match(accountReg)) {
+			accountStr = "帳號不符合格式";
+			accountIsOk = false;
 		} else {
-			user_idStr = "帳號格式正確";
-			user_idIsOk = true;
+			accountStr = "帳號格式正確";
+			accountIsOk = true;
 		}
 	}
 
-	if (!user_idIsOk) {
-		user_idSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + user_idStr;
-		user_idSpan.style.color = "red";
-		user_idSpan.style.fontStyle = "italic";
+	if (!accountIsOk) {
+		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+		accountSpan.style.color = "red";
+		accountSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		user_idSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + user_idStr;
-		user_idSpan.style.color = "black";
-		user_idSpan.style.fontStyle = "normal";
+		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
+		accountSpan.style.color = "black";
+		accountSpan.style.fontStyle = "normal";
 		return true;
 	}
 }
@@ -237,6 +241,9 @@ function checkFervor() {
 		fervorStr = "偏好食物將設為「無」";
 		document.getElementById("fervor").value = "無";
 		fervorIsOk = true;
+	} else {
+		fervorStr = "偏好食物填寫完成";
+		fervorIsOk = true;
 	}
 	if (!fervorIsOk) {
 		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
@@ -250,4 +257,60 @@ function checkFervor() {
 		fervorSpan.style.fontStyle = "normal";
 		return true;
 	} 
+}
+
+function checkLocation_code() {
+	let location_codeObjValue = document.getElementById("location_code").value;
+	let location_codeSpan = document.getElementById("location_codeSpan");
+	
+	let location_codeIsOk = true;
+	let location_codeStr;
+	
+	if (location_codeObjValue.trim() == "" || location_codeObjValue.length == 0) {
+		location_codeStr = "居住區域不可為空白";
+		location_codeIsOk = false;
+	} else {
+		location_codeStr = "居住區域已選擇完畢";
+		location_codeIsOk = true;
+	}
+	if (!location_codeIsOk) {
+		location_codeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + location_codeStr;
+		location_codeSpan.style.color = "red";
+		location_codeSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		location_codeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + location_codeStr;
+		location_codeSpan.style.color = "black";
+		location_codeSpan.style.fontStyle = "normal";
+		return true;
+	}
+}
+
+function checkAddr0() {
+	let addr0ObjValue = document.getElementById("addr0").value;
+	let addr0Span = document.getElementById("addr0Span");
+	
+	let addr0IsOk = true;
+	let addr0Str;
+	
+	if (addr0ObjValue.trim() == "" || addr0ObjValue.length == 0) {
+		addr0Str = "生活地點一不可為空白";
+		addr0IsOk = false;
+	} else {
+		addr0Str = "生活地點一已填寫完畢";
+		addr0IsOk = true;
+	}
+	if (!addr0IsOk) {
+		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr0Str;
+		addr0Span.style.color = "red";
+		addr0Span.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
+		addr0Span.style.color = "black";
+		addr0Span.style.fontStyle = "normal";
+		return true;
+	}
 }
