@@ -37,7 +37,10 @@ public class WebUserRegisterServlet extends HttpServlet {
 		response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 
 		/* 根據取到的參數判定是首次送出資料還是已確認過 */
-		if (request.getParameter("submit") != null) {
+		if (request.getParameter("checkAccount") != null) {
+			/* 返回查詢結果給使用者確認 */
+			doCheckAccount(request, response);
+		} else if (request.getParameter("submit") != null) {
 			/* 返回資料給使用者確認 */
 			doSubmit(request, response);
 		} else if (request.getParameter("confirm") != null) {
@@ -49,6 +52,16 @@ public class WebUserRegisterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
+	}
+	
+	/* checkAccount */
+	public void doCheckAccount(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if (!request.getParameter("account").trim().equals("")) {
+			
+		} else {
+			
+		}
 	}
 	
 	/* submit */

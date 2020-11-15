@@ -1,5 +1,5 @@
 function checkForm() {
-	if (!checkAccount()) {
+	if (!checkAccountName()) {
 		return false;
 	} else if (!checkFirst_name()) {
 		return false;
@@ -20,7 +20,7 @@ function checkForm() {
 	}
 }
 
-function checkAccount() {
+function checkAccountName() {
 	let accountObjValue = document.getElementById("account").value;
 	let accountSpan = document.getElementById("accountSpan");
 

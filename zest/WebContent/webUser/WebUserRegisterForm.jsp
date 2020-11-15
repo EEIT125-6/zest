@@ -20,8 +20,9 @@
 			<legend>註冊相關資料</legend>
 			<hr />
 			<label>帳號名稱：</label> 
-			<input type="text" name="account" id="account" size="40" maxlength="20" onblur = "checkAccount()"
+			<input type="text" name="account" id="account" size="40" maxlength="20" onblur = "checkAccountName()"
 				placeholder="請輸入帳號，6~20個字" />
+			<input type="submit" name="checkAccount" value="檢查帳號">
 			<span id="accountSpan"></span>
 			<hr />
 			<label>中文姓氏：</label>
