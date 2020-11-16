@@ -2,9 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-response.setDateHeader("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -27,6 +27,14 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 				<label>帳號名稱：</label>
 				<jsp:getProperty name="reg_webUser" property="account" />
 				<hr />
+				<label>帳號密碼：</label>
+				<c:if test="${param.password.length() > 0}">
+					<c:forEach var="passwordChar" begin="0" end="${param.password.length()-1}">
+						<c:out value = "*" />
+					</c:forEach>
+				</c:if>
+				<jsp:getProperty name="reg_webUser" property="password" />
+				<hr />
 				<label>中文姓氏：</label>
 				<jsp:getProperty name="reg_webUser" property="first_name" />
 				<hr />
@@ -48,6 +56,12 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 				<hr />
 				<label>偏好食物：</label>
 				<jsp:getProperty name="reg_webUser" property="fervor" />
+				<hr />
+				<label>聯絡信箱：</label>
+				<jsp:getProperty name="reg_webUser" property="email" />
+				<hr />
+				<label>聯絡電話：</label>
+				<jsp:getProperty name="reg_webUser" property="phone" />
 				<hr />
 				<label>是否願意接收促銷/優惠訊息：</label>
 				<c:choose>
@@ -94,7 +108,9 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 			</fieldset>
 			<div align="center">
 				<input type="submit" name="confirm" value="確認">
+				<input type="submit" name="undo" value="取消">
 			</div>
 		</form>
+		<script src = "scripts/DisplayWebUserInfo.js"></script>
 	</body>
 </html>

@@ -1,6 +1,8 @@
 function checkForm() {
 	if (!checkAccountName()) {
 		return false;
+	} else if (!checkAccountPassword()) {
+		return false;
 	} else if (!checkFirst_name()) {
 		return false;
 	} else if (!checkLast_name()) {
@@ -10,6 +12,10 @@ function checkForm() {
 	} else if (!checkBirthday()) {
 		return false;
 	} else if (!checkFervor()) {
+		return false;
+	} else if (!checkEmail()) {
+		return false;
+	} else if (!checkPhone()) {
 		return false;
 	} else if (!checkLocation_code()) {
 		return false;
@@ -21,7 +27,7 @@ function checkForm() {
 }
 
 function checkAccountName() {
-	let accountObjValue = document.getElementById("account").value;
+	let accountObjValue = document.getElementById("account").value.trim();
 	let accountSpan = document.getElementById("accountSpan");
 
 	let accountIsOk = true;
@@ -45,13 +51,14 @@ function checkAccountName() {
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";
+			document.getElementById("checkAccount").style = "display:none";
 			accountIsOk = false;
 		} else {
 			accountStr = "帳號格式正確";
+			document.getElementById("checkAccount").style = "display:inline";
 			accountIsOk = true;
 		}
 	}
-
 	if (!accountIsOk) {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 		accountSpan.style.color = "red";
@@ -65,8 +72,52 @@ function checkAccountName() {
 	}
 }
 
+function checkAccountPassword() {
+	let passwordObjValue = document.getElementById("password").value.trim();
+	let passwordSpan = document.getElementById("passwordSpan");
+
+	let passwordIsOk = true;
+	let passwordStr;
+	let startCharReg = /[0-9]/;
+
+	if (passwordObjValue == "" || passwordObjValue.length == 0) {
+		passwordStr = "密碼不可為空白";
+		passwordIsOk = false;
+	} else if (passwordObjValue.length < 6) {
+		passwordStr = "密碼長度不足，至少需6個字元";
+		passwordIsOk = false;
+	} else if (passwordObjValue.length > 20) {
+		passwordStr = "密碼長度過長，最多僅20個字元";
+		passwordIsOk = false;
+	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
+		passwordStr = "密碼不可以數字開頭";
+		passwordIsOk = false;
+	} else {
+		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
+
+		if (!passwordObjValue.match(accountReg)) {
+			passwordStr = "密碼不符合格式";
+			passwordIsOk = false;
+		} else {
+			passwordStr = "密碼格式正確";
+			passwordIsOk = true;
+		}
+	}
+	if (!passwordIsOk) {
+		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + passwordStr;
+		passwordSpan.style.color = "red";
+		passwordSpan.style.fontStyle = "italic";
+		return false;
+	} else {
+		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
+		passwordSpan.style.color = "black";
+		passwordSpan.style.fontStyle = "normal";
+		return true;
+	}
+}
+
 function checkFirst_name() {
-	let first_nameObjValue = document.getElementById("first_name").value;
+	let first_nameObjValue = document.getElementById("first_name").value.trim();
 	let first_nameSpan = document.getElementById("first_nameSpan");
 
 	let first_nameIsOk = true;
@@ -107,7 +158,7 @@ function checkFirst_name() {
 }
 
 function checkLast_name() {
-	let last_nameObjValue = document.getElementById("last_name").value;
+	let last_nameObjValue = document.getElementById("last_name").value.trim();
 	let last_nameSpan = document.getElementById("last_nameSpan");
 
 	let last_nameIsOk = true;
@@ -148,7 +199,7 @@ function checkLast_name() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("nickname").value;
+	let nicknameObjValue = document.getElementById("nickname").value.trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 
 	let nicknameIsOk = true;
@@ -231,16 +282,19 @@ function checkBirthday() {
 }
 
 function checkFervor() {
-	let fervorObjValue = document.getElementById("fervor").value;
+	let fervorObj = document.getElementsByName("fervor");
+	let fervorObjValue = "";
+	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+	}
 	let fervorSpan = document.getElementById("fervorSpan");
 	
 	let fervorIsOk = true;
 	let fervorStr;
 	
-	if (fervorObjValue.trim() == "" || fervorObjValue.length == 0) {
-		fervorStr = "偏好食物將設為「無」";
-		document.getElementById("fervor").value = "無";
-		fervorIsOk = true;
+	if (fervorObjValue == "" || fervorObjValue.length == 0) {
+		fervorStr = "偏好食物不可空白";
+		fervorIsOk = false;
 	} else {
 		fervorStr = "偏好食物填寫完成";
 		fervorIsOk = true;
@@ -259,6 +313,78 @@ function checkFervor() {
 	} 
 }
 
+function checkEmail() {
+	let emailObjValue = document.getElementById("email").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
+	
+	let emailIsOk = true;
+	let emailStr;
+	
+	if (emailObjValue == "" || emailObjValue.length == 0) {
+		emailStr = "信箱資訊不可為空白";
+		emailIsOk = false;
+	} else if(emailObjValue.indexOf("@") == -1 || emailObjValue.split("@").length > 2 || emailObjValue.indexOf(" ") != -1) {
+		emailStr = "信箱資訊格式錯誤";
+		emailIsOk = false;
+	} else {
+		emailStr = "信箱資訊已填寫完成";
+		emailIsOk = true;
+	}
+	if (!emailIsOk) {
+		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+		emailSpan.style.color = "red";
+		emailSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
+		emailSpan.style.color = "black";
+		emailSpan.style.fontStyle = "normal";
+		return true;
+	}
+}
+
+function checkPhone() {
+	let phoneObjValue = document.getElementById("phone").value;
+	let phoneSpan = document.getElementById("phoneSpan");
+	
+	let phoneIsOk = true;
+	let phoneStr;
+	let phoneReg = /[0]{1}[2-9]{1}[0-9]{7,9}/
+	
+	if (phoneObjValue == "" || phoneObjValue.length == 0) {
+		phoneStr = "連絡電話不可為空白";
+		phoneIsOk = false;
+	} else if(phoneObjValue.length < 9 || phoneObjValue.indexOf(" ") != -1) {
+		phoneStr = "連絡電話格式錯誤";
+		phoneIsOk = false;
+	} else if (!phoneObjValue.match(phoneReg)) {
+		phoneStr = "連絡電話格式錯誤";
+		phoneIsOk = false;
+	} else if (phoneObjValue.substring(0, 2) == "09" && phoneObjValue.length != 10) {
+		phoneStr = "行動電話格式錯誤";
+		phoneIsOk = false;
+	} else if (phoneObjValue.substring(0, 2) != "09" && phoneObjValue.length == 10) {
+		phoneStr = "室內電話格式錯誤";
+		phoneIsOk = false;
+	} else {
+		phoneStr = "連絡電話已填寫完畢";
+		phoneIsOk = true;
+	}
+	if (!phoneIsOk) {
+		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+		phoneSpan.style.color = "red";
+		phoneSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
+		phoneSpan.style.color = "black";
+		phoneSpan.style.fontStyle = "normal";
+		return true;
+	}
+}
+
 function checkLocation_code() {
 	let location_codeObjValue = document.getElementById("location_code").value;
 	let location_codeSpan = document.getElementById("location_codeSpan");
@@ -266,7 +392,7 @@ function checkLocation_code() {
 	let location_codeIsOk = true;
 	let location_codeStr;
 	
-	if (location_codeObjValue.trim() == "" || location_codeObjValue.length == 0) {
+	if (location_codeObjValue == "" || location_codeObjValue.length == 0) {
 		location_codeStr = "居住區域不可為空白";
 		location_codeIsOk = false;
 	} else {
@@ -288,13 +414,13 @@ function checkLocation_code() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value;
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
 	let addr0Span = document.getElementById("addr0Span");
 	
 	let addr0IsOk = true;
 	let addr0Str;
 	
-	if (addr0ObjValue.trim() == "" || addr0ObjValue.length == 0) {
+	if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
 		addr0Str = "生活地點一不可為空白";
 		addr0IsOk = false;
 	} else {
@@ -313,4 +439,22 @@ function checkAddr0() {
 		addr0Span.style.fontStyle = "normal";
 		return true;
 	}
+}
+
+function changeVisibility() {
+	document.getElementById("password").type = (document.getElementById("password").type == "password") ? "text" : "password";
+	document.getElementById("visibility_switch").value = (document.getElementById("visibility_switch").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼"; 
+}
+
+function clearMessage() {
+	document.getElementById("accountSpan").innerHTML = "";
+	document.getElementById("checkAccount").style = "display:none";
+	document.getElementById("passwordSpan").innerHTML = "";
+	document.getElementById("first_nameSpan").innerHTML = "";
+	document.getElementById("last_nameSpan").innerHTML = "";
+	document.getElementById("nicknameSpan").innerHTML = "";
+	document.getElementById("birthdaySpan").innerHTML = "";
+	document.getElementById("fervorSpan").innerHTML = "";
+	document.getElementById("location_codeSpan").innerHTML = "";
+	document.getElementById("addr0Span").innerHTML = "";
 }

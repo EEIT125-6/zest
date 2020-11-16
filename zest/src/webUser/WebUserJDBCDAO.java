@@ -14,9 +14,10 @@ public class WebUserJDBCDAO implements WebUserDAO{
 		this.connection0 = pConnection;
 	}
 	
-	/* 檢查帳號是否存在 */
-	public Boolean checkAccountExist(String inputAccount) {
-		Boolean checkResult = false;
+	/* 檢查帳號是否存在
+	 * -1->異常、0->不存在、1->存在 */
+	public int checkAccountExist(String inputAccount) {
+		int checkResult = -1;
 		
 		try (PreparedStatement preStmt0 = connection0.prepareStatement("SELECT account FROM dbo.WebUser WHERE account = ?")) {
 			/* 開始交易 */ 
@@ -28,7 +29,7 @@ public class WebUserJDBCDAO implements WebUserDAO{
 				/* 執行查詢 */
 	            ResultSet rs0 = preStmt0.executeQuery();
 	            while (rs0.next()) {
-	            	checkResult = (!rs0.getString("account").equals("")) ? true : false;
+	            	checkResult = (!rs0.getString("account").equals("")) ? 1 : 0;
 	            }
 	            rs0.close();
 	            /* 確認交易 */
@@ -39,6 +40,7 @@ public class WebUserJDBCDAO implements WebUserDAO{
 			try {
 				/* 撤回交易 */
 				connection0.rollback();
+				checkResult = -1;
 			} catch (SQLException sqlE1) {
 				System.out.println(sqlE1);
 			}

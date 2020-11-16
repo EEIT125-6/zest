@@ -46,6 +46,9 @@ public class WebUserRegisterServlet extends HttpServlet {
 		} else if (request.getParameter("confirm") != null) {
 			/* 準備將資料傳入DB */
 			doConfirm(request, response);
+		} else if (request.getParameter("undo") != null) {
+			/* 清除資料並返回註冊畫面 */
+			doUndo(request, response);
 		}
 	}
 
@@ -68,7 +71,7 @@ public class WebUserRegisterServlet extends HttpServlet {
 	public void doSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 參數宣告 */
-		String user_id = "", account, first_name, last_name, nickname, fervor, location_code, addr0, addr1, addr2;
+		String user_id = "", account, password, first_name, last_name, nickname, fervor = "", email, phone, location_code, addr0, addr1, addr2;
 		Character gender;
 		LocalDate birthday, join_date;
 		Boolean get_email;
@@ -77,12 +80,24 @@ public class WebUserRegisterServlet extends HttpServlet {
 		
 		/* 先從request取值，前端提供手動輸入的欄位可能要使用trim()去除頭尾的空白 */
 		account = request.getParameter("account").trim();
+		password = request.getParameter("password").trim();
 		first_name = request.getParameter("first_name").trim();
 		last_name = request.getParameter("last_name").trim();
 		nickname = request.getParameter("nickname").trim();
 		gender = request.getParameter("gender").charAt(0);
 		birthday = LocalDate.parse(request.getParameter("birthday"));
-		fervor = request.getParameter("fervor").trim();
+		for (int fervorIndex = 0; fervorIndex < request.getParameterValues("fervor").length; fervorIndex++) {
+			if (!request.getParameterValues("fervor")[fervorIndex].equals("")) {
+				if(fervor.length() > 0) {
+					fervor += ",";
+				}
+				fervor += request.getParameterValues("fervor")[fervorIndex];
+			} else {
+				fervor += "";
+			}
+		}
+		email = request.getParameter("email").trim();
+		phone = request.getParameter("phone").trim();
 		get_email = (request.getParameter("get_email").equals("true")) ? true : false;
 		location_code = request.getParameter("location_code");
 		addr0 = request.getParameter("addr0").trim();
@@ -91,8 +106,8 @@ public class WebUserRegisterServlet extends HttpServlet {
 		/* 立即產生 */
 		join_date = LocalDate.now();
 		/* 使用JavaBean建構子 */
-		WebUserBean reg_webUser = new WebUserBean(user_id, account, first_name, last_name, nickname, gender, birthday, fervor,
-				get_email, location_code, join_date, lv, addr0, addr1, addr2, zest);
+		WebUserBean reg_webUser = new WebUserBean(user_id, account, password, first_name, last_name, nickname, gender, birthday, fervor,
+				email, phone, get_email, location_code, join_date, lv, addr0, addr1, addr2, zest);
 		/* 嘗試建立Session，如果沒有就建立一個，並將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
 		request.getSession(true).setAttribute("reg_webUser", reg_webUser);
 		/* 將request、response交棒給另一個jsp，並交出控制權 */
@@ -103,5 +118,14 @@ public class WebUserRegisterServlet extends HttpServlet {
 	public void doConfirm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+	}
+	
+	/* undo */
+	public void doUndo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 返回註冊畫面 */
+		request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request,response);
 	}
 }

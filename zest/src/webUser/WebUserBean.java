@@ -12,12 +12,15 @@ public class WebUserBean implements Serializable {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	private String user_id;
 	private String account;
+	private String password;
 	private String first_name;
 	private String last_name;
 	private String nickname;
 	private Character gender;
 	private LocalDate birthday;
 	private String fervor;
+	private String email;
+	private String phone;
 	private Boolean get_email;
 	private String location_code;
 	private LocalDate join_date;
@@ -33,15 +36,18 @@ public class WebUserBean implements Serializable {
 	}
 
 	/* 帶參數建構子 */
-	public WebUserBean(String pUser_id, String pAccount, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
 		this.user_id = pUser_id;
 		this.account = pAccount;
+		this.password = pPassword;
 		this.first_name = pFirst_name;
 		this.last_name = pLast_name;
 		this.nickname = pNickname;
 		this.gender = pGender;
 		this.birthday = pBirthday;
 		this.fervor = pFervor;
+		this.email = pEmail;
+		this.phone = pPhone;
 		this.get_email = pGet_email;
 		this.location_code = pLocation_code;
 		this.join_date = pJoin_date;
@@ -67,6 +73,14 @@ public class WebUserBean implements Serializable {
 
 	public void setAccount(String account) {
 		this.account = account;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getFirst_name() {
@@ -115,6 +129,22 @@ public class WebUserBean implements Serializable {
 
 	public void setFervor(String fervor) {
 		this.fervor = fervor;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public Boolean getGet_email() {
