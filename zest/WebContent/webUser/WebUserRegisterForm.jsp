@@ -22,7 +22,7 @@
 			<label>帳號名稱：</label> 
 			<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 				placeholder="請輸入帳號，6~20個字" required="required" />
-			<input type="submit" name="checkAccount" id="checkAccount" value="檢查帳號">
+			<input type="button" name="registerCheckAccount" id="checkAccount" value="檢查帳號">
 			<span id="accountSpan"></span>
 			<hr />
 			<label>帳號密碼：</label> 
@@ -131,10 +131,30 @@
 		    <hr />
 		</fieldset>
 		<div align="center">
-			<input type="submit" name="submit" value="送出">
+			<input type="submit" id="submit" name="registerSubmit" value="送出">
 			<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 		</div>
 	</form>
-	<script src = "scripts/WebUserRegisterForm.js"></script>
+	<script src="scripts/jquery-3.5.1.min.js"></script>
+	<script src="scripts/WebUserRegisterForm.js"></script>
+	<script>
+		$("#checkAccount").click(function () {
+	        checkSameAccount();
+	    });
+		function checkSameAccount(){
+			let account=$("input[name='account']").val();
+			$.ajax({
+				type:"POST",
+	            url:"/zest/webUser/WebUserRegisterServlet",
+	            data:{
+	            	registerCheckAccount:"on",
+	            	inputAccount:document.getElementById("account").value.trim()
+	            },
+	            success:function(result) {
+	            	console.log("test");
+	            }
+			});
+		}
+	</script>
 </body>
 </html>

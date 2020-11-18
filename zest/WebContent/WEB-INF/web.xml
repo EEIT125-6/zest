@@ -25,4 +25,14 @@
     <servlet-name>WebUserRegisterServlet</servlet-name>
     <url-pattern>/webUser/WebUserRegisterServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>WebUserAccountCheckServlet</display-name>
+    <servlet-name>WebUserAccountCheckServlet</servlet-name>
+    <servlet-class>webUser.WebUserAccountCheckServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WebUserAccountCheckServlet</servlet-name>
+    <url-pattern>/webUser/WebUserAccountCheckServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

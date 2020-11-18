@@ -33,7 +33,6 @@
 						<c:out value = "*" />
 					</c:forEach>
 				</c:if>
-				<jsp:getProperty name="reg_webUser" property="password" />
 				<hr />
 				<label>中文姓氏：</label>
 				<jsp:getProperty name="reg_webUser" property="first_name" />
@@ -107,10 +106,9 @@
 				<hr />
 			</fieldset>
 			<div align="center">
-				<input type="submit" name="confirm" value="確認">
-				<input type="submit" name="undo" value="取消">
+				<input type="submit" name="registerConfirm" value="確認">
+				<input type="submit" name="registerUndo" value="取消">
 			</div>
 		</form>
-		<script src = "scripts/DisplayWebUserInfo.js"></script>
 	</body>
 </html>
