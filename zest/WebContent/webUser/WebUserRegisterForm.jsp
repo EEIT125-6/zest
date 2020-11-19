@@ -15,14 +15,14 @@
 	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
 </head>
 <body>
-	<form action="/zest/webUser/WebUserRegisterServlet" method="post" onSubmit="return checkForm();">
+	<form action="/zest/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
 		<fieldset>
 			<legend>註冊相關資料</legend>
 			<hr />
 			<label>帳號名稱：</label> 
 			<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 				placeholder="請輸入帳號，6~20個字" required="required" />
-			<input type="button" name="registerCheckAccount" id="checkAccount" value="檢查帳號">
+			<input type="button" name="register" id="checkAccount" value="檢查帳號">
 			<span id="accountSpan"></span>
 			<hr />
 			<label>帳號密碼：</label> 
@@ -131,7 +131,7 @@
 		    <hr />
 		</fieldset>
 		<div align="center">
-			<input type="submit" id="submit" name="registerSubmit" value="送出">
+			<input type="submit" id="submit" name="register" value="送出">
 			<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 		</div>
 	</form>
@@ -142,16 +142,45 @@
 	        checkSameAccount();
 	    });
 		function checkSameAccount(){
-			let account=$("input[name='account']").val();
+			let account = document.getElementById("account").value.trim();
+			let accountSpan = document.getElementById("accountSpan");
+			let accountStr;
+			let accountIsOk = true;
 			$.ajax({
 				type:"POST",
-	            url:"/zest/webUser/WebUserRegisterServlet",
+	            url:"/zest/webUser/WebUserServlet",
 	            data:{
-	            	registerCheckAccount:"on",
-	            	inputAccount:document.getElementById("account").value.trim()
+	            	'register':'檢查帳號',
+	            	'inputAccount':account
 	            },
 	            success:function(result) {
-	            	console.log("test");
+	            	console.log(result);
+	            	console.log(typeof result);
+	            	if(result == 1) {
+	            		accountStr = "此帳號已有人使用！";
+	            		accountIsOk = false;
+	            	} else if(result == 0) {
+	            		accountStr = "您可建立此帳號！";
+	            		accountIsOk = true;
+	            	} else if(result == -1) {
+	            		accountStr = "檢查途中遭遇錯誤！";
+	            		accountIsOk = false;
+	            	}
+	            	if (!accountIsOk) {
+	            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+	            		accountSpan.style.color = "red";
+	            		accountSpan.style.fontStyle = "italic";
+	            	} else {
+	            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
+	            		accountSpan.style.color = "black";
+	            		accountSpan.style.fontStyle = "normal";
+	            	}
+	            },
+	            error:function(err) {
+	            	accountStr = "發生錯誤，無法執行檢查";
+	            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+            		accountSpan.style.color = "red";
+            		accountSpan.style.fontStyle = "italic";
 	            }
 			});
 		}

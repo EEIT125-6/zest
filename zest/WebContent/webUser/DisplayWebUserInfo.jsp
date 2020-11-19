@@ -20,7 +20,7 @@
 		<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 		<jsp:useBean id="reg_webUser" class="webUser.WebUserBean"
 			scope="session" />
-		<form action="/zest/webUser/WebUserRegisterServlet" method="post">
+		<form action="/zest/webUser/WebUserServlet" method="post">
 			<fieldset>
 				<legend>註冊資料如下，如果無誤請按「確認」</legend>
 				<hr />
@@ -106,8 +106,8 @@
 				<hr />
 			</fieldset>
 			<div align="center">
-				<input type="submit" name="registerConfirm" value="確認">
-				<input type="submit" name="registerUndo" value="取消">
+				<input type="submit" name="register" value="確認">
+				<input type="submit" name="register" value="取消">
 			</div>
 		</form>
 	</body>

@@ -27,12 +27,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>WebUserAccountCheckServlet</display-name>
-    <servlet-name>WebUserAccountCheckServlet</servlet-name>
-    <servlet-class>webUser.WebUserAccountCheckServlet</servlet-class>
+    <display-name>WebUserServlet</display-name>
+    <servlet-name>WebUserServlet</servlet-name>
+    <servlet-class>webUser.WebUserServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>WebUserAccountCheckServlet</servlet-name>
-    <url-pattern>/webUser/WebUserAccountCheckServlet</url-pattern>
+    <servlet-name>WebUserServlet</servlet-name>
+    <url-pattern>/webUser/WebUserServlet</url-pattern>
   </servlet-mapping>
 </web-app>

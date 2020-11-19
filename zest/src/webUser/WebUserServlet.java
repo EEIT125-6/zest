@@ -1,42 +1,47 @@
 package webUser;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-public class WebUserRegisterServlet extends HttpServlet {
+@WebServlet("/WebUserServlet")
+public class WebUserServlet extends HttpServlet {
+	
 	/* IDE能自動協助生成的項目，並不會使用到 */
 	private static final long serialVersionUID = 1L;
 	
 	/* 預先宣告response/request設定所需的部分 */
 	private static final String CONTENT_TYPE = "text/html; charset=UTF-8";
 	private static final String CHARSET_CODE = "UTF-8";
-
-	public WebUserRegisterServlet() {
+	
+	/* DataSource等項目初始化 */
+	private DataSource ds0 = null;
+    private InitialContext ctxt0 = null;
+    private Connection conn0 = null;
+    
+    /* DAO物件 */
+    WebUserDAO webUserDAO;
+	
+    public WebUserServlet() {
         super();
     }
-	
-	/* 初始化 */
+    
+    /* 初始化 */
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
-		/* DataSource等項目初始化 */
-		DataSource ds0 = null;
-	    InitialContext ctxt0 = null;
-	    Connection conn0 = null;
 	    
 	    try {
 		    // 建立Context Object,連到JNDI Server
@@ -45,26 +50,15 @@ public class WebUserRegisterServlet extends HttpServlet {
 	        ds0 = ( DataSource ) ctxt0.lookup("java:comp/env/jdbc/zest");
 	        // 向DataSource要Connection
 	        conn0 = ds0.getConnection();
-	        // 建立Database Access Object,負責Table的Access，實作介面
-	        WebUserDAO webUserDAO = new WebUserJDBCDAO(conn0);
 
 	    } catch (NamingException nE) {
         	System.out.println("Naming Service Lookup Exception");
         } catch (SQLException sqlE) {
         	System.out.println("Database Connection Error"); 
-        } finally {
-        	try {
-				if (conn0 != null) {
-					conn0.close();
-				}
-			} catch (SQLException sqlE0) {
-				System.out.println("Database Connection Error"); 
-			}
         }
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response, WebUserDAO webUserDAO)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* 收/發資料前先設定request/response編碼 */
 		request.setCharacterEncoding(CHARSET_CODE);
 		response.setContentType(CONTENT_TYPE);
@@ -75,38 +69,52 @@ public class WebUserRegisterServlet extends HttpServlet {
 		response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 	      
         /* 根據取到的參數判定是首次送出資料還是已確認過 */
-		if (request.getParameter("registerCheckAccount") != null) {
-			/* 返回查詢結果給使用者確認 */
-			System.out.println("test0");
-			doCheckAccount(request, response, webUserDAO);
-		} else if (request.getParameter("registerSubmit") != null) {
-			/* 返回資料給使用者確認 */
-			doSubmit(request, response);
-		} else if (request.getParameter("registerConfirm") != null) {
-			/* 準備將資料傳入DB */
-			doConfirm(request, response, webUserDAO);
-		} else if (request.getParameter("registerUndo") != null) {
-			/* 清除資料並返回註冊畫面 */
-			doUndo(request, response);
+		if (request.getParameter("register") != null) {
+			switch(request.getParameter("register")){
+				case "檢查帳號":
+					/* 返回查詢結果給使用者確認 */
+					doCheckAccount(request, response);
+					break;
+				case "送出":
+					/* 返回資料給使用者確認 */
+					doSubmit(request, response);
+					break;
+				case "確認":
+					/* 準備將資料傳入DB */
+					doConfirm(request, response);
+					break;
+				default:
+					/* 清除資料並返回註冊畫面 */
+					doUndo(request, response);
+					break;
+			}
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
-	public List<String> doGetLastId(WebUserDAO webUserDAO) 
-			throws IOException {
-		List<String> lastIdList = new ArrayList<>();
-		
-		return lastIdList;
-	}
-	
+
 	/* Register checkAccount */
-	public void doCheckAccount(HttpServletRequest request, HttpServletResponse response, WebUserDAO webUserDAO)
+	public void doCheckAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告printer*/
+		PrintWriter out=response.getWriter();
+		/* 取得使用者輸入的參數 */
+		String inputAccount = request.getParameter("inputAccount");
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+		/* 呼叫DAO方法，返回結果 */
+		int accountCheckResult = webUserDAO.checkAccountExist(inputAccount);
+		/* 將結果返回 */
+		out.write(String.valueOf(accountCheckResult));
+        out.flush();
+        out.close();
 	}
 	
 	/* Register submit */
@@ -157,9 +165,9 @@ public class WebUserRegisterServlet extends HttpServlet {
 	}
 
 	/* Register confirm */
-	public void doConfirm(HttpServletRequest request, HttpServletResponse response, WebUserDAO webUserDAO)
+	public void doConfirm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 	}
 	
 	/* Register undo */

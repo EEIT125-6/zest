@@ -28,9 +28,7 @@ public class WebUserJDBCDAO implements WebUserDAO{
 			if (preStmt0 != null) {
 				/* 執行查詢 */
 	            ResultSet rs0 = preStmt0.executeQuery();
-	            while (rs0.next()) {
-	            	checkResult = (!rs0.getString("account").equals("")) ? 1 : 0;
-	            }
+	            checkResult = (rs0.getRow() > 0) ? 1 : 0;
 	            rs0.close();
 	            /* 確認交易 */
 	            connection0.commit();
