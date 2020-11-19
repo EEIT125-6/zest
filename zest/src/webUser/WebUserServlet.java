@@ -77,15 +77,15 @@ public class WebUserServlet extends HttpServlet {
 					break;
 				case "送出":
 					/* 返回資料給使用者確認 */
-					doSubmit(request, response);
+					doRegisterSubmit(request, response);
 					break;
 				case "確認":
 					/* 準備將資料傳入DB */
-					doConfirm(request, response);
+					doRegisterConfirm(request, response);
 					break;
 				default:
 					/* 清除資料並返回註冊畫面 */
-					doUndo(request, response);
+					doRegisterUndo(request, response);
 					break;
 			}
 		}
@@ -103,28 +103,63 @@ public class WebUserServlet extends HttpServlet {
 		request.setCharacterEncoding(CHARSET_CODE);
 		response.setContentType(CONTENT_TYPE);
 		
+		/* 宣告欲回傳的參數*/
+		int accountCheckResult = -1;
+		String message = "";
 		/* 宣告printer*/
 		PrintWriter out=response.getWriter();
 		/* 取得使用者輸入的參數 */
 		String inputAccount = request.getParameter("inputAccount");
-		/* 利用Connection產生DAO物件 */
-		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
-		/* 呼叫DAO方法，返回結果 */
-		int accountCheckResult = webUserDAO.checkAccountExist(inputAccount);
-		/* 將結果返回 */
+		try {
+			/* 利用Connection產生DAO物件 */
+			webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+			/* 呼叫DAO方法，返回結果 */
+			accountCheckResult = webUserDAO.checkAccountExist(inputAccount);
+			message = "Success";
+		} catch(SQLException sqlE) {
+			message = sqlE.getMessage();
+		}
+
+		/* 將結果返回aJax */
 		out.write(String.valueOf(accountCheckResult));
+		out.write(","+message);
         out.flush();
         out.close();
 	}
 	
+	/* Register getNewID */
+	public String getNewUserId(HttpServletRequest request, HttpServletResponse response, int lv) 
+			throws ServletException, IOException {
+		String newId = "";
+		String message = "";
+		
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+		/* 取得該身分使用者已註冊多少人 */
+		try {
+			int userNumber = webUserDAO.checkUserId(lv+1);
+			/* 得出有幾個空白 */
+			int zeroIndex = 6 - ((userNumber + 1) + "").length();
+			String zeroNumber="";
+			/* 空白填入"0" */
+			for(int letterIndex = 0; letterIndex < zeroIndex; letterIndex++) {
+				zeroNumber+="0";
+			}
+			newId = (userNumber >= 0) ? String.valueOf(lv+1)+zeroNumber+String.valueOf(userNumber + 1) : "";
+			message = "Sucess";
+		} catch (SQLException sqlE) {
+			message = sqlE.getMessage();
+		}
+		return newId+","+message;
+	}
+	
 	/* Register submit */
-	public void doSubmit(HttpServletRequest request, HttpServletResponse response)
+	public void doRegisterSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 參數宣告 */
 		String user_id = "", account, password, first_name, last_name, nickname, fervor = "", email, phone, location_code, addr0, addr1, addr2;
-		Character gender;
+		Character gender, get_email;
 		LocalDate birthday, join_date;
-		Boolean get_email;
 		Integer lv = 0;
 		BigDecimal zest = new BigDecimal("0");
 		
@@ -148,7 +183,7 @@ public class WebUserServlet extends HttpServlet {
 		}
 		email = request.getParameter("email").trim();
 		phone = request.getParameter("phone").trim();
-		get_email = (request.getParameter("get_email").equals("true")) ? true : false;
+		get_email = (request.getParameter("get_email").equals("Y")) ? 'Y' : 'N';
 		location_code = request.getParameter("location_code");
 		addr0 = request.getParameter("addr0").trim();
 		addr1 = request.getParameter("addr1").trim();
@@ -165,13 +200,56 @@ public class WebUserServlet extends HttpServlet {
 	}
 
 	/* Register confirm */
-	public void doConfirm(HttpServletRequest request, HttpServletResponse response)
+	public void doRegisterConfirm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 從session中取出物件reg_webUser */
+		WebUserBean registerData = (WebUserBean)request.getSession(true).getAttribute("reg_webUser");
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+		/* 取得使用者身分 */
+		int lv = registerData.getLv();
+		/* 設定要顯示的訊息 */
+		String insertResultMessage = "";
+		
+		String idResult = getNewUserId(request, response, lv);
+		String[] idResultSpace = idResult.split(",");
+		if (!idResultSpace[0].equals("")) {
+			/* 取得ID  */
+			registerData.setUser_id(idResultSpace[0]);
+			
+			try {
+				/* 執行新增 */
+				boolean insertResult = webUserDAO.insertWebUser(registerData);
+				/* 執行成功 */
+				if (insertResult) {
+					insertResultMessage = "恭喜！您的帳號已成功建立";
+				}
+			} catch (SQLException sqlE) {
+				insertResultMessage = "發生錯誤！" + sqlE.getMessage();
+				/* 嘗試建立Session，並將訊息insertResultMessage以"insertResultMessage"的名稱放入新Session中 */
+				request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
+				/* 導向其他畫面 */
+				request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request,response);
+			}
+		} else {
+			insertResultMessage = "發生錯誤！" + idResultSpace[1];
+		}
+		
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 另外建立Session，並將訊息insertResultMessage以"insertResultMessage"的名稱放入新Session中 */
+		request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
+		/* 導向其他畫面 */
+		request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request,response);
 	}
 	
 	/* Register undo */
-	public void doUndo(HttpServletRequest request, HttpServletResponse response)
+	public void doRegisterUndo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 無效session */
 		request.getSession(true).invalidate();

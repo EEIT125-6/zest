@@ -64,8 +64,8 @@
 				<hr />
 				<label>是否願意接收促銷/優惠訊息：</label>
 				<c:choose>
-					<c:when test="${param.get_email==true}">願意</c:when>
-					<c:when test="${param.get_email==false}">不願意</c:when>
+					<c:when test="${param.get_email=='Y'}">願意</c:when>
+					<c:when test="${param.get_email=='N'}">不願意</c:when>
 				</c:choose>
 				<hr />
 				<label>居住區域：</label>

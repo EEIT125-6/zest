@@ -65,6 +65,10 @@
 			<label>快餐</label>
 			<input type="checkbox" name="fervor" value="燒肉" />
 			<label>燒肉</label>
+			<input type="checkbox" name="fervor" value="西式" />
+			<label>西式</label>
+			<input type="checkbox" name="fervor" value="下午茶" />
+			<label>下午茶</label>
 			<input type="checkbox" name="fervor" value="日式" />
 			<label>日式</label>
 			<input type="checkbox" name="fervor" value="皆可" checked="checked" onblur="checkFervor()"/>
@@ -82,10 +86,10 @@
 			<span id="phoneSpan"></span>
 			<hr />
 			<label>是否願意接收促銷/優惠訊息：</label>
-			<input type="radio" id="get_email" name="get_email" value="true" checked="checked">
-		    <label for="true">願意</label>
-		    <input type="radio" id="get_email" name="get_email" value="false">
-		    <label for="false">不願意</label>
+			<input type="radio" id="get_email" name="get_email" value="Y" checked="checked">
+		    <label for="Y">願意</label>
+		    <input type="radio" id="get_email" name="get_email" value="N">
+		    <label for="N">不願意</label>
 		    <hr />
 		    <label>居住區域：</label>
 	    	<select name="location_code" id="location_code" onblur="checkLocation_code()">
@@ -154,17 +158,18 @@
 	            	'inputAccount':account
 	            },
 	            success:function(result) {
-	            	console.log(result);
-	            	console.log(typeof result);
-	            	if(result == 1) {
+	            	let resultSpace = result.split(",");
+	            	if(resultSpace[0] == '1') {
 	            		accountStr = "此帳號已有人使用！";
 	            		accountIsOk = false;
-	            	} else if(result == 0) {
+	            	} else if(resultSpace[0] == '0') {
 	            		accountStr = "您可建立此帳號！";
 	            		accountIsOk = true;
-	            	} else if(result == -1) {
+	            	} else if(resultSpace[0] == '-1') {
 	            		accountStr = "檢查途中遭遇錯誤！";
 	            		accountIsOk = false;
+	            		/* 顯示彈窗異常訊息 */
+	            		alert(resultSpace[1]);
 	            	}
 	            	if (!accountIsOk) {
 	            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;

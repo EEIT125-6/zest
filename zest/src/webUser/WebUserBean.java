@@ -21,7 +21,7 @@ public class WebUserBean implements Serializable {
 	private String fervor;
 	private String email;
 	private String phone;
-	private Boolean get_email;
+	private Character get_email;
 	private String location_code;
 	private LocalDate join_date;
 	private Integer lv;
@@ -36,7 +36,7 @@ public class WebUserBean implements Serializable {
 	}
 
 	/* 帶參數建構子 */
-	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, Boolean pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, Character pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
 		this.user_id = pUser_id;
 		this.account = pAccount;
 		this.password = pPassword;
@@ -147,11 +147,11 @@ public class WebUserBean implements Serializable {
 		this.phone = phone;
 	}
 
-	public Boolean getGet_email() {
+	public Character getGet_email() {
 		return get_email;
 	}
 
-	public void setGet_email(Boolean get_email) {
+	public void setGet_email(Character get_email) {
 		this.get_email = get_email;
 	}
 
