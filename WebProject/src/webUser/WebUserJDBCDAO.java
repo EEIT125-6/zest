@@ -19,17 +19,20 @@ public class WebUserJDBCDAO implements WebUserDAO{
 	 * -1->異常、0->不存在、1->存在 */
 	public int checkAccountExist(String inputAccount) throws SQLException {
 		int checkResult = -1;
+		int resultCount = 0;
 		
 		try (PreparedStatement preStmt0 = connection0.prepareStatement("SELECT account FROM dbo.WebUser WHERE account = ?")) {
 			/* 開始交易 */ 
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
-			String pAccount = "\'" + inputAccount + "\'";
-			preStmt0.setString(1, pAccount);
+			preStmt0.setString(1, inputAccount);
 			if (preStmt0 != null) {
 				/* 執行查詢 */
 	            ResultSet rs0 = preStmt0.executeQuery();
-	            checkResult = (rs0.getRow() > 0) ? 1 : 0;
+	            if (rs0.next()) {
+	            	resultCount++;
+	            }
+	            checkResult = (resultCount > 0) ? 1 : 0;
 	            rs0.close();
 	            /* 確認交易 */
 	            connection0.commit();
@@ -48,18 +51,18 @@ public class WebUserJDBCDAO implements WebUserDAO{
 	/* 檢查DB上符合特定條件的帳號筆數 */
 	public int checkUserId(int lv) throws SQLException {
 		int numberOfUser = 0;
+		int resultTotalCounts = 0;
 		
 		try (PreparedStatement preStmt0 = connection0.prepareStatement("SELECT user_id FROM dbo.WebUser WHERE user_id LIKE ?")) {
 			/* 開始交易 */ 
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
-			String pMode = "\'"+String.valueOf(lv) + "%\'";
-			int resultTotalCounts = 0;
+			String pMode = String.valueOf(lv) + "%";
 			preStmt0.setString(1, pMode);
 			if (preStmt0 != null) {
 				/* 執行查詢 */
 	            ResultSet rs0 = preStmt0.executeQuery();
-	            if (rs0.next()) {
+	            while (rs0.next()) {
 	            	resultTotalCounts++;
 	            }
 	            numberOfUser = (resultTotalCounts > 0) ? resultTotalCounts : 0;

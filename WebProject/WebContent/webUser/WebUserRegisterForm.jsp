@@ -12,8 +12,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+   
     <title>進行註冊</title>
     <style>
         body{
@@ -172,6 +173,7 @@
 					    <label>生活地點一：</label>
 					    <input type="text" name="addr0" id="addr0" size="65" maxlength="65" onblur="checkAddr0()"
 						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" required="required" />
+						<br />
 						<span id="addr0Span"></span>
 					    <hr />
 					    <label>生活地點二：</label>
@@ -184,7 +186,7 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出">
+						<input type="submit" id="submit" name="register" value="送出" disabled>
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 				</form>
@@ -201,7 +203,7 @@
 						let accountIsOk = true;
 						$.ajax({
 							type:"POST",
-				            url:"/zest/webUser/WebUserServlet",
+				            url:"/WebProject/webUser/WebUserServlet",
 				            data:{
 				            	'register':'檢查帳號',
 				            	'inputAccount':account
@@ -214,6 +216,7 @@
 				            	} else if(resultSpace[0] == '0') {
 				            		accountStr = "您可建立此帳號！";
 				            		accountIsOk = true;
+				            		document.getElementById("submit").disabled = false;
 				            	} else if(resultSpace[0] == '-1') {
 				            		accountStr = "檢查途中遭遇錯誤！";
 				            		accountIsOk = false;

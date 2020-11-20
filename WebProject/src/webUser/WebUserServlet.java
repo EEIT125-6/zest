@@ -139,14 +139,16 @@ public class WebUserServlet extends HttpServlet {
 		try {
 			int userNumber = webUserDAO.checkUserId(lv+1);
 			/* 得出有幾個空白 */
-			int zeroIndex = 6 - ((userNumber + 1) + "").length();
-			String zeroNumber="";
-			/* 空白填入"0" */
-			for(int letterIndex = 0; letterIndex < zeroIndex; letterIndex++) {
-				zeroNumber+="0";
+			if (userNumber >= 0) {
+				int zeroIndex = 6 - ((userNumber + 1) + "").length();
+				String zeroNumber="";
+				/* 空白填入"0" */
+				for(int letterIndex = 0; letterIndex < zeroIndex; letterIndex++) {
+					zeroNumber+="0";
+				}
+				newId = (userNumber >= 0) ? String.valueOf(lv+1)+zeroNumber+String.valueOf(userNumber + 1) : "";
+				message = "Sucess";
 			}
-			newId = (userNumber >= 0) ? String.valueOf(lv+1)+zeroNumber+String.valueOf(userNumber + 1) : "";
-			message = "Sucess";
 		} catch (SQLException sqlE) {
 			message = sqlE.getMessage();
 		}
