@@ -67,10 +67,10 @@ public class WebUserServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 		response.setDateHeader("Expires", -1); // 防止proxy server進行快取
-	      
+		
         /* 根據取到的參數判定是首次送出資料還是已確認過 */
 		if (request.getParameter("register") != null) {
-			switch(request.getParameter("register")){
+			switch (request.getParameter("register")){
 				case "檢查帳號":
 					/* 返回查詢結果給使用者確認 */
 					doCheckAccount(request, response);
@@ -83,9 +83,20 @@ public class WebUserServlet extends HttpServlet {
 					/* 準備將資料傳入DB */
 					doRegisterConfirm(request, response);
 					break;
+				/*返回註冊畫面*/
+				case "取消":
 				default:
 					/* 清除資料並返回註冊畫面 */
 					doRegisterUndo(request, response);
+					break;
+			}
+		} else if (request.getParameter("login") != null) {
+			switch (request.getParameter("login")) {
+				/* 登入 */
+				case "登入":
+				default:
+					/* 返回查詢結果 */
+					doCheckLogin(request, response);
 					break;
 			}
 		}
@@ -217,6 +228,7 @@ public class WebUserServlet extends HttpServlet {
 		int lv = registerData.getLv();
 		/* 設定要顯示的訊息 */
 		String insertResultMessage = "";
+		String insertResultPage = "WebUserRegisterForm.jsp";
 		
 		String idResult = getNewUserId(request, response, lv);
 		String[] idResultSpace = idResult.split(",");
@@ -229,24 +241,31 @@ public class WebUserServlet extends HttpServlet {
 				boolean insertResult = webUserDAO.insertWebUser(registerData);
 				/* 執行成功 */
 				if (insertResult) {
-					insertResultMessage = "恭喜！"+registerData.getFirst_name()+registerData.getLast_name()+"您的帳號已成功建立";
+					insertResultMessage = "恭喜！"+registerData.getFirst_name()+registerData.getLast_name()+"，您的帳號已成功建立";
+					insertResultPage = "WebUserLogin.jsp";
 				}
 			} catch (SQLException sqlE) {
 				insertResultMessage = "發生錯誤！" + sqlE.getMessage();
 				
 				/* 嘗試建立Session，並將訊息insertResultMessage以"insertResultMessage"的名稱放入新Session中 */
 				request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
+				/* 將訊息insertResultPage以"insertResultPage"的名稱放入新Session中 */
+				request.getSession(true).setAttribute("insertResultPage", insertResultPage);
 				/* 導向其他畫面 */
 				request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request,response);
 			}
 		} else {
 			insertResultMessage = "發生錯誤！" + idResultSpace[1];
+			insertResultPage = "WebUserRegisterForm.jsp";
 		}
 		
 		/* 無效session */
 		request.getSession(true).invalidate();
 		/* 另外建立Session，並將訊息insertResultMessage以"insertResultMessage"的名稱放入新Session中 */
 		request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
+		/* 將訊息insertResultPage以"insertResultPage"的名稱放入新Session中 */
+		System.out.println("將被導向："+insertResultPage);
+		request.getSession(true).setAttribute("insertResultPage", insertResultPage);
 		/* 導向其他畫面 */
 		request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request,response);
 	}
@@ -258,5 +277,88 @@ public class WebUserServlet extends HttpServlet {
 		request.getSession(true).invalidate();
 		/* 返回註冊畫面 */
 		request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request,response);
+	}
+	
+	/* Login check */
+	public void doCheckLogin(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告參數*/
+		int accountCheckResult = -1;
+		boolean passwordCheckResult = false;
+		String loginMessage = "";
+		String[] checkResultSpace = null;
+		WebUserBean userFullData = new WebUserBean();
+		/* 取得使用者輸入的參數 */
+		String inputAccount = request.getParameter("account");
+		String inputPassword = request.getParameter("password");
+		
+		try {
+			/* 利用Connection產生DAO物件 */
+			webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+			/* 呼叫DAO方法，返回結果 */
+			accountCheckResult = webUserDAO.checkAccountExist(inputAccount);
+			loginMessage = "Success";
+		} catch(SQLException sqlE) {
+			loginMessage = sqlE.getMessage();
+		}
+		
+		/* 帳號存在才往下做 */
+		if (accountCheckResult == 1) {
+			try {
+				checkResultSpace = webUserDAO.checkPassword(inputAccount, inputPassword).split(":");
+				passwordCheckResult = Boolean.parseBoolean(checkResultSpace[0]);
+				loginMessage = (passwordCheckResult) ? "Success" : "密碼錯誤！請檢查大小寫是否正確，或將類似的字元打錯";
+			} catch(SQLException sqlE) {
+				loginMessage = sqlE.getMessage();
+				/* 嘗試建立Session，並將訊息loginMessage以"loginMessage"的名稱放入新Session中 */
+				request.getSession(true).setAttribute("loginMessage", loginMessage);
+				/* 導向其他畫面 */
+				request.getRequestDispatcher("/webUser/WebUserLoginResult.jsp").forward(request,response);
+			}
+		}	else if (accountCheckResult == 0) {
+			loginMessage = "該帳號不存在！請檢查大小寫是否正確，或將類似的字元打錯";
+		}	
+		
+		if (!loginMessage.equals("Success")) {
+			/* 嘗試建立Session，並將訊息loginMessage以"loginMessage"的名稱放入新Session中 */
+			request.getSession(true).setAttribute("loginMessage", loginMessage);
+			/* 導向其他畫面 */
+			request.getRequestDispatcher("/webUser/WebUserLoginResult.jsp").forward(request,response);
+		/* 帳號、密碼皆正確 */
+		} else {
+			if (checkResultSpace.length > 1) {
+				userFullData.setUser_id(checkResultSpace[1]);
+				userFullData.setAccount(checkResultSpace[2]);
+				userFullData.setPassword(checkResultSpace[3]);
+				userFullData.setFirst_name(checkResultSpace[4]);
+				userFullData.setLast_name(checkResultSpace[5]);
+				userFullData.setNickname(checkResultSpace[6]);
+				userFullData.setGender(checkResultSpace[7].charAt(0));
+				userFullData.setBirth(LocalDate.parse(checkResultSpace[8]));
+				userFullData.setFervor(checkResultSpace[9]);
+				userFullData.setEmail(checkResultSpace[10]);
+				userFullData.setGet_email(checkResultSpace[11].charAt(0));
+				userFullData.setLocation_code(checkResultSpace[12]);
+				userFullData.setJoin_date(LocalDate.parse(checkResultSpace[13]));
+				userFullData.setLv(Integer.parseInt(checkResultSpace[14]));
+				userFullData.setAddr0(checkResultSpace[15]);
+				userFullData.setAddr1(checkResultSpace[16]);
+				userFullData.setAddr2(checkResultSpace[17]);
+				userFullData.setZest(new BigDecimal(checkResultSpace[18]));
+				
+				loginMessage = "歡迎 "+ userFullData.getFirst_name() + userFullData.getLast_name() + " ！";
+				/* 嘗試建立Session，並將Java Bean物件userFullData以"userFullData"的名稱放入新Session中 */
+				request.getSession(true).setAttribute("userFullData", userFullData);
+				/* 嘗試建立Session，並將訊息loginMessage以"loginMessage"的名稱放入新Session中 */
+				request.getSession(true).setAttribute("loginMessage", loginMessage);
+				/* 導向其他畫面 */
+				request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request,response);
+			}
+		}
 	}
 }

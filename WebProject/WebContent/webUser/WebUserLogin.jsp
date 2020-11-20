@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
     
     <title>使用者登入</title>
     <style>
@@ -30,7 +31,7 @@
        }
        .photo{
            padding: 0%;
-           background: url("Images/backbar2-1.jpg"); 
+           background: url("../Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
        }
@@ -44,8 +45,8 @@
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="http://localhost:8080/WebProject/Index.html"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
             </div>
@@ -57,14 +58,14 @@
                         style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
                         <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
                         line-height: 0px;">
-                          <img src="Images/searchbut.jpg" >
+                          <img src="../Images/searchbut.jpg" >
                         </button>
                       </fieldset>
                     </form>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <form method="post">
+                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
                 		<hr />
@@ -78,138 +79,13 @@
 							placeholder="請輸入密碼，6~20個字" required="required" />
 						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
-						<hr />
-						<span id="loginSpan"></span>
                 	</fieldset>
                 	<div align="center">
 						<input type="submit" id="submit" name="login" value="登入">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
                 </form>
-                <script src="scripts/jquery-3.5.1.min.js"></script>
-				<script src="scripts/WebUserLogin.js"></script>
-				<script>
-				$("#submit").click(function () {
-			        loginCheck();
-			    });
-				function loginCheck() {
-					if(!checkForm()){
-						
-					} else {
-						
-					}
-				}
-				
-				function checkForm() {
-					if (!checkAccountName()) {
-						return false;
-					} else if (!checkAccountPassword()) {
-						return false;
-					} else {
-						return true;
-					}
-				}
-				
-				function checkAccountName() {
-					let accountObjValue = document.getElementById("account").value.trim();
-					let accountSpan = document.getElementById("accountSpan");
-
-					let accountIsOk = true;
-					let accountStr;
-					let startCharReg = /[0-9]/;
-
-					if (accountObjValue == "" || accountObjValue.length == 0) {
-						accountStr = "帳號不可為空白";
-						accountIsOk = false;
-					} else if (accountObjValue.length < 6) {
-						accountStr = "帳號長度不足";
-						accountIsOk = false;
-					} else if (accountObjValue.length > 20) {
-						accountStr = "帳號長度過長";
-						accountIsOk = false;
-					} else if (accountObjValue.charAt(0).match(startCharReg)) {
-						accountStr = "帳號不可以數字開頭";
-						accountIsOk = false;
-					} else {
-						let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
-
-						if (!accountObjValue.match(accountReg)) {
-							accountStr = "帳號不符合格式";
-							document.getElementById("checkAccount").style = "display:none";
-							accountIsOk = false;
-						} else {
-							accountStr = "帳號格式正確";
-							document.getElementById("checkAccount").style = "display:inline";
-							accountIsOk = true;
-						}
-					}
-					if (!accountIsOk) {
-						accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-						accountSpan.style.color = "red";
-						accountSpan.style.fontStyle = "italic";
-						return false;
-					} else {
-						accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-						accountSpan.style.color = "black";
-						accountSpan.style.fontStyle = "normal";
-						return true;
-					}
-				}
-
-				function checkAccountPassword() {
-					let passwordObjValue = document.getElementById("password").value.trim();
-					let passwordSpan = document.getElementById("passwordSpan");
-
-					let passwordIsOk = true;
-					let passwordStr;
-					let startCharReg = /[0-9]/;
-
-					if (passwordObjValue == "" || passwordObjValue.length == 0) {
-						passwordStr = "密碼不可為空白";
-						passwordIsOk = false;
-					} else if (passwordObjValue.length < 6) {
-						passwordStr = "密碼長度不足，至少需6個字元";
-						passwordIsOk = false;
-					} else if (passwordObjValue.length > 20) {
-						passwordStr = "密碼長度過長，最多僅20個字元";
-						passwordIsOk = false;
-					} else if (passwordObjValue.charAt(0).match(startCharReg)) {
-						passwordStr = "密碼不可以數字開頭";
-						passwordIsOk = false;
-					} else {
-						let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
-
-						if (!passwordObjValue.match(accountReg)) {
-							passwordStr = "密碼不符合格式";
-							passwordIsOk = false;
-						} else {
-							passwordStr = "密碼格式正確";
-							passwordIsOk = true;
-						}
-					}
-					if (!passwordIsOk) {
-						passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + passwordStr;
-						passwordSpan.style.color = "red";
-						passwordSpan.style.fontStyle = "italic";
-						return false;
-					} else {
-						passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
-						passwordSpan.style.color = "black";
-						passwordSpan.style.fontStyle = "normal";
-						return true;
-					}
-				}
-
-				function changeVisibility() {
-					document.getElementById("password").type = (document.getElementById("password").type == "password") ? "text" : "password";
-					document.getElementById("visibility_switch").value = (document.getElementById("visibility_switch").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼"; 
-				}
-
-				function clearMessage() {
-					document.getElementById("accountSpan").innerHTML = "";
-					document.getElementById("passwordSpan").innerHTML = "";
-				}
-				</script>
+                <script src="scripts/WebUserLogin.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

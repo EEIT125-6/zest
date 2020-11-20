@@ -31,7 +31,7 @@
        }
        .photo{
            padding: 0%;
-           background: url("Images/backbar2-1.jpg"); 
+           background: url("../Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
        }
@@ -45,8 +45,8 @@
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="http://localhost:8080/WebProject/Index.html"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
             </div>
@@ -58,7 +58,7 @@
                         style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
                         <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
                         line-height: 0px;">
-                          <img src="Images/searchbut.jpg" >
+                          <img src="../Images/searchbut.jpg" >
                         </button>
                       </fieldset>
                     </form>
@@ -186,7 +186,7 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出" disabled>
+						<input type="submit" id="submit" name="register" value="送出">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 				</form>
@@ -201,6 +201,7 @@
 						let accountSpan = document.getElementById("accountSpan");
 						let accountStr;
 						let accountIsOk = true;
+						
 						$.ajax({
 							type:"POST",
 				            url:"/WebProject/webUser/WebUserServlet",
@@ -216,7 +217,6 @@
 				            	} else if(resultSpace[0] == '0') {
 				            		accountStr = "您可建立此帳號！";
 				            		accountIsOk = true;
-				            		document.getElementById("submit").disabled = false;
 				            	} else if(resultSpace[0] == '-1') {
 				            		accountStr = "檢查途中遭遇錯誤！";
 				            		accountIsOk = false;

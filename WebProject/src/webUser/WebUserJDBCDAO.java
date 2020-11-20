@@ -48,6 +48,62 @@ public class WebUserJDBCDAO implements WebUserDAO{
 		return checkResult;
 	}
 	
+	/* 檢查密碼，後面用,分隔將使用者資料傳回來 */
+	public String checkPassword(String inputAccount, String inputPassword) throws SQLException {
+		boolean checkResult = false;
+		String totalResult = "";
+		
+		try (PreparedStatement preStmt0 = connection0.prepareStatement("SELECT * FROM dbo.WebUser WHERE account = ? AND password = ?")) {
+			/* 開始交易 */ 
+			connection0.setAutoCommit(false);
+			/* 設定參數 */
+			preStmt0.setString(1, inputAccount);
+			preStmt0.setString(2, inputPassword);
+			if (preStmt0 != null) {
+				/* 執行查詢 */
+	            ResultSet rs0 = preStmt0.executeQuery();
+	            while (rs0.next()) {
+	            	checkResult = true;
+	            	totalResult = Boolean.toString(checkResult);
+	            	/* 讀取使用者資訊 */
+	            	totalResult += ":" + rs0.getString("user_id");
+	            	totalResult += ":" + rs0.getString("account");
+	            	totalResult += ":" + rs0.getString("password");
+	            	totalResult += ":" + rs0.getString("first_name");
+	            	totalResult += ":" + rs0.getString("last_name");
+	            	totalResult += ":" + rs0.getString("nickname");
+	            	totalResult += ":" + rs0.getString("gender");
+	            	totalResult += ":" + rs0.getDate("birth").toString();
+	            	totalResult += ":" + rs0.getString("fervor");
+	            	totalResult += ":" + rs0.getString("email");
+	            	totalResult += ":" + rs0.getString("get_email");
+	            	totalResult += ":" + rs0.getString("location_code");
+	            	totalResult += ":" + rs0.getDate("join_date");
+	            	totalResult += ":" + String.valueOf(rs0.getInt("lv"));
+	            	totalResult += ":" + rs0.getString("addr0");
+	            	totalResult += ":" + rs0.getString("addr1");
+	            	totalResult += ":" + rs0.getString("addr2");
+	            	totalResult += ":" + rs0.getBigDecimal("zest").toString();
+	            }
+	            if(!checkResult) {
+	            	totalResult = Boolean.toString(checkResult);
+	            }
+	            rs0.close();
+	            /* 確認交易 */
+	            connection0.commit();
+            }
+		} catch (SQLException sqlE) {
+			System.out.println(sqlE);
+			checkResult = false;
+			totalResult = Boolean.toString(checkResult);
+			/* 撤回交易 */
+			connection0.rollback();
+			throw new SQLException(sqlE);
+		}
+		
+		return totalResult;
+	}
+	
 	/* 檢查DB上符合特定條件的帳號筆數 */
 	public int checkUserId(int lv) throws SQLException {
 		int numberOfUser = 0;
@@ -63,7 +119,7 @@ public class WebUserJDBCDAO implements WebUserDAO{
 				/* 執行查詢 */
 	            ResultSet rs0 = preStmt0.executeQuery();
 	            while (rs0.next()) {
-	            	resultTotalCounts++;
+	            	resultTotalCounts = Integer.parseInt(rs0.getString("user_id")) - lv*1000000;
 	            }
 	            numberOfUser = (resultTotalCounts > 0) ? resultTotalCounts : 0;
 	            rs0.close();
@@ -97,7 +153,7 @@ public class WebUserJDBCDAO implements WebUserDAO{
 			preStmt0.setString(5, insertedData.getLast_name());
 			preStmt0.setString(6, insertedData.getNickname());
 			preStmt0.setString(7, insertedData.getGender().toString());
-			preStmt0.setDate(8, Date.valueOf(insertedData.getBirthday()));
+			preStmt0.setDate(8, Date.valueOf(insertedData.getBirth()));
 			preStmt0.setString(9, insertedData.getFervor());
 			preStmt0.setString(10, insertedData.getEmail());
 			preStmt0.setString(11, insertedData.getGet_email().toString());

@@ -17,7 +17,7 @@ public class WebUserBean implements Serializable {
 	private String last_name;
 	private String nickname;
 	private Character gender;
-	private LocalDate birthday;
+	private LocalDate birth;
 	private String fervor;
 	private String email;
 	private String phone;
@@ -44,7 +44,7 @@ public class WebUserBean implements Serializable {
 		this.last_name = pLast_name;
 		this.nickname = pNickname;
 		this.gender = pGender;
-		this.birthday = pBirthday;
+		this.birth = pBirthday;
 		this.fervor = pFervor;
 		this.email = pEmail;
 		this.phone = pPhone;
@@ -115,12 +115,12 @@ public class WebUserBean implements Serializable {
 		this.gender = gender;
 	}
 
-	public LocalDate getBirthday() {
-		return birthday;
+	public LocalDate getBirth() {
+		return birth;
 	}
 
-	public void setBirthday(LocalDate birthday) {
-		this.birthday = birthday;
+	public void setBirth(LocalDate birthday) {
+		this.birth = birthday;
 	}
 
 	public String getFervor() {

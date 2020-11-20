@@ -6,16 +6,16 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     
-    <title>註冊流程結束</title>
+    <title>登入失敗</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -65,23 +65,9 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${insertResultMessage}</p>
-                <p>5秒後將移至</p>
-                <p id = "pPage">${insertResultPage}</p>
-                <script>
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserRegisterForm.jsp") {
-                		document.getElementById("pPage").innerHTML = "註冊";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
-                		document.getElementById("pPage").innerHTML = "登入";
-                	}
-                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserRegisterForm.jsp";
-                	setTimeout(function () {
-	                	   window.location.href = redirectPage;
-               	  	}
-	                , 5000);
-                </script>
+                <p>${loginMessage}</p>
+                <p>5秒後將移至登入</p>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
