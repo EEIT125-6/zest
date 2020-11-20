@@ -35,4 +35,15 @@
     <servlet-name>WebUserServlet</servlet-name>
     <url-pattern>/webUser/WebUserServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>CommentServlet</display-name>
+    <servlet-name>CommentServlet</servlet-name>
+    <servlet-class>orange.CommentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CommentServlet</servlet-name>
+    <url-pattern>/orange/CommentServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
