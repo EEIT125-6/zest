@@ -104,7 +104,7 @@
 						</c:choose>
 						<hr />
 						<label>西元生日：</label>
-						<jsp:getProperty name="reg_webUser" property="birthday" />
+						<jsp:getProperty name="reg_webUser" property="birth" />
 						<hr />
 						<label>偏好食物：</label>
 						<jsp:getProperty name="reg_webUser" property="fervor" />
