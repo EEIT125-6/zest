@@ -6,18 +6,16 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
     
-    <title>已登入</title>
+    
+    <title>查詢失敗</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -67,28 +65,22 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
-					scope="session" />
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="WebUserLogin.jsp" />
-				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" >
-                	<fieldset>
-                		<legend>${loginMessage}</legend>
-                		<div align="center">
-                			<hr />
-                			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
-                			<hr />
-                			<input type="submit" id="delete" name="login" value="刪除帳戶">
-                			<hr />
-							<input type="submit" id="logout" name="login" value="登出帳戶">
-							<hr />
-						</div>
-                	</fieldset>
-                </form>
+                <p>${selectResultMessage}</p>
+                <p>5秒後將移至</p>
+                <p id = "pPage">${selectResultPage}</p>
+                <script>
+                	if (document.getElementById("pPage").innerHTML == "") {
+                		document.getElementById("pPage").innerHTML = "登入";
+                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
+                		document.getElementById("pPage").innerHTML = "主畫面";
+                	}
+                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserMain.jsp";
+                	setTimeout(function () {
+	                	   window.location.href = redirectPage;
+               	  	}
+	                , 5000);
+                </script>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

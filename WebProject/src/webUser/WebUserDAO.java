@@ -1,6 +1,7 @@
 package webUser;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface WebUserDAO {
 	
@@ -16,4 +17,16 @@ public interface WebUserDAO {
 	
 	/* 新增資料 */
 	public boolean insertWebUser(WebUserBean insertedData) throws SQLException;
+	
+	/* 刪除資料 */
+	public boolean deleteWebUser(WebUserBean deletedData) throws SQLException;
+	
+	/* 查詢資料 */
+	public List<WebUserBean> selectWebUser(String selectedParameters) throws SQLException;
+	
+	/* 新增資料至刪除表 */
+	public boolean insertWebUserDeleted(WebUserBean insertedData) throws SQLException;
+	
+	/* 查詢刪除表的資料 */
+	public boolean selectWebUserDeleted(WebUserBean selectedData) throws SQLException;
 }

@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -90,18 +92,41 @@ public class WebUserServlet extends HttpServlet {
 					doRegisterUndo(request, response);
 					break;
 			}
+		/* 登入模塊 */
 		} else if (request.getParameter("login") != null) {
 			switch (request.getParameter("login")) {
+				/* 刪除 */
+				case "刪除帳戶":
+					/* 執行刪除 */
+					doDeleteAccount(request, response);
+					break;
 				/* 登出 */	
-				case "登出":
+				case "登出帳戶":
 					/* 執行登出 */
 					doLogout(request, response);
 					break;
 				/* 登入 */
 				case "登入":
-				default:
 					/* 返回查詢結果 */
 					doCheckLogin(request, response);
+					break;
+				/* 預設 */
+				default:
+					/* 返回登入畫面 */
+					doBackToLoginPage(request, response);
+					break;
+			}
+		/* 搜尋模塊 */
+		} else if (request.getParameter("select") != null) {
+			switch(request.getParameter("select")) {
+				/* 查詢 */
+				case "執行查詢":
+					/* 執行特定查詢 */
+					doSelectUserData(request, response);
+					break;
+				default:
+					/* 返回主畫面 */
+					doBackToLoginMainPage(request, response);
 					break;
 			}
 		}
@@ -246,7 +271,7 @@ public class WebUserServlet extends HttpServlet {
 				boolean insertResult = webUserDAO.insertWebUser(registerData);
 				/* 執行成功 */
 				if (insertResult) {
-					insertResultMessage = "恭喜！"+registerData.getFirst_name()+registerData.getLast_name()+"，您的帳號已成功建立";
+					insertResultMessage = "恭喜！"+registerData.getNickname()+"，您的帳號已成功建立";
 					insertResultPage = "WebUserLogin.jsp";
 				}
 			} catch (SQLException sqlE) {
@@ -356,13 +381,76 @@ public class WebUserServlet extends HttpServlet {
 				userFullData.setAddr2(checkResultSpace[17]);
 				userFullData.setZest(new BigDecimal(checkResultSpace[18]));
 				
-				loginMessage = "歡迎 "+ userFullData.getFirst_name() + userFullData.getLast_name() + " ！";
+				loginMessage = "歡迎 "+ userFullData.getNickname() + " ！";
 				/* 嘗試建立Session，並將Java Bean物件userFullData以"userFullData"的名稱放入新Session中 */
 				request.getSession(true).setAttribute("userFullData", userFullData);
-				/* 嘗試建立Session，並將訊息loginMessage以"loginMessage"的名稱放入新Session中 */
+				/* 將訊息loginMessage以"loginMessage"的名稱放入Session中 */
 				request.getSession(true).setAttribute("loginMessage", loginMessage);
-				/* 導向其他畫面 */
+				/* 導向登入後主畫面 */
 				request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request,response);
+			}
+		}
+	}
+	
+	/* Delete account */
+	public void doDeleteAccount(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		/* 設定參數 */
+		String nickname, deleteResultMessage, deleteResultPage = "WebUserMain.jsp";
+		boolean backupCheck = false ,backupResult = false, deleteResult = false; 
+		/* 從session中取出物件userFullData */
+		WebUserBean userData = (WebUserBean)request.getSession(true).getAttribute("userFullData");
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+		/* 取得暱稱 */
+		nickname = userData.getNickname();
+		
+		/* 將資料從使用者Table上刪除，同時備份一份到使用者-刪除Table
+		 * 1.先將資料備份至另一張表，失敗則返回
+		 * 2.再將原資料刪除，失敗則返回 */
+		try {
+			/* 先檢查是否已備份過*/
+			backupCheck = webUserDAO.selectWebUserDeleted(userData);
+			/* 沒備份過才執行備份 */
+			backupResult = (backupCheck) ? true:  webUserDAO.insertWebUserDeleted(userData);
+		} catch (SQLException sqlE) {
+			deleteResultMessage = "執行失敗！錯誤訊息為：" + sqlE.getMessage();
+			/* 將訊息deleteResultMessage以"deleteResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("deleteResultMessage", deleteResultMessage);
+			/* 將導向的網頁deleteResultPage以"deleteResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("deleteResultPage", deleteResultPage);
+			/* 導向刪除結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request,response);
+		} 
+		
+		/* 備份資料成功 */
+		if (backupResult) {
+			/* 執行刪除 */
+			try {
+				deleteResult = webUserDAO.deleteWebUser(userData);
+			} catch (SQLException sqlE) {
+				deleteResultMessage = "執行失敗！錯誤訊息為：" + sqlE.getMessage();
+				/* 將訊息deleteResultMessage以"deleteResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("deleteResultMessage", deleteResultMessage);
+				/* 將導向的網頁deleteResultPage以"deleteResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("deleteResultPage", deleteResultPage);
+				/* 導向刪除結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request,response);
+			}
+			
+			/* 刪除成功 */
+			if (deleteResult) {
+				deleteResultMessage = "感謝您的使用，" + nickname +"！我們有緣再見...";
+				/* 導向回首頁 */
+				deleteResultPage = "WebUserRegisterForm.jsp";
+				/* 無效session */
+				request.getSession(true).invalidate();
+				/* 嘗試建立Session，並將訊息deleteResultMessage以"deleteResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("deleteResultMessage", deleteResultMessage);
+				/* 將導向的網頁deleteResultPage以"deleteResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("deleteResultPage", deleteResultPage);
+				/* 導向刪除結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request,response);
 			}
 		}
 	}
@@ -372,15 +460,70 @@ public class WebUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		/* 宣告要傳回的參數 */
 		String logoutMessage = "";
-		/* 從session中取出物件reg_webUser */
+		/* 從session中取出物件userFullData */
 		WebUserBean userData = (WebUserBean)request.getSession(true).getAttribute("userFullData");
 		/* 取出部分資訊以組成訊息 */
-		logoutMessage = "感謝您的使用，" + userData.getFirst_name() + userData.getLast_name() + "！";
+		logoutMessage = "感謝您的使用，" + userData.getNickname() + "！";
 		/* 無效session */
 		request.getSession(true).invalidate();
 		/* 嘗試建立Session，並將訊息logoutMessage以"logoutMessage"的名稱放入新Session中 */
 		request.getSession(true).setAttribute("logoutMessage", logoutMessage);
 		/* 前往登出畫面 */
 		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request,response);
+	}
+	
+	/* Back to login */
+	public void doBackToLoginPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 前往登出畫面 */
+		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request,response);
+	}
+	
+	/* Back to login main page*/
+	public void doBackToLoginMainPage(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		/* 前往主畫面 */
+		request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request,response);
+	}
+	
+	/* Select account */
+	public void doSelectUserData(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		/* 宣告回傳參數 */
+		List<WebUserBean> selectedResult = new ArrayList<>();
+		String selectResultMessage = "";
+		String selectResultPage = "WebUserMain.jsp";
+		
+		/* 從request中取得查詢參數 */
+		String selectedAccount = (request.getParameter("selectedAccount").length() == 0) ? "?" : request.getParameter("selectedAccount").trim();
+		String selectedNickname = (request.getParameter("selectedNickname").length() == 0) ? "?" : request.getParameter("selectedNickname").trim();
+		String selectedFervor = (request.getParameter("selectedFervor") == null) ? "?" : request.getParameter("selectedFervor");
+		String selectedLocation_code = (request.getParameter("selectedLocation_code").length() == 0) ? "?" : request.getParameter("selectedLocation_code");
+		String selectedParameters = selectedAccount + ":" + selectedNickname + ":" + selectedFervor + ":" + selectedLocation_code;
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+		
+		try {
+			selectedResult = webUserDAO.selectWebUser(selectedParameters);
+			selectResultMessage = "共查詢到 " + String.valueOf(selectedResult.size()) + " 筆符合的資料...";
+			/* 將訊息selectResultMessage以"selectResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultMessage", selectResultMessage);
+			/* 將導向的網頁selectResultPage以"selectResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultPage", selectResultPage);
+			/* 將取得的資料selectedResult以"selectedResult"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectedResult", selectedResult);
+			/* 導向查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/DisplayWebUserSearch.jsp").forward(request,response);
+		} catch (SQLException sqlE) {
+			selectResultMessage = "發生錯誤，無法查詢！訊息為：" + sqlE.getMessage();
+			/* 將訊息selectResultMessage以"selectResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultMessage", selectResultMessage);
+			/* 將導向的網頁selectResultPage以"selectResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultPage", selectResultPage);
+			/* 導向查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserSearchResult.jsp").forward(request,response);
+		}
 	}
 }
