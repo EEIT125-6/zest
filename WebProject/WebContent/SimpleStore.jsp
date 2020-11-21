@@ -67,7 +67,7 @@ body {
             height: 350px;
             width: 100%;
             margin-bottom: 10px;
-            border-radius: 5px 0 0 5px;
+            border-radius: 5px 5px 5px 5px;
             box-shadow: 5px 5px 5px 5px #646262;
              background-color: white;
         }
@@ -81,6 +81,7 @@ body {
         }
         .textdiv{
             padding: 5px;
+            
         }
         .h11{
             
@@ -124,35 +125,43 @@ body {
 	<div class="jumbotron row"
 		style="padding: 25px; background-color: white;">
 		<c:url value="SimpleController" var="riceURL">
-			<c:param name="sclass" value="飯食" />
+			<c:param name="sclass" value="中式" />
 		</c:url>
 
 		<div class="col-sm-2"
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
 			<a href="${riceURL }"><img src="Images/S1.jpg"
-				style="width: 80px;"></a><br>飯食
+				style="width: 80px;"></a><br>中式
 		</div>
 
 
 		<c:url value="SimpleController" var="JPURL">
 			<c:param name="sclass" value="日式" />
 		</c:url>
-
-
 		<div class="col-sm-2"
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
 			<a href="${JPURL}"><img src="Images/S2.jpg" style="width: 80px;" /></a><br>日式
 		</div>
 
 
+		<c:url value="SimpleController" var="TEAURL">
+			<c:param name="sclass" value="下午茶" />
+		</c:url>
 		<div class="col-sm-2"
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<img src="Images/S3.jpg" style="width: 80px;"><br>icon3
+			<a href="${TEAURL}"><img src="Images/S3.jpg" style="width: 80px;"></a><br>下午茶
 		</div>
+
+		
+		<c:url value="SimpleController" var="WESTURL">
+			<c:param name="sclass" value="西式" />
+		</c:url>
 		<div class="col-sm-2"
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<img src="Images/S4.jpg" style="width: 80px;"><br>icon4
+			<a href="${WESTURL}"><img src="Images/S4.jpg" style="width: 80px;"></a><br>西式
 		</div>
+		
+		
 		<c:url value="SimpleController" var="fastURL">
 			<c:param name="sclass" value="快餐" />
 		</c:url>
@@ -175,50 +184,81 @@ body {
 	</div>
 	</div>
 	<div class="container" >
-
+<!-- 
 <form name="AddForm" action="detailStore.jsp" method="GET">
          <input type="hidden" name="todo" value="add">
          Select Book: <select name=bookID>         
          
-          <%
+         // <%
             // Scriptlet 1: Populate the books into the "select" control.
-            for (int i = 0; i < StoreDB.size(); ++i) {
-            	if( 
-            			StoreDB.getStname(i).equals(request.getParameter("nsrch"))){
-               out.println("<option value='" + i + "'>");
-               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
-                       + " | " + StoreDB.getSaddress(i));
-               out.println("</option>");
-            	}
-            } 
+//           for (int i = 0; i < StoreDB.size(); ++i) {
+//           	if( 
+//            			StoreDB.getStname(i).equals(request.getParameter("nsrch"))){
+//               out.println("<option value='" + i + "'>");
+//               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
+//                       + " | " + StoreDB.getSaddress(i));
+//               out.println("</option>");
+//            	}
+//            } 
         %> 
         
         <%
             // Scriptlet 1: Populate the books into the "select" control.
-            for (int i = 0; i < StoreDB.size(); ++i) {
-            	if(StoreDB.getSclass(i).equals(request.getParameter("sclass"))){
-               out.println("<option value='" + StoreDB.getStname(i) + "'>");
-               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
-                       + " | " + StoreDB.getSaddress(i));
-               out.println("</option>");
-            	}
-            } 
+//            for (int i = 0; i < StoreDB.size(); ++i) {
+//            	if(StoreDB.getSclass(i).equals(request.getParameter("sclass"))){
+//               out.println("<option value='" + StoreDB.getStname(i) + "'>");
+//               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
+//                       + " | " + StoreDB.getSaddress(i));
+//               out.println("</option>");
+//            	}
+//            } 
         %> 
  
          </select>
            Enter Quantity: <input type="text" name="qty" size="10" value="1">
          <input type="submit" value="Add to Shopping Cart">
       </form>
+   -->
       
       
-		<div >
+		<div style="margin-bottom:50px">
 		<c:forEach var="row" items="${rs.rows}">
 
 		
 				<c:url value="detailStore.jsp" var="GOURL">
 				<c:param name="stname" value="${row.stname}" />
 				</c:url>
-			<a href="${GOURL}">  
+			<a href="${GOURL}" style="text-decoration:none;color:black">  
+			    <div class="outside">
+       				 <div class="photo"  style="background-image: url('${row.photourl}');background-size:100% 100%">
+            
+      				  </div>
+			        <div class="textdiv">
+			            <h1 class="h11">
+			                ${row.stname }
+			            </h1>
+			            <div class="postion">
+			                ${row.saddress }
+			            </div>
+			            <hr>
+			            <span class="itdc">
+			                ${row.sclass}<br>
+			                ${row.stitd}	
+			            </span>
+			        </div>
+			    </div>
+			</a> 
+
+		</c:forEach>
+		</div>
+		
+		
+		<div style="margin-bottom:50px">
+		<c:forEach var="row" items="${rs2.rows}">
+				<c:url value="detailStore.jsp" var="GOURL">
+				<c:param name="stname" value="${row.stname}" />
+				</c:url>
+			<a href="${GOURL}" style="text-decoration:none;color:black">  
 			    <div class="outside">
        				 <div class="photo">
             
@@ -233,26 +273,16 @@ body {
 			            <hr>
 			            <span class="itdc">
 			                ${row.sclass}<br>
-			                	介紹	
+			                ${row.stitd}	
 			            </span>
 			        </div>
 			    </div>
 			</a> 
-
 		</c:forEach>
-		<div>-----------------------------------</div>
 		</div>
 		
-		
-		<div style="background: white">
-		<c:forEach var="row" items="${rs2.rows}">
-		<div class="junbotron" >
-
-			<a href="Index1.jsp">店家名稱:${row.stname } 店家類別:${row.sclass} 店家位置:${row.saddress }  </a> 
 		</div>
-		</c:forEach>
-		<div>-----------------------------------</div>
-		</div>
+<!-- 		
 		<div class="jumbotron">
 			<span> 美食照片 </span>
 		</div>
@@ -260,10 +290,11 @@ body {
 		<div class="jumbotron">美食照片</div>
 		<div class="jumbotron">美食照片</div>
 		<div class="jumbotron">美食照片</div>
-	</div>
+ -->
 
 
 
+<!-- -------------------------------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
                 <footer class="page-footer font-small mdb-color lighten-3 pt-4">

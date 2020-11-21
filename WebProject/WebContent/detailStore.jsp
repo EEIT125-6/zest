@@ -19,9 +19,12 @@
 
 
 <c:forEach var="row" items="${rs.rows}">
+	<c:set var = "id" value = "${row.id }"/>
 	<c:set var = "stname1"  value = "${row.stname}"/>
 	<c:set var = "sclass" value = "${row.sclass}"/>
 	<c:set var = "saddress" value = "${row.saddress}"/>
+	<c:set var = "stitd" value = "${row.stitd }"/>
+	<c:set var = "tel" value = "${row.tel }"/>
 <!--
 	${row.stname } 
 	${row.sclass} 
@@ -55,8 +58,10 @@
        .photo{
            padding: 0%;
            background: url("Images/backbar2-1.jpg"); 
+           background-repeat: no-repeat;
            height: 540px;
            padding-top: 220px;
+           background-size:100%
        }
        .shopcar{
             height: 40px;
@@ -66,6 +71,7 @@
     </style>
 </head>
 <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
@@ -75,26 +81,107 @@
             </div>
 
 <!-- -------------------------------------------------------------- -->
-    <div class="container" style="border-radius: 0%;background-color:white; text-align: center; height: 300px;">
-        PHOTO
-        <%=request.getParameter("bookID") %>
-        <%=request.getParameter("stname") %>
-        <span> <c:out value = "${sclass}"></c:out></span>
+            <div class="container-fluid photo">
+            </div>
+    <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
+    ;padding-top : 30px ">
+        
+        <!-- <%=request.getParameter("bookID")%> -->
+        <h1 style="margin-bottom: 100px" ><%=request.getParameter("stname") %></h1>
+        <hr>
+        <span>地點:<c:out value = "${saddress}"></c:out></span>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8" style="background-color: teal;"><div style="background-color: tomato;">名字:<c:out value = "${stname1}"></c:out>  類別:<c:out value = "${sclass}"></c:out></div><br> 
-            <div style="background-color: tomato;">MAP 所在地:<c:out value = "${saddress}"></c:out></div></div>
-            <div class="col-sm-4" style="background-color: thistle;"><div>詳細資料</div></div>
-            <!-- <div class="col-sm-4" style="background-color: tomato;">3333</div> -->
+    
+	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
+		<span>餐廳服務</span>
+	</div>
+	
+	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
+		<div>
+            <span id="sp1" class="divcato" style="color:orange;text-decoration:underline;">美食分享</span>
+            <span id="sp2" class="divcato">熱門餐點</span>
+            <span id="sp3" class="divcato">店家餐點</span>    
+			<span id="sp4" class="divcato">簡介</span>
         </div>
-
-
+        <hr>
+        <div id="div1" class="ddiv">
+            hi
+        </div>
+        <div id="div2" style="display:none;" class="ddiv">
+            hello
+        </div>
+        <div id="div3" style="display:none;" class="ddiv">
+            ho
+        </div>
+        <div id="div4" style="display:none;" class="ddiv">
+        	<c:out value = "${stitd }"></c:out>
+        </div>
     </div>
+        <script>
+        $("#sp1").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div1").css("display","inline")
+        })
 
+        $("#sp2").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div2").css("display","inline")
+        })
+        $("#sp3").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div3").css("display","inline")
+        })
+        $("#sp4").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div4").css("display","inline")
+        })
+        
+        $(".divcato").click(function(){
+            $(".divcato").css("color","black")
+            $(".divcato").css("font-weight","normal")
+            $(".divcato").css("text-decoration","none")
+            $(this).css("color","orange")
+            $(this).css("font-weight","bolder")
+            $(this).css("text-decoration","underline")
+        })
+         </script>
+         
+   	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px">
+		<div>餐廳資訊</div>
+		<h2 style="color:gray;margin-bottom:10px;margin-top:10px"><c:out value="${stname1}"></c:out></h2>
+		<hr>
+		<div>
+			電話:<c:out value="${tel }"></c:out>
+		</div>
+		<div>
+			地址:<c:out value="${saddress }"></c:out>
+		</div>
+	</div>
+	<%if(true){ %>
+		<c:url value="Update.jsp" var="EDITURL">
+		<c:param name="stname" value="${param.stname}" />
+		</c:url>
+			<a href="${EDITURL}">編輯</a>
+			
+		<c:url value="Insert.jsp" var="CEATEURL">
+		</c:url> 
+			<a href="${CEATEURL}">新增</a>
+			
 
-
+			<form action="DeleteStore.jsp" method="post">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="stname" value="${stname1}">
+				<input type="submit" value="刪除" >
+			</form>
+		<c:url value="SimpleController" var="bannerURL">
+		<c:param name="banner" value="${stname1}"></c:param>
+		</c:url>
+			<a href="${bannerURL}">修改店家banner</a>
+		<c:url value="#" var="photoURL">
+		<c:param name="photo" value="${param.id }"/>
+		</c:url>
+			<a href="${photoURL}">修改店家photo</a>
+	<%} %>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

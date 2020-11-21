@@ -18,10 +18,12 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
+import javax.websocket.Session;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
 import Store.StoreDB;
+import Store.photoBean;
 
 /**
  * Servlet implementation class SimpleController
@@ -30,7 +32,9 @@ import Store.StoreDB;
 public class SimpleController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	
+	 private static final String CONTENT_TYPE = "text/html; charset=UTF-8";
+	 private static final String CHARSET_CODE = "UTF-8";
+	 
 	DataSource ds;
 //    /**
 //     * @see HttpServlet#HttpServlet()
@@ -108,7 +112,7 @@ public class SimpleController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8"); 
 		
-		PrintWriter out = response.getWriter();
+//		PrintWriter out = response.getWriter();
 
 			
 //		for(int i =0 ; i < StoreDB.size() ; i++) {
@@ -116,11 +120,18 @@ public class SimpleController extends HttpServlet {
 //			out.println(StoreDB.getSaddress(i));
 //			out.println(StoreDB.getSclass(i));
 //		}
-		
+	    request.setCharacterEncoding(CHARSET_CODE);
+	    response.setContentType(CONTENT_TYPE);
+	    if (request.getParameter("banner")!=null) {
+		     gotoBannerProcess(request, response);}
+		else if (request.getParameter("photo")!=null) {
+		     gotoPhotoProcess(request, response);}
+		else {
 		  String nextPage = "/SimpleStore.jsp";
 	      ServletContext servletContext = getServletContext();
 	      RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(nextPage);
 	      requestDispatcher.forward(request, response);
+		}
 	}
 
 	/**
@@ -128,7 +139,21 @@ public class SimpleController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+	    request.setCharacterEncoding(CHARSET_CODE);
+	    response.setContentType(CONTENT_TYPE);
+	    
+
 		doGet(request, response);
 	}
-
+	 public void gotoBannerProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		 String stname;
+		 stname = request.getParameter("banner");
+		 photoBean banner = new photoBean(stname);
+		 request.getSession(true).setAttribute("banner",stname);
+		 request.getRequestDispatcher("testupload.jsp").forward(request,response);
+		 
+	 }
+	 public void gotoPhotoProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		 
+	 }
 }

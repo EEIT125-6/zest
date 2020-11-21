@@ -30,6 +30,7 @@
            background: url("Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
+           background-size:100%
        }
        .shopcar{
             height: 40px;
@@ -63,10 +64,10 @@
             <div class="container"  style="margin-top: 20px;">
                 <div class="jumbotron row" style="padding: 25px; background-color: white;">
    <c:url value="SimpleController" var="riceURL">
-   <c:param name="sclass" value="飯食"/>
+   <c:param name="sclass" value="中式"/>
    </c:url>             
                 
-                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><a href="${riceURL }" ><img src="Images/S1.jpg" style="width: 80px;"></a><br>飯食</div>
+                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><a href="${riceURL }" ><img src="Images/S1.jpg" style="width: 80px;"></a><br>中式</div>
                   
                   
    <c:url value="SimpleController" var="JPURL">
@@ -77,8 +78,23 @@
     			  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><a href="${JPURL}"><img src="Images/S2.jpg" style="width: 80px;"/></a><br>日式</div>
                   
                   
-                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><img src="Images/S3.jpg" style="width: 80px;"><br>下午茶</div>
-                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><img src="Images/S4.jpg" style="width: 80px;"><br>西式</div>
+		<c:url value="SimpleController" var="TEAURL">
+			<c:param name="sclass" value="下午茶" />
+		</c:url>
+		<div class="col-sm-2"
+			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
+			<a href="${TEAURL}"><img src="Images/S3.jpg" style="width: 80px;"></a><br>下午茶
+		</div>
+
+		
+		<c:url value="SimpleController" var="WESTURL">
+			<c:param name="sclass" value="西式" />
+		</c:url>
+		<div class="col-sm-2"
+			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
+			<a href="${WESTURL}"><img src="Images/S4.jpg" style="width: 80px;"></a><br>西式
+		</div>
+		
    <c:url value="SimpleController" var="fastURL">
    <c:param name="sclass" value="快餐"/>
    </c:url>
