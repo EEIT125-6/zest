@@ -67,7 +67,7 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
+		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 				<jsp:useBean id="reg_webUser" class="webUser.WebUserBean"
 					scope="session" />
 				<c:if test="${param.password == null}">

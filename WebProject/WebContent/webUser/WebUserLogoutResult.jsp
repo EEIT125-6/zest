@@ -6,18 +6,16 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
     
-    <title>已登入</title>
+    
+    <title>登出完成</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -67,22 +65,9 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
-					scope="session" />
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="WebUserLogin.jsp" />
-				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" >
-                	<fieldset>
-                		<legend>${loginMessage}</legend>
-                		<div align="center">
-							<input type="submit" id="submit" name="login" value="登出">
-						</div>
-                	</fieldset>
-                </form>
+                <p>${logoutMessage}</p>
+                <p>5秒後將移至登入</p>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

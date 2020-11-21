@@ -92,6 +92,11 @@ public class WebUserServlet extends HttpServlet {
 			}
 		} else if (request.getParameter("login") != null) {
 			switch (request.getParameter("login")) {
+				/* 登出 */	
+				case "登出":
+					/* 執行登出 */
+					doLogout(request, response);
+					break;
 				/* 登入 */
 				case "登入":
 				default:
@@ -360,5 +365,22 @@ public class WebUserServlet extends HttpServlet {
 				request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request,response);
 			}
 		}
+	}
+	
+	/* Logout */
+	public void doLogout(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		/* 宣告要傳回的參數 */
+		String logoutMessage = "";
+		/* 從session中取出物件reg_webUser */
+		WebUserBean userData = (WebUserBean)request.getSession(true).getAttribute("userFullData");
+		/* 取出部分資訊以組成訊息 */
+		logoutMessage = "感謝您的使用，" + userData.getFirst_name() + userData.getLast_name() + "！";
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 嘗試建立Session，並將訊息logoutMessage以"logoutMessage"的名稱放入新Session中 */
+		request.getSession(true).setAttribute("logoutMessage", logoutMessage);
+		/* 前往登出畫面 */
+		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request,response);
 	}
 }
