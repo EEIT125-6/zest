@@ -103,7 +103,8 @@ body {
               <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
 
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;float:right"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
-
+              		<%=request.getParameter("sclass")%>
+					<%=request.getParameter("nsrch") %>
             </p>
               </div>
             <div class="container-fluid " style="margin-top:10px">
@@ -259,7 +260,7 @@ body {
 				</c:url>
 			<a href="${GOURL}" style="text-decoration:none;color:black">  
 			    <div class="outside">
-       				 <div class="photo"style="background-image: url('${row.photourl}');background-size:100% 100%">
+       				 <div class="photo">
             
       				  </div>
 			        <div class="textdiv">
@@ -294,7 +295,7 @@ body {
 
 
 <!-- -------------------------------------------------------------------------------------------- -->
-             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
                 <footer class="page-footer font-small mdb-color lighten-3 pt-4">
                 
@@ -308,14 +309,11 @@ body {
                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
-                        <p>商務合作</p>
-                        <p>	餐飲代理商招募<br>
-                        	商業企劃<br>
-                        	申請掃碼點餐<br>
-                        	美國收單代理商招募<br>
-                        	美國收銀代理商招募<br>
-                        	免費使用美國排隊<br></p>
+                        <h5 class="font-weight-bold text-uppercase mb-4">Footer Content</h5>
+                        <p>Here you can use rows and columns to organize your footer content.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit amet numquam iure provident voluptate
+                          esse
+                          quasi, veritatis totam voluptas nostrum.</p>
                 
                       </div>
                       <!-- Grid column -->
@@ -326,22 +324,22 @@ body {
                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
+                        <h5 class="font-weight-bold text-uppercase mb-4">About</h5>
                 
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <a href="#!">計畫</a>
+                              <a href="#!">PROJECTS</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">關於我們</a>
+                              <a href="#!">ABOUT US</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">Facebook</a>
+                              <a href="#!">BLOG</a>
                             </p>
                           </li>
                           <li>
@@ -365,19 +363,19 @@ body {
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
+                              <i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
+                              <i class="fas fa-envelope mr-3"></i> info@example.com</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p>
+                              <i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-print mr-3"></i> + 02 453 249 89</p>
+                              <i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
                           </li>
                         </ul>
                 
@@ -401,5 +399,6 @@ body {
                 </footer>
                 <!-- Footer -->
                     </div>
+        
 </body>
 </html>

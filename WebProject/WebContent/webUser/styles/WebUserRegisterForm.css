@@ -1,0 +1,7 @@
+form {
+	width: 800px;
+	margin: 20px auto;
+}
+#checkAccount {
+	display: none;
+}

@@ -17,15 +17,13 @@
 
 	<h3>File Upload:</h3>
 	Select a file to upload: <br />
-	<form action="testexupload.jsp" method="post"
+	<form action="testUpLoadbk.jsp" method="post"
 	                        enctype="multipart/form-data">
 	<input type="file" name="file1" size="50" />
 	<br />
 	<input type="submit" value="Upload File" />
 	</form>
-
-	<%=request.getSession().getAttribute("photo") %>
+	<%=request.getSession().getAttribute("banner") %>
 	
 </body>
 </html>
-

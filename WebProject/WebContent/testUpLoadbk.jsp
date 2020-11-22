@@ -83,7 +83,6 @@
 //            f.renameTo(f1);
             }
          }
-         out.println("<a href='Index1.jsp'>goback</a>");
          out.println("</body>");
          out.println("</html>");
          
@@ -98,12 +97,11 @@
 
  	      conn = ds.getConnection();
 
- 	     String sql = "update store set photourl=? where stname=?";
+ 	     String sql = "update store set photourl=? where id=?";
  	    PreparedStatement ps = conn.prepareStatement(sql);
  	    String url  = "Images/"+sb[sb.length-1];
 	 	ps.setString(1, url);
-	 	String a =(String) request.getSession().getAttribute("banner") ;
-	 	ps.setString(2, a);
+	 	ps.setInt(2, 2);
 	 	ps.executeUpdate();
 	 	ps.close();	
 		conn.close();

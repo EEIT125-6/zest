@@ -1,47 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
-	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<%
-	response.setContentType("text/html;charset=UTF-8");
-%>
-
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
-
-<c:set var="ss" value="${param.stname}" />
-<sql:query dataSource="${ds}" var="rs">
-         SELECT * FROM store WHERE stname = ? 
-         <sql:param value="${ss}" />
-</sql:query>
-
-
-<c:forEach var="row" items="${rs.rows}">
-	<c:set var = "id" value = "${row.id }"/>
-	<c:set var = "stname1"  value = "${row.stname}"/>
-	<c:set var = "sclass" value = "${row.sclass}"/>
-	<c:set var = "saddress" value = "${row.saddress}"/>
-	<c:set var = "stitd" value = "${row.stitd }"/>
-	<c:set var = "tel" value = "${row.tel }"/>
-<!--
-	${row.stname } 
-	${row.sclass} 
-	${row.saddress } 
- -->
-</c:forEach>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     
-    <title>橙皮</title>
+    <title>登出完成</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -57,11 +31,9 @@
        }
        .photo{
            padding: 0%;
-           background: url("Images/backbar2-1.jpg"); 
-           background-repeat: no-repeat;
+           background: url("../Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
-           background-size:100%
        }
        .shopcar{
             height: 40px;
@@ -71,117 +43,31 @@
     </style>
 </head>
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
             </div>
-
-<!-- -------------------------------------------------------------- -->
             <div class="container-fluid photo">
+                <!-- <img src="images/backbar2-1.jpg"> -->
+                    <form action="" method="GET" enctype="UTF-8"  >
+                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
+                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
+                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
+                        <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
+                        line-height: 0px;">
+                          <img src="../Images/searchbut.jpg" >
+                        </button>
+                      </fieldset>
+                    </form>
             </div>
-    <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
-    ;padding-top : 30px ">
-        
-        <!-- <%=request.getParameter("bookID")%> -->
-        <h1 style="margin-bottom: 100px" ><%=request.getParameter("stname") %></h1>
-        <hr>
-        <span>地點:<c:out value = "${saddress}"></c:out></span>
-    </div>
-    
-	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span>餐廳服務</span>
-	</div>
-	
-	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
-		<div>
-            <span id="sp1" class="divcato" style="color:orange;text-decoration:underline;">美食分享</span>
-            <span id="sp2" class="divcato">熱門餐點</span>
-            <span id="sp3" class="divcato">店家餐點</span>    
-			<span id="sp4" class="divcato">簡介</span>
-        </div>
-        <hr>
-        <div id="div1" class="ddiv">
-            hi
-        </div>
-        <div id="div2" style="display:none;" class="ddiv">
-            hello
-        </div>
-        <div id="div3" style="display:none;" class="ddiv">
-            ho
-        </div>
-        <div id="div4" style="display:none;" class="ddiv">
-        	<c:out value = "${stitd }"></c:out>
-        </div>
-    </div>
-        <script>
-        $("#sp1").click(function(){
-            $(".ddiv").css("display","none")
-            $("#div1").css("display","inline")
-        })
-
-        $("#sp2").click(function(){
-            $(".ddiv").css("display","none")
-            $("#div2").css("display","inline")
-        })
-        $("#sp3").click(function(){
-            $(".ddiv").css("display","none")
-            $("#div3").css("display","inline")
-        })
-        $("#sp4").click(function(){
-            $(".ddiv").css("display","none")
-            $("#div4").css("display","inline")
-        })
-        
-        $(".divcato").click(function(){
-            $(".divcato").css("color","black")
-            $(".divcato").css("font-weight","normal")
-            $(".divcato").css("text-decoration","none")
-            $(this).css("color","orange")
-            $(this).css("font-weight","bolder")
-            $(this).css("text-decoration","underline")
-        })
-         </script>
-         
-   	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px">
-		<div>餐廳資訊</div>
-		<h2 style="color:gray;margin-bottom:10px;margin-top:10px"><c:out value="${stname1}"></c:out></h2>
-		<hr>
-		<div>
-			電話:<c:out value="${tel }"></c:out>
-		</div>
-		<div>
-			地址:<c:out value="${saddress }"></c:out>
-		</div>
-	</div>
-	<%if(true){ %>
-		<c:url value="Update.jsp" var="EDITURL">
-		<c:param name="stname" value="${param.stname}" />
-		</c:url>
-			<a href="${EDITURL}">編輯</a>
-			
-		<c:url value="Insert.jsp" var="CEATEURL">
-		</c:url> 
-			<a href="${CEATEURL}">新增</a>
-			
-
-			<form action="DeleteStore.jsp" method="post">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="刪除" >
-			</form>
-		<c:url value="SimpleController" var="bannerURL">
-		<c:param name="banner" value="${stname1}"></c:param>
-		</c:url>
-			<a href="${bannerURL}">修改店家banner</a>
-		<c:url value="#" var="photoURL">
-		<c:param name="photo" value="${param.id }"/>
-		</c:url>
-			<a href="${photoURL}">修改店家photo</a>
-	<%} %>
+<!-- -------------------------------------------------------------- -->
+            <div class="container"  style="margin-top: 20px;">
+                <p>${logoutMessage}</p>
+                <p>5秒後將移至登入</p>
+            </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
