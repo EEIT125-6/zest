@@ -33,5 +33,6 @@
 		<c:param name="stname" value="${param.stname}" />
 		</c:url>
 	<a href="${GOURL}"><h1>點我轉跳到商家頁面</h1></a>
+	      <c:redirect url = "${GOURL }"/>
 </body>
 </html>

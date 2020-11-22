@@ -25,6 +25,7 @@
 	<c:set var = "saddress" value = "${row.saddress}"/>
 	<c:set var = "stitd" value = "${row.stitd }"/>
 	<c:set var = "tel" value = "${row.tel }"/>
+	<c:set var = "bannerurl" value = "${row.bannerurl }"/>
 <!--
 	${row.stname } 
 	${row.sclass} 
@@ -57,6 +58,7 @@
        }
        .photo{
            padding: 0%;
+           background-color: yellow;
            background: url("Images/backbar2-1.jpg"); 
            background-repeat: no-repeat;
            height: 540px;
@@ -81,7 +83,7 @@
             </div>
 
 <!-- -------------------------------------------------------------- -->
-            <div class="container-fluid photo">
+            <div class="container-fluid photo" style="background-image: url('${bannerurl}');background-size:100% 100%">
             </div>
     <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
     ;padding-top : 30px ">
@@ -173,17 +175,18 @@
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" >
 			</form>
-		<c:url value="SimpleController" var="bannerURL">
-		<c:param name="banner" value="${stname1}"></c:param>
-		</c:url>
-			<a href="${bannerURL}">修改店家banner</a>
-		<c:url value="#" var="photoURL">
-		<c:param name="photo" value="${param.id }"/>
+		<c:url value="SimpleController" var="photoURL">
+		<c:param name="photo" value="${stname1}"></c:param>
 		</c:url>
 			<a href="${photoURL}">修改店家photo</a>
+			<span>|</span>
+		<c:url value="SimpleController" var="bannerURL">
+		<c:param name="banner" value="${id }"/>
+		</c:url>
+			<a href="${bannerURL}">修改店家banner</a>
 	<%} %>
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
+             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
                 <footer class="page-footer font-small mdb-color lighten-3 pt-4">
                 
@@ -197,11 +200,14 @@
                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">Footer Content</h5>
-                        <p>Here you can use rows and columns to organize your footer content.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit amet numquam iure provident voluptate
-                          esse
-                          quasi, veritatis totam voluptas nostrum.</p>
+                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
+                        <p>商務合作</p>
+                        <p>	餐飲代理商招募<br>
+                        	商業企劃<br>
+                        	申請掃碼點餐<br>
+                        	美國收單代理商招募<br>
+                        	美國收銀代理商招募<br>
+                        	免費使用美國排隊<br></p>
                 
                       </div>
                       <!-- Grid column -->
@@ -212,22 +218,22 @@
                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">About</h5>
+                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
                 
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <a href="#!">PROJECTS</a>
+                              <a href="#!">計畫</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">ABOUT US</a>
+                              <a href="#!">關於我們</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">BLOG</a>
+                              <a href="#!">Facebook</a>
                             </p>
                           </li>
                           <li>
@@ -251,19 +257,19 @@
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                              <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                              <i class="fas fa-print mr-3"></i> + 02 453 249 89</p>
                           </li>
                         </ul>
                 

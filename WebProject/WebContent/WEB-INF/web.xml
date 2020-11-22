@@ -10,40 +10,10 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <resource-ref>
-    <description>MS_SQL_DataSource_For_Zest</description>
-    <res-ref-name>jdbc/zest</res-ref-name>
+    <description>DB Connection Pool</description>
+    <res-ref-name>jdbc/EmployeeDB</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
     <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
   </resource-ref>
-  <servlet>
-    <description></description>
-    <display-name>WebUserRegisterServlet</display-name>
-    <servlet-name>WebUserRegisterServlet</servlet-name>
-    <servlet-class>webUser.WebUserRegisterServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>WebUserRegisterServlet</servlet-name>
-    <url-pattern>/webUser/WebUserRegisterServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>WebUserServlet</display-name>
-    <servlet-name>WebUserServlet</servlet-name>
-    <servlet-class>webUser.WebUserServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>WebUserServlet</servlet-name>
-    <url-pattern>/webUser/WebUserServlet</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-    <description></description>
-    <display-name>CommentServlet</display-name>
-    <servlet-name>CommentServlet</servlet-name>
-    <servlet-class>orange.CommentServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CommentServlet</servlet-name>
-    <url-pattern>/orange/CommentServlet</url-pattern>
-  </servlet-mapping>
 </web-app>
