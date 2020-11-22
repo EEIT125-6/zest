@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<% 
+<%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-	response.setHeader("Pragma","no-cache"); // HTTP 1.0
-	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-   
-    <title>進行搜索</title>
+    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+    
+    <title>修改密碼</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -68,80 +68,45 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-               <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
+                <jsp:useBean id="userFullData" class="webUser.WebUserBean"
 					scope="session" />
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-					<fieldset>
-						<legend>搜尋選項</legend>
+				<c:if test="${selfData.get(0).password == null}">
+					<c:redirect url="WebUserMain.jsp" />
+				</c:if>
+                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<legend>密碼相關資料</legend>
+                		<hr />
+						<label>帳號原密碼：</label>
+						<c:if test="${selfData.get(0).password.length() > 0}">
+							<c:forEach var="passwordChar" begin="0" end="${selfData.get(0).password.length()-1}">
+								<c:out value = "*" />
+							</c:forEach>
+						</c:if>
+						<input type="hidden" name="originalPassword" id="originalPassword" value="${selfData.get(0).password}">
+                		<hr />
+						<label>帳號新密碼：</label> 
+						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~20個字" required="required" />
+						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<span id="passwordSpan"></span>
 						<hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="selectedAccount" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入要查詢的帳號，6~20個字" />
-						<span id="accountSpan"></span>
-						<hr />
-						<label>用戶暱稱：</label>
-						<input type="text" name="selectedNickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入要查詢的暱稱" />
-						<span id="nicknameSpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="selectedFervor" value="米食" onblur="checkFervor()" />
-						<label>米食</label>
-						<input type="checkbox" name="selectedFervor" value="快餐" onblur="checkFervor()" />
-						<label>快餐</label>
-						<input type="checkbox" name="selectedFervor" value="燒肉" onblur="checkFervor()" />
-						<label>燒肉</label>
-						<input type="checkbox" name="selectedFervor" value="西式" onblur="checkFervor()" />
-						<label>西式</label>
-						<input type="checkbox" name="selectedFervor" value="下午茶" onblur="checkFervor()" />
-						<label>下午茶</label>
-						<input type="checkbox" name="selectedFervor" value="日式" onblur="checkFervor()" />
-						<label>日式</label>
-						<input type="checkbox" name="selectedFervor" value="皆可" onblur="checkFervor()" />
-						<label>皆可</label>
-						<span id="fervorSpan"></span>
-						<hr />
-					    <label>居住區域：</label>
-				    	<select name="selectedLocation_code" id="location_code" onblur="checkLocation_code()">
-							<option value="">請選擇要查詢的區域</option>
-							<option value="t01">臺北市</option>
-							<option value="t02">新北市</option>
-							<option value="t03">桃園市</option>
-							<option value="t04">臺中市</option>
-							<option value="t05">臺南市</option>
-							<option value="t06">高雄市</option>
-							<option value="t07">基隆市</option>
-							<option value="t08">新竹市</option>
-							<option value="t09">嘉義市</option>
-							<option value="t10">新竹縣</option>
-							<option value="t11">苗栗縣</option>
-							<option value="t12">彰化縣</option>
-							<option value="t13">南投縣</option>
-							<option value="t14">雲林縣</option>
-							<option value="t15">嘉義縣</option>
-							<option value="t16">屏東縣</option>
-							<option value="t17">宜蘭縣</option>
-							<option value="t18">花蓮縣</option>
-							<option value="t19">臺東縣</option>
-							<option value="t20">澎湖縣</option>
-							<option value="t21">金門縣</option>
-							<option value="t22">連江縣</option>
-							<option value="t23">其他區</option>
-						</select>
-						<span id="location_codeSpan"></span>
-					    <hr />
-					    <span id="searchSpan"></span>
-					</fieldset>
-					<div align="center">
-						<input type="submit" id="submit" name="select" value="執行查詢">
-						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
+						<label>確認新密碼：</label> 
+						<input type="password" name="confirmPassword" id="confirmPassword" size="40" maxlength="20" onblur="checkConfirmPassword()"
+							placeholder="請輸入密碼，6~20個字" required="required" />
+						<input type="button" name="visibility_switch_confirm" id="visibility_switch_confirm" value="顯示密碼" onclick="changeConfirmVisibility()">
+						<span id="confirmPasswordSpan"></span>
+                	</fieldset>
+                	<div align="center">
+                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
+						<input type="submit" name="update" value="密碼修改完畢">
+						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
-				</form>
-				<script src="scripts/WebUserSearchForm.js"></script>
+                </form>
+                <script src="scripts/WebUserModifyPassword.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

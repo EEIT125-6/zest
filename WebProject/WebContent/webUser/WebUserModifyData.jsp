@@ -1,21 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<% 
+<%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-	response.setHeader("Pragma","no-cache"); // HTTP 1.0
-	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
+<!-- taglib宣告 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!-- taglib宣告 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-   
-    <title>進行註冊</title>
+    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+    
+    <title>修改其他個人資料</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -65,83 +68,126 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-					<fieldset>
-						<legend>註冊相關資料</legend>
-						<hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~20個字" required="required" />
-						<input type="button" name="register" id="checkAccount" value="檢查帳號">
-						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-						<hr />
-						<label>中文姓氏：</label>
-						<input type="text" name="first_name" id="first_name" size="40" maxlength="3" onblur="checkFirst_name()"
-						    placeholder="請輸入姓氏，1~3個中文字" required="required" />
+                <jsp:useBean id="userFullData" class="webUser.WebUserBean"
+					scope="session" />
+				<c:if test="${userFullData.password == null}">
+					<c:redirect url="WebUserLogin.jsp" />
+				</c:if>
+				<c:if test="${selfData.get(0).password == null}">
+					<c:redirect url="WebUserMain.jsp" />
+				</c:if>
+                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<legend>可修改的個人相關資料</legend>
+                		<hr />
+						<label>原始的中文姓氏：</label>
+						<input type="hidden" name="originalFirst_name" id="originalFirst_name" value="${selfData.get(0).first_name}">
+						<c:out value="${selfData.get(0).first_name}" />
+						<br />
+						<label>更正的中文姓氏：</label>
+						<input type="text" name="updatedFirst_name" id="updatedFirst_name" size="40" maxlength="3" onblur="checkFirst_name()"
+							placeholder="請輸入姓氏，1~3個中文字" />
 						<span id="first_nameSpan"></span>
 						<hr />
-						<label>中文名字：</label>
-						<input type="text" name="last_name" id="last_name" size="40" maxlength="3" onblur="checkLast_name()"
-						    placeholder="請輸入名字，1~3個中文字" required="required" />
+						<label>原始的中文名字：</label>
+						<input type="hidden" name="originalLast_name" id="originalLast_name" value="${selfData.get(0).last_name}">
+						<c:out value="${selfData.get(0).last_name}" />
+						<br />
+						<label>更正的中文名字：</label>
+						<input type="text" name="updatedLast_name" id="updatedLast_name" size="40" maxlength="3" onblur="checkLast_name()"
+							placeholder="請輸入名字，1~3個中文字" />
 						<span id="last_nameSpan"></span>
 						<hr />
-						<label>稱呼方式：</label>
-						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
+						<label>原始的稱呼方式：</label>
+						<input type="hidden" name="originalNickname" id="originalNickname" value="${selfData.get(0).nickname}">
+						<c:out value="${selfData.get(0).nickname}" />
+						<br />
+						<label>更正的稱呼方式：</label>
+						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
+							placeholder="請輸入想要的稱呼" />
 						<span id="nicknameSpan"></span>
 						<hr />
-						<label>生理性別：</label>
-						<input type="radio" id="M" name="gender" value="M">
-					    <label for="male">男性</label>
-					    <input type="radio" id="F" name="gender" value="F">
-					    <label for="female">女性</label>
-					    <input type="radio" id="N" name="gender" value="N" checked="checked" >
-					    <label for="other">不方便提供</label>
-					    <hr />
-					    <label>西元生日：</label>
-						<input type="date" name="birth" id="birth" onblur="checkBirthday()" required="required" />
-						<span id="birthdaySpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="fervor" value="米食" onblur="checkFervor()" />
+						<label>原始的偏好食物：</label>
+						<input type="hidden" name="originalFervor" id="originalFervor" value="${selfData.get(0).fervor}">
+						<c:out value="${selfData.get(0).fervor}" />
+						<br />
+						<label>更正的偏好食物：</label>
+						<input type="checkbox" name="updatedFervor" value="米食" onblur="checkFervor()" />
 						<label>米食</label>
-						<input type="checkbox" name="fervor" value="快餐" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="快餐" onblur="checkFervor()" />
 						<label>快餐</label>
-						<input type="checkbox" name="fervor" value="燒肉" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="燒肉" onblur="checkFervor()" />
 						<label>燒肉</label>
-						<input type="checkbox" name="fervor" value="西式" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="西式" onblur="checkFervor()" />
 						<label>西式</label>
-						<input type="checkbox" name="fervor" value="下午茶" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="下午茶" onblur="checkFervor()" />
 						<label>下午茶</label>
-						<input type="checkbox" name="fervor" value="日式" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="日式" onblur="checkFervor()" />
 						<label>日式</label>
-						<input type="checkbox" name="fervor" value="皆可" checked="checked" onblur="checkFervor()" />
+						<input type="checkbox" name="updatedFervor" value="皆可" onblur="checkFervor()" />
 						<label>皆可</label>
 						<span id="fervorSpan"></span>
 						<hr />
-						<label>聯絡信箱：</label>
-						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
-						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
+						<label>原始的聯絡信箱：</label>
+						<input type="hidden" name="originalEmail" id="originalEmail" value="${selfData.get(0).email}">
+						<c:out value="${selfData.get(0).email}" />
+						<br />
+						<label>更正的聯絡信箱：</label>
+						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
+						    placeholder="請輸入驗證、聯絡用的E-Mail地址" />
 						<span id="emailSpan"></span>
 						<hr />
-						<label>聯絡電話：</label>
-						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
-						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
+						<label>原始的聯絡電話：</label>
+						<input type="hidden" name="originalPhone" id="originalPhone" value="${selfData.get(0).phone}">
+						<c:out value="${selfData.get(0).phone}" />
+						<br />
+						<label>更正的聯絡電話：</label>
+						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
+						    placeholder="請輸入行動電話或市內電話號碼" />
 						<span id="phoneSpan"></span>
 						<hr />
-						<label>是否願意接收促銷/優惠訊息：</label>
-						<input type="radio" id="get_email" name="get_email" value="Y" checked="checked">
+						<label>原始的接收促銷/優惠訊息意願：</label>
+						<input type="hidden" name="originalGet_email" id="originalGet_email" value="${selfData.get(0).get_email}">
+						<c:choose>
+							<c:when test="${selfData.get(0).get_email=='Y'}">願意</c:when>
+							<c:when test="${selfData.get(0).get_email=='N'}">不願意</c:when>
+						</c:choose>
+						<br />
+						<label>更正的接收促銷/優惠訊息意願：</label>
+						<input type="radio" id="updatedGet_email" name="updatedGet_email" value="Y" checked="checked">
 					    <label for="Y">願意</label>
-					    <input type="radio" id="get_email" name="get_email" value="N">
+					    <input type="radio" id="updatedGet_email" name="updatedGet_email" value="N">
 					    <label for="N">不願意</label>
 					    <hr />
-					    <label>居住區域：</label>
+					    <label>原始的居住區域：</label>
+						<input type="hidden" name="originalLocation_code" id="originalLocation_code" value="${selfData.get(0).location_code}">
+						<c:choose>
+							<c:when test="${selfData.get(0).location_code=='t01'}">臺北市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t02'}">新北市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t03'}">桃園市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t04'}">臺中市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t05'}">臺南市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t06'}">高雄市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t07'}">基隆市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t08'}">新竹市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t09'}">嘉義市</c:when>
+							<c:when test="${selfData.get(0).location_code=='t10'}">新竹縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t11'}">苗栗縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t12'}">彰化縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t13'}">南投縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t14'}">雲林縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t15'}">嘉義縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t16'}">屏東縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t17'}">宜蘭縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t18'}">花蓮縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t19'}">臺東縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t20'}">澎湖縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t21'}">金門縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t22'}">連江縣</c:when>
+							<c:when test="${selfData.get(0).location_code=='t23'}">其他區</c:when>
+						</c:choose>
+						<br />
+					    <label>更正的居住區域：</label>
 				    	<select name="location_code" id="location_code" onblur="checkLocation_code()">
 							<option value="">請選擇目前您居住/生活的區域</option>
 							<option value="t01">臺北市</option>
@@ -170,78 +216,44 @@
 						</select>
 						<span id="location_codeSpan"></span>
 					    <hr />
-					    <label>生活地點一：</label>
-					    <input type="text" name="addr0" id="addr0" size="65" maxlength="65" onblur="checkAddr0()"
-						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" required="required" />
+					    <label>原始的生活地點一：</label>
+						<input type="hidden" name="originalAddr0" id="originalAddr0" value="${selfData.get(0).addr0}">
+						<c:out value="${selfData.get(0).addr0}" />
+						<br />
+					    <label>更正的生活地點一：</label>
+					    <input type="text" name="updatedAddr0" id="updatedAddr0" size="65" maxlength="65" onblur="checkAddr0()"
+						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" />
 						<br />
 						<span id="addr0Span"></span>
 					    <hr />
-					    <label>生活地點二：</label>
-					    <input type="text" name="addr1" id="addr1" size="65" maxlength="65"
-						    placeholder="此項為選填">
+					    <label>原始的生活地點二：</label>
+						<input type="hidden" name="originalAddr1" id="originalAddr1" value="${selfData.get(0).addr1}">
+						<c:out value="${selfData.get(0).addr1}" />
+						<br />
+					    <label>更正的生活地點二：</label>
+					    <input type="text" name="updatedAddr1" id="updatedAddr1" size="65" maxlength="65" onblur="checkAddr1()"
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" />
+						<br />
+						<span id="addr1Span"></span>
 					    <hr />
-					    <label>生活地點三：</label>
-					    <input type="text" name="addr2" id="addr2" size="65" maxlength="65"
-						    placeholder="此項為選填">
+					    <label>原始的生活地點三：</label>
+						<input type="hidden" name="originalAddr2" id="originalAddr2" value="${selfData.get(0).addr2}">
+						<c:out value="${selfData.get(0).addr2}" />
+						<br />
+					    <label>更正的生活地點三：</label>
+					    <input type="text" name="updatedAddr2" id="updatedAddr2" size="65" maxlength="65" onblur="checkAddr2()"
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" />
+						<br />
+						<span id="addr2Span"></span>
 					    <hr />
-					</fieldset>
-					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出">
+                	</fieldset>
+                	<div align="center">
+                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
+						<input type="submit" name="update" value="資料修改完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
-				</form>
-				<script src="scripts/jquery-3.5.1.min.js"></script>
-				<script src="scripts/WebUserRegisterForm.js"></script>
-				<script>
-					$("#checkAccount").click(function () {
-				        checkSameAccount();
-				    });
-					function checkSameAccount(){
-						let account = document.getElementById("account").value.trim();
-						let accountSpan = document.getElementById("accountSpan");
-						let accountStr;
-						let accountIsOk = true;
-						
-						$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            data:{
-				            	'register':'檢查帳號',
-				            	'inputAccount':account
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		accountStr = "此帳號已有人使用！";
-				            		accountIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
-				            		accountStr = "您可建立此帳號！";
-				            		accountIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
-				            		accountStr = "檢查途中遭遇錯誤！";
-				            		accountIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!accountIsOk) {
-				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-				            		accountSpan.style.color = "red";
-				            		accountSpan.style.fontStyle = "italic";
-				            	} else {
-				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-				            		accountSpan.style.color = "black";
-				            		accountSpan.style.fontStyle = "normal";
-				            	}
-				            },
-				            error:function(err) {
-				            	accountStr = "發生錯誤，無法執行檢查";
-				            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-			            		accountSpan.style.color = "red";
-			            		accountSpan.style.fontStyle = "italic";
-				            }
-						});
-					}
-				</script> 
+                </form>
+                <script src="scripts/WebUserModifyData.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

@@ -75,7 +75,7 @@
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>
-						<legend>以下是您剛才執行的查詢結果，<c:out value="${selectResultMessage}"></c:out></legend>
+						<legend><c:out value="${selectResultMessage}"></c:out></legend>
 						<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
 							<hr />
 							<label><c:out value="帳號名稱：" /></label>

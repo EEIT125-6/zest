@@ -1,24 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% 
+	pageEncoding="UTF-8"%>
+<%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-	response.setHeader("Pragma","no-cache"); // HTTP 1.0
-	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- taglib宣告 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-   
-    <title>進行搜索</title>
+    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+    
+    <title>查詢結果</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -68,80 +67,106 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-               <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
+		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
 					scope="session" />
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>
-						<legend>搜尋選項</legend>
+						<legend><c:out value="${selectResultMessage}"></c:out></legend>
 						<hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="selectedAccount" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入要查詢的帳號，6~20個字" />
-						<span id="accountSpan"></span>
-						<hr />
-						<label>用戶暱稱：</label>
-						<input type="text" name="selectedNickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入要查詢的暱稱" />
-						<span id="nicknameSpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="selectedFervor" value="米食" onblur="checkFervor()" />
-						<label>米食</label>
-						<input type="checkbox" name="selectedFervor" value="快餐" onblur="checkFervor()" />
-						<label>快餐</label>
-						<input type="checkbox" name="selectedFervor" value="燒肉" onblur="checkFervor()" />
-						<label>燒肉</label>
-						<input type="checkbox" name="selectedFervor" value="西式" onblur="checkFervor()" />
-						<label>西式</label>
-						<input type="checkbox" name="selectedFervor" value="下午茶" onblur="checkFervor()" />
-						<label>下午茶</label>
-						<input type="checkbox" name="selectedFervor" value="日式" onblur="checkFervor()" />
-						<label>日式</label>
-						<input type="checkbox" name="selectedFervor" value="皆可" onblur="checkFervor()" />
-						<label>皆可</label>
-						<span id="fervorSpan"></span>
-						<hr />
-					    <label>居住區域：</label>
-				    	<select name="selectedLocation_code" id="location_code" onblur="checkLocation_code()">
-							<option value="">請選擇要查詢的區域</option>
-							<option value="t01">臺北市</option>
-							<option value="t02">新北市</option>
-							<option value="t03">桃園市</option>
-							<option value="t04">臺中市</option>
-							<option value="t05">臺南市</option>
-							<option value="t06">高雄市</option>
-							<option value="t07">基隆市</option>
-							<option value="t08">新竹市</option>
-							<option value="t09">嘉義市</option>
-							<option value="t10">新竹縣</option>
-							<option value="t11">苗栗縣</option>
-							<option value="t12">彰化縣</option>
-							<option value="t13">南投縣</option>
-							<option value="t14">雲林縣</option>
-							<option value="t15">嘉義縣</option>
-							<option value="t16">屏東縣</option>
-							<option value="t17">宜蘭縣</option>
-							<option value="t18">花蓮縣</option>
-							<option value="t19">臺東縣</option>
-							<option value="t20">澎湖縣</option>
-							<option value="t21">金門縣</option>
-							<option value="t22">連江縣</option>
-							<option value="t23">其他區</option>
-						</select>
-						<span id="location_codeSpan"></span>
-					    <hr />
-					    <span id="searchSpan"></span>
+							<label>帳號名稱：</label>
+							<c:out value="${selfData.get(0).account}" />
+							<hr />
+							<label>帳號密碼：</label>
+							<c:if test="${selfData.get(0).password.length() > 0}">
+								<c:forEach var="passwordChar" begin="0" end="${selfData.get(0).password.length()-1}">
+									<c:out value = "*" />
+								</c:forEach>
+							</c:if>
+							<hr />
+							<label>中文姓氏：</label>
+							<c:out value="${selfData.get(0).first_name}" />
+							<hr />
+							<label>中文名字：</label>
+							<c:out value="${selfData.get(0).last_name}" />
+							<hr />
+							<label>稱呼方式：</label>
+							<c:out value="${selfData.get(0).nickname}" />
+							<hr />
+							<label>生理性別：</label>
+							<c:choose>
+								<c:when test="${selfData.get(0).gender == 'M'}">男性</c:when>
+								<c:when test="${selfData.get(0).gender == 'F'}">女性</c:when>
+								<c:when test="${selfData.get(0).gender == 'N'}">不方便提供</c:when>
+							</c:choose>
+							<hr />
+							<label>西元生日：</label>
+							<c:out value="${selfData.get(0).birth}" />
+							<hr />
+							<label>偏好食物：</label>
+							<c:out value="${selfData.get(0).fervor}" />
+							<hr />
+							<label>聯絡信箱：</label>
+							<c:out value="${selfData.get(0).email}" />
+							<hr />
+							<label>聯絡電話：</label>
+							<c:out value="${selfData.get(0).phone}" />
+							<hr />
+							<label>是否願意接收促銷/優惠訊息：</label>
+							<c:choose>
+								<c:when test="${selfData.get(0).get_email=='Y'}">願意</c:when>
+								<c:when test="${selfData.get(0).get_email=='N'}">不願意</c:when>
+							</c:choose>
+							<hr />
+							<label>居住區域：</label>
+							<c:choose>
+								<c:when test="${selfData.get(0).location_code=='t01'}">臺北市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t02'}">新北市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t03'}">桃園市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t04'}">臺中市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t05'}">臺南市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t06'}">高雄市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t07'}">基隆市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t08'}">新竹市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t09'}">嘉義市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t10'}">新竹縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t11'}">苗栗縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t12'}">彰化縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t13'}">南投縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t14'}">雲林縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t15'}">嘉義縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t16'}">屏東縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t17'}">宜蘭縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t18'}">花蓮縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t19'}">臺東縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t20'}">澎湖縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t21'}">金門縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t22'}">連江縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t23'}">其他區</c:when>
+							</c:choose>
+							<hr />
+							<label>生活地點一：</label>
+							<c:out value="${selfData.get(0).addr0}" />
+							<hr />
+							<label>生活地點二：</label>
+							<c:out value="${selfData.get(0).addr1}" />
+							<hr />
+							<label>生活地點三：</label>
+							<c:out value="${selfData.get(0).addr2}" />
+							<hr />
+							<label>所擁有的陳幣：</label>
+							<c:out value="${selfData.get(0).zest}" />
+							<hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" id="submit" name="select" value="執行查詢">
-						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
+						<input type="submit" name="update" value="修改其他資料">
+						<input type="submit" name="update" value="修改密碼">
+						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 				</form>
-				<script src="scripts/WebUserSearchForm.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->
