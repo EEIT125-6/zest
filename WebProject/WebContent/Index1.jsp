@@ -116,19 +116,23 @@
                 </div>
                 <div class="row" style="color:black;">
                   <div class="col-sm-4">
-                    <h3>Column 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <h3>最新美食文章</h3>
+                    <p>The naturally fermented tofu is tender!</p>
+                    <p>
+Recommend Lin Kee Spicy Duck Blood Stinky Tofu, which features cabbage. The soup is sweet and not too strong. The naturally fermented tofu is tender! This home has its own characteristics! Lin Ji is great and the service is also very good
+</p>
                   </div>
                   <div class="col-sm-4">
-                    <h3>Column 2</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <h3>優質餐廳 x 優質部落客</h3>
+                    <p>Quality restaurant x quality blogger cooperation</p>
+                    <p>
+Hey son, eat cakes Taichung Tablet House│The popular check-in sweets and snacks in Tainan are now in Taichung! There are different tastes every day, just in the alley next to Zhongyou Department Store in Yizhong Business District~
+</p>
                   </div>
                   <div class="col-sm-4">
-                    <h3>Column 3</h3>        
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <h3>部落客合作洽詢</h3>        
+                    <p>Blogger cooperation</p>
+                    <p>Triple PONDER COFFEE Ponder Coffee‧Ecstasy Back to Gan Coffee X New Zealand Dessert X Enjoy a Happy Time</p>
                   </div>
                 </div>
               </div>
@@ -148,11 +152,14 @@
                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">Footer Content</h5>
-                        <p>Here you can use rows and columns to organize your footer content.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit amet numquam iure provident voluptate
-                          esse
-                          quasi, veritatis totam voluptas nostrum.</p>
+                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
+                        <p>商務合作</p>
+                        <p>	餐飲代理商招募<br>
+                        	商業企劃<br>
+                        	申請掃碼點餐<br>
+                        	美國收單代理商招募<br>
+                        	美國收銀代理商招募<br>
+                        	免費使用美國排隊<br></p>
                 
                       </div>
                       <!-- Grid column -->
@@ -163,22 +170,22 @@
                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">About</h5>
+                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
                 
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <a href="#!">PROJECTS</a>
+                              <a href="#!">計畫</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">ABOUT US</a>
+                              <a href="#!">關於我們</a>
                             </p>
                           </li>
                           <li>
                             <p>
-                              <a href="#!">BLOG</a>
+                              <a href="#!">Facebook</a>
                             </p>
                           </li>
                           <li>
@@ -202,19 +209,19 @@
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                              <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                              <i class="fas fa-print mr-3"></i> + 02 453 249 89</p>
                           </li>
                         </ul>
                 

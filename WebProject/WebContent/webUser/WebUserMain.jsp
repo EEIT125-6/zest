@@ -78,6 +78,8 @@
                 		<legend>${loginMessage}</legend>
                 		<div align="center">
                 			<hr />
+                			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
+                			<hr />
                 			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
                 			<hr />
                 			<input type="submit" id="delete" name="login" value="刪除帳戶">

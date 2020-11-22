@@ -76,47 +76,91 @@
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>
 						<legend><c:out value="${selectResultMessage}"></c:out></legend>
-						<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
+						<hr />
+							<label>帳號名稱：</label>
+							<c:out value="${selfData.get(0).account}" />
 							<hr />
-							<label><c:out value="帳號名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).account}" />
+							<label>帳號密碼：</label>
+							<c:if test="${selfData.get(0).password.length() > 0}">
+								<c:forEach var="passwordChar" begin="0" end="${selfData.get(0).password.length()-1}">
+									<c:out value = "*" />
+								</c:forEach>
+							</c:if>
 							<hr />
-							<label><c:out value="稱呼名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).nickname}" />
+							<label>中文姓氏：</label>
+							<c:out value="${selfData.get(0).first_name}" />
 							<hr />
-							<label><c:out value="偏好食物：" /></label>
-							<c:out value="${selectedResult.get(userCount).fervor}" />
+							<label>中文名字：</label>
+							<c:out value="${selfData.get(0).last_name}" />
 							<hr />
-							<label><c:out value="居住區域：" /></label>
+							<label>稱呼方式：</label>
+							<c:out value="${selfData.get(0).nickname}" />
+							<hr />
+							<label>生理性別：</label>
 							<c:choose>
-								<c:when test="${selectedResult.get(userCount).location_code=='t01'}">臺北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t02'}">新北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t03'}">桃園市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t04'}">臺中市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t05'}">臺南市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t06'}">高雄市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t07'}">基隆市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t08'}">新竹市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t09'}">嘉義市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t10'}">新竹縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t11'}">苗栗縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t12'}">彰化縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t13'}">南投縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t14'}">雲林縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t15'}">嘉義縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t16'}">屏東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t17'}">宜蘭縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t18'}">花蓮縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t19'}">臺東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t20'}">澎湖縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t21'}">金門縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t22'}">連江縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t23'}">其他區</c:when>
+								<c:when test="${selfData.get(0).gender == 'M'}">男性</c:when>
+								<c:when test="${selfData.get(0).gender == 'F'}">女性</c:when>
+								<c:when test="${selfData.get(0).gender == 'N'}">不方便提供</c:when>
 							</c:choose>
 							<hr />
-						</c:forEach>
+							<label>西元生日：</label>
+							<c:out value="${selfData.get(0).birth}" />
+							<hr />
+							<label>偏好食物：</label>
+							<c:out value="${selfData.get(0).fervor}" />
+							<hr />
+							<label>聯絡信箱：</label>
+							<c:out value="${selfData.get(0).email}" />
+							<hr />
+							<label>聯絡電話：</label>
+							<c:out value="${selfData.get(0).phone}" />
+							<hr />
+							<label>是否願意接收促銷/優惠訊息：</label>
+							<c:choose>
+								<c:when test="${selfData.get(0).get_email=='Y'}">願意</c:when>
+								<c:when test="${selfData.get(0).get_email=='N'}">不願意</c:when>
+							</c:choose>
+							<hr />
+							<label>居住區域：</label>
+							<c:choose>
+								<c:when test="${selfData.get(0).location_code=='t01'}">臺北市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t02'}">新北市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t03'}">桃園市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t04'}">臺中市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t05'}">臺南市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t06'}">高雄市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t07'}">基隆市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t08'}">新竹市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t09'}">嘉義市</c:when>
+								<c:when test="${selfData.get(0).location_code=='t10'}">新竹縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t11'}">苗栗縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t12'}">彰化縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t13'}">南投縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t14'}">雲林縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t15'}">嘉義縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t16'}">屏東縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t17'}">宜蘭縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t18'}">花蓮縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t19'}">臺東縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t20'}">澎湖縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t21'}">金門縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t22'}">連江縣</c:when>
+								<c:when test="${selfData.get(0).location_code=='t23'}">其他區</c:when>
+							</c:choose>
+							<hr />
+							<label>生活地點一：</label>
+							<c:out value="${selfData.get(0).addr0}" />
+							<hr />
+							<label>生活地點二：</label>
+							<c:out value="${selfData.get(0).addr1}" />
+							<hr />
+							<label>生活地點三：</label>
+							<c:out value="${selfData.get(0).addr2}" />
+							<hr />
 					</fieldset>
 					<div align="center">
+						<input type="submit" name="update" value="進行修改">
+						<input type="submit" name="update" value="修改密碼">
 						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 				</form>

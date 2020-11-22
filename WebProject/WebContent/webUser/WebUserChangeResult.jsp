@@ -1,23 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
     
-    <title>查詢結果</title>
+    
+    <title>修改階段結束</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -67,61 +65,22 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
-					scope="session" />
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="WebUserLogin.jsp" />
-				</c:if>
-				<form action="/WebProject/webUser/WebUserServlet" method="post">
-					<fieldset>
-						<legend><c:out value="${selectResultMessage}"></c:out></legend>
-						<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
-							<hr />
-							<label><c:out value="帳號名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).account}" />
-							<hr />
-							<label><c:out value="稱呼名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).nickname}" />
-							<hr />
-							<label><c:out value="偏好食物：" /></label>
-							<c:out value="${selectedResult.get(userCount).fervor}" />
-							<hr />
-							<label><c:out value="居住區域：" /></label>
-							<c:choose>
-								<c:when test="${selectedResult.get(userCount).location_code=='t01'}">臺北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t02'}">新北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t03'}">桃園市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t04'}">臺中市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t05'}">臺南市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t06'}">高雄市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t07'}">基隆市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t08'}">新竹市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t09'}">嘉義市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t10'}">新竹縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t11'}">苗栗縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t12'}">彰化縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t13'}">南投縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t14'}">雲林縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t15'}">嘉義縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t16'}">屏東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t17'}">宜蘭縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t18'}">花蓮縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t19'}">臺東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t20'}">澎湖縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t21'}">金門縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t22'}">連江縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t23'}">其他區</c:when>
-							</c:choose>
-							<hr />
-						</c:forEach>
-					</fieldset>
-					<div align="center">
-						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
-					</div>
-				</form>
+                <p>${updateResultMessage}</p>
+                <p>5秒後將移至</p>
+                <p id = "pPage">${updateResultPage}</p>
+                <script>
+                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
+                		document.getElementById("pPage").innerHTML = "登入";
+                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
+                		document.getElementById("pPage").innerHTML = "主畫面";
+                	}
+                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserMain.jsp";
+                	setTimeout(function () {
+	                	   window.location.href = redirectPage;
+               	  	}
+	                , 5000);
+                </script>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

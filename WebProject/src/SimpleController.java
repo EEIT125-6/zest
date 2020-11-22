@@ -146,14 +146,18 @@ public class SimpleController extends HttpServlet {
 		doGet(request, response);
 	}
 	 public void gotoBannerProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		 String stname;
-		 stname = request.getParameter("banner");
-		 photoBean banner = new photoBean(stname);
-		 request.getSession(true).setAttribute("banner",stname);
-		 request.getRequestDispatcher("testupload.jsp").forward(request,response);
+		 String id;
+		 id = request.getParameter("banner");
+//		 photoBean banner = new photoBean(stname);
+		 request.getSession(true).setAttribute("banner",id);
+		 request.getRequestDispatcher("testuploadbanner.jsp").forward(request,response);
 		 
 	 }
 	 public void gotoPhotoProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		 
+		 String stname;
+		 stname = request.getParameter("photo");
+//		 photoBean banner = new photoBean(stname);
+		 request.getSession(true).setAttribute("photo",stname);
+		 request.getRequestDispatcher("testupload.jsp").forward(request,response);
 	 }
 }

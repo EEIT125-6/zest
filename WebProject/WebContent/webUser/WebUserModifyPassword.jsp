@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
@@ -9,15 +10,15 @@
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- taglib宣告 -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
     
-    <title>查詢結果</title>
+    <title>修改密碼</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -67,59 +68,45 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.WebUserBean"
+                <jsp:useBean id="userFullData" class="webUser.WebUserBean"
 					scope="session" />
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-				<form action="/WebProject/webUser/WebUserServlet" method="post">
-					<fieldset>
-						<legend><c:out value="${selectResultMessage}"></c:out></legend>
-						<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
-							<hr />
-							<label><c:out value="帳號名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).account}" />
-							<hr />
-							<label><c:out value="稱呼名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).nickname}" />
-							<hr />
-							<label><c:out value="偏好食物：" /></label>
-							<c:out value="${selectedResult.get(userCount).fervor}" />
-							<hr />
-							<label><c:out value="居住區域：" /></label>
-							<c:choose>
-								<c:when test="${selectedResult.get(userCount).location_code=='t01'}">臺北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t02'}">新北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t03'}">桃園市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t04'}">臺中市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t05'}">臺南市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t06'}">高雄市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t07'}">基隆市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t08'}">新竹市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t09'}">嘉義市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t10'}">新竹縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t11'}">苗栗縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t12'}">彰化縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t13'}">南投縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t14'}">雲林縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t15'}">嘉義縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t16'}">屏東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t17'}">宜蘭縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t18'}">花蓮縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t19'}">臺東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t20'}">澎湖縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t21'}">金門縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t22'}">連江縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t23'}">其他區</c:when>
-							</c:choose>
-							<hr />
-						</c:forEach>
-					</fieldset>
-					<div align="center">
-						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
+				<c:if test="${selfData.get(0).password == null}">
+					<c:redirect url="WebUserMain.jsp" />
+				</c:if>
+                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<legend>密碼相關資料</legend>
+                		<hr />
+						<label>帳號原密碼：</label>
+						<c:if test="${selfData.get(0).password.length() > 0}">
+							<c:forEach var="passwordChar" begin="0" end="${selfData.get(0).password.length()-1}">
+								<c:out value = "*" />
+							</c:forEach>
+						</c:if>
+						<input type="hidden" name="originalPassword" id="originalPassword" value="${selfData.get(0).password}">
+                		<hr />
+						<label>帳號新密碼：</label> 
+						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~20個字" required="required" />
+						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<span id="passwordSpan"></span>
+						<hr />
+						<label>確認新密碼：</label> 
+						<input type="password" name="confirmPassword" id="confirmPassword" size="40" maxlength="20" onblur="checkConfirmPassword()"
+							placeholder="請輸入密碼，6~20個字" required="required" />
+						<input type="button" name="visibility_switch_confirm" id="visibility_switch_confirm" value="顯示密碼" onclick="changeConfirmVisibility()">
+						<span id="confirmPasswordSpan"></span>
+                	</fieldset>
+                	<div align="center">
+                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
+						<input type="submit" name="update" value="密碼修改完畢">
+						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
-				</form>
+                </form>
+                <script src="scripts/WebUserModifyPassword.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->
