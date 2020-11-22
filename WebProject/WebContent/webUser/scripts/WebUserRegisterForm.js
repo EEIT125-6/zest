@@ -207,7 +207,7 @@ function checkNickname() {
 
 	if (nicknameObjValue == "" || nicknameObjValue.length == 0) {
 		if (!checkLast_name()) {
-			nicknameStr = "名字不可為空白";
+			nicknameStr = "稱呼不可為空白";
 			nicknameIsOk = false;
 		} else {
 			nicknameStr = "稱呼將設為您的名字";
@@ -233,7 +233,7 @@ function checkNickname() {
 }
 
 function checkBirthday() {
-	let birthdayObjValue = document.getElementById("birth").value;
+	let birthdayObjValue = document.getElementById("birthday").value;
 	let birthdaySpan = document.getElementById("birthdaySpan");
 
 	let birthdayIsOk = true;
@@ -285,9 +285,6 @@ function checkFervor() {
 	let fervorObj = document.getElementsByName("fervor");
 	let fervorObjValue = "";
 	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
-		if (fervorObj[fervorIndex].checked && fervorObjValue != "") {
-			fervorObjValue += ",";
-		}
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let fervorSpan = document.getElementById("fervorSpan");
@@ -458,6 +455,8 @@ function clearMessage() {
 	document.getElementById("nicknameSpan").innerHTML = "";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
+	document.getElementById("emailSpan").innerHTML = "";
+	document.getElementById("phoneSpan").innerHTML = "";
 	document.getElementById("location_codeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 }

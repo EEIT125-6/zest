@@ -101,7 +101,7 @@
 						<label>下午茶</label>
 						<input type="checkbox" name="selectedFervor" value="日式" onblur="checkFervor()" />
 						<label>日式</label>
-						<input type="checkbox" name="selectedFervor" value="皆可" checked="checked" onblur="checkFervor()" />
+						<input type="checkbox" name="selectedFervor" value="皆可" onblur="checkFervor()" />
 						<label>皆可</label>
 						<span id="fervorSpan"></span>
 						<hr />

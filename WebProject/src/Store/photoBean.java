@@ -1,14 +1,14 @@
-package Store;
+package store;
 
-public class photoBean
+public class PhotoBean
 {
   String stname;
 
-  public photoBean()
+  public PhotoBean()
   {
   }
   
-  public photoBean(String pstname)
+  public PhotoBean(String pstname)
   {
     this.stname = pstname;
   }
@@ -23,6 +23,4 @@ public class photoBean
   {
     return stname;
   }
-
-
 }

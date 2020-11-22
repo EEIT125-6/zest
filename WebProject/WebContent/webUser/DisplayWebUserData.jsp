@@ -157,10 +157,13 @@
 							<label>生活地點三：</label>
 							<c:out value="${selfData.get(0).addr2}" />
 							<hr />
+							<label>所擁有的陳幣：</label>
+							<c:out value="${selfData.get(0).zest}" />
+							<hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" name="update" value="修改個人資料">
-						<input type="submit" name="update" value="修改帳戶密碼">
+						<input type="submit" name="update" value="修改其他資料">
+						<input type="submit" name="update" value="修改密碼">
 						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 				</form>

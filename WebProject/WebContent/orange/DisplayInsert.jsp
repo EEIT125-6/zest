@@ -38,7 +38,7 @@ request.setCharacterEncoding("UTF-8");
         <jsp:getProperty name="commentBean" property="photo" /><br>
     </div>
 <div class="st1">
-    <label class="t1" for="context">留言:</label><textarea>
+    <label class="t1" for="context">留言:</label>
     <jsp:getProperty name="commentBean" property="context" /></textarea><br>
 </div>
 

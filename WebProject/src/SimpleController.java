@@ -1,5 +1,3 @@
-
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +20,8 @@ import javax.websocket.Session;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
-import Store.StoreDB;
-import Store.photoBean;
+import store.PhotoBean;
+import store.StoreDB;
 
 /**
  * Servlet implementation class SimpleController

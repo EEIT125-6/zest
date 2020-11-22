@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-
+    
     <title>修改其他個人資料</title>
     <style>
         body{
@@ -25,6 +25,7 @@
         
         
        }
+
        .header{
             height: 100px;
             border-bottom: 3px solid #e76f51;height: 90px;
@@ -111,19 +112,19 @@
 						<c:out value="${selfData.get(0).fervor}" />
 						<br />
 						<label>更正的偏好食物：</label>
-						<input type="checkbox" name="updatedFervor" value="米食" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="米食" onblur="checkFervor()" />
 						<label>米食</label>
-						<input type="checkbox" name="updatedFervor" value="快餐" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" onblur="checkFervor()" />
 						<label>快餐</label>
-						<input type="checkbox" name="updatedFervor" value="燒肉" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="燒肉" onblur="checkFervor()" />
 						<label>燒肉</label>
-						<input type="checkbox" name="updatedFervor" value="西式" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="西式" onblur="checkFervor()" />
 						<label>西式</label>
-						<input type="checkbox" name="updatedFervor" value="下午茶" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="下午茶" onblur="checkFervor()" />
 						<label>下午茶</label>
-						<input type="checkbox" name="updatedFervor" value="日式" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="日式" onblur="checkFervor()" />
 						<label>日式</label>
-						<input type="checkbox" name="updatedFervor" value="皆可" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="皆可" onblur="checkFervor()" />
 						<label>皆可</label>
 						<span id="fervorSpan"></span>
 						<hr />
@@ -144,19 +145,6 @@
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" />
 						<span id="phoneSpan"></span>
-						<hr />
-						<label>原始的接收促銷/優惠訊息意願：</label>
-						<input type="hidden" name="originalGet_email" id="originalGet_email" value="${selfData.get(0).get_email}">
-						<c:choose>
-							<c:when test="${selfData.get(0).get_email=='Y'}">願意</c:when>
-							<c:when test="${selfData.get(0).get_email=='N'}">不願意</c:when>
-						</c:choose>
-						<br />
-						<label>更正的接收促銷/優惠訊息意願：</label>
-						<input type="radio" id="updatedGet_email" name="updatedGet_email" value="Y" checked="checked">
-					    <label for="Y">願意</label>
-					    <input type="radio" id="updatedGet_email" name="updatedGet_email" value="N">
-					    <label for="N">不願意</label>
 					    <hr />
 					    <label>原始的居住區域：</label>
 						<input type="hidden" name="originalLocation_code" id="originalLocation_code" value="${selfData.get(0).location_code}">
@@ -187,7 +175,7 @@
 						</c:choose>
 						<br />
 					    <label>更正的居住區域：</label>
-				    	<select name="location_code" id="location_code" onblur="checkLocation_code()">
+				    	<select name="updatedlocation_code" id="updatedlocation_code" onblur="checkLocation_code()">
 							<option value="">請選擇目前您居住/生活的區域</option>
 							<option value="t01">臺北市</option>
 							<option value="t02">新北市</option>
@@ -245,7 +233,7 @@
 						<br />
 						<span id="addr2Span"></span>
 					    <hr />
-					    <span id="updateSpan"></span>
+					    <span id="updatedSpan"></span>
                 	</fieldset>
                 	<div align="center">
                 		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
@@ -255,39 +243,39 @@
                 </form>
                 <script src="scripts/WebUserModifyData.js"></script>
             </div>
-
+            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
                 <footer class="page-footer font-small mdb-color lighten-3 pt-4">
-
+                
                   <!-- Footer Links -->
                   <div class="container text-center text-md-left">
-
+                
                     <!-- Grid row -->
                     <div class="row">
-
+                
                       <!-- Grid column -->
                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
-
+                
                         <!-- Content -->
                         <h5 class="font-weight-bold text-uppercase mb-4">Footer Content</h5>
                         <p>Here you can use rows and columns to organize your footer content.</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit amet numquam iure provident voluptate
                           esse
                           quasi, veritatis totam voluptas nostrum.</p>
-
+                
                       </div>
                       <!-- Grid column -->
-
+                
                       <hr class="clearfix w-100 d-md-none">
-
+                
                       <!-- Grid column -->
                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
-
+                
                         <!-- Links -->
                         <h5 class="font-weight-bold text-uppercase mb-4">About</h5>
-
+                
                         <ul class="list-unstyled">
                           <li>
                             <p>
@@ -310,18 +298,18 @@
                             </p>
                           </li>
                         </ul>
-
+                
                       </div>
                       <!-- Grid column -->
-
+                
                       <hr class="clearfix w-100 d-md-none">
-
+                
                       <!-- Grid column -->
                       <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1">
-
+                
                         <!-- Contact details -->
                         <h5 class="font-weight-bold text-uppercase mb-4">Address</h5>
-
+                
                         <ul class="list-unstyled">
                           <li>
                             <p>
@@ -340,27 +328,27 @@
                               <i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
                           </li>
                         </ul>
-
+                
                       </div>
                       <!-- Grid column -->
                       <hr class="clearfix w-100 d-md-none">
                       <!-- Grid column -->
-
+                
                     </div>
                     <!-- Grid row -->
-
+                
                   </div>
                   <!-- Footer Links -->
-
+                
                   <!-- Copyright -->
                   <div class="footer-copyright text-center py-3">© 2020 Copyright:
                     <a > 橙皮美食平台</a>
                   </div>
                   <!-- Copyright -->
-
+                
                 </footer>
                 <!-- Footer -->
                     </div>
-
+        
 </body>
-</html> 
+</html>

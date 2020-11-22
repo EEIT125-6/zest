@@ -1,4 +1,4 @@
-package Store;
+package store;
 
 import java.io.Serializable;
 
@@ -31,7 +31,5 @@ public class StoreDB implements Serializable {
 	
 	public static int size() {
 	       return sclass.length;
-	}
-	
-	
+	}	
 }

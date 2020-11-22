@@ -1,4 +1,4 @@
-<%@page import="Store.photoBean"%>
+<%@ page import="store.PhotoBean"%>
 <%@ page import="java.io.*,java.util.*, javax.servlet.*,java.sql.*,javax.sql.*,javax.naming.*,javax.servlet.ServletException,javax.servlet.ServletException,javax.servlet.http.HttpServlet,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse" %>
 <%@ page import="javax.servlet.http.*" %>
 <%@ page import="org.apache.commons.fileupload.*" %>
