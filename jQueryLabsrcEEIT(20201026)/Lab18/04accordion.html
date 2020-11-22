@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <title>04accordion.html</title>
+  <link rel="stylesheet" href="../css/themes/base/jquery-ui.css">
+</head>
+<body>
+ 
+    <div id="accordion">
+        <h3>ATP年終賽》費德勒、喬科維奇分同組 納達爾先戰3位年輕小將</h3>
+        <div>
+            <p>ATP倫敦年終賽將在10日開打，自2009年以來就一直在倫敦舉行，日前小組籤表也已經出爐，兩組分別以美國退役名將阿格西（Andre Agassi）和瑞典退役名將柏格（Björn Borg）命名。其中備受關注的喬科維奇（Novak Djokovic）和費德勒（Roger Federer）被分在同一組，至於剛完婚的納達爾（Rafael Nadal）則是將力抗3位未滿24歲的年輕小將。</p>
+            <p>柏格組包括喬科維奇、費德勒、奧地利好手蒂姆（Dominic Thiem）和首度入圍的義大利好手貝雷蒂尼（Matteo Berrettini）；至於阿格西組則是包括納達爾、俄羅斯好手梅德維夫（Daniil Medvedev）、希臘新星西西帕斯（Stefanos Tsitsipas）和德國金童茲維列夫（Alexander Zverev）。</p>
+        </div>
+        <h3>費德勒、喬科維奇分同組</h3>
+        <div>
+            <p>ATP年終賽在每年的年底舉行，參賽者是當年ATP世界排名前8的選手，然而和其他循環賽不同的是，ATP年終賽並非採單敗淘汰制，而是所有的8名選手被分成兩組，每組4人，採用小組單循環的方式，意思就是每個選手必須跟同一組的其他選手各交手一次，各組取成績最好的前兩名進入四強賽，再由四強賽的贏家進入決賽來爭奪最後的冠軍金盃。</p>
+            <p>ATP年終賽在每年的年底舉行，參賽者是當年ATP世界排名前8的選手，然而和其他循環賽不同的是，ATP年終賽並非採單敗淘汰制，而是所有的8名選手被分成兩組，每組4人，採用小組單循環的方式，意思就是每個選手必須跟同一組的其他選手各交手一次，各組取成績最好的前兩名進入四強賽，再由四強賽的贏家進入決賽來爭奪最後的冠軍金盃。</p>
+        </div>
+        <h3>納達爾先戰3位年輕小將</h3>
+        <div>
+            <p>納達爾在上周因腹傷退出了巴黎大師賽的4強賽，但仍計畫前往倫敦看是否能夠出賽，納達爾說道：「我預計將會在周四或周五展開訓練，目標就是在年終賽出戰。」然而如果納達爾最終確定退賽，將會由西班牙好手巴提斯塔（Roberto Bautista Agut）遞補。</p>
+            <p>納達爾在上周因腹傷退出了巴黎大師賽的4強賽，但仍計畫前往倫敦看是否能夠出賽，納達爾說道：「我預計將會在周四或周五展開訓練，目標就是在年終賽出戰。」然而如果納達爾最終確定退賽，將會由西班牙好手巴提斯塔（Roberto Bautista Agut）遞補。</p>
+            <ul>
+                <li>清單項目一</li>
+                <li>清單項目二</li>
+                <li>清單項目三</li>
+            </ul>
+        </div>
+        <h3>ATP年終賽》</h3>
+        <div>
+            <p>費德勒則是睽違17年後，首次無緣年終排名世界前2，目前累積6座年終賽冠軍為史上之最，今年將尋求生涯第7座年終賽冠軍。而費德勒今年出賽13站賽事，戰績51勝8敗，一共進帳4座冠軍，不過並沒有包括大滿貫賽冠軍，目前前生涯累計103座冠軍，距離美國傳奇康諾斯（Jimmy Connors）還差6冠。</p>
+            <p>費德勒則是睽違17年後，首次無緣年終排名世界前2，目前累積6座年終賽冠軍為史上之最，今年將尋求生涯第7座年終賽冠軍。而費德勒今年出賽13站賽事，戰績51勝8敗，一共進帳4座冠軍，不過並沒有包括大滿貫賽冠軍，目前前生涯累計103座冠軍，距離美國傳奇康諾斯（Jimmy Connors）還差6冠。</p>
+        </div>
+    </div>
+    
+    <button id="toggle">圖示切換</button>
+    
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            var icons = {
+                header: "ui-icon-plusthick",
+                activeHeader: "ui-icon-minusthick"
+            };
+            $( "#accordion" ).accordion({
+                icons: icons,
+                heightStyle:"content",
+                event: "mouseover"
+            });
+
+            $( "#toggle" ).on( "click", function() {
+                // console.log(( $( "#accordion" ).accordion( "option", "icons" ) ))
+                if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
+                $( "#accordion" ).accordion( "option", "icons", null );
+                } else {
+                $( "#accordion" ).accordion( "option", "icons", icons );
+                }
+            });
+        });
+    </script>
+  
+</body>
+</html>

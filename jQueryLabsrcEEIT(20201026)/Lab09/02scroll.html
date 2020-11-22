@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>02scroll.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        body{
+            height: 300vh;  
+        }
+        .read_progress{
+            position: fixed;
+            left:0;
+            right:0;
+            top:0;
+            height: 20px;
+            background: rgba(0,0,0,.3);
+        }
+        .read_progress_bar{
+            height: 20px;
+            background: red;
+            width: 0%;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="read_progress">
+            <div id="read_progress_bar" class="read_progress_bar"></div>
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+           let docHeight=$("body").height();
+           console.log("doc height="+docHeight);
+           let winHeight=$(window).height();
+           console.log("window height="+winHeight);
+
+           $(window).scroll(function(){
+               let scrollTop=$(this).scrollTop();
+               console.log("srollTop="+scrollTop);
+
+               let scrollpercent=Math.round((scrollTop/(docHeight-winHeight))*100)+"%";
+               console.log("scrollpercent="+scrollpercent);
+
+               $("#read_progress_bar").width(scrollpercent);
+            //    $(".read_progress_bar").css("width",scrollpercent);
+           })
+        });
+    </script>
+ </body>
+</html>

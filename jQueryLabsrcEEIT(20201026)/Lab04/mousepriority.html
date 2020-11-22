@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>05mouse.html</title>
+</head>
+<body>
+    <input id="idbut" type="button" value="button">
+    <div>div<br><span>span</span></div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+
+            // $("div").mousedown(function(){
+            //     alert("div")
+            // });
+            // $("span").mousedown(function(){
+            //     alert("span");                
+            // })
+
+            //mouseover 及 mouseenter 優先權一樣，寫前面的先觸發
+            //mousedown 觸發後，mouseup 及 click不會被觸發
+            //mouseup 優先權高於click            
+            
+            // $('#idbut').mouseover(function(){
+            //     alert("mouseover");
+            // });
+
+            // $('#idbut').mouseout(function(){
+            //     alert("mouseout");
+            // });
+
+            // $('#idbut').mouseenter(function(){
+            //     alert("mouseenter");
+            // });
+
+            // $('#idbut').mouseleave(function(){
+            //     alert("mouseleave");
+            // });
+            
+            // $('#idbut').mousedown(function(){
+            //     alert("mousedown");
+            // });
+            
+            $('#idbut').mouseup(function(){
+                alert("mouseup");
+            });
+            
+            $('#idbut').click(function(){
+                alert("click");
+            });           
+
+        })
+    </script>
+
+</body>
+</html>

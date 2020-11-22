@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>01transition.html</title>
+    <style type="text/css">
+        div{
+            padding:10px;
+        }
+
+        .box1{
+            width:60px;
+            height:60px;
+            background:blue;
+            transition:width 5s;
+        }
+        .box1:hover{
+            width:500px;            
+        }
+
+        .box2{
+            width:60px;
+            height:60px;
+            background:yellow;
+            transition:background 3s;
+        }
+        .box2:hover{                      
+            background:green;            
+        }
+
+        .box3{
+            width:60px;
+            height:60px;
+            background:red;
+            transition:all 5s;           
+        }
+        .box3:hover{
+            width:500px;
+            background:blue;
+        }
+    </style>
+</head>
+<body>
+    <div>
+    <div class="box1"></div>
+    <div class="box2"></div>
+    <div class="box3"></div>
+    </div>
+</body>
+</html>

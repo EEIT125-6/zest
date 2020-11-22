@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>04siblingendTraversing.html</title>
+    <style> 
+            .level-1 * { 
+                display: block;
+                border: 2px solid lightgrey;
+                color: lightgrey;
+                padding: 5px;
+                margin: 15px;
+            }       
+            .item-iv{
+                border:2px dotted orchid  ;
+            }
+        </style>
+    
+</head>
+<body>
+    <ul class="level-1" style="width:500px" >ul(direct parent)
+        <li class="item-i">I</li>
+        <li class="item-ii">II</li>
+        <li class="item-iii">III</li>
+        <li class="item-iv">IV(self)
+            <ul class="level-2">ul(children)
+                <li class="item-a">A</li>            
+            </ul>
+        </li>
+        <li class="item-v">V</li>
+        <li class="item-vi">VI</li>
+        <li class="item-vii">VII</li>       
+    </ul>
+    <hr>
+    <input type="button" id="btn1" value="siblings()">
+    <input type="button" id="btn2" value="end()">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){
+                $( ".item-iv" ).siblings().css( "border", "solid 2px aqua" );  //I,II,II,V,VI,VII             
+            });
+
+            $("#btn2").click(function(){
+                $( "ul.level-1" )
+                    .find(".item-a")
+                    .css( "border", "solid 2px blue" )
+                    .end()
+                    .find(".item-ii")
+                    .css("border","solid 2px red");         
+            });
+        });
+    </script>
+</body>
+</html>

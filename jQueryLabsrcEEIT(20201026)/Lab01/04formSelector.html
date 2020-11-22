@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>04formSelector.html</title>
+</head>
+<body>
+    <input type="button" id="button" class="button" value="OK">
+    <button>click me</button>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+//有這些方法  $(':button')選取標籤跟TYPE  $('button')選取標籤  $('#button')選取ID  $('.button')選取Class
+// console.log($('input[type]'))  會選取到 <input 裡面有type的>
+// console.log($('input[type=button]')) 會選取到 <input type="button">
+        $(function(){
+            
+            $(':button').click(function(){    
+                $(':button').hide();//隱藏元素
+            })
+
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>04multipleCSS.html</title>
+    <style>
+        /*
+        1. 兩個 class 中有空格  
+           .first .second
+        2. 兩個 class 中沒有空格
+           .first.second 
+        3. 兩個 class 中出現逗號         
+           .first,.second
+        */
+
+        /* 指定 first 裡面的 second 才會顯示黃底紅字*/
+        /* .first .second{
+            background-color: yellow;
+            color: red;
+            height: auto;
+        } */
+
+        /* 指定 div class 名稱同時具有 "first" 和 "second" 才會顯示黃底紅字*/
+        /* .first.second{
+            background-color: yellow;
+            color: red;
+            height: auto;
+        } */
+
+
+        /* 指定div class名稱只要含first或second就會顯示黃底紅字*/
+        /* .first,.second{
+            background-color: yellow;
+            color: red;
+            height: 100%;
+        } */
+
+        .demo{
+            display:block;
+            height: 50vh;
+        }
+
+        .box{
+            width: 150px;
+            height: 70px;
+            border: 2px solid blue;
+            border-radius: 5px;
+            text-align: left;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <div class="first box">名稱只有 "first"</div>
+        <div class="second box">名稱只有 "second"</div>
+        <div class="first second box">名稱同時具有 "first" 和 "second" </div>        
+        <div class="second first box">名稱同時具有 "first" 和 "second" </div>
+        
+        <div class="first box">
+            <div class="second">名稱為 "first" 的div之下有名稱為 "second" </div>
+        </div>
+    
+        <div class="second box">
+            <div class="first">名稱為 "second" 的div之下有名稱為 "first" </div>
+        </div>
+    </div>
+</body>
+</html>

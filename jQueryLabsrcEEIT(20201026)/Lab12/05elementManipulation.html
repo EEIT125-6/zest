@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>05elementManipulation.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+            div.wrap{
+              border: 2px solid blue;
+            }
+            p {
+              background: yellow;
+              margin: 4px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>computer language</h2>
+        <div class="outter">
+            <div class="inner">HTML</div>
+            <div class="inner">JavaScript</div>
+            <div class="inner">jQuery</div>
+        </div>
+        <p>HTML</p>
+        <p>JavaScript</p>
+        <p>jQuery</p>
+        
+        <hr>
+        <input class="btn btn-primary" type="button" id="btnapp" value="append()">
+        <input class="btn btn-primary" type="button" id="btnpre" value="prepend()">
+        <input class="btn btn-primary" type="button" id="btnappTo" value="appendTo()">
+        <input class="btn btn-primary" type="button" id="btnpreTo" value="prependTo()"><br><br>
+        <input class="btn btn-primary" type="button" id="btnafter" value="after()">
+        <input class="btn btn-primary" type="button" id="btnbefore" value="before()">
+        <input class="btn btn-primary" type="button" id="btninsAfter" value="insertAfter()">
+        <input class="btn btn-primary" type="button" id="btninsBefore" value="insertBefore()"><br><br>
+        <input class="btn btn-primary" type="button" id="btnwrap" value="wrap()">
+        <input class="btn btn-primary" type="button" id="btnwrapAll" value="wrapAll()">
+        <input class="btn btn-primary" type="button" id="btnwrapInner" value="wrapInner()">
+        <input class="btn btn-primary" type="button" id="btnremove" value="remove()">
+        <input class="btn btn-primary" type="button" id="btnempty" value="empty()">
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btnapp").click(function(){  //用F12查看
+                // $(".inner").append("<b>append</b>"); //o
+                $(".inner").append("append");              
+            });
+
+            $("#btnpre").click(function(){                
+                $(".inner").prepend("<b>prepebd</b>");
+            });
+
+            $("#btnappTo").click(function(){               
+                $("<b>appendTo</b>").appendTo(".inner");
+                // $("appendTo").appendTo(".inner"); //錯誤的寫法,因為無法變成jQuery物件
+            });
+
+            $("#btnpreTo").click(function(){               
+                $("<b>prependTo</b>").prependTo(".inner");
+            });
+
+            $("#btnafter").click(function(){               
+                $(".inner").after("<b>after</b>");
+            });
+
+            $("#btnbefore").click(function(){               
+                $(".inner").before("<b>before</b>");
+            });
+
+            $("#btninsAfter").click(function(){
+                $("<b>insertAfter</b>").insertAfter(".inner");               
+            });
+
+            $("#btninsBefore").click(function(){                
+                $("<b>insertBefore</b>").insertBefore(".inner");
+            });
+
+            $("#btnwrap").click(function(){               
+                $("p").wrap("<div class='wrap'></div>");
+            });
+
+            $("#btnwrapAll").click(function(){               
+                $("p").wrapAll("<div class='wrap'></div>");
+            });
+
+            $("#btnwrapInner").click(function(){               
+                $("p").wrapInner("<div class='wrap'></div>");
+            });
+
+            $("#btnremove").click(function(){               
+                $(".inner").remove();  //用F12查看                
+            });
+            
+            $("#btnempty").click(function(){               
+                $(".inner").empty();
+                // $(".container").empty();
+            });
+        });
+    </script>
+</body>
+</html>

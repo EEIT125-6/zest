@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>01nextprevTraversing.html</title>
+    <style> 
+        .level-1 * { 
+            display: block;
+            border: 2px solid lightgrey;
+            color: lightgrey;
+            padding: 5px;
+            margin: 15px;
+        }       
+        .item-iv{
+            border:2px dotted orchid  ;
+        }
+    </style>
+</head>
+<body>body(grandparent)
+    <ul class="level-1" style="width:500px" >ul(direct parent)
+        <li class="item-i">I</li>
+        <li class="item-ii">II</li>
+        <li class="item-iii">III</li>
+        <li class="item-iv">IV(self)
+          <ul class="level-2">ul(children)
+            <li class="item-a">A</li>            
+          </ul>
+        </li>
+        <li class="item-v">V</li>
+        <li class="item-vi">VI</li>
+        <li class="item-vii">VII</li>       
+      </ul>
+    <hr>
+    <input type="button" id="btn1" value="next()">
+    <input type="button" id="btn2" value="nextAll()"> 
+    <input type="button" id="btn3" value="nextUntil()"><br>
+    <input type="button" id="btn4" value="prev()">
+    <input type="button" id="btn5" value="prevAll()"> 
+    <input type="button" id="btn6" value="prevUntil()">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){                
+                $( ".item-iv" ).next().css( "border", "solid 3px green" ); //V
+            });
+
+            $("#btn2").click(function(){               
+                $( ".item-iv" ).nextAll().css( "border", "solid 2px blue" );//V,VI,VII
+            }); 
+
+            $("#btn3").click(function(){               
+                $( ".item-iv" ).nextUntil(".item-vii").css( "border", "solid 2px red" );  //V,VI
+            });  
+
+            $("#btn4").click(function(){                
+                $( ".item-iv" ).prev().css( "border", "solid 3px green" ); //III
+            });
+
+            $("#btn5").click(function(){               
+                $( ".item-iv" ).prevAll().css( "border", "solid 2px blue" );  //III,II,I
+            }); 
+
+            $("#btn6").click(function(){               
+                $( ".item-iv" ).prevUntil(".item-i").css( "border", "solid 2px red" );  //III,II
+            });         
+        });
+    </script>
+</body>
+</html>

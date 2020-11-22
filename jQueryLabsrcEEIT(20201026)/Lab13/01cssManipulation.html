@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01cssManipulation.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        .box{
+            width: 120px;
+            height: 120px;
+            background: lightskyblue;
+            transition: .5s;
+        }
+        .color{
+            width: 48px;
+            height: 48px;
+            margin:10px;
+            border-radius:50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- .py-# / py-*-#  	padding top and bottom -->
+        <div class="py-2">
+            <button id="css" type="button" class="btn btn-primary">css</button>
+            <button id="extend" type="button" class="btn btn-primary">extend</button>
+        </div>
+        <div class="box">
+
+        </div>
+        <div class="row py-2">
+            <div class="col-6 d-flex">
+                <div class="color" style="background: red"></div>
+                <div class="color" style="background: yellow"></div>
+                <div class="color" style="background: green"></div>
+            </div>
+        </div>
+    </div> 
+        
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#css").click(function(){
+                //將.box的寬及高設為150px，
+                //背景顏色設為粉紅
+                //邊框圓角(border-radius)設為50%
+                // $(".box").css("width","150px")
+                // .css("height","150px")
+                // .css("background-color","pink")
+                // .css("border-radius","50%");
+                             
+                let Style={"width":"150px",
+                            height:150,
+                            "background-color":"pink",
+                            borderRadius:"50%"}
+                $(".box").css(Style);
+                });
+
+            
+            $("#extend").click(function(){
+                //將.box的大小，新增寬及高 10px
+               $(".box").css("width","+=10px").css("height","+=10px")
+               
+            });
+
+            $(".color").click(function(){
+                //將所選背景顏色設定到.box的背景顏色
+                //1.
+                console.log($(this).css("background-color"));
+                let color = $(this).css("background-color");
+                $(".box").css("background-color",color);
+                
+                //2.
+                // console.log($(this).css("background"));    看這就知道為什麼4.不行
+                // let color = $(this).css("background-color");
+                // $(".box").css("background",color);
+
+                //3.
+                // let color = $(this).css("background-color");
+                // $(".box").css("background",color);
+
+                //4. 無法執行 但不會報錯
+                // let color = $(this).css("background");
+                // $(".box").css("background-color",color);
+
+            });
+            
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <title>07tooltip.html</title>
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+    <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+    <link rel="stylesheet" href="../css/themes/base/jquery-ui.css">
+    <style>
+        .photo {
+          width: 300px;
+          text-align: center;
+        }
+        .photo .ui-widget-header {
+          margin: 1em 0;
+        }
+        .map {
+          width: 300px;
+          height: 200px;
+        }
+        .ui-tooltip {
+          max-width: 350px;
+        }
+    </style>       
+</head>
+<body>    
+    <div class="ui-widget photo">
+      <div class="ui-widget-header ui-corner-all">
+        <h2>Taipei 101 skyscraper</h2>
+        <h3><a href="https://www.google.com/maps/place/110%E5%8F%B0%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E4%BF%A1%E7%BE%A9%E8%B7%AF%E4%BA%94%E6%AE%B57%E8%99%9F/@25.0339687,121.5622781,17z/data=!3m1!4b1!4m5!3m4!1s0x3442abb6da9c9e1f:0x1206bcf082fd10a6!8m2!3d25.0339639!4d121.5644722" data-geo="">Taipei,Taiwan</a></h3>
+      </div>
+      <a href="images/101.jpg">
+        <img src="images/101s.jpg" alt="Taipei 101 skyscraper" class="ui-corner-all">
+      </a>
+    </div>
+    
+    <div class="ui-widget photo">
+      <div class="ui-widget-header ui-corner-all">
+        <h2>Mountain Qixing</h2>
+        <h3><a href="https://www.google.com.tw/maps/place/%E4%B8%83%E6%98%9F%E5%B1%B1/@25.1708326,121.5445785,15z/data=!3m1!4b1!4m5!3m4!1s0x3442b211420b2d41:0x660ea65880053cd0!8m2!3d25.1708333!4d121.5533333?hl=zh-TW" data-geo="">Mountain Qixing</a></h3>
+      </div>
+      <a href="images/Qixing2.jpg">
+        <img src="images/Qixing.jpg" alt="Mountain Qixing" class="ui-corner-all">
+      </a>
+    </div>
+    
+    <p>All images are part of <a href="http://www.google.com">google</a>
+    and are licensed under <a href="http://taipei.iiiedu.org.tw" title="tapei.iiiedu.org.tw">IIIEDU</a> by the copyright holder.</p>
+    
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( document ).tooltip({
+              items: "img, [data-geo], [title]",
+              content: function() {
+                var element = $( this );
+                console.log(this);
+                if ( element.is( "[data-geo]" ) ) {
+                  var text = element.text();
+                  console.log("text="+text)         
+                  return "<img class='map' alt='" + text +
+                    "' src='images/101s.png'>";
+                }
+                if ( element.is( "[title]" ) ) {
+                  return element.attr( "title" );
+                }
+                if ( element.is( "img" ) ) {
+                  return element.attr( "alt" );
+                }
+              }
+            });
+        
+        } );
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>07changeFontSizeCSS.html</title>
+    <style>
+        .container{
+            margin:10px 50px;
+        }
+        .btn-group{
+			text-align:right;
+			margin:24px auto 24px auto;				
+		}
+        
+        .btn{            
+            color:#fff;
+            background-color:#6c757d;
+            border-color:#6c757d;
+            border-radius:5px;
+            }
+        .btn:hover{
+                color:#fff;
+                background-color:#5a6268;
+                border-color:#545b62
+                }
+        .active{
+            color:#fff;
+            /* background-color:#545b62; */
+            background-color:#4F4F4F;
+            border-color:#4e555b
+            }
+        .m{
+            font-size: 1rem;
+        }
+        .s{
+            font-size: 0.75rem;
+        }
+        .l{
+            font-size: 1.25rem;
+        }    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <div class="btn-group" >
+                <button type="button" class="btn" data-size="s">小</button>
+                <button type="button" class="btn" data-size="m">中</button>
+                <button type="button" class="btn" data-size="l">大</button>
+            </div>
+        </div>
+        <h2>NBA／聽到詹皇讚美自己 東契奇興奮直呼：他是我偶像</h2>
+        <p>達拉斯獨行俠的「歐洲金童」Luka Doncic，前天出戰湖人，和「詹皇」LeBron James同場繳出至少30分「大三元」，表現相當精采，詹皇賽後也稱讚這名後輩， Doncic更直呼詹皇就是他的偶像。達拉斯獨行俠的「歐洲金童」Luka Doncic，前天出戰湖人，和「詹皇」LeBron James同場繳出至少30分「大三元」，表現相當精采，詹皇賽後也稱讚這名後輩， Doncic更直呼詹皇就是他的偶像。</p>
+        <p>今天兩隊各自有比賽，不過話題依舊圍繞在前天的獨行俠、湖人之戰，當時湖人憑藉著詹皇39分12籃板16助攻，最終在延長賽擊敗獨行俠， Doncic則繳出31分15助攻13籃板，令人驚豔。</p>
+        <p>詹皇今天受訪時再度被問到關於 Doncic的話題，他也不吝稱讚，給出高度評價，「顯然他是一個年輕且偉大的天才，我喜歡他的比賽，他不僅會替自己製造機會，也會幫助隊友。」</p>
+        <p>而Doncic賽後被記者問到對於詹皇稱讚，他說，「這對我來說真的很瘋狂，我一直努力追隨著他，從一開始他就是我的偶像，能和他同場較勁，聽到他對我的讚美，對我來說很特別。」</p>
+        
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $(".btn").eq(1).addClass("active");
+           
+
+            $(".btn").click(function(){
+                let size=$(this).data("size");
+                console.log(size)
+                $(this).addClass("active").siblings().removeClass("active");
+                $("html").removeClass().addClass(size);
+                
+            })
+        });
+    </script>
+</body>
+</html>

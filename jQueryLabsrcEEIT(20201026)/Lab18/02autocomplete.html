@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>03autocomplete.html</title>
+    <link rel="stylesheet" href="../css/themes/base/jquery-ui.css">    
+    <style>
+        .highlight{
+            background:lightgreen;
+            color:red;
+        }
+        .focus{
+            background:yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="ui-widget">
+        <label for="tags">Tags: </label>
+        <input id="tags">
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+        $(function(){
+            var availableTags = [
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+                ];
+            $( "#tags" ).autocomplete({
+                source: availableTags,
+                autoFocus: true,
+                classes: {
+                    "ui-autocomplete": "highlight",
+                    "ui-autocomplete-input":"focus"
+                 }
+
+            });
+        });
+    </script>
+</body>
+</html>

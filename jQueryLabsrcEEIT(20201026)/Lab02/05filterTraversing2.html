@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>05filterTraversing2.html</title>
+    <style>
+        table,th,td{border:1px solid gray;}            
+    </style>
+</head>
+<body>
+    <h2>languages table</h2>
+    <table id="languages">
+        <thead>
+            <tr>
+                <th>Language</th>
+                <th>Type</th>
+                <th>Invented</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Java</td>
+                <td>Static</td>
+                <td>1995</td>
+            </tr>
+            <tr>
+                <td>Ruby</td>
+                <td>Dynamic</td>
+                <td>1993</td>
+                </tr>
+            <tr>
+                <td>JavaScript</td>
+                <td>Dynamic</td>
+                <td>1995</td>
+            </tr>
+            <tr>
+                <td>C++</td>
+                <td>Static</td>
+                <td>1983</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+
+    <input type="button" id="btn1" value=":first-child">    
+    <input type="button" id="btn2" value=":first">
+    <input type="button" id="btn3" value=":eq(0)">   
+    <input type="button" id="btn4" value=".first()">
+    <input type="button" id="btn5" value=".eq(0)">   
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            //child Selector
+            $("#btn1").click(function(){
+                //每一個tr td的第一個td，背景設yellow(:first-child)                 
+                $("tr td:first-child").css("background","yellow")               
+                console.log($("tr td:first-child"));
+            });
+
+            //Basic Filter selector
+            $("#btn2").click(function(){ 
+                //tr td的第一個td，背景設lime(:first)                
+                $("tr td:first").css("background","lime")  
+            });
+
+            $("#btn3").click(function(){
+                //tr td的第一個td，背景設cyan(:eq(0))                 
+                $("tr td:eq(0)").css("background","cyan")                          
+            });
+            
+
+            //Traversing--filter
+            $("#btn4").click(function(){
+                //tr td的第一個td，背景設lightgreen(.first())
+                $("tr td").first().css("background","lightgreen")
+            });
+
+            $("#btn5").click(function(){
+                //tr td的第一個td，背景設lightblue(.eq(0))
+                
+                for(i=0 ; i<$("tr td").length ;i=i+2){
+                $("tr td").eq(i).css("background","lightblue")
+                }
+            });                                            
+            
+                              
+        });
+    </script>    
+</body>
+</html>

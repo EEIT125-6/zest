@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>04AttrProp.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body> 
+    <div class="container">   
+        <input type="checkbox" name="ch" value="a1" checked><label>A1</label>
+        <input type="checkbox" name="ch" value="a2" checked="checked"><label>A2</label>
+        <input type="checkbox" name="ch" value="a3" checked="true"><label>A3</label>
+        <input type="checkbox" name="ch" value="a4" checked="on"><label>A4</label>
+        <input type="checkbox" name="ch" value="a5" checked="yes"><label>A5</label>
+        <input type="checkbox" name="ch" value="a6" checked="xyz"><label>A6</label>
+        <input type="checkbox" name="ch" value="a7" ><label>A7</label>
+        <hr>
+        <input class="btn btn-primary" type="button" id="btn1" value="attr&prop">
+        <input type="checkbox" id="Toggle" />Toggle All
+        <input class="btn btn-primary" type="button" value="checkToggle" id="buttonToggle" />
+        <input class="btn btn-primary" type="button" value="get checked" id="buttonGet" />
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){                                
+            $("#btn1").click(function(){
+                // $(":checkbox[name='ch']").each(function(index){
+                //     console.log("attr "+index+":"+$(this).attr("checked"));
+                // });
+
+                // $(":checkbox[name='ch']").each(function(index){
+                //     console.log("prop "+index+":"+$(this).prop("checked"));
+                // });          
+            });
+
+            $("#Toggle").change(function () {
+                //切換所有checkbox的勾選狀態與#Toggle相同
+                console.log($(this).attr('checked'));
+                console.log($(this).prop('checked'));
+
+            });
+
+            $("#buttonToggle").click(function () {
+                //切換各自checkbox的勾選狀態
+                
+            });
+
+            $("#buttonGet").click(function () {
+                //讀出所有被勾選checkbox的值
+                  
+            });            
+            
+        });
+    </script>
+</body>
+</html>

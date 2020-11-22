@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+   <title>02dragdrop.html</title>
+   <style>  
+        .block { 
+            top: 5px;
+            left: 5px;
+            border: 1px solid gray;
+            background-color: #68BFEF;
+            width: 130px; 
+            height: 130px;
+            margin: 10px;
+            z-index: 100;
+        }
+       .block1 { 
+            top: 5px;
+            left: 5px;
+            border: 2px solid green;
+            background-color: #68BFEF;
+            width: 130px; 
+            height: 130px;
+            margin: 10px;
+            z-index: 100;
+        }
+        .drop { 
+            border: 2px #ccc dotted;
+            width:160px;
+            height: 600px;
+            overflow: auto;
+            margin: 10px 10px 10px 10px; 
+            position: absolute;
+            top: 5px;
+            right:200px;
+            opacity: 0.7;
+        }
+        .myactive {
+            opacity: 0.2;          
+        }
+        .myhover {
+            border: 5px solid red;
+        }
+      </style>
+</head>
+<body>
+    <div id="iddiv">
+        <img src="images/01a.jpg" class="block" data-num="1" >
+        <img src="images/01b.jpg" class="block" data-num="1"><br>
+        <img src="images/01c.jpg" class="block1" data-num="1"> 
+    </div>
+    <div class="drop">
+
+    </div>
+  
+		
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".block").draggable({helper: 'clone'});
+            $(".block1").draggable({helper: 'clone',opacity: 0.40,snap:'.drop'});
+            var mycart = [];
+            var tempcart="";
+                      
+      
+            $(".drop").droppable({
+                accept:"*",
+                activeClass: 'myactive',
+                hoverClass: 'myhover',
+                tolerance:'pointer',
+                out:function(ev,ui){
+                    var src=ui.draggable.attr('src');
+                    alert(src+' 未置入已返回');
+                },
+                drop: function(ev, ui) { 
+                        ui.draggable.clone().fadeOut("fast",			
+                            function() { 
+                                $(this).fadeIn("fast");//<img>                   
+                            }).appendTo($(this));//<div></div>
+                        sortit();                            
+                }//drop	
+            
+            }); 
+      
+      
+        function sortit(){
+            
+            $('.drop img').each(function(e){
+                var mynum=$(this).data('num');
+                mycart[e]='<img src='+$(this).attr('src')+' data-num='+mynum+' class=block>';
+                        });
+                        
+            mycart.sort();
+            mycart.reverse();
+                $('.drop').empty();
+            
+            $(mycart).each(function(e){          
+                var chk=e-1;
+                var chk1=e+1;
+                if ($(mycart[e]).attr('src')!=$(mycart[chk]).attr('src')){
+                    var num=$(mycart[e]).data('num');
+                    $('.drop').append(mycart[e]+'<div id=sum'+e+'>Total:'+num+'</div>');
+                    }
+                if ($(mycart[e]).attr('src')==$(mycart[chk]).attr('src')){
+                    var qty=$('.drop img:eq('+chk+')').data('num');
+                    qty=qty+1;
+                    $('.drop img:eq('+chk+')').data({num:qty});
+                    $('#sum'+chk).html('Total:'+qty);
+                    }
+            
+            });
+        }	//sortit()	
+          
+    });
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>03basicSelector.html</title>   
+</head>
+<body>
+    <h2>This is Heading 2</h2>
+    <p class="classP">this is paragraph 1</p>
+    <p class="classP">this is paragraph 2</p>
+    <p id="idP">this is paragraph 3</p>
+    <div class="classDiv">this is first div</div>
+    <div class="classDiv">this is second div</div>
+    <span class="classSp" id="idsp1">this is span</span>
+    <span class="classSp" id="idsp2">this is span</span>
+    <hr>
+    <input type="button" id="btn1" value="*">
+    <input type="button" id="btn2" value="element">
+    <input type="button" id="btn3" value="class">
+    <input type="button" id="btn4" value="id">
+    <input type="button" id="btn5" value="MultipleSelect">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+         $(function(){
+            $("#btn1").click(function(){
+                $("*").css("border","solid blue 1px");                                       
+            });
+
+            $("#btn2").click(function(){                
+                $("p").css("background-color","pink");
+            });
+
+            $("#btn3").click(function(){               
+                $(".classDiv").css("text-decoration","line-through");
+            });
+
+            $("#btn4").click(function(){               
+                $("#idsp1").css("background-color","yellow");
+            });
+
+            $("#btn5").click(function(){               
+                $("p.classP,span#idsp2").css("border","dotted red 2px");
+            });
+            
+        });
+    </script>
+
+</body>
+</html>

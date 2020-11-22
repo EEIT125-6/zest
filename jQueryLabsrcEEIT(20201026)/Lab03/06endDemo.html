@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>06endDemo.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+            figure{
+                width:20%;
+                border: 2px solid transparent;
+                margin: 4px;
+            }
+            figure img{
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex">
+            <figure>
+                <img id="pokemon1" src="images/pokemon1.png" alt="pokemon1">
+            </figure>
+            <figure>
+                <img id="pokemon2" src="images/pokemon2.png" alt="pokemon2">
+            </figure>
+            <figure>
+                <img id="pokemon3" src="images/pokemon3.png" alt="pokemon3">
+            </figure>
+            <figure>
+                <img id="pokemon4" src="images/pokemon4.png" alt="pokemon4">
+            </figure>
+            <figure>
+                <img id="pokemon5" src="images/pokemon5.png" alt="pokemon5">
+            </figure>
+        </div>
+    </div> 
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("figure").click(function(){
+                // console.log(this)
+                // $(this).css("border","2px solid red")
+                // .siblings().css("border","none")
+
+                $(this).siblings().css("border","2px solid transparent")
+                .end().css("border","2px solid red")
+            });
+
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>03slideDownUp.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        #img1{width:300px;height:200px}
+    </style>   
+</head>
+<body>
+    <div class="container">
+        <input class="btn btn-primary" type="button" id="btndown" value="滑動加大顯示">
+        <input class="btn btn-primary" type="button" id="btnup" value="滑動向上縮小">
+        <input class="btn btn-primary" type="button" id="btntoggle" value="切換顯示隱藏元素"> 
+        <hr>
+        <div id="cardiv">
+            <img id="img1" src="images/car2.png">
+        </div>
+    </div>
+    
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btndown").click(function(){
+                $("#cardiv").slideDown(3000);               
+            });
+
+            $("#btnup").click(function(){                
+                $("#cardiv").slideUp("slow",function(){
+                    alert("藏起來了!!");
+                });
+            });
+
+            $("#btntoggle").click(function(){               
+                $("#cardiv").slideToggle(2000,function(){$(this).hide(2000)});
+            });           
+        });
+    </script>
+</html>

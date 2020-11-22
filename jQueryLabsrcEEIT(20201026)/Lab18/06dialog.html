@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <title>06ialog.html</title>
+    <link rel="stylesheet" href="../css/themes/base/jquery-ui.css">   
+    <style>
+        #div1{
+          position: absolute;
+          top:100px;
+          left:100px;        
+          width:500px
+          }
+        
+    </style>
+</head>
+<body>
+ 
+    <div id="dialog-confirm" title="Empty the recycle bin?">
+      <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+    </div>
+    <div id="div1"> 
+    <p>Sed vel diam id libero <a href="http://example.com">rutrum convallis</a>. Donec aliquet leo vel magna. Phasellus rhoncus faucibus ante. Etiam bibendum, enim faucibus aliquet rhoncus, arcu felis ultricies neque, sit amet auctor elit eros a lectus.</p>
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+            $( function() {
+              $( "#dialog-confirm" ).dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                // buttons: {
+                //   "Delete all items": function() {
+                //     $( this ).dialog( "close" );
+                //   },
+                //   Cancel: function() {
+                //     $( this ).dialog( "close" );
+                //   }
+                // }   
+                buttons: [
+                  {
+                    text: "Delete all items",
+                    icon: "ui-icon-heart",
+                    click: function() {
+                      $( this ).dialog( "close" );
+                    }
+              
+                    // Uncommenting the following line would hide the text,
+                    // resulting in the label being used as a tooltip
+                    //showText: false
+                  }
+                ]                           
+              });
+            } );
+    </script>
+</body>
+</html>

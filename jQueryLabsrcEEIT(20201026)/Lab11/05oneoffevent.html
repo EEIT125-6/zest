@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>05oneoffevent</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body> 
+    <div class="container">
+   
+        <input class="btn btn-primary" type="button" value="one" id="buttonOne" >
+        <input class="btn btn-primary" type="button" value="on" id="buttonOn" >
+        <input class="btn btn-primary" type="button" value="off" id="buttonOff" >
+        <input class="btn btn-primary" type="button" value="click" id="idbut1">
+        <input class="btn btn-primary" type="button" value="off" id="idbut2" >
+
+        <div id="msg"></div>
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {   
+            //練習一
+            //使用one來綁定buttonOne按鈕的click事件
+            //按下按鈕後在msg的div中顯示one的字樣
+            //瀏覽網頁時,重複按下buttonOne按鈕,只會在div中出現一次one的字
+            $("#buttonOne").one("click",function(){
+                $("#msg").append("one<br>");
+            })
+
+            //練習二
+            //使用on來綁定buttonOn按鈕的click事件
+            //按下按鈕後在msg的div中顯示on的字樣
+            //瀏覽網頁時,重複按下buttonOn按鈕,會在div中重複出現on的字
+            $("#buttonOn").on("click",function(){
+                $("#msg").append("one<br>");
+            })
+
+
+            $("#buttonOff").click(function () {
+                //練習三
+                //將buttonOn按鈕的click事件取消掉
+                $("#buttonOn").off("click")
+            
+                                     
+            });  
+
+            //不一定要on綁定才可以用off移除
+            $("#idbut1").click(function(){
+                console.log("click");
+                $('#msg').append("click<br>");
+            })
+
+            $("#idbut2").click(function(){
+                $("#idbut1").off("click");
+            })
+
+                
+        });
+    </script>
+</body>
+</html>

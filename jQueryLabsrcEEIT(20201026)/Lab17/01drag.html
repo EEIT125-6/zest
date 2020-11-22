@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01drag.html</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .picture{
+            margin:20px auto;
+            width:800px;
+            height:540px;
+            background: url(images/slide1.jpg);
+            background-size:cover;
+            position: relative;
+        }
+        .cover{
+            position: absolute;
+            left:0;
+            top:0;
+            bottom:0;
+            width:50%;
+            background: lightseagreen;
+            opacity: .5;
+        }
+        .drag{
+            position: absolute;
+            width:10px;
+            height:100%;
+            background: lightseagreen;
+            /* background:red; */
+            left:50%;
+            top:0;
+        }
+    </style>
+</head>
+<body>
+    <div class="picture">
+        <div class="cover"></div>
+        <div class="drag" id="drag"></div>
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+        <script>
+            $("#drag").draggable({ 
+                axis: "x",
+                containment: "parent", 
+                scroll: false,
+                drag: function () {
+                    var dragPos=$(this).css("left");
+                   $(".cover").css("width", dragPos);
+                },
+                stop:function(){
+                    $(this).draggable("disable");
+                }
+            });
+        </script>
+</body>
+</html>

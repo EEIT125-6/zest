@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>03this.html</title>   
+</head>
+<body>
+    <h2>Drinks</h2>
+    <ul>
+        <li>Coffee</li>
+        <li>Juice</li>
+        <li>Tea</li>
+    </ul>
+    <p id="demo"></p>
+    <hr>
+    <input type="button" id="btn1" value="selector.each()">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){
+                // console.log($("li"));                     
+                $("li").each(function(index,element){
+                    // console.log(this);
+                    // console.log($(this));
+                    // console.log(index);
+                    // console.log(element);
+                    console.log($(this).text());                                                             
+                    // $("#demo").text("<li>"+$(this).text()+"</li>");
+                    $("#demo").append("<li>"+$(this).text()+"</li>");
+                    // $("#demo").html("<li>"+$(this).text()+"</li>");
+                });                  
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01resize.html</title>
+    <style>
+        img{
+            position: absolute;
+            width:100%;
+            height:100%;            
+            } 
+
+        #div1 {
+            position: absolute;
+            width: 400px;
+            height: 300px;                                
+        }       
+    </style>
+    
+</head>
+<body>
+    <div id="div1">
+            <img id="image1" src="images/tesla1.jpg">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+            let divWtpc = $("#div1").width()/$(window).width()
+            let divHtpc = $("#div1").height()/$(window).height()
+            move_div();
+
+            //當視窗放大或縮小時呼叫move_div的函式
+            //讓div1置中
+            $(window).resize(move_div);
+
+            function move_div() {
+                let winHeight=$(window).height();
+                let winWidth=$(window).width();
+                // console.log("winWidth="+winWidth)
+                // console.log("divWidth="+objWidth)
+                // console.log("winHeight="+winHeight)
+                // console.log("divHeight="+objHeight)
+                $("#div1").height(divHtpc*winHeight).width(divWtpc*winWidth)
+                let objHeight=$("#div1").height();
+                let objWidth=$("#div1").width();
+                let top = (winHeight-objHeight)/2
+                let left = (winWidth-objWidth)/2
+
+                $("#div1").css('top',top).css('left',left)
+                // .height(divHtpc*winHeight).width(divWtpc*winWidth)
+            }   
+        
+    </script>
+</body>
+</html>

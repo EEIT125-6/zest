@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>06attributeSelector.html</title>
+</head>
+<body>
+    <a href="a.doc" hreflang="en">A(doc)</a> |
+    <a href="a.pdf" hreflang="en-">A(pdf)</a> <br />
+    <a href="bpdf.doc" hreflang="english">B(doc)</a> |
+    <a href="b.pdf" hreflang="zh-TW">B(pdf)</a>
+    <hr>
+    <input type="button" id="btn1" value="a['href']">
+    <input type="button" id="btn2" value="=">
+    <input type="button" id="btn3" value="!=">
+    <input type="button" id="btn4" value="^=">
+    <input type="button" id="btn5" value="*=">
+    <input type="button" id="btn6" value="$="> 
+    <input type="button" id="btn7" value="|="> 
+    <input type="button" id="btn8" value="$=href">
+    <script src="../js/jquery-3.5.1.min.js"></script>    
+    <script>
+         $(function(){
+            $("#btn1").click(function(){                 
+                $("a[href]").css("text-decoration","none");                
+            });
+
+            $("#btn2").click(function(){                
+                $("a[href='a.pdf']").css("background-color","pink");
+            });
+
+            $("#btn3").click(function(){               
+                $("a[href!='a.doc']").css("color","green");
+            });
+
+            $("#btn4").click(function(){               
+                $("a[href^='a']").css("border","dotted red 2px");
+            });
+
+            $("#btn5").click(function(){               
+                $("a[href*='pdf']").css("background-color","pink");
+            });
+
+            $("#btn6").click(function(){               
+                $("a[href$='doc']").css("background-color","yellow");
+            });
+
+            $("#btn7").click(function(){               
+                $("a[hreflang|='en']").css("border","dotted green 2px");
+            });
+
+            $("#btn8").click(function(){               
+                //在pdf及doc的超連結前面加上小圖
+                //css 參考用法如下
+                //text-decoration:none
+                //background:url(images/pdf_icon.gif) no-repeat
+                //padding-left:20px
+               
+                $("a[href$='.pdf'").css("text-decoration","none")
+                .css("background","url(images/pdf_icon.gif)")  
+                .css("background-repeat","no-repeat")
+                .css("padding-left","20px");
+            });         
+        });
+    </script> 
+</body>
+</html>

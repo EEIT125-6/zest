@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>02eventBubble.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body> 
+    <div class="container">
+    <table id="idtable" class="table table-bordered table-sm" >
+            <tr>
+                <td>A0</td>
+                <td>B1</td>
+                <td>C2</td>
+                <td class="btn btn-danger">刪除</td>
+            </tr>
+            <tr>
+                <td>D3</td>
+                <td>E4</td>
+                <td>F5</td>
+                <td class="btn btn-danger">刪除</td>
+            </tr>
+            <tr>
+                <td>G6</td>
+                <td>H7</td>
+                <td>I8</td>
+                <td id="td9" class="btn btn-danger" id>刪除</td>
+            </tr>
+        </table>
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+        <script>
+            $(document).ready(function () {   
+               
+                    $('.btn-danger').click(function () {
+                        console.log("btn-danger")
+                    });   
+
+                $('#idtable').click(function(){
+                    console.log("idtable");
+                });                                                 
+                
+            });
+
+
+                // document.querySelector("#idtable").addEventListener("click",ft,true);
+                // document.querySelector("#td9").addEventListener("click",ftd,true);
+
+                // document.querySelector("#idtable").onclick=ft;
+                // document.querySelector("#td9").onclick=ftd;
+                
+                // function ft(){
+                //     alert("table");
+                // }
+                // function ftd(){
+                //     alert("td");
+                // }
+        </script>
+</body>
+</html>

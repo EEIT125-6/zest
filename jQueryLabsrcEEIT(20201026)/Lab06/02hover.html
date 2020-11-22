@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <title>02hover.html</title>
+    <style>
+      p {
+        background: yellow;
+        }
+    </style>
+</head>
+<body>        
+    <p>
+      Hello, <span>Person</span> <em>and person</em>.
+    </p> 
+
+    <p id="idp">ppppppppppp</p>
+    
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script> 
+      $(function(){
+        $("p").hover(function(){
+          $(this).css("color","red");
+        },function(){
+          $(this).css("color","blue");
+        });
+
+        $("#idp").hover(function(){                 //由於寫的順序再後 所以會壓掉前面的屬性
+                  $(this).css("color","green");
+              },function(){
+                  $(this).css("color","purple");
+        });    
+             
+      });   
+    </script>
+</body>
+</html>

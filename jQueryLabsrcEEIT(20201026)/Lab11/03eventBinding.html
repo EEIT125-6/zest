@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>03eventBinding</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body> 
+    <div class="container">
+    <table id="idtable" class="table table-bordered table-sm" >
+            <tr>
+                <td>A0</td>
+                <td>B1</td>
+                <td>C2</td>
+                <td><a href="#" class="btn btn-danger">刪除</a></td>
+            </tr>
+            <tr>
+                <td>D3</td>
+                <td>E4</td>
+                <td>F5</td>
+                <td><a href="#" class="btn btn-danger">刪除</a></td>
+            </tr>
+            <tr>
+                <td>G6</td>
+                <td>H7</td>
+                <td>I8</td>
+                <td><a href="#" class="btn btn-danger">刪除</a></td>
+            </tr>
+        </table>
+        <input class="btn btn-primary" type="button" value="add row" id="buttonAdd" >
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+        <script>
+            $(document).ready(function () {   
+                //測試看看
+                //按下刪除按鈕(class名稱是btn-danger)時,可以將那一筆資料刪除
+                //再試試看
+                //按下[add row]按鈕多新增幾筆資料
+                //針對新增出來的資料,按下刪除按鈕(class名稱是btn-danger)時,還可以將那一筆資料刪除嗎???
+                // $('.btn-danger').click(function () {
+                //     //$(this).parent().parent().remove();
+                //     $(this).parents('tr').remove();                    
+                // });   
+
+
+                //練習使用on綁定網頁上刪除按鈕，完成刪除動作
+                $("#idtable").on("click",".btn-danger",function(){
+                    $(this).parents('tr').remove();   
+                })
+
+                $('#buttonAdd').click(function () {
+                    $('table').append("<tr><td>X</td><td>Y</td><td>Z</td><td><a href='#' class='btn btn-danger'>刪除</a></td></tr>");                    
+                });                                    
+    
+            });
+        </script>
+</body>
+</html>

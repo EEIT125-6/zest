@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>03flex2.html</title>
+    <style>
+        .container {
+            border:2px solid #61a0f8;
+            width:300px;
+            display:flex;         
+            justify-content: center; 
+            align-items: center;
+            top:0;
+            bottom:0;
+        }
+
+        .item {
+            width:50px;
+            margin: 10px;               
+            }
+        .item.red {
+            background: red;
+            height: 30px;       
+        }
+        .item.blue {
+            background: blue;
+            height: 50px;    
+        }
+        .item.green {
+            background: green;
+            height: 20px;
+        } 
+    </style>
+</head>
+<body>
+        <div class="container">
+                <div class="item red"></div>
+                <div class="item blue"></div>
+                <div class="item green"></div>
+              </div>
+</body>
+</html>

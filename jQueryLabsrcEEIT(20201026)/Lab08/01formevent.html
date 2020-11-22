@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01formevent.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        .btn{
+            top:0;
+            transition: .5s;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="myform" action="http://localhost:8080/get.jsp"  >            
+            <div class="py-2">
+                <input type="text" id="idInp" name="txtName" class="form-control">
+                <span id="idsp"></span>
+            </div>
+            <div class="py-2">
+                <select class="form-control" name="" id="idSel">
+                    <option value="1">台北市</option>
+                    <option value="2">新竹市</option>
+                    <option value="3">台中市</option>
+                </select>
+            </div>
+            <div class="">
+                <a class="btn btn-info position-relative">click</a>
+                <input type="submit" class="btn btn-info position-relative" value="submit">
+            </div>
+            <div id="demo"></div>
+        </form>
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            //8-1
+            $(".btn").click(function(){
+                console.log("submit");                                               
+
+            });
+
+            $("#myform").submit(function(event){
+                console.log("submit!"); 
+                // console.log(event.type);
+                          
+            });
+
+            //8-2
+            $("#idInp").focus(function(){
+                console.log("focus"); 
+                $(this).css("background","yellow")
+             
+            }).blur(function(){
+                console.log("blur");
+                $(this).css("background","red")
+            })
+
+            //8-3
+            $("#idSel").change(function(){
+                console.log("change");
+                //讀取option的值
+                let opt=$("#idSel>option:selected");
+                console.log(opt);
+                let i = opt.index();
+                let v = opt.val();
+                let txt = opt.text();
+
+                $("#demo").text("index:"+i+",value"+v+",content"+txt)
+            });
+            
+           
+
+        })
+    </script>
+</body>
+</html>

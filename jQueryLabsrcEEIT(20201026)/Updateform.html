@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style="margin:10px 750px">
+        <!-- 用container -->
+        <form action="" method="post" enctype="multipart/form-data">
+            <fieldset style="width: 400px;">
+                <legend>修改資料</legend>
+                <label>商店名稱:
+                    <input type="text" id="name" name="stname" value="">
+                </label>
+                <br>
+                <label>商店類別
+                    <select name="sclass">
+                        <option value="中式">中式</option>
+                        <option value="日式">日式</option>
+                        <option value="下午茶">下午茶</option>
+                        <option value="西式">西式</option>
+                        <option value="快餐">快餐</option>
+                        <option value="燒肉">燒肉</option>
+                    </select>
+                </label>
+                <br>
+                <label>地址:
+                    <input type="text" id="saddress" name="nsaddress" value="">
+                </label>
+                <br>
+                <label>電話:
+                    <input type="text" id="tel" name="ntel" value="">
+                </label>
+                <br>
+                <label style="width: 40px;float: left;text-align: right;padding-right: 3px;">簡介:
+                    <textarea cols="40" rows="5" id="stitd" name="nstitd" value=""></textarea>
+                </label>
+            </fieldset>
+            <div>
+                <input type="submit" value="修改">
+                <input type="reset" value="清除">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

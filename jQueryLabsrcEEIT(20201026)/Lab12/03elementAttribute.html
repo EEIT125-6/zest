@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>03elementAttribute.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <a id="ida" href="http://jquery.com" title="web">jquery</a><br>
+        <input id="idchk" type="checkbox" checked="checked" value="reading">reading<br>
+    
+        <input type="checkbox" value="a1" name="a" checked />A1
+        <input type="checkbox" value="a2" name="a" checked="checked" />A2
+        <input type="checkbox" value="a3" name="a" checked="true" />A3
+        <input type="checkbox" value="a4" name="a" checked="on" />A4
+        <input type="checkbox" value="a5" name="a" checked="yes" />A5
+        <input type="checkbox" value="a6" name="a" />A6<br>
+
+        <select id="idsel" multiple="multiple">
+            <option id="opt1" value="1">HTML</option>
+            <option id="opt2" value="2" >JavaScript</option>
+            <option id="opt3" value="3" selected="selected">jQuery</option>
+            <option id="opt4" value="4">python</option>
+            <option id="opt5" value="5" selected="selected">Java</option>
+            <option id="opt6" value="6">C#</option>
+        </select>
+            <hr>
+            <input class="btn btn-primary" type="button" id="btn1" value="attrprop(name,value)">
+            <input class="btn btn-primary" type="button" id="btn2" value="removeAtt(name)">
+            <input class="btn btn-primary" type="button" id="btn3" value="removeProp(name)">
+    
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){
+                //對於HTML元素本身就帶有的固有屬性使用attr()及prop()讀取和設定，
+                //對於checked，selected，disabled 使用prop讀取和設定
+                //固有屬性和checked用removeAttr,自定屬性用removeProp
+                
+                // console.log($("#ida").attr("href"));      
+                // console.log($("#ida").prop("href"));      
+                // console.log($("#ida").css("href"));       
+                // console.log($("input").attr("checked"));  
+                // console.log($("input").prop("checked"));   
+                // console.log($("input").css("checked"));    
+
+                // $("#ida").attr("href","http://iiiedu.org.tw"); 
+                // $("#ida").prop("href","http://iiiedu.org.tw"); 
+                // $("#ida").css("href","http://iiiedu.org.tw");  
+                // $(":checked").attr("checked",false); 
+                // console.log($(":checked").attr("checked"));  
+                // $(":checked").prop("checked",false); 
+                // console.log($(":checked").prop("checked"));  
+                // $(":checked").css("checked",false);   
+
+                //attr() vs prop()
+
+                // console.log($(":checkbox:eq(1)").attr('checked'));   //??       
+                // console.log($(":checkbox:eq(2)").attr('checked'));   //checked   
+                // console.log($(":checkbox:eq(3)").attr('checked'));   //true      
+                // console.log($(":checkbox:eq(4)").attr('checked'));   //on        
+                // console.log($(":checkbox:eq(5)").attr('checked'));   //yes      
+                // console.log($(":checkbox:eq(6)").attr('checked'));   //undefined
+
+                // console.log($(":checkbox:eq(1)").prop('checked'));   
+                // console.log($(":checkbox:eq(2)").prop('checked'));   
+                // console.log($(":checkbox:eq(3)").prop('checked'));   
+                // console.log($(":checkbox:eq(4)").prop('checked'));   
+                // console.log($(":checkbox:eq(5)").prop('checked'));   
+                // console.log($(":checkbox:eq(6)").prop('checked'));   
+
+            });              
+
+            $("#btn2").click(function(){                            
+                // $("#ida").removeAttr("href");       //o
+                // $("#ida").removeProp("href");       //x
+                // $(":checked").removeAttr("checked");//o
+                // $(":checked").removeProp("checked");//x
+            });
+
+            $("#btn3").click(function(){
+                // 自定屬性
+                // console.log($("#ida").prop("customs","abc").prop("customs"));                
+                // $("#ida").removeProp("customs");
+                // console.log($("#ida").prop("customs"));
+
+                // console.log("---------------");
+                // console.log($("#ida").prop("customs","123")
+                //             .removeProp("customs")
+                //             .prop("customs")
+                //             );                            
+            });           
+            
+        });
+    </script>
+</body>
+</html>

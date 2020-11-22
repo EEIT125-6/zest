@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+       <input  class="form-control" id="idText" type="text">
+       <h1 >hello, <span id="showName"></span></h1>
+
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+            $(function(){
+                $("#idText")
+                //事件優先順序 keydown->keypress->keyup
+                 $("#idText").keydown(function(event){
+                    console.log("keydown");
+                    console.log(event.keyCode);
+                    console.log($(this).val());
+                })
+
+                $("#idText").keyup(function(event){
+                    console.log("keyup"); 
+                    //輸入值在#showName顯示
+                    console.log(event.keyCode);
+                    console.log($(this).val());
+                    $("#showName").text(($(this).val()));
+                })                
+
+                $("#idText").keypress(function(event){
+                    console.log("keypress");
+                    console.log(event.keyCode);
+                    console.log($(this).val());
+                })
+               
+            })
+    </script>
+</body>
+</html>

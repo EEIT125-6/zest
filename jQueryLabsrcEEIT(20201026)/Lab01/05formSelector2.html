@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>05formSelector2.html</title>
+</head>
+<body>
+    <form action="" method="put" onsubmit="return false;">
+        <div>
+            <label>Text:</label> <input type="text" id="aTextField" name="someTextField" value="someTextValue"/>
+        </div>
+        <div>
+            <label>Radio group:</label>
+            <input type="radio" name="radioGroup" id="radioA" value="a" checked="checked"/><label>A</label> 
+            <input type="radio" name="radioGroup" id="radioB" value="b"/><label>B</label>
+            <input type="radio" name="radioGroup" id="radioC" value="c" disabled="disable"/><label>C</label>
+            <input type="radio" name="radioGroup" id="radioD" value="d" disabled="disable"/><label>D</label>
+            <input type="radio" name="radioGroup" id="radioE" value="e" disabled="disable"/><label>E</label>
+        </div>
+        <div>
+            <label>Checkboxes:</label>
+            <input type="checkbox" name="checkboxes" id="checkbox1" value="1"/><label>1</label>
+            <input type="checkbox" name="checkboxes" id="checkbox2" value="2"/><label>2</label>
+            <input type="checkbox" name="checkboxes" id="checkbox3" value="3" checked="checked" /><label>3</label>
+            <input type="checkbox" name="checkboxes" id="checkbox4" value="4"/><label>4</label>
+        </div>
+        <div>
+            <select>
+                <option id="opt1" value="1">A</option>
+                <option id="opt2" value="2" selected="selected">B</option>
+                <option id="opt3" value="3">C</option>
+            </select>            
+        </div>
+        <div>
+             <input type="image" src="images/n1.png">
+             <textarea>this is textarea</textarea>
+        </div>
+        <!-- <input type="button" value="OK"> -->
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+    <hr>
+
+    <input type="button" id="btn1" value=":checked">
+    <input type="button" id="btn2" value=":selected">
+    <input type="button" id="btn3" value=":disable">
+    <input type="button" id="btn4" value=":image">
+    <input type="button" id="btn5" value=":text">
+    <input type="button" id="btn6" value=":input"> 
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){               
+                console.log($(":checked"));                         
+            }); 
+            
+
+            $("#btn2").click(function(){                
+                $(":selected").css("background-color","green");
+                console.log($(":selected"));
+            });
+
+            $("#btn3").click(function(){               
+                console.log($(":disabled"))
+            });
+
+            $("#btn4").click(function(){               
+                $(":image").css("border","fuchsia dotted 2px");
+            });
+
+            $("#btn5").click(function(){               
+                $(":text").css("background-color","pink");
+            }); 
+
+            $("#btn6").click(function(){                 
+                $(":input").css("background-color","yellow"); 
+                console.log($(":input"))               
+            });
+                                     
+        });
+    </script>   
+
+  </body>
+</html>

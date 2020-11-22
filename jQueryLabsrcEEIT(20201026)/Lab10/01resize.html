@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01resize.html</title>
+    <style>
+        img{
+            position: absolute;
+            width:100%;
+            height:100%;            
+            } 
+
+        #div1 {
+            position: absolute;
+            width: 400px;
+            height: 300px;                                
+        }       
+    </style>
+    
+</head>
+<body>
+    <div id="div1">
+            <img id="image1" src="images/tesla1.jpg">
+    </div>
+    
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            move_div();
+
+            //當視窗放大或縮小時呼叫move_div的函式
+            //讓div1置中
+            $(window).resize(move_div);
+
+            function move_div() {
+                let winHeight=$(window).height();
+                let winWidth=$(window).width();
+                let objHeight=$("#div1").height();
+                let objWidth=$("#div1").width();
+
+                let top = (winHeight-objHeight)/2
+                let left = (winWidth-objWidth)/2
+                // console.log("HI"+objHeight)
+                // let objHeight2=$("#div1").css("height");
+                // console.log("objHeight2"+objHeight2)
+                let divwidth = objWidth/winWidth*objWidth
+                let divheight = objHeight/winHeight*objHeight
+                $("#div1").css('top',top).css('left',left)
+            }   
+        });
+    </script>
+</body>
+</html>

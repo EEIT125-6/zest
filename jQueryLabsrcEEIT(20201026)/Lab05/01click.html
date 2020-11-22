@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01click.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <a id="idlink" href="http://taipei.iiiedu.org.tw">IIIEDU</a>        
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#idlink").click(function(event){
+                //取消預設的動作(preventDefault)
+                
+                    event.preventDefault();
+                
+            });
+        })
+    </script>
+</body>
+</html>

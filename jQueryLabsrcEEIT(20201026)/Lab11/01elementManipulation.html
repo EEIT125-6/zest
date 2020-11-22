@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>01elementManipulation.html</title>
+    <style>
+            div.wrap{
+              border: 2px solid blue;
+            }
+            p {
+              background: yellow;
+              margin: 4px;
+            }
+    </style>
+</head>
+<body>
+    <h2>Greetings</h2>
+    <div class="container">
+        <div class="inner">Hello</div>
+        <div class="inner">Goodbye</div>
+    </div>
+    <p>Hello</p>
+    <p>cruel</p>
+    <p>World</p>
+    
+    <hr>    
+    <input type="button" id="btn1" value="remove()">
+    <input type="button" id="btn2" value="empty()">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            
+            $("#btn1").click(function(){               
+                $(".inner").remove();  //用F12查看                
+            });
+            
+            $("#btn2").click(function(){               
+                $(".inner").empty();
+                // $(".container").empty();
+            });
+        });
+    </script>
+</body>
+</html>

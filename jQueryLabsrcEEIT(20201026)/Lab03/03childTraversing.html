@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <title>02descendantsTraversing.html</title>
+    <style>
+        .level-1 * { 
+            display: block;
+            border: 2px solid lightgrey;
+            color: lightgrey;
+            padding: 5px;
+            margin: 15px;
+        }
+        ul .item-ii{
+            border:2px dotted orchid;
+        }
+    </style>
+</head>
+<body>body(grandparent)
+    <ul class="level-1" style="width:500px" >ul(direct parent)
+        <li class="item-i">I</li>
+        <li class="item-ii">II(self)
+          <ul class="level-2">ul(children)
+            <li class="item-a">A</li>
+            <li class="item-b">B
+                <ul class="level-3">
+                    <li class="item-1">1</li>                    
+                </ul>
+            </li>
+            <li class="item-c">C</li>
+          </ul>
+        </li>       
+      </ul>
+      <hr>
+      <input type="button" id="btn1" value="children()">
+    <input type="button" id="btn2" value="find('li')">
+    <input type="button" id="btn3" value="find('*')">
+   
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){
+                $( "ul .item-ii" ).children().css( "border", "solid 2px red" );  //ul 
+                // $( "ul .level-2" ).children().css( "border", "solid 2px red" );  //多個li,只找一層
+ 
+                //.level-2的children是.item-a,.item-b,.item-c多個兒子         
+            });
+
+            $("#btn2").click(function(){                
+                $( "ul .item-ii" ).find("li").css( "border", "solid 2px green" ); //以下所有li
+                // $( "ul .item-ii" ).find("ul").css( "border", "solid 2px green" ); //以下所有ul
+            });
+
+            $("#btn3").click(function(){               
+                $( "ul .item-ii" ).find("*").css( "border", "solid 2px blue" );//以下所有li,ul
+            });         
+        });
+    </script>
+</body>
+</html>

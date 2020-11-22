@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>02csspriority.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        .box{
+            width: 120px;
+            height: 120px;
+            background: lightskyblue;
+            transition: .5s;
+        }
+        .active{
+            width: 120px;
+            height: 120px;
+            background: pink;
+            border-radius: 50%;
+            transition: .5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="idbox" class="box" >
+    </div>
+        
+    </div> 
+        
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            
+            $("#idbox").hover(over,out);
+
+            function over(){
+                // $('#idbox').addClass("active");   //留意css  class的執行順序 !ERROR!
+                $('#idbox').removeClass("box").addClass("active");
+            }  
+
+            function out(){
+                // $('#idbox').addClass("box");  //!ERROR!
+                $('#idbox').removeClass("active").addClass("box");                           
+            }           
+        })
+    </script>
+</body>
+</html>

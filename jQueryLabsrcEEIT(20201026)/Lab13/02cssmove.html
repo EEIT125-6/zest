@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>02cssmove.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .box{
+            width: 120px;
+            height: 120px;
+            background: lightskyblue;
+            transition: .2s;
+            top:0;
+            left:0;
+        }
+        .field{
+            height: 400px;
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="field position-relative">
+            <div class="box position-absolute"></div>
+        </div>
+        <div class="py-2">
+            <div class="py-3 text-center">
+                <div class="py-1">
+                    <button id="up" data-direction="up" class="btn btn-info"><i class="fa fa-caret-up"></i></button>
+                </div>
+                <div>
+                    <button id="left" data-direction="left" class="btn btn-info mx-3"><i class="fa fa-caret-left"></i></button>
+                    <button id="right" data-direction="right" class="btn btn-info mx-3"><i class="fa fa-caret-right"></i></button>
+                </div>
+                <div class="py-1">
+                    <button id="down" data-direction="down" class="btn btn-info"><i class="fa fa-caret-down"></i></button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        let speed=10;
+
+        $("#up").click(function(){
+            $(".box").css("top", "-="+speed+"px");
+        });
+        $("#down").click(function(){
+            $(".box").css("top", "+="+speed+"px");
+        });
+        $("#left").click(function(){
+            $(".box").css("left", "-="+speed+"px");
+        });
+        $("#right").click(function(){
+            $(".box").css("left", "+="+speed+"px");
+        });
+ 
+    </script>
+</body>
+</html>

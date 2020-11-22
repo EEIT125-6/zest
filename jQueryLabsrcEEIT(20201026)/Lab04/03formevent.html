@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>03formevent.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        .btn{
+            top:0;
+            transition: .5s;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="02keyevent.html" id="myform">
+            <div class="py-2">
+                <input type="text" id="idInp" class="form-control">
+            </div>
+            <div class="py-2">
+                <select class="form-control" name="" id="idSel">
+                    <option value="1">台北市</option>
+                    <option value="2">新竹市</option>
+                    <option value="3">台中市</option>
+                </select>
+            </div>
+            <div class="">
+                <!-- <a class="btn btn-info position-relative">click</a> -->
+                <input type="submit" class="btn btn-info position-relative" value="submit">
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#idInp").focus(function(){
+                console.log("focus");                              
+            });
+            
+            $("#idInp").blur(function(){
+                console.log("blur");                               
+            });
+
+            $("#idInp").change(function(){
+                console.log("change");                               
+            });
+
+            $("#idSel").change(function(){
+                console.log("change");                               
+            });
+
+            $("#myform").submit(function(event){
+                console.log("submit!"); 
+                alert("submit");                            
+            })
+        })
+    </script>
+</body>
+</html>

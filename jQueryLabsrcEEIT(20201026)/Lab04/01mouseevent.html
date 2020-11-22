@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>01mouseevent.html</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <button class="btn btn-primary" id="click">click</button>
+        <button class="btn btn-primary" id="dblclick">double click</button>
+        <button class="btn btn-primary" id="contextmenu">contextmenu</button>
+        <button class="btn btn-primary" id="mouseDown">mousedown</button>
+        <button class="btn btn-primary" id="mouseUp">mouseup</button>
+        <button class="btn btn-primary" id="mouseEnter">mouseenter</button>
+        <button class="btn btn-primary" id="mouseLeave">mouseleave</button>
+        <button class="btn btn-primary" id="hover">hover</button>
+    </div>
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#click").click(function(abc){
+                console.log("click");    
+                console.log(abc.type)   //console.log(event.type);  效果相同
+                // console.log(event.type); 
+            });
+            $("#dblclick").dblclick(function(){
+                console.log("double click")
+            });
+            $("#contextmenu").contextmenu(function(){
+                console.log("contextmenu");              
+            });
+    
+            $("#mouseDown").mousedown(function(){
+                console.log("mouse down")
+            })
+            $("#mouseUp").mouseup(function(){
+                console.log("mouse up")
+            })
+            $("#mouseEnter").mouseenter(function(){
+                console.log("mouse enter")
+            })
+            $("#mouseLeave").mouseleave(function(){
+                console.log("mouse leave")
+            })
+    
+            $("#hover").hover(function(event){
+                console.log("enter")
+                console.log(event.type);
+            }, function(event){
+                console.log("leave")
+                console.log(event.type);
+            })            
+      });
+    </script>
+</body>
+</html>

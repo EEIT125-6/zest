@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>02childSelector.html</title>
+    <style>
+        table,th,td{border:1px solid gray;}            
+    </style>
+</head>
+<body>
+    <h2>languages table</h2>
+    <table id="languages">
+        <thead>
+            <tr>
+                <th>Language</th>
+                <th>Type</th>
+                <th>Invented</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Java</td>
+                <td>Static</td>
+                <td>1995</td>
+            </tr>
+            <tr>
+                <td>Ruby</td>
+                <td>Dynamic</td>
+                <td>1993</td>
+                </tr>
+            <tr>
+                <td>JavaScript</td>
+                <td>Dynamic</td>
+                <td>1995</td>
+            </tr>
+            <tr>
+                <td>C++</td>
+                <td>Static</td>
+                <td>1983</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+
+    <input type="button" id="btn1" value=":first-child">
+    <input type="button" id="btn2" value=":last-child">
+    <input type="button" id="btn3" value=":nth-child(2)">
+    <input type="button" id="btn4" value=":only-child">
+    <hr>
+    <input type="button" id="btn5" value=":first">
+    <input type="button" id="btn6" value=":last">
+    <input type="button" id="btn7" value=":even">
+    <input type="button" id="btn8" value=":odd">
+    <hr>
+    <input type="button" id="btn9" value=":nth-child(even)">
+    <input type="button" id="btn10" value=":nth-child(odd)">
+    <input type="button" id="btn11" value=":nth-child(2n)">
+    <input type="button" id="btn12" value=":nth-child(2n+1)">
+    <input type="button" id="btn13" value=":nth-child(3n+1)">
+
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn1").click(function(){                 
+                $("tr td:first-child").css("background-color","yellow");                
+            });
+
+            $("#btn2").click(function(){                
+                $("tr td:last-child").css("background-color","orange");
+            });
+
+            $("#btn3").click(function(){               
+                $("tr td:nth-child(2)").css("background-color","lime");
+            });
+
+            $("#btn4").click(function(){               
+                $("thead tr:only-child").css("background-color","fuchsia");
+            });
+
+            //Basic Filter selector,選擇器由0開始計數
+            $("#btn5").click(function(){                 
+                $("tr td:first").css("background-color","lime");                           
+            });
+
+            $("#btn6").click(function(){                
+                $("tr td:last").css("background-color","plum");
+            });
+
+            $("#btn7").click(function(){                 
+                // $("tr td:nth-child(2n+1)").css("background-color","lime");   //效果不同
+                $("tr td:even").css("background-color","lime");
+            });
+
+            $("#btn8").click(function(){                
+                $("tr td:odd").css("background-color","plum");                
+            });
+
+            //child filter selector,選擇器由1開始計數
+            $("#btn9").click(function(){
+                //tbody tr的偶數列綠色 nth-child(even)                 
+                $("tbody tr:nth-child(2n)").css("background","green")
+                // $("tbody tr:nth-child(even)").css("background","green")
+                // $("tbody tr:odd").css("background","green")  //與上述結果相同
+                // $("tbody tr").css("background","green")  //全部的tr
+            });
+
+            $("#btn10").click(function(){  
+                //tbody tr的奇數列黃色 nth-child(odd)               
+                $("tbody tr:nth-child(2n+1)").css("background","yellow")
+                // $("tbody tr:even").css("background","yellow")
+            });
+
+            $("#btn11").click(function(){                                                        
+                 //tbody的2n列藍色 :nth-child(2n) 偶數
+                 //2n的n,n從1開始
+                 
+            });  
+
+            $("#btn12").click(function(){
+                //tbody的2n+1列紅色 :nth-child(2n+1) 奇數
+                //(2n+1)的n ,n從0開始
+                              
+            }); 
+
+            $("#btn13").click(function(){
+                //第1,4...列文字顏色設為桃紅色(fuchsia) :nth-child(3n+1)
+
+            });                         
+        });
+    </script>    
+</body>
+</html>

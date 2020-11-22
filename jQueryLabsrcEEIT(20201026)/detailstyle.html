@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <div style="margin:10px auto; background-color: wheat; width: 500px; padding:10px;">
+        <div>
+            <span id="sp1" class="divcato">美食分享</span>
+            <span id="sp2" class="divcato">熱門餐點</span>
+            <span id="sp3" class="divcato">店家餐點</span>    
+
+        </div>
+        <hr>
+        <div id="div1" class="ddiv">
+            hi
+        </div>
+        <div id="div2" style="display:none;" class="ddiv">
+            hello
+        </div>
+        <div id="div3" style="display:none;" class="ddiv">
+            bonjr
+        </div>
+    </div>
+        <script>
+        $("#sp1").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div1").css("display","inline")
+        })
+
+        $("#sp2").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div2").css("display","inline")
+        })
+        $("#sp3").click(function(){
+            $(".ddiv").css("display","none")
+            $("#div3").css("display","inline")
+        })
+        
+        $(".divcato").click(function(){
+            $(".divcato").css("color","black")
+            $(this).css("color","orange")
+        })
+    </script>
+</body>
+</html>
