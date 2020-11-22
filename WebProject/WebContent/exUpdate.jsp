@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
+<sql:setDataSource var="ds" dataSource="jdbc/zest" />
       <sql:update dataSource = "${ds}" var = "count">
          update Store set stname=? ,sclass=? ,saddress=? ,stitd=?, tel=? where id = ?
          <sql:param value="${param.stname}"/>

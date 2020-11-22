@@ -245,6 +245,7 @@
 						<br />
 						<span id="addr2Span"></span>
 					    <hr />
+					    <span id="updateSpan"></span>
                 	</fieldset>
                 	<div align="center">
                 		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>

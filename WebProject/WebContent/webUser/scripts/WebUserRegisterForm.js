@@ -233,7 +233,7 @@ function checkNickname() {
 }
 
 function checkBirthday() {
-	let birthdayObjValue = document.getElementById("birthday").value;
+	let birthdayObjValue = document.getElementById("birth").value;
 	let birthdaySpan = document.getElementById("birthdaySpan");
 
 	let birthdayIsOk = true;
@@ -285,6 +285,9 @@ function checkFervor() {
 	let fervorObj = document.getElementsByName("fervor");
 	let fervorObjValue = "";
 	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+		if (fervorObj[fervorIndex].checked && fervorObjValue != "") {
+			fervorObjValue += ",";
+		}
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let fervorSpan = document.getElementById("fervorSpan");

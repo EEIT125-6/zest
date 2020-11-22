@@ -10,7 +10,7 @@
 	response.setContentType("text/html;charset=UTF-8");
 %>
 
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
+<sql:setDataSource var="ds" dataSource="jdbc/zest" />
 
 <c:set var="ss" value="${param.sclass}" />
 <sql:query dataSource="${ds}" var="rs">

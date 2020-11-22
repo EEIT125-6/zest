@@ -12,7 +12,7 @@
    int maxFileSize = 5000 * 1024;
    int maxMemSize = 5000 * 1024;
    ServletContext context = pageContext.getServletContext();
-   String filePath = "C:\\java\\JavaWebWorkSpace\\WebProject\\WebContent\\Images";
+   String filePath = "C:\\JavaWebWorkSpace\\WebProject\\WebContent\\Images\\";
 
    // Verify the content type
    String contentType = request.getContentType();
@@ -48,9 +48,11 @@
             // Get the uploaded file parameters
             String fieldName = fi.getFieldName();
             String fileName = fi.getName();
+
             boolean isInMemory = fi.isInMemory();
             long sizeInBytes = fi.getSize();
             // Write the file
+      System.out.println(fileName);
             if( fileName.lastIndexOf("\\") >= 0 ){
             file = new File( filePath + 
             fileName.substring( fileName.lastIndexOf("\\"))) ;
@@ -75,7 +77,7 @@
   		    
   	      ctxt = new InitialContext();
 
-  	      ds = ( DataSource ) ctxt.lookup("java:comp/env/jdbc/EmployeeDB");
+  	      ds = ( DataSource ) ctxt.lookup("java:comp/env/jdbc/zest");
 
   	      conn = ds.getConnection();
 

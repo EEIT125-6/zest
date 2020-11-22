@@ -8,7 +8,7 @@
 <%
 	response.setContentType("text/html;charset=UTF-8");
 %>
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
+<sql:setDataSource var="ds" dataSource="jdbc/zest" />
 
 <sql:query dataSource="${ds}" var="rs">
          select count(*) as number from store 

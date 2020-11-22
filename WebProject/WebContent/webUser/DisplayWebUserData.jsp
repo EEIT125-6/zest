@@ -159,8 +159,8 @@
 							<hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" name="update" value="進行修改">
-						<input type="submit" name="update" value="修改密碼">
+						<input type="submit" name="update" value="修改個人資料">
+						<input type="submit" name="update" value="修改帳戶密碼">
 						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 				</form>

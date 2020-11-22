@@ -124,6 +124,35 @@ public class WebUserServlet extends HttpServlet {
 					/* 執行特定查詢 */
 					doSelectUserData(request, response);
 					break;
+				case "檢視/修改個人資料":
+					/* 查詢個人資料 */
+					doSelectSelfData(request, response);
+					break;
+				default:
+					/* 返回主畫面 */
+					doBackToLoginMainPage(request, response);
+					break;
+					
+			} 
+		/* 修改模塊 */
+		} else if (request.getParameter("update") != null) {
+			switch(request.getParameter("update")) {
+				case "修改帳戶密碼":
+					/* 導向修改密碼 */
+					doGoToModifyPassword(request, response);
+					break;
+				case "修改個人資料":
+					/* 導向修改畫面 */
+					doGoToModifyPage(request, response);
+					break;
+				case "密碼修改完畢":
+					/* 準備執行密碼更新 */
+					doUpdatePassword(request, response);
+					break;
+				case "資料修改完畢":
+					/* 準備執行密碼更新 */
+					doUpdateData(request, response);
+					break;
 				default:
 					/* 返回主畫面 */
 					doBackToLoginMainPage(request, response);
@@ -201,7 +230,7 @@ public class WebUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		/* 參數宣告 */
 		String user_id = "", account, password, first_name, last_name, nickname, fervor = "", email, phone, location_code, addr0, addr1, addr2;
-		Character gender, get_email;
+		String gender, get_email;
 		LocalDate birthday, join_date;
 		Integer lv = 0;
 		BigDecimal zest = new BigDecimal("0");
@@ -212,7 +241,7 @@ public class WebUserServlet extends HttpServlet {
 		first_name = request.getParameter("first_name").trim();
 		last_name = request.getParameter("last_name").trim();
 		nickname = request.getParameter("nickname").trim();
-		gender = request.getParameter("gender").charAt(0);
+		gender = request.getParameter("gender");
 		birthday = LocalDate.parse(request.getParameter("birthday"));
 		for (int fervorIndex = 0; fervorIndex < request.getParameterValues("fervor").length; fervorIndex++) {
 			if (!request.getParameterValues("fervor")[fervorIndex].equals("")) {
@@ -226,7 +255,7 @@ public class WebUserServlet extends HttpServlet {
 		}
 		email = request.getParameter("email").trim();
 		phone = request.getParameter("phone").trim();
-		get_email = (request.getParameter("get_email").equals("Y")) ? 'Y' : 'N';
+		get_email = (request.getParameter("get_email").equals("Y")) ? "Y" : "N";
 		location_code = request.getParameter("location_code");
 		addr0 = request.getParameter("addr0").trim();
 		addr1 = request.getParameter("addr1").trim();
@@ -368,18 +397,19 @@ public class WebUserServlet extends HttpServlet {
 				userFullData.setFirst_name(checkResultSpace[4]);
 				userFullData.setLast_name(checkResultSpace[5]);
 				userFullData.setNickname(checkResultSpace[6]);
-				userFullData.setGender(checkResultSpace[7].charAt(0));
+				userFullData.setGender(checkResultSpace[7]);
 				userFullData.setBirth(LocalDate.parse(checkResultSpace[8]));
 				userFullData.setFervor(checkResultSpace[9]);
 				userFullData.setEmail(checkResultSpace[10]);
-				userFullData.setGet_email(checkResultSpace[11].charAt(0));
-				userFullData.setLocation_code(checkResultSpace[12]);
-				userFullData.setJoin_date(LocalDate.parse(checkResultSpace[13]));
-				userFullData.setLv(Integer.parseInt(checkResultSpace[14]));
-				userFullData.setAddr0(checkResultSpace[15]);
-				userFullData.setAddr1(checkResultSpace[16]);
-				userFullData.setAddr2(checkResultSpace[17]);
-				userFullData.setZest(new BigDecimal(checkResultSpace[18]));
+				userFullData.setPhone(checkResultSpace[11]);
+				userFullData.setGet_email(checkResultSpace[12]);
+				userFullData.setLocation_code(checkResultSpace[13]);
+				userFullData.setJoin_date(LocalDate.parse(checkResultSpace[14]));
+				userFullData.setLv(Integer.parseInt(checkResultSpace[15]));
+				userFullData.setAddr0(checkResultSpace[16]);
+				userFullData.setAddr1(checkResultSpace[17]);
+				userFullData.setAddr2(checkResultSpace[18]);
+				userFullData.setZest(new BigDecimal(checkResultSpace[19]));
 				
 				loginMessage = "歡迎 "+ userFullData.getNickname() + " ！";
 				/* 嘗試建立Session，並將Java Bean物件userFullData以"userFullData"的名稱放入新Session中 */
@@ -507,7 +537,7 @@ public class WebUserServlet extends HttpServlet {
 		
 		try {
 			selectedResult = webUserDAO.selectWebUser(selectedParameters);
-			selectResultMessage = "共查詢到 " + String.valueOf(selectedResult.size()) + " 筆符合的資料...";
+			selectResultMessage = "以下是您剛才執行的查詢結果，共查詢到 " + String.valueOf(selectedResult.size()) + " 筆符合的資料...";
 			/* 將訊息selectResultMessage以"selectResultMessage"的名稱放入Session中 */
 			request.getSession(true).setAttribute("selectResultMessage", selectResultMessage);
 			/* 將導向的網頁selectResultPage以"selectResultPage"的名稱放入Session中 */
@@ -524,6 +554,180 @@ public class WebUserServlet extends HttpServlet {
 			request.getSession(true).setAttribute("selectResultPage", selectResultPage);
 			/* 導向查詢結果畫面 */
 			request.getRequestDispatcher("/webUser/WebUserSearchResult.jsp").forward(request,response);
+		}
+	}
+	
+	/* Select user's own data */
+	public void doSelectSelfData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 返回的參數 */
+		List<WebUserBean> selfData = new ArrayList<>();
+		String selectResultMessage = "";
+		String selectResultPage = "WebUserMain.jsp";
+
+		/* 從session中取出物件userFullData */
+		WebUserBean userData = (WebUserBean) request.getSession(true).getAttribute("userFullData");
+		/* 取得目前使用者ID */
+		String selfUser_id = userData.getUser_id();
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+
+		try {
+			selfData.add(webUserDAO.selectWebUserSelf(selfUser_id));
+			selectResultMessage = "以下為您的個人資料...";
+			/* 將訊息selectResultMessage以"selectResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultMessage", selectResultMessage);
+			/* 將物件selfData以"selfData"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selfData", selfData);
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/DisplayWebUserData.jsp").forward(request, response);
+		} catch (SQLException sqlE) {
+			selectResultMessage = "執行失敗！錯誤訊息為：" + sqlE.getMessage();
+			/* 將訊息selectResultMessage以"selectResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultMessage", selectResultMessage);
+			/* 將導向的網頁selectResultPage以"selectResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("selectResultPage", selectResultPage);
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserSearchResult.jsp").forward(request, response);
+		}
+	}
+	
+	/* Go to modify-page */
+	public void doGoToModifyPage(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 前往修改畫面 */
+		request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
+	}
+
+	/* Go to modify-password-page */
+	public void doGoToModifyPassword(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 前往修改畫面 */
+		request.getRequestDispatcher("/webUser/WebUserModifyPassword.jsp").forward(request, response);
+	}
+
+	/* Update password */
+	public void doUpdatePassword(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 返回的參數 */
+		String updateResultMessage = "";
+		String updateResultPage = "WebUserMain.jsp";
+		boolean updatePasswordResult;
+
+		/* 取出新密碼 */
+		String newPassword = request.getParameter("confirmPassword");
+		/* 從session中取出物件userFullData */
+		WebUserBean userData = (WebUserBean) request.getSession(true).getAttribute("userFullData");
+		/* 取得目前使用者ID */
+		String user_id = userData.getUser_id();
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+
+		try {
+			updatePasswordResult = webUserDAO.updateWebUserPassword(user_id, newPassword);
+			if (updatePasswordResult) {
+				updateResultPage = "WebUserLogin.jsp";
+				updateResultMessage = "密碼變更成功！5秒後將返回登入畫面";
+				/* 無效session */
+				request.getSession(true).invalidate();
+				/* 嘗試建立Session，並將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+				/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+				/* 導向變更結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
+			} else {
+				updateResultMessage = "密碼變更失敗！5秒後將返回主畫面";
+				/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+				/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+				/* 導向變更結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
+			}
+		} catch (SQLException sqlE) {
+			updateResultMessage = "執行修改失敗！錯誤訊息為：" + sqlE.getMessage() + System.lineSeparator() + "5秒後將返回主畫面";
+			/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+			/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+			/* 導向變更結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
+		}
+	}
+
+	/* Update other data */
+	public void doUpdateData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 返回的參數 */
+		String updateResultMessage = "";
+		String updateResultPage = "WebUserMain.jsp";
+		boolean updateDataResult;
+
+		/* 從session中取出物件userFullData */
+		WebUserBean userData = (WebUserBean) request.getSession(true).getAttribute("userFullData");
+		/* 取得目前使用者ID */
+		String updatedUser_id = userData.getUser_id();
+		/* 從request中取得查詢參數 */
+		String updatedFirst_name = (request.getParameter("updatedFirst_name").length() == 0) ? "?"
+				: request.getParameter("updatedFirst_name").trim();
+		String updatedLast_name = (request.getParameter("updatedLast_name").length() == 0) ? "?"
+				: request.getParameter("updatedLast_name").trim();
+		String updatedNickname = (request.getParameter("updatedNickname").length() == 0) ? "?"
+				: request.getParameter("updatedNickname").trim();
+		String updatedFervor = (request.getParameter("updatedFervor").length() == 0) ? "?"
+				: request.getParameter("updatedFervor").trim();
+		String updatedEmail = (request.getParameter("updatedEmail").length() == 0) ? "?"
+				: request.getParameter("updatedEmail").trim();
+		String updatedPhone = (request.getParameter("updatedPhone").length() == 0) ? "?"
+				: request.getParameter("updatedPhone").trim();
+		String updatedGet_email = (request.getParameter("updatedGet_email").length() == 0) ? "?"
+				: request.getParameter("updatedGet_email").trim();
+		String updatedLocation_code = (request.getParameter("updatedLocation_code").length() == 0) ? "?"
+				: request.getParameter("updatedLocation_code").trim();
+		String updatedAddr0 = (request.getParameter("updatedAddr0").length() == 0) ? "?"
+				: request.getParameter("updatedAddr0").trim();
+		String updatedAddr1 = (request.getParameter("updatedAddr1").length() == 0) ? "?"
+				: request.getParameter("updatedAddr1").trim();
+		String updatedAddr2 = (request.getParameter("updatedAddr2").length() == 0) ? "?"
+				: request.getParameter("updatedAddr2").trim();
+		String updatedParameters = updatedUser_id + ":" + updatedFirst_name + ":" + updatedLast_name + ":" + updatedNickname 
+				+ ":" + updatedFervor + ":" + updatedEmail + ":" + updatedPhone + ":" + updatedGet_email + ":" + updatedLocation_code 
+				+ ":" + updatedAddr0 + ":" + updatedAddr1 + ":" + updatedAddr2;
+
+		/* 利用Connection產生DAO物件 */
+		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+
+		try {
+			updateDataResult = webUserDAO.updateWebUserData(updatedParameters);
+			if (updateDataResult) {
+				updateResultPage = "WebUserLogin.jsp";
+				updateResultMessage = "密碼變更成功！5秒後將返回登入畫面";
+				/* 無效session */
+				request.getSession(true).invalidate();
+				/* 嘗試建立Session，並將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+				/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+				/* 導向變更結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
+			} else {
+				updateResultMessage = "個人資料變更失敗！5秒後將返回主畫面";
+				/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+				/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+				request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+				/* 導向變更結果畫面 */
+				request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
+			}
+		} catch (SQLException sqlE) {
+			updateResultMessage = "執行修改失敗！錯誤訊息為：" + sqlE.getMessage() + System.lineSeparator() + "5秒後將返回主畫面";
+			/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+			/* 將導向的網頁updateResultPage以"updateResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("updateResultPage", updateResultPage);
+			/* 導向變更結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserChangeResult.jsp").forward(request, response);
 		}
 	}
 }

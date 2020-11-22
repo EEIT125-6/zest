@@ -3,8 +3,8 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
-<sql:query sql="select * from BAORD;" var="rs" dataSource="${ds}" /> 
+<sql:setDataSource var="ds" dataSource="jdbc/zest" />
+<sql:query sql="select * from Board;" var="rs" dataSource="${ds}" /> 
 
 <!DOCTYPE html>
 <html>
@@ -24,11 +24,11 @@
     <th>photo</th>
     <c:forEach var="row" items="${rs.rows}">
     <tr>
-    <td>${row.NAME}</td>
-    <td>${row.STARS}</td>
-    <td>${row.DATE}</td>
-    <td>${row.CONTEXT}</td>
-    <td>${row.PHOTO}</td>
+    <td>${row.name}</td>
+    <td>${row.star}</td>
+    <td>${row.date}</td>
+    <td>${row.context}</td>
+    <td>${row.photo}</td>
     </tr>
     </c:forEach>
   </table>

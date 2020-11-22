@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
  
-<sql:setDataSource var="ds" dataSource="jdbc/EmployeeDB" />
+<sql:setDataSource var="ds" dataSource="jdbc/zest" />
 
       <c:set var = "ss" value = "${param.sclass}"/>
       <sql:query dataSource = "${ds}" var = "rs">

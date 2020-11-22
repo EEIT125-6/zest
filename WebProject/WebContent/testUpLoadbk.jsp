@@ -79,7 +79,7 @@
            	Object bb = session.getAttribute("banner");
            	
            	System.out.println(bb);        
-            File f1 = new File("C:\\java\\JavaWebWorkSpace\\WebProject\\WebContent\\Images\\test\\banner.jpg");
+            File f1 = new File("C:\\JavaWebWorkSpace\\WebProject\\WebContent\\Images\\test\\banner.jpg");
 //            f.renameTo(f1);
             }
          }
@@ -94,7 +94,7 @@
  		    
  	      ctxt = new InitialContext();
 
- 	      ds = ( DataSource ) ctxt.lookup("java:comp/env/jdbc/EmployeeDB");
+ 	      ds = ( DataSource ) ctxt.lookup("java:comp/env/jdbc/zest");
 
  	      conn = ds.getConnection();
 
