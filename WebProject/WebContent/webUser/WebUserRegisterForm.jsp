@@ -105,7 +105,7 @@
 					    <label for="other">不方便提供</label>
 					    <hr />
 					    <label>西元生日：</label>
-						<input type="date" name="birth" id="birth" onblur="checkBirthday()" required="required" />
+						<input type="date" name="birthday" id="birthday" onblur="checkBirthday()" required="required" />
 						<span id="birthdaySpan"></span>
 						<hr />
 						<label>偏好食物：</label>

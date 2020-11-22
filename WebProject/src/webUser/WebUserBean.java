@@ -16,12 +16,12 @@ public class WebUserBean implements Serializable {
 	private String first_name;
 	private String last_name;
 	private String nickname;
-	private String gender;
+	private Character gender;
 	private LocalDate birth;
 	private String fervor;
 	private String email;
 	private String phone;
-	private String get_email;
+	private Character get_email;
 	private String location_code;
 	private LocalDate join_date;
 	private Integer lv;
@@ -36,7 +36,7 @@ public class WebUserBean implements Serializable {
 	}
 
 	/* 帶參數建構子 */
-	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, String pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, String pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, Character pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, Character pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
 		this.user_id = pUser_id;
 		this.account = pAccount;
 		this.password = pPassword;
@@ -107,11 +107,11 @@ public class WebUserBean implements Serializable {
 		this.nickname = nickname;
 	}
 
-	public String getGender() {
+	public Character getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Character gender) {
 		this.gender = gender;
 	}
 
@@ -147,11 +147,11 @@ public class WebUserBean implements Serializable {
 		this.phone = phone;
 	}
 
-	public String getGet_email() {
+	public Character getGet_email() {
 		return get_email;
 	}
 
-	public void setGet_email(String get_email) {
+	public void setGet_email(Character get_email) {
 		this.get_email = get_email;
 	}
 

@@ -18,17 +18,11 @@ public interface WebUserDAO {
 	/* 新增資料 */
 	public boolean insertWebUser(WebUserBean insertedData) throws SQLException;
 	
-	/* 修改密碼 */
-	public boolean updateWebUserPassword(String user_id, String newPassword) throws SQLException;
-	
 	/* 刪除資料 */
 	public boolean deleteWebUser(WebUserBean deletedData) throws SQLException;
 	
 	/* 查詢資料 */
 	public List<WebUserBean> selectWebUser(String selectedParameters) throws SQLException;
-	
-	/* 查詢使用者自身資料 */
-	public WebUserBean selectWebUserSelf(String selfUser_id) throws SQLException;
 	
 	/* 新增資料至刪除表 */
 	public boolean insertWebUserDeleted(WebUserBean insertedData) throws SQLException;
