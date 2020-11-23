@@ -98,7 +98,9 @@
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="Index1.jsp"  style="float: left;font-size:37px;"><img src="Images/LOGO1-removebg-preview.png" style="height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
+              <br>登入 | 註冊  |
+              <a href="product/index.jsp"><img src="Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
@@ -127,12 +129,117 @@
             <span id="sp2" class="divcato">熱門餐點</span>
             <span id="sp3" class="divcato">店家餐點</span>    
 			<span id="sp4" class="divcato">簡介</span>
+			<a href="ShowComment.jsp"><i class="material-icons" style="font-size:24px">library_books</i>顯示評論</a>
         </div>
         <hr>
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">
-            <a href=""><i class="material-icons" style="font-size:24px">grade</i>進行點評</a>
-            <a href=""><i class="material-icons" style="font-size:24px">receipt</i>查看評論</a>
+            <div class="box1" style="text-align: left;margin: auto;" >   
+    <center>
+        <div class="d1" >評分總人數:</div>
+        <br>
+        <div class="d2">
+            <h3>給予評價</h3>
+            <img id="idimg1" src="image/s1.png" height="25px"、 width="25px"/>
+            <img id="idimg2" src="image/s1.png" height="25px"、 width="25px"/>
+            <img id="idimg3" src="image/s1.png" height="25px"、 width="25px"/>
+            <img id="idimg4" src="image/s1.png" height="25px"、 width="25px"/>
+            <img id="idimg5" src="image/s1.png" height="25px"、 width="25px"/>
+        </div>
+        <div class="d3"> 
+            <div class="container" >
+                <div class="row">
+                  <div class="s1">
+                    <img  src="image/Mstar.png" height="110px"、width="110px">
+                </div>
+                  <div class="s2">
+                      <div style="line-height: 20px;background-color ; padding-top: 3px;"> <input type="range" min="0" max="100" step="1" value="100" > </div>
+                       <input type="range" min="0" max="100" step="1" value="50"><br>
+                       <input type="range" min="0" max="100" step="1" value="100"><br>
+                       <input type="range" min="0" max="100" step="1" value="100"><br>
+                     <!--    <input type="range" min="0" max="100" step="1" value="100"><br> -->
+                  </div>
+                  <div class="s3">
+                    <h3></h3>        
+                  </div>
+                </div>
+              </div>
+         
+            
+        </div>
+    </div>
+    </center>
+    <br>
+    <div class="box2" style="text-align: center;margin: auto;">
+       <form method=post action="./orange/CommentServlet">
+
+   <fieldset>
+        <legend>留言版</legend>
+        
+    <div class="st1">
+        <label class="t1" for="name">姓名:</label>
+        <input type="text" id="name" name="name" size="30"><br>
+    </div>
+    <div class="st1">
+        <label for="stars" class="t1">評分:</label>
+        <input type="text" id="stars" name="stars" size="30"><br>
+    </div>
+     <!--  <div class="st1">
+        <label class="t1" for="photo">照片:</label>
+        <input type="text" id="photo" name="photo" ><br>
+    </div> -->  
+<div class="st1">
+    <label class="t1" for="pwd1">留言:</label>
+    <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
+</div>
+
+    <div class="sub">
+        <input type="submit" name="submit" value="傳送"  >
+        <input type="reset" value="清除"> 
+    </div>
+</fieldset>
+   
+</form>
+    </div>
+    <script>  
+    
+        let imgs=document.querySelectorAll("img");
+
+            for(i=0;i<imgs.length;i++){
+            imgs[i].onmouseover=mouseover;
+            imgs[i].onmouseout=mouseout;
+            }
+
+
+                
+
+        function mouseover() {
+      
+            let a = this.id.charAt(5)
+            for(i=1;i<=a;i++){
+            document.querySelector("#idimg"+i).src="image/s3.png";            
+            }
+            
+        }
+
+        function mouseout() {
+
+            let a = this.id.charAt(5)
+
+            for(i=1;i<=a;i++){
+            document.querySelector("#idimg"+i).src="image/s1.png";
+            }
+            
+        }
+
+        function focus() {
+            console.log("focus");
+        }
+
+        function blur() {
+            console.log("blur");
+        }
+    </script>
             </span>
         </div>
         <div id="div2" style="display:none;" class="ddiv">

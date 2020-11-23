@@ -1,14 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
-%>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
-    <title>進行登入</title>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        
+    <title>橙皮</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -40,7 +31,7 @@
        }
        .photo{
            padding: 0%;
-           background: url("Images/backbar2-1.jpg"); 
+           background: url("../Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
            background-size:100%
@@ -151,41 +142,44 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br>登入 |<a href="WebUserRegisterForm.jsp">註冊</a>  |
+              <br>登入 | 註冊  |
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
-<!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
-				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-                	<fieldset>
-                		<legend>登入相關資料</legend>
-                		<hr />
-                		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~20個字" required="required" />
-						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-                	</fieldset>
-                	<div align="center">
-						<input type="submit" id="submit" name="login" value="登入">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
-					</div>
-                </form>
-                <script src="scripts/WebUserLogin.js"></script>
+            <div class="container">
+            <h1 style="margin:10px auto;text-align:center">操作成功</h1>
             </div>
-            
+<script>
+	setTimeout(function(){
+		window.location.href="../ShowComment.jsp"
+	}
+	,5000);
+</script>
+
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
+    
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 700){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>   
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
                 <!-- Footer -->
                 <footer class="page-footer font-small mdb-color lighten-3 pt-4">
                 

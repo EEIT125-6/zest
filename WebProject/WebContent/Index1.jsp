@@ -148,7 +148,7 @@
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br><a href="webUser/WebUserLogin.jsp">登入</a> |
                <a href="webUser/WebUserRegisterForm.jsp">註冊</a>  |
-               <img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
+               <a href="product/index.jsp"><img src="Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>

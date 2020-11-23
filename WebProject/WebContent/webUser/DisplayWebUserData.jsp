@@ -153,7 +153,7 @@
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br><c:out value="${userFullData.nickname}" />|
               <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
-              <img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
@@ -249,7 +249,7 @@
 							<label>生活地點三：</label>
 							<c:out value="${selfData.get(0).addr2}" />
 							<hr />
-							<label>所擁有的陳幣：</label>
+							<label>所擁有的橙幣：</label>
 							<c:out value="${selfData.get(0).zest}" />
 							<hr />
 					</fieldset>
