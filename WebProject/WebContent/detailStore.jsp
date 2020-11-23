@@ -41,6 +41,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <title>橙皮</title>
     <style>
@@ -116,6 +117,8 @@
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
 		<span style="font-size: 140%">餐廳服務</span>
+		<a href="booking/bookingForm.jsp"><i class="material-icons" style="font-size:24px">today</i>進行訂位</a>
+        <a href="booking/Page1.jsp"><i class="material-icons" style="font-size:24px">build</i>查詢/修改訂位</a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
@@ -127,7 +130,10 @@
         </div>
         <hr>
         <div id="div1" class="ddiv">
-            <span style="font-size: 140%">hi</span>
+            <span style="font-size: 140%">
+            <a href=""><i class="material-icons" style="font-size:24px">grade</i>進行點評</a>
+            <a href=""><i class="material-icons" style="font-size:24px">receipt</i>查看評論</a>
+            </span>
         </div>
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> hello</span>

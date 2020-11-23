@@ -54,4 +54,15 @@
     <servlet-name>CommentServlet</servlet-name>
     <url-pattern>/orange/CommentServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>BookingServlet</display-name>
+    <servlet-name>BookingServlet</servlet-name>
+    <servlet-class>BookingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BookingServlet</servlet-name>
+    <url-pattern>/BookingServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
