@@ -12,7 +12,7 @@
    int maxFileSize = 5000 * 1024;
    int maxMemSize = 5000 * 1024;
    ServletContext context = pageContext.getServletContext();
-   String filePath = "C:\\java\\JavaWebWorkSpace\\WebProject\\WebContent\\Images";
+   String filePath = "C:\\java\\JavaWebWorkSpace\\WebProject\\WebContent\\Images\\";
 
    // Verify the content type
    String contentType = request.getContentType();
@@ -64,7 +64,7 @@
             sb = fileName.split("\\\\");
             }
          }
-         out.println("<a href='Index1.jsp'>back</a>");
+         out.println("<a href='Index1.jsp'>back to Index</a>");
          out.println("</body>");
          out.println("</html>");
 
@@ -98,6 +98,7 @@
   	      } catch (Exception e) {
   	        System.out.println("Connection Pool Error!");
   	      }
+  	    response.sendRedirect("Index1.jsp");
   	    }
       }catch(Exception ex) {
          System.out.println(ex);

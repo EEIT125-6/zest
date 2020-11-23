@@ -40,7 +40,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     
     <title>橙皮</title>
     <style>
@@ -70,6 +70,26 @@
             margin: 0;
             margin-left:5px ;
        }
+
+#gotop {
+    position:fixed;
+    z-index:90;
+    right:30px;
+    bottom:31px;
+    display:none;
+    width:50px;
+    height:50px;
+    color:#fff;
+    background:#ddbe56;
+    line-height:50px;
+    border-radius:50%;
+    transition:all 1.5s;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+#gotop :hover{
+    background:#0099CC;
+}
     </style>
 </head>
 <body>
@@ -91,15 +111,15 @@
         <!-- <%=request.getParameter("bookID")%> -->
         <h1 style="margin-bottom: 100px" ><%=request.getParameter("stname") %></h1>
         <hr>
-        <span>地點:<c:out value = "${saddress}"></c:out></span>
+        <span style="font-size: 140%">地點:<c:out value = "${saddress}"></c:out></span>
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span>餐廳服務</span>
+		<span style="font-size: 140%">餐廳服務</span>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
-		<div>
+		<div style="font-size: 140%">
             <span id="sp1" class="divcato" style="color:orange;text-decoration:underline;">美食分享</span>
             <span id="sp2" class="divcato">熱門餐點</span>
             <span id="sp3" class="divcato">店家餐點</span>    
@@ -107,16 +127,16 @@
         </div>
         <hr>
         <div id="div1" class="ddiv">
-            hi
+            <span style="font-size: 140%">hi</span>
         </div>
         <div id="div2" style="display:none;" class="ddiv">
-            hello
+            <span style="font-size: 140%"> hello</span>
         </div>
         <div id="div3" style="display:none;" class="ddiv">
-            ho
+             <span style="font-size: 140%">ho </span>
         </div>
         <div id="div4" style="display:none;" class="ddiv">
-        	<c:out value = "${stitd }"></c:out>
+        	 <span style="font-size: 140%"><c:out value = "${stitd }"></c:out></span>
         </div>
     </div>
         <script>
@@ -148,15 +168,15 @@
         })
          </script>
          
-   	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px">
-		<div>餐廳資訊</div>
+   	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px;">
+		<div style="style="font-size: 140%"">餐廳資訊</div>
 		<h2 style="color:gray;margin-bottom:10px;margin-top:10px"><c:out value="${stname1}"></c:out></h2>
 		<hr>
-		<div>
-			電話:<c:out value="${tel }"></c:out>
+		<div >
+			<span style="font-size: 140%">電話:<c:out value="${tel }"></c:out></span>
 		</div>
 		<div>
-			地址:<c:out value="${saddress }"></c:out>
+			<span style="font-size: 140%">地址:<c:out value="${saddress }"></c:out></span>
 		</div>
 	</div>
 	<%if(true){ %>
@@ -164,17 +184,18 @@
 		<c:param name="stname" value="${param.stname}" />
 		</c:url>
 			<a href="${EDITURL}">編輯</a>
-			
+			<span>|</span>
 		<c:url value="Insert.jsp" var="CEATEURL">
 		</c:url> 
 			<a href="${CEATEURL}">新增</a>
-			
+			<span>|</span>
 
-			<form action="DeleteStore.jsp" method="post">
+			<form action="DeleteStore.jsp" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="刪除" >
+				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
+			<span>|</span>
 		<c:url value="SimpleController" var="photoURL">
 		<c:param name="photo" value="${stname1}"></c:param>
 		</c:url>
@@ -185,6 +206,28 @@
 		</c:url>
 			<a href="${bannerURL}">修改店家banner</a>
 	<%} %>
+<!-- ---------------------------------------- -->
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
+    
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 700){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>   
 <!-- -------------------------------------------------------------------- -->
              <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
