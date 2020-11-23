@@ -61,7 +61,7 @@
            background-color: yellow;
            background: url("Images/backbar2-1.jpg"); 
            background-repeat: no-repeat;
-           height: 540px;
+           height: 700px;
            padding-top: 220px;
            background-size:100%
        }
@@ -96,7 +96,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="Index1.jsp"  style="float: left;font-size:37px;"><img src="Images/LOGO1-removebg-preview.png" style="height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>

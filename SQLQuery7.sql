@@ -1,6 +1,5 @@
 
-
-/****** Object:  Table [dbo].[Store]    Script Date: 2020/11/23 下午 04:34:56 ******/
+/****** Object:  Table [dbo].[Store]    Script Date: 2020/11/23 下午 05:47:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -113,6 +112,18 @@ INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [ban
 
 有機會可以來吃吃看~~!!
 營業時間：週一-週日:11:00 - 21:30', N'0925151692', N'Images/豪哥快炒BANNER.jpg', N'Images/1605013642-1876735125-g_l.jpg')
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl]) VALUES (16, N'小東門蒸烤鮮飯食', N'中式', N'新竹市東區大同路86號 (東門市場1082室)', N'人氣名店"小東門-蒸烤鮮飯食"。
+結合了日本、台灣及粵式料理，是學生、上班族消夜聚餐的最佳選擇！
+營業時間： 17:00~23:00', N'03-5237883', N'Images/小東門。蒸烤鮮飯食banner.jpg', N'Images/小東門蒸烤鮮飯食.jpg')
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl]) VALUES (17, N'靜岡勝政豬排', N'日式', N'桃園市中壢區中園路二段501號GBF', N'於內甜美細緻又多汁」的完美之境！是靜岡勝政豬排的使命！ 位於富士山腳下的靜岡勝政日式豬排，為日本靜岡縣屹立近20年的指標性排隊豬排名店，是當地人氣不墜的豬排名店。為呈現最原汁原味的靜岡勝政日式豬排風味饗宴，從食材、製作、食器選擇、服務，無一不細心嚴選打造，以期完整體現靜岡勝政日式豬排不斷追求「究極的日式豬排」的精神。', N'034680000', N'Images/靜岡勝政豬排23.jpg', N'Images/靜岡勝政豬排20181228_181827.jpg')
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl]) VALUES (18, N'拉麵吧RamanBar', N'日式', N'桃園市中壢區大同路84號', N'說起日本美食就讓人想起串燒和拉麵，拉麵吧結合日本的美食代表，推出雞肉串燒拉麵，提供多種湯頭讓饕客依偏好選擇，讓來拉麵吧客人們花少少錢就可以品嚐到日本的代表美食。', N'03-4220111', N'Images/拉麵吧banner.jpg', N'Images/拉麵吧3.JPG')
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl]) VALUES (19, N'硬派主廚的軟嫩料理', N'燒肉', N'新竹市東區中央路102巷10號300(東門市場 1143號', N'選用USDA Choice美國特選級牛肉，採用低溫熟成的舒服料理技法製作，保留了每塊肉品的原汁原味，再將表皮炙燒到微焦，一口咬下軟嫩的口感，搭配季節時蔬的享用，拌入半熟溫泉蛋、古早味肉燥飯，整體料理不過度烹調反而保留了食材的真實味道，肉肉控的必點料理～', N'03-5251323', N'Images/硬派主廚banner.JPG', N'Images/硬派主廚.jpg')
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl]) VALUES (20, N'RAINBOWPAPA', N'下午茶', N'桃園市中壢區幸福新村3號', N'每週都供應不同的主廚特餐，讓饕客每次來都有不一樣的味覺感受與驚喜，走進RAINBOW PAPA，感受全新的幸福滋味。', N'03-4655377', N'Images/RAINBOWPAPAbanner.JPG', N'Images/RAINBOWPAPAphoto.JPG')
 GO
 SET IDENTITY_INSERT [dbo].[Store] OFF
 GO
