@@ -7,6 +7,9 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
+<!-- taglib宣告 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!-- taglib宣告 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,25 +49,16 @@
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 
+              <a href="WebUserRegisterForm.jsp"> 註冊</a>|<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
             </div>
-            <div class="container-fluid photo">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
-                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
-                        <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
-                        line-height: 0px;">
-                          <img src="../Images/searchbut.jpg" >
-                        </button>
-                      </fieldset>
-                    </form>
-            </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
+            	<c:if test="${userFullData.password != null}">
+					<c:redirect url="WebUserMain.jsp" />
+				</c:if>
                 <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>登入相關資料</legend>

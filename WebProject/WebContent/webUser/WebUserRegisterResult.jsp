@@ -50,19 +50,6 @@
             </p>
               </div>
             </div>
-            <div class="container-fluid photo">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
-                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
-                        <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
-                        line-height: 0px;">
-                          <img src="../Images/searchbut.jpg" >
-                        </button>
-                      </fieldset>
-                    </form>
-            </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <p>${insertResultMessage}</p>

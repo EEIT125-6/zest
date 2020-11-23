@@ -49,22 +49,12 @@
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
+              <br><c:out value="${userFullData.nickname}" />|
+              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
+              <img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
-            </div>
-            <div class="container-fluid photo">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
-                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
-                        <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
-                        line-height: 0px;">
-                          <img src="../Images/searchbut.jpg" >
-                        </button>
-                      </fieldset>
-                    </form>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
@@ -137,6 +127,7 @@
 					    <span id="searchSpan"></span>
 					</fieldset>
 					<div align="center">
+						<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
 						<input type="submit" id="submit" name="select" value="執行查詢">
 						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
 					</div>

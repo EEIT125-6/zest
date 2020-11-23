@@ -49,22 +49,12 @@
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
+              <br><c:out value="${userFullData.nickname}" />|
+              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
+              <img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
-            </div>
-            <div class="container-fluid photo">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
-                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
-                        <button style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
-                        line-height: 0px;">
-                          <img src="../Images/searchbut.jpg" >
-                        </button>
-                      </fieldset>
-                    </form>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
@@ -146,6 +136,20 @@
 						    placeholder="請輸入行動電話或市內電話號碼" />
 						<span id="phoneSpan"></span>
 					    <hr />
+					    <label>原始的接收促銷/優惠意願：</label>
+					    <input type="hidden" name="originalGet_email" id="originalGet_email" value="${selfData.get(0).get_email}">
+					    <c:choose>
+							<c:when test="${selfData.get(0).get_email=='Y'}">願意</c:when>
+							<c:when test="${selfData.get(0).get_email=='N'}">不願意</c:when>
+						</c:choose>
+					    <br />
+					    <label>更正的接收促銷/優惠意願：</label>
+						<input type="radio" id="updatedGet_email1" name="updatedGet_email" value="Y" onblur="checkGet_email()">
+					    <label for="Y">願意</label>
+					    <input type="radio" id="updatedGet_email2" name="updatedGet_email" value="N" onblur="checkGet_email()">
+					    <label for="N">不願意</label>
+					    <span id="get_emailSpan"></span>
+						<hr />
 					    <label>原始的居住區域：</label>
 						<input type="hidden" name="originalLocation_code" id="originalLocation_code" value="${selfData.get(0).location_code}">
 						<c:choose>
@@ -175,7 +179,7 @@
 						</c:choose>
 						<br />
 					    <label>更正的居住區域：</label>
-				    	<select name="updatedlocation_code" id="updatedlocation_code" onblur="checkLocation_code()">
+				    	<select name="updatedLocation_code" id="updatedLocation_code" onblur="checkLocation_code()">
 							<option value="">請選擇目前您居住/生活的區域</option>
 							<option value="t01">臺北市</option>
 							<option value="t02">新北市</option>

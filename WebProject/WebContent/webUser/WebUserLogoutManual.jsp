@@ -6,9 +6,9 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
+<%
+	session.invalidate();
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     
     
-    <title>修改階段結束</title>
+    <title>登出完成</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -49,30 +49,13 @@
             <div class="container-fluid  header" >
               <div class="container" >
               <a href="http://localhost:8080/WebProject/Index.html"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><c:out value="${userFullData.nickname}" />|
-              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
-              <img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
+              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar">
             </p>
               </div>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${updateResultMessage}</p>
-                <p>5秒後將移至</p>
-                <p id = "pPage">${updateResultPage}</p>
-                <script>
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
-                		document.getElementById("pPage").innerHTML = "登入";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
-                		document.getElementById("pPage").innerHTML = "主畫面";
-                	}
-                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserMain.jsp";
-                	setTimeout(function () {
-	                	   window.location.href = redirectPage;
-               	  	}
-	                , 5000);
-                </script>
+                <p>5秒後將移至登入</p>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">

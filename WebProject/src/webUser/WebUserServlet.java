@@ -236,7 +236,7 @@ public class WebUserServlet extends HttpServlet {
 				location_code, addr0, addr1, addr2;
 		String gender, get_email;
 		LocalDate birth, join_date;
-		Integer lv = 0;
+		Integer lv = 0, version = 0;
 		BigDecimal zest = new BigDecimal("0");
 
 		/* 先從request取值，前端提供手動輸入的欄位可能要使用trim()去除頭尾的空白 */
@@ -268,7 +268,7 @@ public class WebUserServlet extends HttpServlet {
 		join_date = LocalDate.now();
 		/* 使用JavaBean建構子 */
 		WebUserBean reg_webUser = new WebUserBean(user_id, account, password, first_name, last_name, nickname, gender,
-				birth, fervor, email, phone, get_email, location_code, join_date, lv, addr0, addr1, addr2, zest);
+				birth, fervor, email, phone, get_email, location_code, join_date, lv, addr0, addr1, addr2, zest, version);
 		/* 嘗試建立Session，如果沒有就建立一個，並將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
 		request.getSession(true).setAttribute("reg_webUser", reg_webUser);
 		/* 將request、response交棒給另一個jsp，並交出控制權 */
@@ -414,6 +414,7 @@ public class WebUserServlet extends HttpServlet {
 				userFullData.setAddr1(checkResultSpace[17]);
 				userFullData.setAddr2(checkResultSpace[18]);
 				userFullData.setZest(new BigDecimal(checkResultSpace[19]));
+				userFullData.setVersion(Integer.parseInt(checkResultSpace[20]));
 
 				loginMessage = "歡迎 " + userFullData.getNickname() + " ！";
 				/* 嘗試建立Session，並將Java Bean物件userFullData以"userFullData"的名稱放入新Session中 */
@@ -629,11 +630,13 @@ public class WebUserServlet extends HttpServlet {
 		WebUserBean userData = (WebUserBean) request.getSession(true).getAttribute("userFullData");
 		/* 取得目前使用者ID */
 		String user_id = userData.getUser_id();
+		/* 取得目前使用者資料版本 */
+		int version = userData.getVersion();
 		/* 利用Connection產生DAO物件 */
 		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
 		
 		try {
-			updatePasswordResult = webUserDAO.updateWebUserPassword(user_id, newPassword);
+			updatePasswordResult = webUserDAO.updateWebUserPassword(user_id, newPassword, version);
 			if (updatePasswordResult) {
 				updateResultPage = "WebUserLogin.jsp";
 				updateResultMessage = "密碼變更成功！5秒後將返回登入畫面";
@@ -677,6 +680,8 @@ public class WebUserServlet extends HttpServlet {
 		WebUserBean userData = (WebUserBean) request.getSession(true).getAttribute("userFullData");
 		/* 取得目前使用者ID */
 		String updatedUser_id = userData.getUser_id();
+		/* 取得目前使用者資料版本 */
+		String version = String.valueOf(userData.getVersion());
 		/* 從request中取得查詢參數 */
 		String updatedFirst_name = (request.getParameter("updatedFirst_name").length() == 0) ? "?"
 				: request.getParameter("updatedFirst_name").trim();
@@ -684,7 +689,7 @@ public class WebUserServlet extends HttpServlet {
 				: request.getParameter("updatedLast_name").trim();
 		String updatedNickname = (request.getParameter("updatedNickname").length() == 0) ? "?"
 				: request.getParameter("updatedNickname").trim();
-		String updatedFervor = (request.getParameter("updatedFervor").length() == 0) ? "?"
+		String updatedFervor = (request.getParameter("updatedFervor") == null) ? "?"
 				: request.getParameter("updatedFervor").trim();
 		if (updatedFervor.substring(0,1).equals(",")) {
 			updatedFervor = updatedFervor.substring(1);
@@ -693,8 +698,10 @@ public class WebUserServlet extends HttpServlet {
 				: request.getParameter("updatedEmail").trim();
 		String updatedPhone = (request.getParameter("updatedPhone").length() == 0) ? "?"
 				: request.getParameter("updatedPhone").trim();
+		String updatedGet_email = (request.getParameter("updatedGet_email") == null) ? "?"
+				: request.getParameter("updatedGet_email");
 		String updatedLocation_code = (request.getParameter("updatedLocation_code") == null) ? "?"
-				: request.getParameter("updatedLocation_code").trim();
+				:request.getParameter("updatedLocation_code").trim();
 		String updatedAddr0 = (request.getParameter("updatedAddr0").length() == 0) ? "?"
 				: request.getParameter("updatedAddr0").trim();
 		String updatedAddr1 = (request.getParameter("updatedAddr1").length() == 0) ? "?"
@@ -702,8 +709,8 @@ public class WebUserServlet extends HttpServlet {
 		String updatedAddr2 = (request.getParameter("updatedAddr2").length() == 0) ? "?"
 				: request.getParameter("updatedAddr2").trim();
 		String updatedParameters = updatedUser_id + ":" + updatedFirst_name + ":" + updatedLast_name + ":" + updatedNickname 
-				+ ":" + updatedFervor + ":" + updatedEmail + ":" + updatedPhone + ":" + updatedLocation_code 
-				+ ":" + updatedAddr0 + ":" + updatedAddr1 + ":" + updatedAddr2;
+				+ ":" + updatedFervor + ":" + updatedEmail + ":" + updatedPhone + ":" + updatedGet_email + ":" + updatedLocation_code 
+				+ ":" + updatedAddr0 + ":" + updatedAddr1 + ":" + updatedAddr2 + ":" + version;
 		
 		/* 利用Connection產生DAO物件 */
 		webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);

@@ -19,7 +19,7 @@ public interface WebUserDAO {
 	public boolean insertWebUser(WebUserBean insertedData) throws SQLException;
 	
 	/* 修改密碼 */
-	public boolean updateWebUserPassword(String user_id, String newPassword) throws SQLException;
+	public boolean updateWebUserPassword(String user_id, String newPassword, int version) throws SQLException;
 	
 	/* 修改其他資料 */
 	public boolean updateWebUserData(String updatedParameters) throws SQLException;

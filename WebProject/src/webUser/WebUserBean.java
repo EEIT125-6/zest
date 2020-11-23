@@ -29,6 +29,7 @@ public class WebUserBean implements Serializable {
 	private String addr1;
 	private String addr2;
 	private BigDecimal zest;
+	private Integer version;
 
 	/* 無參數建構子 */
 	public WebUserBean() {
@@ -36,7 +37,7 @@ public class WebUserBean implements Serializable {
 	}
 
 	/* 帶參數建構子 */
-	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, String pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, String pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest) {
+	public WebUserBean(String pUser_id, String pAccount, String pPassword, String pFirst_name, String pLast_name, String pNickname, String pGender, LocalDate pBirthday, String pFervor, String pEmail, String pPhone, String pGet_email, String pLocation_code, LocalDate pJoin_date, Integer pLv, String pAddr0, String pAddr1 , String pAddr2, BigDecimal pZest, Integer pVersion) {
 		this.user_id = pUser_id;
 		this.account = pAccount;
 		this.password = pPassword;
@@ -56,6 +57,7 @@ public class WebUserBean implements Serializable {
 		this.addr1 = pAddr1;
 		this.addr2 = pAddr2;
 		this.zest = pZest;
+		this.version = pVersion;
 	}
 
 	/* setter&getter */
@@ -209,5 +211,13 @@ public class WebUserBean implements Serializable {
 
 	public void setZest(BigDecimal zest) {
 		this.zest = zest;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 }

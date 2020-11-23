@@ -92,6 +92,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 					totalResult += ":" + rs0.getString("addr1");
 					totalResult += ":" + rs0.getString("addr2");
 					totalResult += ":" + rs0.getBigDecimal("zest").toString();
+					totalResult += ":" + String.valueOf(rs0.getInt("version"));
 				}
 				if (!checkResult) {
 					totalResult = Boolean.toString(checkResult);
@@ -199,15 +200,18 @@ public class WebUserJDBCDAO implements WebUserDAO {
 	}
 	
 	/* 修改密碼 */
-	public boolean updateWebUserPassword(String user_id, String newPassword) throws SQLException {
+	public boolean updateWebUserPassword(String user_id, String newPassword, int version) throws SQLException {
 		boolean updatePasswordResult = false;
+		int newVersion = version + 1;
 		
-		try (PreparedStatement preStmt0 = connection0.prepareStatement("UPDATE dbo.WebUser SET password = ? WHERE user_id = ?")) {
+		try (PreparedStatement preStmt0 = connection0.prepareStatement("UPDATE dbo.WebUser SET password = ?, version = ? WHERE user_id = ? AND version = ?")) {
 			/* 開始交易 */
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
 			preStmt0.setString(1, newPassword);
-			preStmt0.setString(2, user_id);
+			preStmt0.setInt(2, newVersion);
+			preStmt0.setString(3, user_id);
+			preStmt0.setInt(4, version);
 			
 			/* 加入批次 */
 			preStmt0.addBatch();
@@ -244,10 +248,13 @@ public class WebUserJDBCDAO implements WebUserDAO {
 		String updatedFervor = (updatedParameters.split(":")[4].equals("?")) ? "" : updatedParameters.split(":")[4];
 		String updatedEmail = (updatedParameters.split(":")[5].equals("?")) ? "" : updatedParameters.split(":")[5];
 		String updatedPhone = (updatedParameters.split(":")[6].equals("?")) ? "" : updatedParameters.split(":")[6];
-		String updatedLocation_code = (updatedParameters.split(":")[7].equals("?")) ? "" : updatedParameters.split(":")[7];
-		String updatedAddr0 = (updatedParameters.split(":")[8].equals("?")) ? "" : updatedParameters.split(":")[8];
-		String updatedAddr1 = (updatedParameters.split(":")[9].equals("?")) ? "" : updatedParameters.split(":")[9];
-		String updatedAddr2 = (updatedParameters.split(":")[10].equals("?")) ? "" : updatedParameters.split(":")[10];
+		String updatedGet_email = (updatedParameters.split(":")[7].equals("?")) ? "" : updatedParameters.split(":")[7];
+		String updatedLocation_code = (updatedParameters.split(":")[8].equals("?")) ? "" : updatedParameters.split(":")[8];
+		String updatedAddr0 = (updatedParameters.split(":")[9].equals("?")) ? "" : updatedParameters.split(":")[9];
+		String updatedAddr1 = (updatedParameters.split(":")[10].equals("?")) ? "" : updatedParameters.split(":")[10];
+		String updatedAddr2 = (updatedParameters.split(":")[11].equals("?")) ? "" : updatedParameters.split(":")[11];
+		int version = Integer.parseInt(updatedParameters.split(":")[12]);
+		int newVersion = version + 1;
 		
 		/* 準備設定statement */
 		StringBuilder sb0 = new StringBuilder();
@@ -290,6 +297,13 @@ public class WebUserJDBCDAO implements WebUserDAO {
 				sb0.append(", phone = '" + updatedPhone + "'");
 			}
 		}
+		if (!updatedGet_email.equals("")) {
+			if (sb0.toString().equals("")) {
+				sb0.append("UPDATE dbo.WebUser SET get_email = '" + updatedGet_email + "'");
+			} else {
+				sb0.append(", get_email = '" + updatedGet_email + "'");
+			}
+		}
 		if (!updatedLocation_code.equals("")) {
 			if (sb0.toString().equals("")) {
 				sb0.append("UPDATE dbo.WebUser SET location_code = '" + updatedLocation_code + "'");
@@ -320,7 +334,9 @@ public class WebUserJDBCDAO implements WebUserDAO {
 		}
 		/* 收尾 */
 		if (!sb0.toString().equals("")) {
-			sb0.append(" WHERE user_id = '" + updatedUser_id + "'");
+			sb0.append(", version = " + newVersion + " WHERE user_id = '" + updatedUser_id + "'");
+			
+			System.out.println("SQL Comand is :" + System.lineSeparator() + sb0.toString());
 			
 			try (Statement stmt0 = connection0.createStatement()){
 				/* 開始交易 */

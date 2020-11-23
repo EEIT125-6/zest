@@ -26,6 +26,12 @@ function checkForm() {
 	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
 	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
+	let get_emailObjValue;
+	get_emailObjValue = (document.getElementById("updatedGet_email1") == null) ? "" : document.getElementById("updatedGet_email1").value;
+	get_emailObjValue = (document.getElementById("updatedGet_email2") == null) ? "" : document.getElementById("updatedGet_email2").value;
+	console.log(get_emailObjValue);
+	let oldGet_emailObjValue = document.getElementById("originalGet_email").value;
+	
 	let location_codeObjValue = (document.getElementById("updatedLocation_code") == null) ? "" : document.getElementById("updatedLocation_code").value;
 	let oldLocation_codeObjValue = document.getElementById("originalLocation_code").value;
 	
@@ -52,6 +58,8 @@ function checkForm() {
 	} else if (!checkEmail()) {
 		return false;
 	} else if (!checkPhone()) {
+		return false;
+	} else if (!checkGet_email()) {
 		return false;
 	} else if (!checkLocation_code()) {
 		return false;
@@ -88,6 +96,11 @@ function checkForm() {
 			document.getElementById("updatedPhone").value = "";
 			counter++;
 		}
+		if (get_emailObjValue == "" || get_emailObjValue.length == 0 || get_emailObjValue == oldGet_emailObjValue) {
+			document.getElementById("updatedGet_email1").value = "";
+			document.getElementById("updatedGet_email2").value = "";
+			counter++;
+		}
 		if (location_codeObjValue == "" || location_codeObjValue.length == 0 || location_codeObjValue == oldLocation_codeObjValue) {
 			document.getElementById("updatedLocation_code").value = "";
 			counter++;
@@ -105,7 +118,7 @@ function checkForm() {
 			counter++;
 		}
 		
-		if (counter == 10) {
+		if (counter == 11) {
 			updatedStr = "至少需填寫/選擇一項條件才能執行修改/更正！";
 			updatedSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updatedStr;
 			updatedSpan.style.color = "red";
@@ -222,13 +235,7 @@ function checkNickname() {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
 	}
-	if (!nicknameIsOk) {
-		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-		nicknameSpan.style.color = "red";
-		nicknameSpan.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (nicknameIsOk) {
 		if (nicknameObjValue == "" || nicknameObjValue.length == 0) {
 			nicknameSpan.innerHTML = "";
 		} else {
@@ -261,13 +268,7 @@ function checkFervor() {
 		fervorStr = "偏好食物填寫完成";
 		fervorIsOk = true;
 	}
-	if (!fervorIsOk) {
-		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
-		fervorSpan.style.color = "red";
-		fervorSpan.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (fervorIsOk) {
 		if (fervorObjValue == "" || fervorObjValue.length == 0) {
 			fervorSpan.innerHTML = "";
 		} else {
@@ -359,6 +360,34 @@ function checkPhone() {
 	}
 }
 
+function checkGet_email() {
+	let get_emailObjValue;
+	get_emailObjValue = (document.getElementById("updatedGet_email1") == null) ? "" : document.getElementById("updatedGet_email1").value;
+	get_emailObjValue = (document.getElementById("updatedGet_email2") == null) ? "" : document.getElementById("updatedGet_email2").value;
+	let get_emailSpan = document.getElementById("get_emailSpan");
+	
+	let get_emailIsOk = true;
+	let get_emailStr;
+	
+	if (get_emailObjValue == "" || get_emailObjValue.length == 0) {
+		get_emailStr = "";
+		get_emailIsOk = true;
+	} else {
+		get_emailStr = "接收促銷/優惠意願已選擇完畢";
+		get_emailIsOk = true;
+	}
+	if (get_emailIsOk) {
+		if (get_emailObjValue == "" || get_emailObjValue.length == 0) {
+			get_emailSpan.innerHTML = "";
+		} else {
+			get_emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + get_emailStr;
+			get_emailSpan.style.color = "black";
+			get_emailSpan.style.fontStyle = "normal";
+		}
+		return true;
+	}
+}
+
 function checkLocation_code() {
 	let location_codeObjValue = (document.getElementById("updatedLocation_code") == null) ? "" : document.getElementById("updatedLocation_code").value;
 	let location_codeSpan = document.getElementById("location_codeSpan");
@@ -373,13 +402,7 @@ function checkLocation_code() {
 		location_codeStr = "居住區域已選擇完畢";
 		location_codeIsOk = true;
 	}
-	if (!location_codeIsOk) {
-		location_codeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + location_codeStr;
-		location_codeSpan.style.color = "red";
-		location_codeSpan.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (location_codeIsOk) {
 		if (location_codeObjValue == "" || location_codeObjValue.length == 0) {
 			location_codeSpan.innerHTML = "";
 		} else {
@@ -405,13 +428,7 @@ function checkAddr0() {
 		addr0Str = "生活地點一已填寫完畢";
 		addr0IsOk = true;
 	}
-	if (!addr0IsOk) {
-		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr0Str;
-		addr0Span.style.color = "red";
-		addr0Span.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (addr0IsOk) {
 		if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
 			addr0Span.innerHTML = "";
 		} else {
@@ -437,13 +454,7 @@ function checkAddr1() {
 		addr1Str = "生活地點二已填寫完畢";
 		addr1IsOk = true;
 	}
-	if (!addr1IsOk) {
-		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr1Str;
-		addr1Span.style.color = "red";
-		addr1Span.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (addr1IsOk) {
 		if (addr1ObjValue == "" || addr1ObjValue.length == 0) {
 			addr1Span.innerHTML = "";
 		} else {
@@ -469,13 +480,7 @@ function checkAddr2() {
 		addr2Str = "生活地點三已填寫完畢";
 		addr2IsOk = true;
 	}
-	if (!addr2IsOk) {
-		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr2Str;
-		addr2Span.style.color = "red";
-		addr2Span.style.fontStyle = "italic";
-		return false;
-	}
-	else {
+	if (addr2IsOk) {
 		if (addr2ObjValue == "" || addr2ObjValue.length == 0) {
 			addr2Span.innerHTML = "";
 		} else {
@@ -494,6 +499,7 @@ function clearMessage() {
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
 	document.getElementById("phoneSpan").innerHTML = "";
+	document.getElementById("get_EmailSpan").innerHTML = "";
 	document.getElementById("location_codeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";
