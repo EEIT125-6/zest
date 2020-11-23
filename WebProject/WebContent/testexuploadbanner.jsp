@@ -64,7 +64,7 @@
             sb = fileName.split("\\\\");
             }
          }
-         out.println("<a href='Index1.jsp'>back</a>");
+         out.println("<a href='Index1.jsp'>back to Index</a>");
          out.println("</body>");
          out.println("</html>");
 
@@ -98,6 +98,7 @@
   	      } catch (Exception e) {
   	        System.out.println("Connection Pool Error!");
   	      }
+  	    response.sendRedirect("Index1.jsp");
   	    }
       }catch(Exception ex) {
          System.out.println(ex);

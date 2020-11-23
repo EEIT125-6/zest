@@ -48,11 +48,9 @@
             // Get the uploaded file parameters
             String fieldName = fi.getFieldName();
             String fileName = fi.getName();
-
             boolean isInMemory = fi.isInMemory();
             long sizeInBytes = fi.getSize();
             // Write the file
-      System.out.println(fileName);
             if( fileName.lastIndexOf("\\") >= 0 ){
             file = new File( filePath + 
             fileName.substring( fileName.lastIndexOf("\\"))) ;
@@ -66,7 +64,7 @@
             sb = fileName.split("\\\\");
             }
          }
-         out.println("<a href='Index1.jsp'>back</a>");
+         out.println("<a href='Index1.jsp'>back to Index</a>");
          out.println("</body>");
          out.println("</html>");
 
@@ -100,6 +98,7 @@
   	      } catch (Exception e) {
   	        System.out.println("Connection Pool Error!");
   	      }
+   	    response.sendRedirect("Index1.jsp");
   	    }
       }catch(Exception ex) {
          System.out.println(ex);

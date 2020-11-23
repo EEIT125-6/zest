@@ -1,4 +1,3 @@
-<%@ page import="store.StoreDB"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
@@ -41,6 +40,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+ <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 <title>Document</title>
 <style>
 body {
@@ -85,8 +85,8 @@ body {
         }
         .h11{
             
-            font-size: 30px;
-            margin-bottom:160px ;
+            font-size: 45px;
+            margin-bottom:35px ;
         }
         .postion{
 
@@ -94,6 +94,26 @@ body {
         .itdc{
 
         }
+        
+#gotop {
+    position:fixed;
+    z-index:90;
+    right:30px;
+    bottom:31px;
+    display:none;
+    width:50px;
+    height:50px;
+    color:#fff;
+    background:#ddbe56;
+    line-height:50px;
+    border-radius:50%;
+    transition:all 1.5s;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+#gotop :hover{
+    background:#0099CC;
+}
 </style>
 </head>
 <body>
@@ -109,12 +129,12 @@ body {
             <div class="container-fluid " style="margin-top:10px">
                 <!-- <img src="images/backbar2-1.jpg"> -->
                     <form action="SimpleController" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 600px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="60"  placeholder="搜尋餐廳"
-                        style="height: 36px;;border-radius: 4px;line-height: 38px;border: solid 2px black;;" >
-                        <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;
-                        line-height: 0px;">
-                          <img src="Images/searchbut.jpg" >
+                      <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
+                        <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳"
+                        style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" >
+                        <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px
+                         ;float:right;height: 36px">
+                        	<img src="Images/searchbut.jpg" >  
                         </button>
                       </fieldset>
                     </form>
@@ -122,7 +142,7 @@ body {
             </div>
 	<div class="container" style="margin-top:10px">
 	<div class="jumbotron row"
-		style="padding: 25px; background-color: white;">
+		style="padding: 25px; background-color: white;font-size: 150%">
 		<c:url value="SimpleController" var="riceURL">
 			<c:param name="sclass" value="中式" />
 		</c:url>
@@ -220,7 +240,7 @@ body {
    -->
       
       
-		<div style="margin-bottom:50px">
+		<div style="margin-bottom:50px;">
 		<c:forEach var="row" items="${rs.rows}">
 
 		
@@ -232,8 +252,8 @@ body {
        				 <div class="photo"  style="background-image: url('${row.photourl}');background-size:100% 100%">
             
       				  </div>
-			        <div class="textdiv">
-			            <h1 class="h11">
+			        <div class="textdiv" style="font-size: 135%">
+			            <h1 class="h11" >
 			                ${row.stname }
 			            </h1>
 			            <div class="postion">
@@ -292,7 +312,29 @@ body {
  -->
 
 
-
+<!-- ---------------------------------------- -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
+    
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 500){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>    
 <!-- -------------------------------------------------------------------------------------------- -->
              <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

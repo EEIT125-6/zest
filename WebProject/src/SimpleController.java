@@ -20,9 +20,6 @@ import javax.websocket.Session;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
-import store.PhotoBean;
-import store.StoreDB;
-
 /**
  * Servlet implementation class SimpleController
  */
@@ -54,9 +51,9 @@ public class SimpleController extends HttpServlet {
 		      InitialContext ctx = new InitialContext();
 		      // Lookup the DataSource, which will be backed by a pool
 		      //   that the application server provides.
-		      ds = (DataSource)ctx.lookup("java:comp/env/jdbc/EmployeeDB");
+		      ds = (DataSource)ctx.lookup("java:comp/env/jdbc/zest");
 		      if (ds == null)
-		         throw new ServletException("Unknown DataSource 'jdbc/EmployeeDB'");
+		         throw new ServletException("Unknown DataSource 'jdbc/zest'");
 		  } catch (NamingException ex) {
 		      ex.printStackTrace();
 		  }
