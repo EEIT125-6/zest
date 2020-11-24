@@ -14,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import org.apache.tomcat.util.buf.StringCache;
-
 import booking.bean.BookingBean;
-import jdk.nashorn.internal.runtime.ListAdapter;
 
 
 /**
@@ -145,7 +142,7 @@ public class BookingServlet extends HttpServlet {
 			
 		boolean del = bookingDAO.cancelBooking(phone);
 		if(del)
-			  request.getRequestDispatcher("booking/cancelResult.jsp").forward(request,response);
+			  request.getRequestDispatcher("./booking/cancelResult.jsp").forward(request,response);
 		  else {
 			  System.out.println("訂位取消未成功。。。");
 		}

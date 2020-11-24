@@ -315,7 +315,7 @@ public class WebUserServlet extends HttpServlet {
 				/* 將訊息insertResultPage以"insertResultPage"的名稱放入新Session中 */
 				request.getSession(true).setAttribute("insertResultPage", insertResultPage);
 				/* 導向其他畫面 */
-				request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request, response);
+				request.getRequestDispatcher("../webUser/WebUserRegisterResult.jsp").forward(request, response);
 			}
 		} else {
 			insertResultMessage = "發生錯誤！" + idResultSpace[1];
@@ -327,10 +327,9 @@ public class WebUserServlet extends HttpServlet {
 		/* 另外建立Session，並將訊息insertResultMessage以"insertResultMessage"的名稱放入新Session中 */
 		request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
 		/* 將訊息insertResultPage以"insertResultPage"的名稱放入新Session中 */
-		System.out.println("將被導向：" + insertResultPage);
 		request.getSession(true).setAttribute("insertResultPage", insertResultPage);
 		/* 導向其他畫面 */
-		request.getRequestDispatcher("/webUser/WebUserRegisterResult.jsp").forward(request, response);
+		request.getRequestDispatcher("../webUser/WebUserRegisterResult.jsp").forward(request, response);
 	}
 
 	/* Register undo */

@@ -152,7 +152,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 		boolean insertResult = false;
 
 		try (PreparedStatement preStmt0 = connection0
-				.prepareStatement("INSERT INTO dbo.WebUser VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+				.prepareStatement("INSERT INTO dbo.WebUser VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 			/* 開始交易 */
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
@@ -175,6 +175,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 			preStmt0.setString(17, insertedData.getAddr1());
 			preStmt0.setString(18, insertedData.getAddr2());
 			preStmt0.setBigDecimal(19, insertedData.getZest());
+			preStmt0.setInt(20, insertedData.getVersion());
 
 			/* 加入批次 */
 			preStmt0.addBatch();
@@ -464,6 +465,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 					tmpData.setAddr1(rs0.getString("addr1"));
 					tmpData.setAddr2(rs0.getString("addr2"));
 					tmpData.setZest(rs0.getBigDecimal("zest"));
+					tmpData.setVersion(rs0.getInt("version"));
 					selectedResult.add(tmpData);
 				}
 				/* 確認交易 */
@@ -513,6 +515,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 					selfData.setAddr1(rs0.getString("addr1"));
 					selfData.setAddr2(rs0.getString("addr2"));
 					selfData.setZest(rs0.getBigDecimal("zest"));
+					selfData.setVersion(rs0.getInt("version"));
 				}
 			}
 			/* 確認交易 */
@@ -532,7 +535,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 		boolean insertResult = false;
 
 		try (PreparedStatement preStmt0 = connection0
-				.prepareStatement("INSERT INTO dbo.WebUserDeleted VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+				.prepareStatement("INSERT INTO dbo.WebUserDeleted VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 			/* 開始交易 */
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
@@ -555,6 +558,7 @@ public class WebUserJDBCDAO implements WebUserDAO {
 			preStmt0.setString(17, insertedData.getAddr1());
 			preStmt0.setString(18, insertedData.getAddr2());
 			preStmt0.setBigDecimal(19, insertedData.getZest());
+			preStmt0.setInt(20, insertedData.getVersion());
 
 			/* 加入批次 */
 			preStmt0.addBatch();

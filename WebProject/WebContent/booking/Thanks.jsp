@@ -19,7 +19,7 @@ url="bookingForm.jsp">
 <title>完成訂位</title>
 <script type="text/javascript">
 setTimeout(function(){
-	window.location.href="booking/bookingForm.jsp";
+	window.location.href="/WebProject/booking/bookingForm.jsp";
 },5000);
 </script>
     <style>
@@ -52,10 +52,10 @@ setTimeout(function(){
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="./Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="../Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br>登入 | 註冊  |
-              <a href="./product/index.jsp"><img src="./Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
+              <a href="../product/index.jsp"><img src="./Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
@@ -63,7 +63,7 @@ setTimeout(function(){
 <h2>訂位完成！</h2>
 5秒後將自動轉跳回訂位頁面
 <%-- <a href="<c:url value='bookingForm.jsp'/>"></a> --%>
-<form action="../bookingForm.jsp" method="post" >
+<form action="/WebProject/booking/bookingForm.jsp" method="post" >
 <input type="submit" name="back" value="返回" style="margin-top:20px;">
 </form>         
 </center> 

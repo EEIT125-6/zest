@@ -233,7 +233,7 @@ function checkNickname() {
 }
 
 function checkBirthday() {
-	let birthdayObjValue = document.getElementById("birthday").value;
+	let birthdayObjValue = document.getElementById("birth").value;
 	let birthdaySpan = document.getElementById("birthdaySpan");
 
 	let birthdayIsOk = true;

@@ -24,7 +24,7 @@ response.setContentType("text/html;charset=UTF-8");
        }
        .photo{
            padding: 0%;
-           background: url("../Images/backbar2-1.jpg"); 
+           background: url("./Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
        }
@@ -41,10 +41,10 @@ response.setContentType("text/html;charset=UTF-8");
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="../Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br>登入 | 註冊  |
-              <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
+              <a href="../product/index.jsp"><img src="./Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
@@ -54,7 +54,7 @@ response.setContentType("text/html;charset=UTF-8");
 <h2>您的預約已取消！</h2>
 </div>  
 <a href="<c:url value='Page1.jsp'/>"></a>
-<form action="./Page1.jsp" method="post" >
+<form action="/WebProject/booking/Page1.jsp" method="post" >
 <input type="submit" name="back" value="返回" style="margin-bottom:70px">
 </form>
   
