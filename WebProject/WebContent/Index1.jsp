@@ -18,6 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
     <title>橙皮</title>
     <style>
@@ -149,6 +150,7 @@
               <br><a href="webUser/WebUserLogin.jsp">登入</a> |
                <a href="webUser/WebUserRegisterForm.jsp">註冊</a>  |
                <a href="product/index.jsp"><img src="Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
+               <a href="booking/Page1.jsp"><i class="material-icons" style="font-size:24px">build</i></a>
             </p>
               </div>
             </div>

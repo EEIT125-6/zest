@@ -173,10 +173,6 @@ request.setCharacterEncoding("UTF-8");
         <label class="t1" for="date">時間:</label>
         <jsp:getProperty name="commentBean" property="date" /><br>
     </div>
-   <div class="st1">
-        <label class="t1" for="photo">照片:</label>
-        <jsp:getProperty name="commentBean" property="photo" /><br>
-    </div>
 <div class="st1">
     <label class="t1" for="context">留言:</label>
     <jsp:getProperty name="commentBean" property="context" /></textarea><br>

@@ -37,7 +37,7 @@ setTimeout(function(){
        }
        .photo{
            padding: 0%;
-           background: url("../Images/backbar2-1.jpg"); 
+           background: url("./Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
        }
@@ -52,10 +52,10 @@ setTimeout(function(){
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="./Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br>登入 | 註冊  |
-              <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
+              <a href="./product/index.jsp"><img src="./Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>

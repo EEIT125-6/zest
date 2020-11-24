@@ -168,45 +168,47 @@
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>
 						<legend><c:out value="${selectResultMessage}"></c:out></legend>
-						<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
-							<hr />
-							<label><c:out value="帳號名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).account}" />
-							<hr />
-							<label><c:out value="稱呼名稱：" /></label>
-							<c:out value="${selectedResult.get(userCount).nickname}" />
-							<hr />
-							<label><c:out value="偏好食物：" /></label>
-							<c:out value="${selectedResult.get(userCount).fervor}" />
-							<hr />
-							<label><c:out value="居住區域：" /></label>
-							<c:choose>
-								<c:when test="${selectedResult.get(userCount).location_code=='t01'}">臺北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t02'}">新北市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t03'}">桃園市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t04'}">臺中市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t05'}">臺南市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t06'}">高雄市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t07'}">基隆市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t08'}">新竹市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t09'}">嘉義市</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t10'}">新竹縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t11'}">苗栗縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t12'}">彰化縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t13'}">南投縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t14'}">雲林縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t15'}">嘉義縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t16'}">屏東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t17'}">宜蘭縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t18'}">花蓮縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t19'}">臺東縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t20'}">澎湖縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t21'}">金門縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t22'}">連江縣</c:when>
-								<c:when test="${selectedResult.get(userCount).location_code=='t23'}">其他區</c:when>
-							</c:choose>
-							<hr />
-						</c:forEach>
+						<c:if test="${selectedResult.size()>0}">
+							<c:forEach var="userCount" begin="0" end="${selectedResult.size()-1}">
+								<hr />
+								<label><c:out value="帳號名稱：" /></label>
+								<c:out value="${selectedResult.get(userCount).account}" />
+								<hr />
+								<label><c:out value="稱呼名稱：" /></label>
+								<c:out value="${selectedResult.get(userCount).nickname}" />
+								<hr />
+								<label><c:out value="偏好食物：" /></label>
+								<c:out value="${selectedResult.get(userCount).fervor}" />
+								<hr />
+								<label><c:out value="居住區域：" /></label>
+								<c:choose>
+									<c:when test="${selectedResult.get(userCount).location_code=='t01'}">臺北市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t02'}">新北市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t03'}">桃園市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t04'}">臺中市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t05'}">臺南市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t06'}">高雄市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t07'}">基隆市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t08'}">新竹市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t09'}">嘉義市</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t10'}">新竹縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t11'}">苗栗縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t12'}">彰化縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t13'}">南投縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t14'}">雲林縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t15'}">嘉義縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t16'}">屏東縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t17'}">宜蘭縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t18'}">花蓮縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t19'}">臺東縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t20'}">澎湖縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t21'}">金門縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t22'}">連江縣</c:when>
+									<c:when test="${selectedResult.get(userCount).location_code=='t23'}">其他區</c:when>
+								</c:choose>
+								<hr />
+							</c:forEach>
+						</c:if>
 					</fieldset>
 					<div align="center">
 						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>

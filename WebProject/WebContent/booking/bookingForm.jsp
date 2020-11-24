@@ -14,6 +14,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <title>訂位系統</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 
@@ -129,6 +130,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br>登入 | 註冊  |
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
+              <a href="Page1.jsp"><i class="material-icons" style="font-size:24px">build</i></a>
             </p>
               </div>
        </div>
@@ -191,7 +193,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
             <textarea name="needs" id="cm"cols="40" rows="5"></textarea>
         </div>
         <div class="st2">
-            <input type="submit" name="back" value="上一步">
+            <a href="javascript:history.back()"><input type="button" name="back" value="上一步"></a>
             <input type="submit" name="next" id="next" value="下一步" >
         </div>
     </fieldset>

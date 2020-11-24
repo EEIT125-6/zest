@@ -153,7 +153,7 @@ response.setCharacterEncoding("UTF-8");
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
               <br>登入 |註冊  |
               <a href="index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
@@ -164,7 +164,7 @@ response.setCharacterEncoding("UTF-8");
 	<div class="container"  style="margin-top: 20px;">
 	<sql:setDataSource var="product"
 		driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-		url="jdbc:sqlserver://10.31.25.130:1433;databaseName=WebProject"
+		url="jdbc:sqlserver://localhost:1433;databaseName=WebProject"
 		user="scott" password="tiger" />
 
 	<sql:query dataSource="${product}" var="products">

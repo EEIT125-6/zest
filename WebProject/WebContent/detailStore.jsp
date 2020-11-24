@@ -120,7 +120,6 @@
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
 		<span style="font-size: 140%">餐廳服務</span>
 		<a href="booking/bookingForm.jsp"><i class="material-icons" style="font-size:24px">today</i>進行訂位</a>
-        <a href="booking/Page1.jsp"><i class="material-icons" style="font-size:24px">build</i>查詢/修改訂位</a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
