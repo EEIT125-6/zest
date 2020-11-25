@@ -53,6 +53,41 @@ public class WebUserJDBCDAO implements WebUserDAO {
 
 		return checkResult;
 	}
+	
+	/*
+	 * 檢查信箱是否已使用 -1->異常、0->不存在、1->存在
+	 */
+	public int checkEmailExist(String inputEmail) throws SQLException {
+		int checkResult = -1;
+		int resultCount = 0;
+		
+		try (PreparedStatement preStmt0 = connection0
+				.prepareStatement("SELECT email FROM dbo.WebUser WHERE email = ?")){
+			/* 開始交易 */
+			connection0.setAutoCommit(false);
+			/* 設定參數 */
+			preStmt0.setString(1, inputEmail);
+			if (preStmt0 != null) {
+				/* 執行查詢 */
+				ResultSet rs0 = preStmt0.executeQuery();
+				if (rs0.next()) {
+					resultCount++;
+				}
+				checkResult = (resultCount > 0) ? 1 : 0;
+				rs0.close();
+				/* 確認交易 */
+				connection0.commit();
+			} 
+		} catch (SQLException sqlE) {
+			System.out.println(sqlE);
+			checkResult = -1;
+			/* 撤回交易 */
+			connection0.rollback();
+			throw new SQLException(sqlE);
+		}
+		
+		return checkResult;
+	}
 
 	/* 檢查密碼，後面用,分隔將使用者資料傳回來 */
 	public String checkPassword(String inputAccount, String inputPassword) throws SQLException {

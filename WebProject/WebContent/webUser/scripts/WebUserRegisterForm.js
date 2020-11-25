@@ -51,11 +51,9 @@ function checkAccountName() {
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";
-			document.getElementById("checkAccount").style = "display:none";
 			accountIsOk = false;
 		} else {
 			accountStr = "帳號格式正確";
-			document.getElementById("checkAccount").style = "display:inline";
 			accountIsOk = true;
 		}
 	}
@@ -63,11 +61,13 @@ function checkAccountName() {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 		accountSpan.style.color = "red";
 		accountSpan.style.fontStyle = "italic";
+		document.getElementById("checkAccount").style = "display:none";
 		return false;
 	} else {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
 		accountSpan.style.color = "black";
 		accountSpan.style.fontStyle = "normal";
+		document.getElementById("checkAccount").style = "display:inline";
 		return true;
 	}
 }
@@ -334,12 +334,14 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
+		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 		emailSpan.style.color = "black";
 		emailSpan.style.fontStyle = "normal";
+		document.getElementById("checkEmailUsed").style = "display:inline";
 		return true;
 	}
 }

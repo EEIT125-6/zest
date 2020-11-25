@@ -25,7 +25,7 @@
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
 		        
-    <title>進行註冊</title>
+    <title>店家註冊</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -164,7 +164,7 @@
 				</c:if>
                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
 					<fieldset>
-						<legend>註冊相關資料</legend>
+						<legend>店家註冊相關資料</legend>
 						<hr />
 						<label>帳號名稱：</label> 
 						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
@@ -178,17 +178,17 @@
 						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
 						<hr />
-						<label>中文姓氏：</label>
+						<label>負責人中文姓氏：</label>
 						<input type="text" name="first_name" id="first_name" size="40" maxlength="3" onblur="checkFirst_name()"
 						    placeholder="請輸入姓氏，1~3個中文字" required="required" />
 						<span id="first_nameSpan"></span>
 						<hr />
-						<label>中文名字：</label>
+						<label>負責人中文名字：</label>
 						<input type="text" name="last_name" id="last_name" size="40" maxlength="3" onblur="checkLast_name()"
 						    placeholder="請輸入名字，1~3個中文字" required="required" />
 						<span id="last_nameSpan"></span>
 						<hr />
-						<label>稱呼方式：</label>
+						<label>負責人稱呼方式：</label>
 						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
 						<span id="nicknameSpan"></span>
@@ -284,7 +284,7 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出">
+						<input type="submit" id="submit" name="register" value="送出資料">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 				</form>

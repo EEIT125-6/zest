@@ -80,6 +80,10 @@ public class WebUserServlet extends HttpServlet {
 				/* 返回查詢結果給使用者確認 */
 				doCheckAccount(request, response);
 				break;
+			case "檢查信箱":
+				/* 返回查詢結果給使用者確認 */
+				doCheckEmail(request, response);
+				break;
 			case "送出":
 				/* 返回資料給使用者確認 */
 				doRegisterSubmit(request, response);
@@ -195,6 +199,38 @@ public class WebUserServlet extends HttpServlet {
 
 		/* 將結果返回aJax */
 		out.write(String.valueOf(accountCheckResult));
+		out.write("," + message);
+		out.flush();
+		out.close();
+	}
+	
+	/* Register checkEmail */
+	public void doCheckEmail(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告欲回傳的參數 */
+		int emailCheckResult = -1;
+		String message = "";
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		/* 取得使用者輸入的參數 */
+		String inputEmail = request.getParameter("inputEmail");
+		try {
+			/* 利用Connection產生DAO物件 */
+			webUserDAO = (webUserDAO != null) ? webUserDAO : new WebUserJDBCDAO(conn0);
+			/* 呼叫DAO方法，返回結果 */
+			emailCheckResult = webUserDAO.checkEmailExist(inputEmail);
+			message = "Success";
+		} catch (SQLException sqlE) {
+			message = sqlE.getMessage();
+		}
+
+		/* 將結果返回aJax */
+		out.write(String.valueOf(emailCheckResult));
 		out.write("," + message);
 		out.flush();
 		out.close();

@@ -5,3 +5,6 @@ form {
 #checkAccount {
 	display: none;
 }
+#checkEmailUsed {
+	display: none;
+}
