@@ -5,12 +5,14 @@ import java.util.List;
 
 public interface WebUserDAO {
 	
-	/* 檢查帳號是否存在
-	 * -1->異常、0->不存在、1->存在 */
+	/*
+	 *  檢查帳號是否存在 -1->異常、0->不存在、1->啟用
+	 */
 	public int checkAccountExist(String inputAccount) throws SQLException;
 	
-	/* 檢查信箱是否已使用
-	 * -1->異常、0->不存在、1->存在 */
+	/*
+	 * 檢查信箱是否已使用 -1->異常、0->不存在、1->啟用
+	 */
 	public int checkEmailExist(String inputEmail) throws SQLException;
 	
 	/* 檢查密碼，後面用,分隔將使用者資料傳回來 */

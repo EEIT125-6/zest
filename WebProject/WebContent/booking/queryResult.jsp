@@ -48,10 +48,10 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <body>
             <div class="container-fluid  header" >
               <div class="container" >
-              <a href="./Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
+              <a href="Index1.jsp"><img src="./Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><a href="webUser/WebUserLogin.jsp">登入</a>  |
-               <a href="webUser/WebUserRegisterForm.jsp">註冊</a>  |
+              <br><a href="./webUser/WebUserLogin.jsp">登入</a>  |
+               <a href="./webUser/WebUserRegisterForm.jsp">註冊</a>  |
               <a href="./product/index.jsp"><img src="./Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>

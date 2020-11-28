@@ -272,10 +272,11 @@ public class WebUserServlet extends HttpServlet {
 				location_code, addr0, addr1, addr2;
 		String gender, get_email;
 		LocalDate birth, join_date;
-		Integer lv = 0, version = 0;
+		Integer lv, version = 0;
 		BigDecimal zest = new BigDecimal("0");
 
 		/* 先從request取值，前端提供手動輸入的欄位可能要使用trim()去除頭尾的空白 */
+		lv = Integer.parseInt(request.getParameter("lv"));
 		account = request.getParameter("account").trim();
 		password = request.getParameter("password").trim();
 		first_name = request.getParameter("first_name").trim();

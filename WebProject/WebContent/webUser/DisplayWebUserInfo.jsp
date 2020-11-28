@@ -168,6 +168,13 @@
 					<fieldset>
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
 						<hr />
+						<label>帳號身分：</label>
+						<c:choose>
+							<c:when test="${param.lv==0}">消費者</c:when>
+							<c:when test="${param.lv==1}">店家</c:when>
+							<c:when test="${param.lv==-1}">管理員</c:when>
+						</c:choose>
+						<hr />
 						<label>帳號名稱：</label>
 						<jsp:getProperty name="reg_webUser" property="account" />
 						<hr />

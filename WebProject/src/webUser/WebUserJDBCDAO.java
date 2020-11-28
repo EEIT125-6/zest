@@ -20,14 +20,14 @@ public class WebUserJDBCDAO implements WebUserDAO {
 	}
 
 	/*
-	 * 檢查帳號是否存在 -1->異常、0->不存在、1->存在
+	 * 檢查帳號是否存在 -1->異常、0->不存在、1->啟用
 	 */
 	public int checkAccountExist(String inputAccount) throws SQLException {
 		int checkResult = -1;
 		int resultCount = 0;
 
 		try (PreparedStatement preStmt0 = connection0
-				.prepareStatement("SELECT account FROM dbo.WebUser WHERE account = ?")) {
+				.prepareStatement("SELECT account FROM dbo.WebUser WHERE account = ? ")) {
 			/* 開始交易 */
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
@@ -38,7 +38,17 @@ public class WebUserJDBCDAO implements WebUserDAO {
 				if (rs0.next()) {
 					resultCount++;
 				}
-				checkResult = (resultCount > 0) ? 1 : 0;
+				switch(resultCount) {
+					case 1:
+						checkResult = 1;
+						break;
+					case 0:
+						checkResult = 0;
+						break;
+					default:
+						checkResult = -1;
+						break;
+				}
 				rs0.close();
 				/* 確認交易 */
 				connection0.commit();
@@ -55,14 +65,14 @@ public class WebUserJDBCDAO implements WebUserDAO {
 	}
 	
 	/*
-	 * 檢查信箱是否已使用 -1->異常、0->不存在、1->存在
+	 * 檢查信箱是否已使用 -1->異常、0->不存在、1->啟用
 	 */
 	public int checkEmailExist(String inputEmail) throws SQLException {
 		int checkResult = -1;
 		int resultCount = 0;
 		
 		try (PreparedStatement preStmt0 = connection0
-				.prepareStatement("SELECT email FROM dbo.WebUser WHERE email = ?")){
+				.prepareStatement("SELECT email FROM dbo.WebUser WHERE email = ? ")){
 			/* 開始交易 */
 			connection0.setAutoCommit(false);
 			/* 設定參數 */
@@ -73,7 +83,17 @@ public class WebUserJDBCDAO implements WebUserDAO {
 				if (rs0.next()) {
 					resultCount++;
 				}
-				checkResult = (resultCount > 0) ? 1 : 0;
+				switch(resultCount) {
+				case 1:
+					checkResult = 1;
+					break;
+				case 0:
+					checkResult = 0;
+					break;
+				default:
+					checkResult = -1;
+					break;
+			}
 				rs0.close();
 				/* 確認交易 */
 				connection0.commit();

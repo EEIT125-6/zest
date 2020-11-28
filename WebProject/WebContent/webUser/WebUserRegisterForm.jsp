@@ -166,6 +166,14 @@
 					<fieldset>
 						<legend>註冊相關資料</legend>
 						<hr />
+						<label>帳號身分：</label>
+						<input type="radio" id="customer" name="lv" value=0 checked="checked" >
+					    <label for="customer">消費者</label>
+					    <input type="radio" id="shop_owner" name="lv" value=1>
+					    <label for="shop_owner">店家</label>
+					    <input type="radio" id="admin" name="lv" value=-1>
+					    <label for="admin">管理員</label>
+					    <hr />
 						<label>帳號名稱：</label> 
 						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 							placeholder="請輸入帳號，6~20個字" required="required" />
@@ -309,10 +317,10 @@
 				            },
 				            success:function(result) {
 				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
+				            	if(resultSpace[0] == '2' || resultSpace[0] == '3' || resultSpace[0] == '4') {
 				            		accountStr = "此帳號已有人使用！";
 				            		accountIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
+				            	} else if(resultSpace[0] == '0'  || resultSpace[0] == '1') {
 				            		accountStr = "您可建立此帳號！";
 				            		accountIsOk = true;
 				            	} else if(resultSpace[0] == '-1') {
@@ -357,10 +365,10 @@
 				            },
 				            success:function(result) {
 				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
+				            	if(resultSpace[0] == '2' || resultSpace[0] == '3' || resultSpace[0] == '4') {
 				            		emailStr = "此電子信箱已有人使用！";
 				            		emailIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
+				            	} else if(resultSpace[0] == '0' || resultSpace[0] == '1') {
 				            		emailStr = "您可使用此電子信箱！";
 				            		emailIsOk = true;
 				            	} else if(resultSpace[0] == '-1') {
