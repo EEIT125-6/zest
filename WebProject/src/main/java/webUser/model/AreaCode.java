@@ -1,14 +1,17 @@
 package webUser.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /* 永續類別 */
 @Entity
 /* 定義表格名 */
-@Table(name="T_AreaCode")
+@Table(name="AreaCode")
 public class AreaCode {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
@@ -17,8 +20,10 @@ public class AreaCode {
 	private Integer areaCode;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(4)")
 	private String areaName;
-	@Column(nullable = false , unique = false , columnDefinition="int default 0")
-	private Integer cityCode;
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="cityCode" ,nullable = false ,unique = false)
+	private CityCode cityCode;
 	
 	/* 無參數建構子 */
 	public AreaCode() {
@@ -26,7 +31,7 @@ public class AreaCode {
 	}
 	
 	/* 帶參數建構子 */
-	public AreaCode(Integer areaCode, String areaName, Integer cityCode) {
+	public AreaCode(Integer areaCode, String areaName, CityCode cityCode) {
 		super();
 		this.areaCode = areaCode;
 		this.areaName = areaName;
@@ -50,11 +55,11 @@ public class AreaCode {
 		this.areaName = areaName;
 	}
 
-	public Integer getCityCode() {
+	public CityCode getCityCode() {
 		return cityCode;
 	}
 
-	public void setCityCode(Integer cityCode) {
+	public void setCityCode(CityCode cityCode) {
 		this.cityCode = cityCode;
 	}
 }

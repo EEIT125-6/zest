@@ -1,10 +1,10 @@
-package webUser.dao;
+package webUser.service;
 
 import java.sql.SQLException;
 
 import webUser.model.WebUserData;
 
-public interface WebUserDAO {
+public interface WebUserService {
 	/*
 	 *  檢查帳號是否存在 -1->異常、0->不存在、1->存在
 	 */
@@ -15,9 +15,6 @@ public interface WebUserDAO {
 	 */
 	public int checkEmailExist(String inputEmail) throws SQLException;
 	
-	/* 產生新增使用者所需的ID */
-	public String createNewUserId(String selectedId, int lv) throws SQLException;
-	
-	/* 新增使用者資料 1->成功、0->失敗*/
-	public int insertWebUserData(String insertId, WebUserData registerData) throws SQLException;
+	/* 執行資料新增 1->成功、0->失敗 */
+	public int insertWebUserData(WebUserData registerData) throws SQLException;
 }

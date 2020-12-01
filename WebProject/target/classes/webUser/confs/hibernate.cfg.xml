@@ -15,7 +15,7 @@
      
     <!-- 2. 其他與資料存取有關的設定 -->
     <!-- 自動產生資料庫的Schema -->
-	<property name="hbm2ddl.auto">create-drop</property>
+	<property name="hbm2ddl.auto">update</property>
 	<!-- 顯示實際操作資料庫時的SQL --> 
     <property name="show_sql">true</property> 
     <!-- 將顯示的SQL排版，方便觀看 -->
@@ -31,7 +31,7 @@
 	<!-- 3. 宣告程式使用的Mapping檔 ，每個永續類別都需要定義一個Mapping檔	-->
 	<mapping class="webUser.model.CityCode"></mapping>
 	<mapping class="webUser.model.AreaCode"></mapping>
-	<mapping class="webUser.model.WebUser"></mapping>
+	<mapping class="webUser.model.WebUserData"></mapping>
 	
 	</session-factory>
 </hibernate-configuration>
