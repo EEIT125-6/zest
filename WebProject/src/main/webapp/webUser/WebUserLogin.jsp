@@ -175,6 +175,13 @@
 							placeholder="請輸入密碼，6~20個字" required="required" />
 						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
+						<br />
+						<span id="loginSpan">
+							<c:if test="${loginMessage != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${loginMessage}" />
+							</c:if>
+						</span>
                 	</fieldset>
                 	<div align="center">
 						<input type="submit" id="submit" name="login" value="登入">

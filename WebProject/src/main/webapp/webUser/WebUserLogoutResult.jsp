@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
         <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />
         
-    <title>登出完成</title>
+    <title>即將導向至新畫面</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);

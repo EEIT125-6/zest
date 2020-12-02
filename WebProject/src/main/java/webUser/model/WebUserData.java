@@ -33,7 +33,7 @@ public class WebUserData {
 	private String gender;
 	@Column(nullable = false , unique = false , columnDefinition="date")
 	private Date birth;
-	@Column(nullable = false , unique = true , columnDefinition="nvarchar(50)")
+	@Column(nullable = false , unique = false , columnDefinition="nvarchar(50)")
 	private String fervor;
 	@Column(nullable = false , unique = true , columnDefinition="varchar(50)")
 	private String email;

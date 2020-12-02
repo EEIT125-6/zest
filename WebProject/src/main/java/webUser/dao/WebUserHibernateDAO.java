@@ -1,7 +1,6 @@
 package webUser.dao;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -125,5 +124,35 @@ public class WebUserHibernateDAO implements WebUserDAO{
 			userFullData = list.get(0);
 		}
 		return userFullData;
+	}
+
+	@Override
+	public int quitWebUserData(WebUserData quitUserData) throws SQLException {
+		/* 變數宣告 */
+		int quitResult = 0;
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行變更 */
+		session.saveOrUpdate(quitUserData);
+		quitResult++;
+		return quitResult;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int checkAccountQuit(String inputAccount) throws SQLException {
+		/* 變數宣告 */
+		int checkResult = -1;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.account = :inputAccount AND wu.status = 'active'";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputAccount", inputAccount).getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
 	}
 }

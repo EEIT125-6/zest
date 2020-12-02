@@ -257,8 +257,8 @@
 						<hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" name="register" value="確認">
-						<input type="submit" name="register" value="取消">
+						<input type="submit" name="register" id="registerConfirm" value="確認">
+						<input type="submit" name="register" id="registerCancel" value="取消">
 					</div>
 				</form>
 				<script src="scripts/DisplayWebUserInfo.js"></script>

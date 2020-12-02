@@ -104,8 +104,9 @@ public class WebUserServiceHibernate implements WebUserService {
 	@Override
 	public int checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException {
 		/* 變數宣告 */
-		int checkLoginResult = -1;
+		int checkLoginResult = -2;
 		int checkAccountResult = -1;
+		int checkAccountQuit = -1;
 		int checkPasswordResult = -1;
 		/* 取得Session */
 		Session session = factory.getCurrentSession();
@@ -118,7 +119,15 @@ public class WebUserServiceHibernate implements WebUserService {
 			checkAccountResult = webUserDao.checkAccountExist(inputAccount);
 			/* 帳號不存在就不繼續往下執行 */
 			if (checkAccountResult != 1) {
-				throw new SQLException("帳號或密碼錯誤，請檢查之後再次輸入");
+				throw new SQLException("帳號錯誤，請檢查之後再次輸入");
+			} else {
+				checkLoginResult++;
+			}
+			/* 檢查帳號是否有效 */
+			checkAccountQuit = webUserDao.checkAccountQuit(inputAccount);
+			/* 帳號棄用就不繼續往下執行 */
+			if (checkAccountQuit != 1) {
+				throw new SQLException("該帳號已棄用！請選擇其他帳號登入或註冊一個新帳號");
 			} else {
 				checkLoginResult++;
 			}
@@ -126,7 +135,7 @@ public class WebUserServiceHibernate implements WebUserService {
 			checkPasswordResult = webUserDao.checkPassword(inputAccount, inputPassword);
 			/* 密碼錯誤 */
 			if (checkPasswordResult != 1) {
-				throw new SQLException("帳號或密碼錯誤，請檢查之後再次輸入");
+				throw new SQLException("密碼錯誤，請檢查之後再次輸入");
 			} else {
 				checkLoginResult++;
 			}
@@ -166,5 +175,34 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return UserFullData;
+	}
+
+	@Override
+	public int quitWebUserData(WebUserData quitUserData) throws SQLException {
+		/* 變數宣告 */
+		int quitResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 變更帳號狀態 */
+			quitResult = webUserDao.quitWebUserData(quitUserData);
+			/* 變更失敗 */
+			if (quitResult != 1) {
+				throw new SQLException("變更失敗");
+			} 
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return quitResult;
 	}
 }

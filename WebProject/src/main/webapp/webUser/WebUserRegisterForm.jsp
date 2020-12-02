@@ -214,7 +214,7 @@
 						<span id="birthdaySpan"></span>
 						<hr />
 						<label>偏好食物：</label>
-						<input type="checkbox" name="fervor" value="米食" onblur="checkFervor()" />
+						<input type="checkbox" name="fervor" value="中式" onblur="checkFervor()" />
 						<label>中式</label>
 						<input type="checkbox" name="fervor" value="快餐" onblur="checkFervor()" />
 						<label>快餐</label>

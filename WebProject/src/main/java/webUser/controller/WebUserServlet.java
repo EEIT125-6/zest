@@ -63,7 +63,7 @@ public class WebUserServlet extends HttpServlet {
 			case "取消":
 			default:
 				/* 清除資料並返回註冊畫面 */
-				doRegisterUndo(request, response);
+				doUndo(request, response, "register");
 				break;
 			}
 		}
@@ -81,14 +81,14 @@ public class WebUserServlet extends HttpServlet {
 				doLogout(request, response);
 				break;
 			/* 刪除 */
-			case "刪除帳戶":
+			case "放棄使用帳戶":
 				/* 執行刪除 */
-				doDeleteAccount(request, response);
+				doQuitAccount(request, response);
 				break;
 			/* 預設 */
 			default:
 				/* 返回登入畫面 */
-				doBackToLoginPage(request, response);
+				doUndo(request, response, "login");
 				break;
 			}
 		}
@@ -118,19 +118,15 @@ public class WebUserServlet extends HttpServlet {
 		/* 調用服務裡的方法 */
 		try {
 			accountCheckResult = wus.checkAccountExist(inputAccount);
-			/* 將結果返回aJax */
-			out.write(String.valueOf(accountCheckResult));
-			out.write("," + message);
-			out.flush();
-			out.close();
+			
 		} catch (SQLException sqlE) {
 			message = sqlE.getMessage();
-			/* 將結果返回aJax */
-			out.write(String.valueOf(accountCheckResult));
-			out.write("," + message);
-			out.flush();
-			out.close();
 		}
+		/* 將結果返回aJax */
+		out.write(String.valueOf(accountCheckResult));
+		out.write("," + message);
+		out.flush();
+		out.close();
 	}
 	
 	/* Register checkEmail */
@@ -258,15 +254,6 @@ public class WebUserServlet extends HttpServlet {
 		request.getRequestDispatcher("../webUser/WebUserRegisterResult.jsp").forward(request, response);
 	}
 	
-	/* Register undo */
-	public void doRegisterUndo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		/* 無效session */
-		request.getSession(true).invalidate();
-		/* 返回註冊畫面 */
-		request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request, response);
-	}
-	
 	/* Login check */
 	public void doCheckLogin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -293,7 +280,8 @@ public class WebUserServlet extends HttpServlet {
 			/* 存取使用者個人資料 */
 			userFullData = wus.getWebUserData(inputAccount);
 		} catch (SQLException sqlE) {
-			loginMessage = sqlE.getMessage();
+			String loginMessageTmp = sqlE.getMessage();
+			loginMessage = loginMessageTmp.split(":")[1];
 		}
 		
 		if (accountCheckResult == 1) {
@@ -303,35 +291,94 @@ public class WebUserServlet extends HttpServlet {
 		} 
 		
 		/* 將訊息loginMessage以"loginMessage"的名稱放入Session中 */
-		request.getSession(true).setAttribute("loginMessage", loginMessage);
+		request.getSession(true).setAttribute("loginMessage", loginMessage);;
 		
 		if (accountCheckResult == 1) {
 			/* 導向登入後主畫面 */
-			request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request, response);
+			request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request, response);	
 		} else {
-			/* 導向登入失敗畫面 */
-			request.getRequestDispatcher("/webUser/WebUserLoginResult.jsp").forward(request, response);
+			/* 導回登入畫面 */
+			request.getRequestDispatcher("/webUser/WebUserLogin.jsp").forward(request, response);			
 		}
 	}
 	
 	/* Logout */
 	public void doLogout(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 宣告要傳回的參數 */
+		String logoutMessage = "";
 		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		/* 取出部分資訊以組成訊息 */
+		logoutMessage = "感謝您的使用，" + userData.getNickname() + "！";
+		
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 嘗試建立Session，並將訊息logoutMessage以"logoutMessage"的名稱放入新Session中 */
+		request.getSession(true).setAttribute("logoutMessage", logoutMessage);
+		/* 前往登出畫面 */
+		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
 	}
 	
 	/* Delete account */
-	public void doDeleteAccount(HttpServletRequest request, HttpServletResponse response)
+	public void doQuitAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 宣告要傳回的參數 */
+		int deleteResult = -1;
+		String quitMessage = "";
+		String redirectPage = "";
 		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 從session中取出物件userFullData */
+		WebUserData quitUserData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		/* 設定使用者狀態 */
+		quitUserData.setStatus("quit");
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 調用服務裡的方法 */
+		try {
+			deleteResult = wus.quitWebUserData(quitUserData);
+		} catch (SQLException sqlE) {
+			String quitMessageTmp = sqlE.getMessage();
+			quitMessage = quitMessageTmp.split(":")[1];
+		}
+		
+		/* 成功變更 */
+		if (deleteResult == 1) {
+			quitMessage = "感謝您的使用，" + quitUserData.getNickname() + "！我們有緣再見...";
+			redirectPage = "WebUserRegisterForm.jsp";
+			/* 無效session */
+			request.getSession(true).invalidate();
+		}
+		
+		/* 將訊息quitMessage以"quitMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("quitMessage", quitMessage);
+		/* 將導向的網頁redirectPage以"redirectPage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("redirectPage", redirectPage);
+		/* 導向刪除結果畫面 */
+		request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request, response);
 	}
 	
-	/* Back to login */
-	public void doBackToLoginPage(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	/* undo */
+	public void doUndo(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
 		/* 無效session */
 		request.getSession(true).invalidate();
-		/* 前往登出畫面 */
-		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
+		/* 重導向畫面 */
+		switch(mode) {
+			case "register":
+				request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request, response);
+				break;
+			case "login":
+			default:
+				request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
+				break;
+		}
+		
 	}
 }

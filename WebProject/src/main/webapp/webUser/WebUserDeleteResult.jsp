@@ -24,7 +24,7 @@
         
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
         
-    <title>已登入</title>
+    <title>刪除階段結束</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -159,40 +159,28 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="WebUserLogin.jsp" />
-				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-                	<fieldset>
-                		<legend>${loginMessage}</legend>
-                		<div align="center">
-                			<hr />
-                			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
-                			<hr />
-                			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
-                			<hr />
-                			<input type="submit" id="delete" name="login" value="放棄使用帳戶">
-                			<hr />
-							<input type="submit" id="logout" name="login" value="登出帳戶">
-							<hr />
-						</div>
-                	</fieldset>
-                </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserMain.js"></script>
+                <p>${quitMessage}</p>
+                <p>5秒後將移至</p>
+                <p id = "pPage">${redirectPage}</p>
                 <script>
-	                $("#delete").click(function () {
-			        	deleteAlert();
-				    });
-                	function deleteAlert() {
-                		alert("請注意，本操作不可逆，您將無法再次以相同的帳號名稱、電子信箱來註冊本服務；如有其他疑問，請洽本站管理員");
+                	let directPage = "WebUserLogin.jsp";
+                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
+                		document.getElementById("pPage").innerHTML = "登入";
+                		directPage = "WebUserLogin.jsp";
+                	} else if (document.getElementById("pPage").innerHTML == "WebUserRegisterForm.jsp") {
+                		document.getElementById("pPage").innerHTML = "註冊";
+                		directPage = "WebUserRegisterForm.jsp";
+                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
+                		document.getElementById("pPage").innerHTML = "主畫面";
+                		directPage = "WebUserMain.jsp";
                 	}
+        
+                	setTimeout(function () {
+	                	   window.location.href = directPage;
+               	  	}
+	                , 5000);
                 </script>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

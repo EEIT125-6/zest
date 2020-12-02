@@ -19,4 +19,7 @@ public interface WebUserService {
 	
 	/* 取得使用者個人資料 */
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;
+	
+	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
+	public int quitWebUserData(WebUserData quitUserData) throws SQLException;
 }
