@@ -1,26 +1,31 @@
 function checkForm() {
-	if (!checkSameAccountAndEmail()) {
-		return false;
-	} else if (!checkAccountPassword()) {
-		return false;
-	} else if (!checkFirst_name()) {
-		return false;
-	} else if (!checkLast_name()) {
-		return false;
-	} else if (!checkNickname()) {
-		return false;
-	} else if (!checkBirthday()) {
-		return false;
-	} else if (!checkFervor()) {
-		return false;
-	} else if (!checkPhone()) {
-		return false;
-	} else if (!checkLocation_code()) {
-		return false;
-	} else if (!checkAddr0()){
-		return false;
+	let choice=confirm("是否要送出註冊資料？");
+	if (choice==true) {
+		if (!checkSameAccountAndEmail()) {
+			return false;
+		} else if (!checkAccountPassword()) {
+			return false;
+		} else if (!checkFirst_name()) {
+			return false;
+		} else if (!checkLast_name()) {
+			return false;
+		} else if (!checkNickname()) {
+			return false;
+		} else if (!checkBirthday()) {
+			return false;
+		} else if (!checkFervor()) {
+			return false;
+		} else if (!checkPhone()) {
+			return false;
+		} else if (!checkLocation_code()) {
+			return false;
+		} else if (!checkAddr0()){
+			return false;
+		} else {
+			return true;
+		}
 	} else {
-		return true;
+		return false;
 	}
 }
 

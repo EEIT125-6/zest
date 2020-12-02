@@ -24,6 +24,8 @@ public class DataInitialHibernate {
 			
 			WebUserData u01 = new WebUserData("1000001", "George017", "Geo1rge6", "曾", "丙顥", "阿丙", "M", Date.valueOf("1992-01-16"), "中式,日式,下午茶", "george610787@outlook.com", "0911954504", "Y", "t03", Date.valueOf("2020-12-01"), 0, "桃園市平鎮區中大路300號", "", "", new BigDecimal("0"), 0, "active");
 			session.save(u01);
+			WebUserData u02 = new WebUserData("1000002", "WangOldK", "Geo1rge6", "王", "老千", "老千", "M", Date.valueOf("2000-10-10"), "燒肉,西式,日式", "WangOldK@outlook.com", "0911993377", "N", "t08", Date.valueOf("2020-12-01"), 0, "新竹市中正路120號", "", "", new BigDecimal("0"), 0, "active");
+			session.save(u02);
 			
 			CityCode t01 = new CityCode(1, "臺北市");
 			session.save(t01);

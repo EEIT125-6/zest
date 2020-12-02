@@ -39,7 +39,7 @@ public class WebUserData {
 	private String email;
 	@Column(nullable = false , unique = true , columnDefinition="varchar(11)")
 	private String phone;
-	@Column(nullable = false , unique = true , columnDefinition="char(1)")
+	@Column(nullable = false , unique = false , columnDefinition="char(1)")
 	private String getEmail;
 	@Column(nullable = false , unique = false , columnDefinition="char(3)")
 	private String locationCode;

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
@@ -20,11 +20,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-        <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         
-    <title>註冊資料確認</title>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        
+    <title>已登入</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -151,117 +151,36 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br>登入 | 註冊  |
+              <br><c:out value="${userFullData.nickname}" />|
+              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="reg_webUser" class="webUser.model.WebUserData"
+            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
+				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${param.password == null}">
-					<c:redirect url="WebUserRegisterForm.jsp" />
+				<c:if test="${userFullData.password == null}">
+					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-					<fieldset>
-						<legend>註冊資料如下，如果無誤請按「確認」</legend>
-						<hr />
-						<label>帳號身分：</label>
-						<c:choose>
-							<c:when test="${param.lv==0}">消費者</c:when>
-							<c:when test="${param.lv==1}">店家</c:when>
-							<c:when test="${param.lv==-1}">管理員</c:when>
-						</c:choose>
-						<hr />
-						<label>帳號名稱：</label>
-						<jsp:getProperty name="reg_webUser" property="account" />
-						<hr />
-						<label>帳號密碼：</label>
-						<c:if test="${param.password.length() > 0}">
-							<c:forEach var="passwordChar" begin="0" end="${param.password.length()-1}">
-								<c:out value = "*" />
-							</c:forEach>
-						</c:if>
-						<hr />
-						<label>中文姓氏：</label>
-						<jsp:getProperty name="reg_webUser" property="firstName" />
-						<hr />
-						<label>中文名字：</label>
-						<jsp:getProperty name="reg_webUser" property="lastName" />
-						<hr />
-						<label>稱呼方式：</label>
-						<jsp:getProperty name="reg_webUser" property="nickname" />
-						<hr />
-						<label>生理性別：</label>
-						<c:choose>
-							<c:when test="${param.gender=='M'}">男性</c:when>
-							<c:when test="${param.gender=='F'}">女性</c:when>
-							<c:when test="${param.gender=='N'}">不方便提供</c:when>
-						</c:choose>
-						<hr />
-						<label>西元生日：</label>
-						<jsp:getProperty name="reg_webUser" property="birth" />
-						<hr />
-						<label>偏好食物：</label>
-						<jsp:getProperty name="reg_webUser" property="fervor" />
-						<hr />
-						<label>聯絡信箱：</label>
-						<jsp:getProperty name="reg_webUser" property="email" />
-						<hr />
-						<label>聯絡電話：</label>
-						<jsp:getProperty name="reg_webUser" property="phone" />
-						<hr />
-						<label>是否願意接收促銷/優惠訊息：</label>
-						<c:choose>
-							<c:when test="${param.getEmail=='Y'}">願意</c:when>
-							<c:when test="${param.getEmail=='N'}">不願意</c:when>
-						</c:choose>
-						<hr />
-						<label>居住區域：</label>
-						<c:choose>
-							<c:when test="${param.locationCode=='t01'}">臺北市</c:when>
-							<c:when test="${param.locationCode=='t02'}">新北市</c:when>
-							<c:when test="${param.locationCode=='t03'}">桃園市</c:when>
-							<c:when test="${param.locationCode=='t04'}">臺中市</c:when>
-							<c:when test="${param.locationCode=='t05'}">臺南市</c:when>
-							<c:when test="${param.locationCode=='t06'}">高雄市</c:when>
-							<c:when test="${param.locationCode=='t07'}">基隆市</c:when>
-							<c:when test="${param.locationCode=='t08'}">新竹市</c:when>
-							<c:when test="${param.locationCode=='t09'}">嘉義市</c:when>
-							<c:when test="${param.locationCode=='t10'}">新竹縣</c:when>
-							<c:when test="${param.locationCode=='t11'}">苗栗縣</c:when>
-							<c:when test="${param.locationCode=='t12'}">彰化縣</c:when>
-							<c:when test="${param.locationCode=='t13'}">南投縣</c:when>
-							<c:when test="${param.locationCode=='t14'}">雲林縣</c:when>
-							<c:when test="${param.locationCode=='t15'}">嘉義縣</c:when>
-							<c:when test="${param.locationCode=='t16'}">屏東縣</c:when>
-							<c:when test="${param.locationCode=='t17'}">宜蘭縣</c:when>
-							<c:when test="${param.locationCode=='t18'}">花蓮縣</c:when>
-							<c:when test="${param.locationCode=='t19'}">臺東縣</c:when>
-							<c:when test="${param.locationCode=='t20'}">澎湖縣</c:when>
-							<c:when test="${param.locationCode=='t21'}">金門縣</c:when>
-							<c:when test="${param.locationCode=='t22'}">連江縣</c:when>
-							<c:when test="${param.locationCode=='t23'}">其他區</c:when>
-						</c:choose>
-						<hr />
-						<label>生活地點一：</label>
-						<jsp:getProperty name="reg_webUser" property="addr0" />
-						<hr />
-						<label>生活地點二：</label>
-						<jsp:getProperty name="reg_webUser" property="addr1" />
-						<hr />
-						<label>生活地點三：</label>
-						<jsp:getProperty name="reg_webUser" property="addr2" />
-						<hr />
-					</fieldset>
-					<div align="center">
-						<input type="submit" name="register" value="確認">
-						<input type="submit" name="register" value="取消">
-					</div>
-				</form>
-				<script src="scripts/DisplayWebUserInfo.js"></script>
+                <form action="/WebProject/webUser/WebUserServlet" method="post" >
+                	<fieldset>
+                		<legend>${loginMessage}</legend>
+                		<div align="center">
+                			<hr />
+                			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
+                			<hr />
+                			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
+                			<hr />
+                			<input type="submit" id="delete" name="login" value="刪除帳戶">
+                			<hr />
+							<input type="submit" id="logout" name="login" value="登出帳戶">
+							<hr />
+						</div>
+                	</fieldset>
+                </form>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

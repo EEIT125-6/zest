@@ -67,6 +67,31 @@ public class WebUserServlet extends HttpServlet {
 				break;
 			}
 		}
+		/* 登入部分 */
+		if (request.getParameter("login") != null) {
+			switch (request.getParameter("login")) {
+			/* 登入 */
+			case "登入":
+				/* 返回查詢結果 */
+				doCheckLogin(request, response);
+				break;
+			/* 登出 */
+			case "登出帳戶":
+				/* 執行登出 */
+				doLogout(request, response);
+				break;
+			/* 刪除 */
+			case "刪除帳戶":
+				/* 執行刪除 */
+				doDeleteAccount(request, response);
+				break;
+			/* 預設 */
+			default:
+				/* 返回登入畫面 */
+				doBackToLoginPage(request, response);
+				break;
+			}
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -240,5 +265,73 @@ public class WebUserServlet extends HttpServlet {
 		request.getSession(true).invalidate();
 		/* 返回註冊畫面 */
 		request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request, response);
+	}
+	
+	/* Login check */
+	public void doCheckLogin(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告參數 */
+		int accountCheckResult = -1;
+		String loginMessage = "";
+		WebUserData userFullData = new WebUserData();
+		
+		/* 取得使用者輸入的參數 */
+		String inputAccount = request.getParameter("account");
+		String inputPassword = request.getParameter("password");
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 調用服務裡的方法 */
+		try {
+			/* 檢查登入 */
+			accountCheckResult = wus.checkWebUserLogin(inputAccount, inputPassword);
+			/* 存取使用者個人資料 */
+			userFullData = wus.getWebUserData(inputAccount);
+		} catch (SQLException sqlE) {
+			loginMessage = sqlE.getMessage();
+		}
+		
+		if (accountCheckResult == 1) {
+			loginMessage = "歡迎 " + userFullData.getNickname() + " ！";
+			/* 嘗試建立Session，並將Java Bean物件userFullData以"userFullData"的名稱放入新Session中 */
+			request.getSession(true).setAttribute("userFullData", userFullData);
+		} 
+		
+		/* 將訊息loginMessage以"loginMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("loginMessage", loginMessage);
+		
+		if (accountCheckResult == 1) {
+			/* 導向登入後主畫面 */
+			request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request, response);
+		} else {
+			/* 導向登入失敗畫面 */
+			request.getRequestDispatcher("/webUser/WebUserLoginResult.jsp").forward(request, response);
+		}
+	}
+	
+	/* Logout */
+	public void doLogout(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+	}
+	
+	/* Delete account */
+	public void doDeleteAccount(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+	}
+	
+	/* Back to login */
+	public void doBackToLoginPage(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 無效session */
+		request.getSession(true).invalidate();
+		/* 前往登出畫面 */
+		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
 	}
 }

@@ -1,6 +1,7 @@
 package webUser.dao;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -53,10 +54,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 	@SuppressWarnings("unchecked")
 	@Override
 	public String createNewUserId(String selectedId, int lv) throws SQLException {
-		System.out.println("lv is" + lv);
-		System.out.println("selectId is" + selectedId);
 		/* 變數宣告 */
 		String createIdResult = "";
+		String lastAccount = "";
 		/* HQL */
 		String hql = "FROM WebUserData AS wu WHERE wu.id LIKE :selectedId";
 		/* 取得當前Session */
@@ -65,10 +65,10 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		Query<WebUserData> query = session.createQuery(hql);
 		/* 取得陣列 */
 		List<WebUserData> list = query.setParameter("selectedId", selectedId).getResultList();
-		System.out.println("query results are "+list);
 		/* 取得最後一筆 */
-		createIdResult = (list.size() > 0) 
-				? String.valueOf(Integer.parseInt(list.get(list.size() - 1).getUserId()) + 1) 
+		lastAccount = (list.size() > 0) ? list.get(list.size() - 1).getUserId() : "";
+		createIdResult = (!lastAccount.equals("")) 
+				? String.valueOf(Integer.parseInt(lastAccount) + 1) 
 				: String.valueOf(lv) + "000001";
 		return createIdResult;
 	}
@@ -84,5 +84,46 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		session.save(registerData);
 		instertResult++;
 		return instertResult;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int checkPassword(String inputAccount, String inputPassword) throws SQLException {
+		/* 變數宣告 */
+		int checkResult = 0;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.account = :inputAccount AND wu.password = :inputPassword";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("inputAccount", inputAccount)
+				.setParameter("inputPassword", inputPassword)
+				.getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public WebUserData getWebUserData(String inputAccount) throws SQLException {
+		/* 變數宣告 */
+		WebUserData userFullData = new WebUserData();
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.account = :inputAccount";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputAccount", inputAccount).getResultList();
+		/* 取出資料，理論上陣列中只會有一筆資料 */
+		if( list.size() == 1) {
+			userFullData = list.get(0);
+		}
+		return userFullData;
 	}
 }

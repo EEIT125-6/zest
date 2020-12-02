@@ -12,7 +12,6 @@
 	<property name="connection.username">scott</property>
 	<property name="connection.password">tiger</property>		
    
-     
     <!-- 2. 其他與資料存取有關的設定 -->
     <!-- 自動產生資料庫的Schema -->
 	<property name="hbm2ddl.auto">update</property>
