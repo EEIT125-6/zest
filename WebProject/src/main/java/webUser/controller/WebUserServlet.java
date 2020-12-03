@@ -80,16 +80,28 @@ public class WebUserServlet extends HttpServlet {
 				/* 執行登出 */
 				doLogout(request, response);
 				break;
-			/* 刪除 */
-			case "放棄使用帳戶":
-				/* 執行刪除 */
-				doQuitAccount(request, response);
-				break;
 			/* 預設 */
 			default:
 				/* 返回登入畫面 */
 				doUndo(request, response, "login");
 				break;
+			}
+		}
+		/* 修改部分 */
+		if (request.getParameter("update") != null) {
+			switch (request.getParameter("update")) {
+				/* 變更為放棄使用 */
+				case "放棄使用帳戶":
+					/* 執行變更 */
+					doQuitAccount(request, response);
+					break;
+			}
+		}
+		/* 刪除部分已改為變更帳號狀態為quit */
+		/* 查詢部分 */
+		if (request.getParameter("select") != null) {
+			switch (request.getParameter("select")) {
+				
 			}
 		}
 	}
@@ -262,7 +274,7 @@ public class WebUserServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		
 		/* 宣告參數 */
-		int accountCheckResult = -1;
+		int accountCheckResult = -3;
 		String loginMessage = "";
 		WebUserData userFullData = new WebUserData();
 		
@@ -290,16 +302,17 @@ public class WebUserServlet extends HttpServlet {
 			request.getSession(true).setAttribute("userFullData", userFullData);
 		} 
 		
-		/* 將訊息loginMessage以"loginMessage"的名稱放入Session中 */
+		/* 將訊息loginMessage以"loginMessage"的名稱放入session中 */
 		request.getSession(true).setAttribute("loginMessage", loginMessage);;
 		
-		if (accountCheckResult == 1) {
-			/* 導向登入後主畫面 */
-			request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request, response);	
-		} else {
-			/* 導回登入畫面 */
-			request.getRequestDispatcher("/webUser/WebUserLogin.jsp").forward(request, response);			
-		}
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		
+		/* 將結果返回aJax */
+		out.write(String.valueOf(accountCheckResult));
+		out.write("," + loginMessage);
+		out.flush();
+		out.close();
 	}
 	
 	/* Logout */
@@ -321,7 +334,7 @@ public class WebUserServlet extends HttpServlet {
 		request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
 	}
 	
-	/* Delete account */
+	/* Quit account */
 	public void doQuitAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 宣告要傳回的參數 */

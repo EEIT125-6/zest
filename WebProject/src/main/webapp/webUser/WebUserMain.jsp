@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
         
     <title>已登入</title>
     <style>
@@ -174,7 +174,7 @@
                 			<hr />
                 			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
                 			<hr />
-                			<input type="submit" id="delete" name="login" value="放棄使用帳戶">
+                			<input type="submit" id="quit" name="update" value="放棄使用帳戶">
                 			<hr />
 							<input type="submit" id="logout" name="login" value="登出帳戶">
 							<hr />
@@ -184,10 +184,10 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="scripts/WebUserMain.js"></script>
                 <script>
-	                $("#delete").click(function () {
-			        	deleteAlert();
+	                $("#quit").click(function () {
+			        	quitAlert();
 				    });
-                	function deleteAlert() {
+                	function quitAlert() {
                 		alert("請注意，本操作不可逆，您將無法再次以相同的帳號名稱、電子信箱來註冊本服務；如有其他疑問，請洽本站管理員");
                 	}
                 </script>

@@ -145,7 +145,7 @@ public class WebUserServiceHibernate implements WebUserService {
 			if (tx != null) {
 				/* 撤回交易 */
 				tx.rollback();
-				checkLoginResult = -1;
+				checkLoginResult = -3;
 			}
 			throw new SQLException(sqlE);
 		}
