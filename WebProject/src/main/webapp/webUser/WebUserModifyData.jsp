@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<% 
+<%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-	response.setHeader("Pragma","no-cache"); // HTTP 1.0
-	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -22,10 +22,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-		        
-    <title>進行註冊</title>
+        <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+    <title>修改個人資料</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -152,103 +152,130 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><a href="WebUserLogin.jsp">登入</a> | 註冊  |
+              <br><c:out value="${userFullData.nickname}" />|
+              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-               <c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
+                <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
+					scope="session" />
+				<c:if test="${userFullData.password == null}">
+					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-					<fieldset>
-						<legend>註冊相關資料</legend>
-						<hr />
-						<label>帳號身分：</label>
-						<input type="radio" id="customer" name="lv" value=0 checked="checked" >
-					    <label for="customer">消費者</label>
-					    <input type="radio" id="shop_owner" name="lv" value=1>
-					    <label for="shop_owner">店家</label>
-					    <input type="radio" id="admin" name="lv" value=-1>
-					    <label for="admin">管理員</label>
-					    <hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~20個字" required="required" />
-						<input type="button" name="register" id="checkAccount" value="檢查帳號">
-						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-						<hr />
+                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<legend>可修改的個人相關資料</legend>
+                		<hr />
+                		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${userFullData.firstName}">
 						<label>中文姓氏：</label>
-						<input type="text" name="firstName" id="firstName" size="40" maxlength="3" onblur="checkFirst_name()"
-						    placeholder="請輸入姓氏，1~3個中文字" required="required" />
+						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
+							placeholder="請輸入姓氏，1~3個中文字" value="${userFullData.firstName}" />
 						<span id="firstNameSpan"></span>
 						<hr />
+						<input type="hidden" name="originalLastName" id="originalLastName" value="${userFullData.lastName}">
 						<label>中文名字：</label>
-						<input type="text" name="lastName" id="lastName" size="40" maxlength="3" onblur="checkLast_name()"
-						    placeholder="請輸入名字，1~3個中文字" required="required" />
+						<input type="text" name="updatedLastName" id="updatedLastName" size="40" maxlength="3" onblur="checkLastName()"
+							placeholder="請輸入名字，1~3個中文字" value="${userFullData.lastName}" />
 						<span id="lastNameSpan"></span>
 						<hr />
+						<input type="hidden" name="originalNickname" id="originalNickname" value="${userFullData.nickname}">
 						<label>稱呼方式：</label>
-						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
+						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
+							placeholder="請輸入想要的稱呼" value="${userFullData.nickname}" />
 						<span id="nicknameSpan"></span>
 						<hr />
-						<label>生理性別：</label>
-						<input type="radio" id="M" name="gender" value="M">
-					    <label for="male">男性</label>
-					    <input type="radio" id="F" name="gender" value="F">
-					    <label for="female">女性</label>
-					    <input type="radio" id="N" name="gender" value="N" checked="checked" >
-					    <label for="other">不方便提供</label>
-					    <hr />
-					    <label>西元生日：</label>
-						<input type="date" name="birth" id="birth" onblur="checkBirthday()" required="required" />
-						<span id="birthdaySpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="fervor" value="中式" onblur="checkFervor()" />
+						<label>原始的偏好食物：</label>
+						<input type="hidden" name="originalFervor" id="originalFervor" value="${userFullData.fervor}">
+						<c:out value="${userFullData.fervor}" />
+						<br />
+						<label>更正的偏好食物：</label>
+						<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="中式" onblur="checkFervor()" />
 						<label>中式</label>
-						<input type="checkbox" name="fervor" value="快餐" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" onblur="checkFervor()" />
 						<label>快餐</label>
-						<input type="checkbox" name="fervor" value="燒肉" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="燒肉" onblur="checkFervor()" />
 						<label>燒肉</label>
-						<input type="checkbox" name="fervor" value="西式" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="西式" onblur="checkFervor()" />
 						<label>西式</label>
-						<input type="checkbox" name="fervor" value="下午茶" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="下午茶" onblur="checkFervor()" />
 						<label>下午茶</label>
-						<input type="checkbox" name="fervor" value="日式" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="日式" onblur="checkFervor()" />
 						<label>日式</label>
-						<input type="checkbox" name="fervor" value="皆可" checked="checked" onblur="checkFervor()" />
+						<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="皆可" onblur="checkFervor()" />
 						<label>皆可</label>
 						<span id="fervorSpan"></span>
 						<hr />
+						<input type="hidden" name="originalEmail" id="originalEmail" value="${userFullData.email}">
 						<label>聯絡信箱：</label>
-						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
-						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱">
+						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
+						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${userFullData.email}" />
 						<span id="emailSpan"></span>
 						<hr />
+						<input type="hidden" name="originalPhone" id="originalPhone" value="${userFullData.phone}">
 						<label>聯絡電話：</label>
-						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
-						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
+						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
+						    placeholder="請輸入行動電話或市內電話號碼" value="${userFullData.phone}" />
 						<span id="phoneSpan"></span>
-						<hr />
-						<label>是否願意接收促銷/優惠訊息：</label>
-						<input type="radio" id="getEmail" name="getEmail" value="Y" checked="checked">
-					    <label for="Y">願意</label>
-					    <input type="radio" id="getEmail" name="getEmail" value="N">
-					    <label for="N">不願意</label>
 					    <hr />
-					    <label>居住區域：</label>
-				    	<select name="locationCode" id="locationCode" onblur="checkLocation_code()">
+					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${userFullData.getEmail}">
+					    <label>接收促銷/優惠意願：</label>
+					    <c:choose>
+					    	<c:when test="${userFullData.getEmail=='Y'}">
+								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
+								onblur="checkGetEmail()" checked="checked">
+							</c:when>
+							<c:when test="${userFullData.getEmail!='Y'}">
+								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
+									onblur="checkGetEmail()" >
+							</c:when>
+						</c:choose>
+					    <label for="Y">願意</label>
+					    <c:choose>
+					    	<c:when test="${userFullData.getEmail!='N'}">
+							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
+							    	onblur="checkGetEmail()" >
+						    </c:when>
+						    <c:when test="${userFullData.getEmail=='N'}">
+							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
+							    	onblur="checkGetEmail()" checked="checked">
+						    </c:when>
+					    </c:choose>
+					    <label for="N">不願意</label>
+					    <span id="getEmailSpan"></span>
+						<hr />
+					    <label>原始的居住區域：</label>
+						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${userFullData.locationCode}">
+						<c:choose>
+							<c:when test="${userFullData.locationCode=='t01'}">臺北市</c:when>
+							<c:when test="${userFullData.locationCode=='t02'}">新北市</c:when>
+							<c:when test="${userFullData.locationCode=='t03'}">桃園市</c:when>
+							<c:when test="${userFullData.locationCode=='t04'}">臺中市</c:when>
+							<c:when test="${userFullData.locationCode=='t05'}">臺南市</c:when>
+							<c:when test="${userFullData.locationCode=='t06'}">高雄市</c:when>
+							<c:when test="${userFullData.locationCode=='t07'}">基隆市</c:when>
+							<c:when test="${userFullData.locationCode=='t08'}">新竹市</c:when>
+							<c:when test="${userFullData.locationCode=='t09'}">嘉義市</c:when>
+							<c:when test="${userFullData.locationCode=='t10'}">新竹縣</c:when>
+							<c:when test="${userFullData.locationCode=='t11'}">苗栗縣</c:when>
+							<c:when test="${userFullData.locationCode=='t12'}">彰化縣</c:when>
+							<c:when test="${userFullData.locationCode=='t13'}">南投縣</c:when>
+							<c:when test="${userFullData.locationCode=='t14'}">雲林縣</c:when>
+							<c:when test="${userFullData.locationCode=='t15'}">嘉義縣</c:when>
+							<c:when test="${userFullData.locationCode=='t16'}">屏東縣</c:when>
+							<c:when test="${userFullData.locationCode=='t17'}">宜蘭縣</c:when>
+							<c:when test="${userFullData.locationCode=='t18'}">花蓮縣</c:when>
+							<c:when test="${userFullData.locationCode=='t19'}">臺東縣</c:when>
+							<c:when test="${userFullData.locationCode=='t20'}">澎湖縣</c:when>
+							<c:when test="${userFullData.locationCode=='t21'}">金門縣</c:when>
+							<c:when test="${userFullData.locationCode=='t22'}">連江縣</c:when>
+							<c:when test="${userFullData.locationCode=='t23'}">其他區</c:when>
+						</c:choose>
+						<br />
+					    <label>更正的居住區域：</label>
+				    	<select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
 							<option value="">請選擇目前您居住/生活的區域</option>
 							<option value="t01">臺北市</option>
 							<option value="t02">新北市</option>
@@ -276,127 +303,36 @@
 						</select>
 						<span id="locationCodeSpan"></span>
 					    <hr />
+					    <input type="hidden" name="originalAddr0" id="originalAddr0" value="${userFullData.addr0}">
 					    <label>生活地點一：</label>
-					    <input type="text" name="addr0" id="addr0" size="65" maxlength="65" onblur="checkAddr0()"
-						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" required="required" />
+					    <input type="text" name="updatedAddr0" id="updatedAddr0" size="65" maxlength="65" onblur="checkAddr0()"
+						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr0}" />
 						<br />
 						<span id="addr0Span"></span>
 					    <hr />
+					    <input type="hidden" name="originalAddr1" id="originalAddr1" value="${userFullData.addr1}">
 					    <label>生活地點二：</label>
-					    <input type="text" name="addr1" id="addr1" size="65" maxlength="65"
-						    placeholder="此項為選填">
+					    <input type="text" name="updatedAddr1" id="updatedAddr1" size="65" maxlength="65" onblur="checkAddr1()"
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr1}" />
+						<br />
+						<span id="addr1Span"></span>
 					    <hr />
+					    <input type="hidden" name="originalAddr2" id="originalAddr2" value="${userFullData.addr2}">
 					    <label>生活地點三：</label>
-					    <input type="text" name="addr2" id="addr2" size="65" maxlength="65"
-						    placeholder="此項為選填">
+					    <input type="text" name="updatedAddr2" id="updatedAddr2" size="65" maxlength="65" onblur="checkAddr2()"
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr2}" />
+						<br />
+						<span id="addr2Span"></span>
 					    <hr />
-					</fieldset>
-					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出">
+					    <span id="updatedSpan"></span>
+                	</fieldset>
+                	<div align="center">
+                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
+						<input type="submit" name="update" value="資料修改完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
-				</form>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-				<script src="scripts/WebUserRegisterForm.js"></script>
-				<script>	
-					$("#checkAccount").click(function () {
-				        checkSameAccount();
-				    });
-					function checkSameAccount(){
-						let account = document.getElementById("account").value.trim();
-						let accountSpan = document.getElementById("accountSpan");
-						let accountStr;
-						let accountIsOk = true;
-						
-						$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            data:{
-				            	'register':'檢查帳號',
-				            	'inputAccount':account
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		accountStr = "此帳號已有人使用！";
-				            		accountIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
-				            		accountStr = "可建立此帳號！";
-				            		accountIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
-				            		accountStr = "檢查途中遭遇錯誤！";
-				            		accountIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!accountIsOk) {
-				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-				            		accountSpan.style.color = "red";
-				            		accountSpan.style.fontStyle = "italic";
-				            	} else {
-				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-				            		accountSpan.style.color = "black";
-				            		accountSpan.style.fontStyle = "normal";
-				            	}
-				            },
-				            error:function(err) {
-				            	accountStr = "發生錯誤，無法執行檢查";
-				            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-			            		accountSpan.style.color = "red";
-			            		accountSpan.style.fontStyle = "italic";
-				            }
-						});
-					}
-					
-					$("#checkEmailUsed").click(function () {
-				        checkSameEmail();
-				    });
-					function checkSameEmail(){
-						let email = document.getElementById("email").value.trim();
-						let emailSpan = document.getElementById("emailSpan");
-						let emailStr;
-						let emailIsOk = true;
-						
-						$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            data:{
-				            	'register':'檢查信箱',
-				            	'inputEmail':email
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		emailStr = "此電子信箱已有人使用！";
-				            		emailIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
-				            		emailStr = "可使用此電子信箱！";
-				            		emailIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
-				            		emailStr = "檢查途中遭遇錯誤！";
-				            		emailIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!emailIsOk) {
-				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
-				            		emailSpan.style.color = "red";
-				            		emailSpan.style.fontStyle = "italic";
-				            	} else {
-				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
-				            		emailSpan.style.color = "black";
-				            		emailSpan.style.fontStyle = "normal";
-				            	}
-				            },
-				            error:function(err) {
-				            	emailStr = "發生錯誤，無法執行檢查";
-				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
-				            	emailSpan.style.color = "red";
-				            	emailSpan.style.fontStyle = "italic";
-				            }
-						});
-					}
-				</script> 
+                </form>
+                <script src="scripts/WebUserModifyData.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

@@ -43,48 +43,48 @@ public class WebUserServlet extends HttpServlet {
 		/* 註冊部分 */
 		if (request.getParameter("register") != null) {
 			switch (request.getParameter("register")) {
-			case "檢查帳號":
-				/* 返回查詢結果給使用者確認 */
-				doCheckAccount(request, response);
-				break;
-			case "檢查信箱":
-				/* 返回查詢結果給使用者確認 */
-				doCheckEmail(request, response);
-				break;
-			case "送出":
-				/* 返回資料給使用者確認 */
-				doRegisterSubmit(request, response);
-				break;
-			case "確認":
-				/* 準備將資料傳入DB */
-				doRegisterConfirm(request, response);
-				break;
-			/* 返回註冊畫面 */
-			case "取消":
-			default:
-				/* 清除資料並返回註冊畫面 */
-				doUndo(request, response, "register");
-				break;
+				case "檢查帳號":
+					/* 返回查詢結果給使用者確認 */
+					doCheckAccount(request, response);
+					break;
+				case "檢查信箱":
+					/* 返回查詢結果給使用者確認 */
+					doCheckEmail(request, response);
+					break;
+				case "送出":
+					/* 返回資料給使用者確認 */
+					doRegisterSubmit(request, response);
+					break;
+				case "確認":
+					/* 準備將資料傳入DB */
+					doRegisterConfirm(request, response);
+					break;
+				/* 返回註冊畫面 */
+				case "取消":
+				default:
+					/* 清除資料並返回註冊畫面 */
+					doUndo(request, response, "register");
+					break;
 			}
 		}
 		/* 登入部分 */
 		if (request.getParameter("login") != null) {
 			switch (request.getParameter("login")) {
-			/* 登入 */
-			case "登入":
-				/* 返回查詢結果 */
-				doCheckLogin(request, response);
-				break;
-			/* 登出 */
-			case "登出帳戶":
-				/* 執行登出 */
-				doLogout(request, response);
-				break;
-			/* 預設 */
-			default:
-				/* 返回登入畫面 */
-				doUndo(request, response, "login");
-				break;
+				/* 登入 */
+				case "登入":
+					/* 返回查詢結果 */
+					doCheckLogin(request, response);
+					break;
+				/* 登出 */
+				case "登出帳戶":
+					/* 執行登出 */
+					doLogout(request, response);
+					break;
+				/* 預設 */
+				default:
+					/* 返回登入畫面 */
+					doUndo(request, response, "login");
+					break;
 			}
 		}
 		/* 修改部分 */
@@ -95,13 +95,28 @@ public class WebUserServlet extends HttpServlet {
 					/* 執行變更 */
 					doQuitAccount(request, response);
 					break;
+				case "修改密碼":
+					/* 導向修改密碼 */
+					doGoToModifyPages(request, response, "password");
+					break;
+				case "修改其他資料":
+					/* 導向修改畫面 */
+					doGoToModifyPages(request, response, "other data");
+					break;
 			}
 		}
 		/* 刪除部分已改為變更帳號狀態為quit */
 		/* 查詢部分 */
 		if (request.getParameter("select") != null) {
 			switch (request.getParameter("select")) {
-				
+				case "檢視/修改個人資料":
+					/* 查詢個人資料 */
+					doSelectSelfData(request, response);
+					break;
+				default:
+					/* 返回主畫面 */
+					doUndo(request, response, "select");
+					break;
 			}
 		}
 	}
@@ -262,8 +277,8 @@ public class WebUserServlet extends HttpServlet {
 		request.getSession(true).setAttribute("insertResultMessage", insertResultMessage);
 		/* 將訊息insertResultPage以"insertResultPage"的名稱放入新Session中 */
 		request.getSession(true).setAttribute("insertResultPage", insertResultPage);
-		/* 導向其他畫面 */
-		request.getRequestDispatcher("../webUser/WebUserRegisterResult.jsp").forward(request, response);
+		/* 導向其他畫面，改用response.sendRedirect() */
+		response.sendRedirect(request.getContextPath()+"/webUser/WebUserRegisterResult.jsp");
 	}
 	
 	/* Login check */
@@ -378,6 +393,68 @@ public class WebUserServlet extends HttpServlet {
 		request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request, response);
 	}
 	
+	/* Select user's own data */
+	public void doSelectSelfData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 宣告要傳回的參數 */
+		WebUserData selfData = new WebUserData();
+		String getResultMessage = "";
+		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		/* 取得目前使用者帳號 */
+		String userAccount = userData.getAccount();
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 調用服務裡的方法 */
+		try {
+			selfData = wus.getWebUserData(userAccount);
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			getResultMessage = getDataMessageTmp.split(":")[1];
+		}
+		
+		/* 成功取得資料時，selfData不為Null */
+		if (selfData != null) {
+			userData = selfData;
+			getResultMessage = "以下為您的個人資料...";
+			/* 將物件selfData以"UserFullData"的名稱放入Session中 */
+			request.getSession(true).setAttribute("UserFullData", selfData);
+		} else if (getResultMessage.equals("")) {
+			getResultMessage = "無法取得使用者資料";
+			/* 將導向的網頁failResultPage以"failResultPage"的名稱放入Session中 */
+			request.getSession(true).setAttribute("failResultPage", "WebUserMain.jsp");
+		}
+		
+		/* 將訊息getResultMessage以"getResultMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("getResultMessage", getResultMessage);
+		
+		if (selfData != null) {
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/DisplayWebUserData.jsp").forward(request, response);
+		} else {
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserSearchResult.jsp").forward(request, response);
+		}
+	}
+	
+	/* Go to certain page */
+	public void doGoToModifyPages(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
+		/* 導向新畫面 */
+		switch(mode) {
+			case "password":
+				/* 前往修改畫面 */
+				request.getRequestDispatcher("/webUser/WebUserModifyPassword.jsp").forward(request, response);
+				break;
+			case "other data":
+				/* 前往修改畫面 */
+				request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
+				break;
+		}
+	}
+	
 	/* undo */
 	public void doUndo(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
 		/* 無效session */
@@ -386,6 +463,9 @@ public class WebUserServlet extends HttpServlet {
 		switch(mode) {
 			case "register":
 				request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request, response);
+				break;
+			case "select":
+				request.getRequestDispatcher("/webUser/WebUserMain.jsp").forward(request, response);
 				break;
 			case "login":
 			default:
