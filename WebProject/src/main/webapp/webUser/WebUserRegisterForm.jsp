@@ -311,6 +311,7 @@
 						$.ajax({
 							type:"POST",
 				            url:"/WebProject/webUser/WebUserServlet",
+				            async  : false,
 				            data:{
 				            	'register':'檢查帳號',
 				            	'inputAccount':account

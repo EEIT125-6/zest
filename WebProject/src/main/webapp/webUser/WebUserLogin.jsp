@@ -212,6 +212,7 @@
 	                	$.ajax({
 							type:"POST",
 				            url:"/WebProject/webUser/WebUserServlet",
+				            async  : false,
 				            data:{
 				            	'login':'登入',
 				            	'account':account,
@@ -253,6 +254,8 @@
 				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 				            		loginSpan.style.color = "black";
 				            		loginSpan.style.fontStyle = "normal";
+				            		/* 刷新 */
+				            		location.reload(true);
 				            	}
 				            },
 				            error:function(err) {
