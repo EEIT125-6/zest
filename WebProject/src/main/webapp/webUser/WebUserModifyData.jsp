@@ -915,6 +915,7 @@
                 	<div align="center">
                 		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
 						<input type="submit" name="update" value="資料修改完畢">
+						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
                 </form>
                 <script src="scripts/WebUserModifyData.js"></script>

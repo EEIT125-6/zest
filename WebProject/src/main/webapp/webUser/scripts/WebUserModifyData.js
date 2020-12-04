@@ -369,10 +369,7 @@ function checkgetEmail() {
 	let getEmailIsOk = true;
 	let getEmailStr;
 	
-	if (getEmailObjValue == "" || getEmailObjValue.length == 0) {
-		getEmailStr = "";
-		getEmailIsOk = true;
-	} else {
+	if (getEmailObjValue != "" || getEmailObjValue.length != 0) {
 		getEmailStr = "接收促銷/優惠意願已選擇完畢";
 		getEmailIsOk = true;
 	}
@@ -391,19 +388,17 @@ function checkgetEmail() {
 function checkLocationCode() {
 	let locationCodeObjValue = (document.getElementById("updatedLocationCode") == null) ? "" : document.getElementById("updatedLocationCode").value;
 	let locationCodeSpan = document.getElementById("locationCodeSpan");
+	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
 	
 	let locationCodeIsOk = true;
 	let locationCodeStr;
 	
-	if (locationCodeObjValue == "" || locationCodeObjValue.length == 0) {
-		locationCodeStr = "";
-		locationCodeIsOk = true;
-	} else {
+	if (locationCodeObjValue != "" || locationCodeObjValue.length != 0) {
 		locationCodeStr = "居住區域已選擇完畢";
 		locationCodeIsOk = true;
 	}
 	if (locationCodeIsOk) {
-		if (locationCodeObjValue == "" || locationCodeObjValue.length == 0) {
+		if (locationCodeObjValue == oldLocationCodeObjValue) {
 			locationCodeSpan.innerHTML = "";
 		} else {
 			locationCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + locationCodeStr;
@@ -417,26 +412,41 @@ function checkLocationCode() {
 function checkAddr0() {
 	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
 	let addr0Span = document.getElementById("addr0Span");
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	
 	let addr0IsOk = true;
 	let addr0Str;
 	
-	if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
-		addr0Str = "";
+	if (addr0ObjValue == oldAddr0ObjValue) {
+		addr0Str = "生活地點一已填寫完畢";
 		addr0IsOk = true;
+	} else if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
+		addr0Str = "生活地點一不可為空";
+		addr0IsOk = false;
+	} else if ((addr0ObjValue == addr1ObjValue && addr1ObjValue != "") || (addr0ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+		addr0Str = "生活地點重複填寫";
+		addr0IsOk = false;
+	} else if ((addr0ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr2ObjValue) || (addr0ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr1ObjValue)) {
+		addr0Str = "生活地點重複填寫";
+		addr0IsOk = false;
 	} else {
 		addr0Str = "生活地點一已填寫完畢";
 		addr0IsOk = true;
 	}
 	if (addr0IsOk) {
-		if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
-			addr0Span.innerHTML = "";
-		} else {
-			addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
-			addr0Span.style.color = "black";
-			addr0Span.style.fontStyle = "normal";
-		}
+		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
+		addr0Span.style.color = "black";
+		addr0Span.style.fontStyle = "normal";
 		return true;
+	} else {
+		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr0Str;
+		addr0Span.style.color = "red";
+		addr0Span.style.fontStyle = "italic";
+		return false;
 	}
 }
 
@@ -444,14 +454,27 @@ function checkAddr1() {
 	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
 	let addr1Span = document.getElementById("addr1Span");
 	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	
 	let addr1IsOk = true;
 	let addr1Str;
 	
-	if (addr1ObjValue != oldAddr1ObjValue) {
+	if (addr1ObjValue == oldAddr1ObjValue || (addr1ObjValue == "" || addr1ObjValue.length == 0)) {
 		addr1Str = "生活地點二已填寫完畢";
 		addr1IsOk = true;
-	} 
+	} else if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+		addr1Str = "生活地點重複填寫";
+		addr1IsOk = false;
+	} else if ((addr1ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr2ObjValue) || (addr1ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr0ObjValue)) {
+		addr1Str = "生活地點重複填寫";
+		addr1IsOk = false;
+	} else {
+		addr1Str = "生活地點二已填寫完畢";
+		addr1IsOk = true;
+	}
 	if (addr1IsOk) {
 		if (addr1ObjValue == "" || addr1ObjValue.length == 0) {
 			addr1Span.innerHTML = "";
@@ -461,6 +484,11 @@ function checkAddr1() {
 			addr1Span.style.fontStyle = "normal";
 		}
 		return true;
+	} else {
+		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr1Str;
+		addr1Span.style.color = "red";
+		addr1Span.style.fontStyle = "italic";
+		return false;
 	}
 }
 
@@ -468,11 +496,24 @@ function checkAddr2() {
 	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
 	let addr2Span = document.getElementById("addr2Span");
 	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
 	
 	let addr2IsOk = true;
 	let addr2Str;
 	
-	if (addr2ObjValue != oldAddr2ObjValue) {
+	if (addr2ObjValue != oldAddr2ObjValue || (addr2ObjValue == "" || addr2ObjValue.length == 0)) {
+		addr2Str = "生活地點三已填寫完畢";
+		addr2IsOk = true;
+	} else if ((addr2ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr2ObjValue == addr1ObjValue && addr1ObjValue != "")) {
+		addr2Str = "生活地點重複填寫";
+		addr2IsOk = false;
+	} else if ((addr2ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr1ObjValue) || (addr2ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr0ObjValue)) {
+		addr2Str = "生活地點重複填寫";
+		addr2IsOk = false;
+	} else {
 		addr2Str = "生活地點三已填寫完畢";
 		addr2IsOk = true;
 	}
@@ -485,5 +526,25 @@ function checkAddr2() {
 			addr2Span.style.fontStyle = "normal";
 		}
 		return true;
+	} else {
+		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr2Str;
+		addr2Span.style.color = "red";
+		addr2Span.style.fontStyle = "italic";
+		return false;
 	}
+}
+
+function clearMessage() {
+	document.getElementById("first_nameSpan").innerHTML = "";
+	document.getElementById("last_nameSpan").innerHTML = "";
+	document.getElementById("nicknameSpan").innerHTML = "";
+	document.getElementById("fervorSpan").innerHTML = "";
+	document.getElementById("emailSpan").innerHTML = "";
+	document.getElementById("phoneSpan").innerHTML = "";
+	document.getElementById("location_codeSpan").innerHTML = "";
+	document.getElementById("addr0Span").innerHTML = "";
+	document.getElementById("addr1Span").innerHTML = "";
+	document.getElementById("addr2Span").innerHTML = "";
+	/* 刷新 */
+	location.reload(true);
 }

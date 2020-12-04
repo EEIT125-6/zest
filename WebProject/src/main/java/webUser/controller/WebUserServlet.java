@@ -219,6 +219,7 @@ public class WebUserServlet extends HttpServlet {
 			birth = Date.valueOf(LocalDate.now()); 
 		}
 		
+		/* 防非正規管道吃進來的異常輸入為空值時 */
 		if (request.getParameterValues("fervor").length > 0) {
 			for (int fervorIndex = 0; fervorIndex < request.getParameterValues("fervor").length; fervorIndex++) {
 				if (!request.getParameterValues("fervor")[fervorIndex].equals("")) {
@@ -248,7 +249,9 @@ public class WebUserServlet extends HttpServlet {
 		WebUserData reg_webUser = new WebUserData(userId, account, password, firstName, lastName, nickname, gender,
 				birth, fervor, email, phone, getEmail, locationCode, joinDate, lv, addr0, addr1, addr2, zest, version, status);
 		
+		/* 預防性後端輸入檢查，正常時回傳空字串 */
 		submitMessage = doRegisterInputCheck(reg_webUser);
+		
 		if (submitMessage.equals("")) {
 			/* 嘗試建立Session，如果沒有就建立一個，並將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
 			request.getSession(true).setAttribute("reg_webUser", reg_webUser);
@@ -279,7 +282,15 @@ public class WebUserServlet extends HttpServlet {
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
+		/* 預防性後端輸入檢查，正常時回傳空字串 */
 		insertResultMessage = doRegisterInputCheck(registerData);
+		/* 追加檢查項目 */
+		if (!registerData.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
+			insertResultMessage = "加入時間異常";
+		}
+		if (!registerData.getStatus().equals("active")) {
+			insertResultMessage = "帳號狀態異常";
+		}
 		
 		/* 宣告欲回傳的參數 */
 		int insertResult = -1;
@@ -322,6 +333,7 @@ public class WebUserServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		
 		/* 宣告參數 */
+		int inputCheckResult = -1;
 		int accountCheckResult = -3;
 		String loginMessage = "";
 		WebUserData userFullData = new WebUserData();
@@ -333,15 +345,53 @@ public class WebUserServlet extends HttpServlet {
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
-		/* 調用服務裡的方法 */
-		try {
-			/* 檢查登入 */
-			accountCheckResult = wus.checkWebUserLogin(inputAccount, inputPassword);
-			/* 存取使用者個人資料 */
-			userFullData = wus.getWebUserData(inputAccount);
-		} catch (SQLException sqlE) {
-			String loginMessageTmp = sqlE.getMessage();
-			loginMessage = loginMessageTmp.split(":")[1];
+		/* 預防性後端檢查，正常時回傳1 */
+		inputCheckResult = doLoginInputCheck(inputAccount, inputPassword);
+		
+		if (inputCheckResult == 1) {
+			/* 調用服務裡的方法 */
+			try {
+				/* 檢查登入 */
+				accountCheckResult = wus.checkWebUserLogin(inputAccount, inputPassword);
+				/* 存取使用者個人資料 */
+				userFullData = wus.getWebUserData(inputAccount);
+			} catch (SQLException sqlE) {
+				String loginMessageTmp = sqlE.getMessage();
+				loginMessage = loginMessageTmp.split(":")[1];
+			}
+		} else {
+			switch(inputCheckResult) {
+				case 0:
+					loginMessage = "帳號不可為空白";
+					break;
+				case -1:
+					loginMessage = "帳號長度不足";
+					break;
+				case -2:
+					loginMessage = "帳號長度過長";
+					break;
+				case -3:
+					loginMessage = "帳號不可以數字開頭";
+					break;
+				case -4:
+					loginMessage = "帳號不符合格式";
+					break;
+				case 2:
+					loginMessage = "密碼不可為空白";
+					break;
+				case 3:
+					loginMessage = "密碼長度不足，至少需8個字元";
+					break;
+				case 4:
+					loginMessage = "密碼長度過長，最多僅20個字元";
+					break;
+				case 5:
+					loginMessage = "密碼不可以數字開頭";
+					break;
+				case 6:
+					loginMessage = "密碼不符合格式";
+					break;
+			}
 		}
 		
 		if (accountCheckResult == 1) {
@@ -882,5 +932,38 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		return submitMessage;
+	}
+	
+	/* Login input check */
+	public int doLoginInputCheck(String account, String password) {
+		int inputCheckResult = 1;
+		
+		/* 使用者帳號 */
+		if (account.equals("")) {
+			inputCheckResult = 0;
+		} else if(account.length() < 8) {
+			inputCheckResult = -1;
+		} else if(account.length() > 20) {
+			inputCheckResult = -2;
+		} else if (account.matches("[1-9]{1}.")) {
+			inputCheckResult = -3;
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = -4;
+		} 
+		
+		/* 使用者密碼 */
+		if (password.equals("")) {
+			inputCheckResult = 2;
+		} else if (password.length() < 8) {
+			inputCheckResult = 3;
+		} else if (password.length() > 20) {
+			inputCheckResult = 4;
+		} else if (password.matches("[1-9]{1}.")) {
+			inputCheckResult = 5;
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = 6;
+		} 
+		
+		return inputCheckResult;
 	}
 }

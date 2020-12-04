@@ -178,6 +178,11 @@
                 			<hr />
 							<input type="submit" id="logout" name="login" value="登出帳戶">
 							<hr />
+							<c:if test="${updateMessage != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${updateMessage}" />
+								<hr />
+							</c:if>
 						</div>
                 	</fieldset>
                 </form>
