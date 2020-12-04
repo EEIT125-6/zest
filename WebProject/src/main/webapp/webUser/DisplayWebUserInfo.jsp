@@ -184,6 +184,8 @@
 								<c:out value = "*" />
 							</c:forEach>
 						</c:if>
+						<input type="button" name="showPassword" id="showPassword" value="顯示密碼">
+						<input type="hidden" name="password" id="password" value="${param.password}">
 						<hr />
 						<label>中文姓氏：</label>
 						<jsp:getProperty name="reg_webUser" property="firstName" />
@@ -261,7 +263,14 @@
 						<input type="submit" name="register" id="registerCancel" value="取消">
 					</div>
 				</form>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 				<script src="scripts/DisplayWebUserInfo.js"></script>
+				<script>
+					$("#showPassword").click(function () {
+				        document.getElementById("password").type = (document.getElementById("password").type == "hidden") ? "text" : "hidden";
+				    	document.getElementById("showPassword").value = (document.getElementById("showPassword").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼";
+				    });
+				</script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

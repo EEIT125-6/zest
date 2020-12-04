@@ -487,17 +487,3 @@ function checkAddr2() {
 		return true;
 	}
 }
-
-function clearMessage() {
-	document.getElementById("firstNameSpan").innerHTML = "";
-	document.getElementById("lastNameSpan").innerHTML = "";
-	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("fervorSpan").innerHTML = "";
-	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("getEmailSpan").innerHTML = "";
-	document.getElementById("locationCodeSpan").innerHTML = "";
-	document.getElementById("addr0Span").innerHTML = "";
-	document.getElementById("addr1Span").innerHTML = "";
-	document.getElementById("addr2Span").innerHTML = "";
-}
