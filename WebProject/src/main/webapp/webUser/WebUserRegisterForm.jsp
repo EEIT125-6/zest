@@ -165,6 +165,12 @@
                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>註冊相關資料</legend>
+						<span id="submitSpan">
+							<c:if test="${submitMessage != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${submitMessage}" />
+							</c:if>
+						</span>
 						<hr />
 						<label>帳號身分：</label>
 						<input type="radio" id="customer" name="lv" value=0 checked="checked" >
@@ -176,13 +182,13 @@
 					    <hr />
 						<label>帳號名稱：</label> 
 						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~20個字" required="required" />
+							placeholder="請輸入帳號，8~20個字" required="required" />
 						<input type="button" name="register" id="checkAccount" value="檢查帳號">
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~20個字" required="required" />
+							placeholder="請輸入密碼，8~20個字" required="required" />
 						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
 						<hr />
@@ -283,12 +289,16 @@
 						<span id="addr0Span"></span>
 					    <hr />
 					    <label>生活地點二：</label>
-					    <input type="text" name="addr1" id="addr1" size="65" maxlength="65"
+					    <input type="text" name="addr1" id="addr1" size="65" maxlength="65"  onblur="checkAddr1()"
 						    placeholder="此項為選填">
+						<br />
+						<span id="addr1Span"></span>
 					    <hr />
 					    <label>生活地點三：</label>
-					    <input type="text" name="addr2" id="addr2" size="65" maxlength="65"
+					    <input type="text" name="addr2" id="addr2" size="65" maxlength="65"  onblur="checkAddr2()"
 						    placeholder="此項為選填">
+						<br />
+						<span id="addr2Span"></span>
 					    <hr />
 					</fieldset>
 					<div align="center">

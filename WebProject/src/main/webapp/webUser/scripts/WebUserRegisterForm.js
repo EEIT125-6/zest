@@ -21,6 +21,10 @@ function checkForm() {
 			return false;
 		} else if (!checkAddr0()){
 			return false;
+		} else if (!checkAddr1()){
+			return false;
+		} else if (!checkAddr2()){
+			return false;
 		} else {
 			return true;
 		}
@@ -50,7 +54,7 @@ function checkAccountName() {
 		accountStr = "帳號不可以數字開頭";
 		accountIsOk = false;
 	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
+		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";
@@ -96,9 +100,9 @@ function checkAccountPassword() {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
 	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
+		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
 
-		if (!passwordObjValue.match(accountReg)) {
+		if (!passwordObjValue.match(passwordReg)) {
 			passwordStr = "密碼不符合格式";
 			passwordIsOk = false;
 		} else {
@@ -421,12 +425,17 @@ function checkLocation_code() {
 function checkAddr0() {
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
 	let addr0Span = document.getElementById("addr0Span");
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
 	
 	let addr0IsOk = true;
 	let addr0Str;
 	
 	if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
 		addr0Str = "生活地點一不可為空白";
+		addr0IsOk = false;
+	} else if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+		addr0Str = "生活地點一不可與其他地點重複";
 		addr0IsOk = false;
 	} else {
 		addr0Str = "生活地點一已填寫完畢";
@@ -442,6 +451,66 @@ function checkAddr0() {
 		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
 		addr0Span.style.color = "black";
 		addr0Span.style.fontStyle = "normal";
+		return true;
+	}
+}
+
+function checkAddr1() {
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1Span = document.getElementById("addr1Span");
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	
+	let addr1IsOk = true;
+	let addr1Str;
+	
+	if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+		addr1Str = "生活地點二不可與其他地點重複";
+		addr1IsOk = false;
+	} else {
+		addr1Str = "生活地點二已填寫完畢";
+		addr1IsOk = true;
+	}
+	if (!addr1IsOk) {
+		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr1Str;
+		addr1Span.style.color = "red";
+		addr1Span.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr1Str;
+		addr1Span.style.color = "black";
+		addr1Span.style.fontStyle = "normal";
+		return true;
+	}
+}
+
+function checkAddr2() {
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2Span = document.getElementById("addr2Span");
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	
+	let addr2IsOk = true;
+	let addr2Str;
+	
+	if ((addr2ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr2ObjValue == addr1ObjValue && addr1ObjValue != "")) {
+		addr2Str = "生活地點三不可與其他地點重複";
+		addr2IsOk = false;
+	} else {
+		addr2Str = "生活地點三已填寫完畢";
+		addr2IsOk = true;
+	}
+	if (!addr2IsOk) {
+		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr2Str;
+		addr2Span.style.color = "red";
+		addr2Span.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr2Str;
+		addr2Span.style.color = "black";
+		addr2Span.style.fontStyle = "normal";
 		return true;
 	}
 }
@@ -464,6 +533,8 @@ function clearMessage() {
 	document.getElementById("phoneSpan").innerHTML = "";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
+	document.getElementById("addr1Span").innerHTML = "";
+	document.getElementById("addr2Span").innerHTML = "";
 }
 
 
