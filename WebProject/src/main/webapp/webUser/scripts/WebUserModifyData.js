@@ -47,87 +47,92 @@ function checkForm() {
 	let updatedSpan = document.getElementById("updatedSpan");
 	let updatedStr = "";
 
-	if (!checkFirstName()) {
-		return false;
-	} else if (!checkLastName()) {
-		return false;
-	} else if (!checkNickname()) {
-		return false;
-	} else if (!checkFervor()) {
-		return false;
-	} else if (!checkEmail()) {
-		return false;
-	} else if (!checkPhone()) {
-		return false;
-	} else if (!checkgetEmail()) {
-		return false;
-	} else if (!checkLocationCode()) {
-		return false;
-	} else if (!checkAddr0()){
-		return false;
-	} else if (!checkAddr1()){
-		return false;
-	} else if (!checkAddr2()){
-		return false;
-	} else {
-		if (firstNameObjValue == "" || firstNameObjValue.length == 0 || firstNameObjValue == oldFirstNameObjValue) {
-			document.getElementById("updatedFirstName").value = "";
-			counter++;
-		}
-		if (lastNameObjValue == "" || lastNameObjValue.length == 0 || lastNameObjValue == oldLastNameObjValue) {
-			document.getElementById("updatedLastName").value = "";
-			counter++;
-		}
-		if (nicknameObjValue == "" || nicknameObjValue.length == 0 || nicknameObjValue == oldNicknameObjValue) {
-			document.getElementById("updatedNickname").value = "";
-			counter++;
-		}
-		if (fervorObjValue == "" || fervorObjValue.length == 0 || fervorObjValue == oldFervorObjValue) {
-			for (let fervorIndex = 0; fervorIndex < 7; fervorIndex++) {
-				document.getElementById("updatedFervor"+fervorIndex.toString()).checked = false;
-			}
-			counter++;
-		}
-		if (emailObjValue == "" || emailObjValue.length == 0 || emailObjValue == oldEmailObjValue) {
-			document.getElementById("updatedEmail").value = "";
-			counter++;
-		}
-		if (phoneObjValue == "" || phoneObjValue.length == 0 || phoneObjValue == oldPhoneObjValue) {
-			document.getElementById("updatedPhone").value = "";
-			counter++;
-		}
-		if (getEmailObjValue == "" || getEmailObjValue.length == 0 || getEmailObjValue == oldgetEmailObjValue) {
-			document.getElementById("updatedgetEmail1").value = "";
-			document.getElementById("updatedgetEmail2").value = "";
-			counter++;
-		}
-		if (locationCodeObjValue == "" || locationCodeObjValue.length == 0 || locationCodeObjValue == oldLocationCodeObjValue) {
-			document.getElementById("updatedLocationCode").value = "";
-			counter++;
-		}
-		if (addr0ObjValue == "" || addr0ObjValue.length == 0 || addr0ObjValue == oldAddr0ObjValue) {
-			document.getElementById("updatedAddr0").value = "";
-			counter++;
-		}
-		if (addr1ObjValue == oldAddr1ObjValue) {
-			document.getElementById("updatedAddr1").value = "";
-			counter++;
-		}
-		if (addr2ObjValue == oldAddr2ObjValue) {
-			document.getElementById("updatedAddr2").value = "";
-			counter++;
-		}
-		
-		if (counter == 11) {
-			updatedStr = "至少需填寫/選擇一項條件才能執行修改/更正！";
-			updatedSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updatedStr;
-			updatedSpan.style.color = "red";
-			updatedSpan.style.fontStyle = "italic";
+	let choice=confirm("是否確定要送出修改後的資料？");
+	if (choice == true) {
+		if (!checkFirstName()) {
+			return false;
+		} else if (!checkLastName()) {
+			return false;
+		} else if (!checkNickname()) {
+			return false;
+		} else if (!checkFervor()) {
+			return false;
+		} else if (!checkSameEmail()) {
+			return false;
+		} else if (!checkPhone()) {
+			return false;
+		} else if (!checkgetEmail()) {
+			return false;
+		} else if (!checkLocationCode()) {
+			return false;
+		} else if (!checkAddr0()){
+			return false;
+		} else if (!checkAddr1()){
+			return false;
+		} else if (!checkAddr2()){
 			return false;
 		} else {
-			updatedSpan.innerHTML = "";
-			return true;
+			if (firstNameObjValue == "" || firstNameObjValue.length == 0 || firstNameObjValue == oldFirstNameObjValue) {
+				document.getElementById("updatedFirstName").value = "";
+				counter++;
+			}
+			if (lastNameObjValue == "" || lastNameObjValue.length == 0 || lastNameObjValue == oldLastNameObjValue) {
+				document.getElementById("updatedLastName").value = "";
+				counter++;
+			}
+			if (nicknameObjValue == "" || nicknameObjValue.length == 0 || nicknameObjValue == oldNicknameObjValue) {
+				document.getElementById("updatedNickname").value = "";
+				counter++;
+			}
+			if (fervorObjValue == "" || fervorObjValue.length == 0 || fervorObjValue == oldFervorObjValue) {
+				for (let fervorIndex = 0; fervorIndex < 7; fervorIndex++) {
+					document.getElementById("updatedFervor"+fervorIndex.toString()).checked = false;
+				}
+				counter++;
+			}
+			if (emailObjValue == "" || emailObjValue.length == 0 || emailObjValue == oldEmailObjValue) {
+				document.getElementById("updatedEmail").value = "";
+				counter++;
+			}
+			if (phoneObjValue == "" || phoneObjValue.length == 0 || phoneObjValue == oldPhoneObjValue) {
+				document.getElementById("updatedPhone").value = "";
+				counter++;
+			}
+			if (getEmailObjValue == "" || getEmailObjValue.length == 0 || getEmailObjValue == oldgetEmailObjValue) {
+				document.getElementById("updatedgetEmail1").value = "";
+				document.getElementById("updatedgetEmail2").value = "";
+				counter++;
+			}
+			if (locationCodeObjValue == "" || locationCodeObjValue.length == 0 || locationCodeObjValue == oldLocationCodeObjValue) {
+				document.getElementById("updatedLocationCode").value = "";
+				counter++;
+			}
+			if (addr0ObjValue == "" || addr0ObjValue.length == 0 || addr0ObjValue == oldAddr0ObjValue) {
+				document.getElementById("updatedAddr0").value = "";
+				counter++;
+			}
+			if (addr1ObjValue == oldAddr1ObjValue) {
+				document.getElementById("updatedAddr1").value = "";
+				counter++;
+			}
+			if (addr2ObjValue == oldAddr2ObjValue) {
+				document.getElementById("updatedAddr2").value = "";
+				counter++;
+			}
+			
+			if (counter == 11) {
+				updatedStr = "至少需填寫/選擇一項條件才能執行修改/更正！";
+				updatedSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updatedStr;
+				updatedSpan.style.color = "red";
+				updatedSpan.style.fontStyle = "italic";
+				return false;
+			} else {
+				updatedSpan.innerHTML = "";
+				return true;
+			}
 		}
+	} else {
+		return false;
 	}
 }
 
@@ -257,19 +262,22 @@ function checkFervor() {
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let fervorSpan = document.getElementById("fervorSpan");
+	let oldFervorObjValue = document.getElementById("originalFervor").value;
 	
 	let fervorIsOk = true;
 	let fervorStr;
 	
 	if (fervorObjValue == "" || fervorObjValue.length == 0) {
-		fervorStr = "";
+		fervorStr = "偏好食物不可為空";
+		fervorIsOk = false;
+	} else if (fervorObjValue == oldFervorObjValue) {
 		fervorIsOk = true;
 	} else {
 		fervorStr = "偏好食物填寫完成";
 		fervorIsOk = true;
 	}
 	if (fervorIsOk) {
-		if (fervorObjValue == "" || fervorObjValue.length == 0) {
+		if (fervorObjValue == oldFervorObjValue) {
 			fervorSpan.innerHTML = "";
 		} else {
 			fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
@@ -277,56 +285,68 @@ function checkFervor() {
 			fervorSpan.style.fontStyle = "normal";
 		}
 		return true;
-	} 
+	} else {
+		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
+		fervorSpan.style.color = "red";
+		fervorSpan.style.fontStyle = "italic";
+		return false;
+	}
 }
 
 function checkEmail() {
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
+	let oldEmailObjValue = document.getElementById("originalEmail").value;
 	
 	let emailIsOk = true;
 	let emailStr;
 	
 	if (emailObjValue == "" || emailObjValue.length == 0) {
-		emailStr = "";
-		emailIsOk = true;
+		emailStr = "信箱資訊不可為空";
+		emailIsOk = false;
 	} else if(emailObjValue.indexOf("@") == -1 || emailObjValue.split("@").length > 2 || emailObjValue.indexOf(" ") != -1) {
 		emailStr = "信箱資訊格式錯誤";
 		emailIsOk = false;
-	} else {
+	} else if (emailObjValue == oldEmailObjValue) {
 		emailStr = "信箱資訊已填寫完成";
+		emailIsOk = true;
+	} else {
+		emailStr = "信箱資訊已修改完成";
 		emailIsOk = true;
 	}
 	if (!emailIsOk) {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
+		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
-		if (emailObjValue == "" || emailObjValue.length == 0) {
+		if (emailObjValue == oldEmailObjValue) {
 			emailSpan.innerHTML = "";
 		} else {
 			emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 			emailSpan.style.color = "black";
 			emailSpan.style.fontStyle = "normal";
+			document.getElementById("checkEmailUsed").style = "display:inline";
 		}
 		return true;
-	}
+	} 
 }
 
 function checkPhone() {
 	let phoneObjValue = document.getElementById("updatedPhone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
 	let phoneIsOk = true;
 	let phoneStr;
 	let phoneReg = /[0]{1}[2-9]{1}[0-9]{7,9}/
 	
 	if (phoneObjValue == "" || phoneObjValue.length == 0) {
-		phoneStr = "";
-		phoneIsOk = true;
-	} else if(phoneObjValue.length < 9 || phoneObjValue.indexOf(" ") != -1) {
+		phoneStr = "連絡電話不可為空";
+		phoneIsOk = false;
+	} else if (phoneObjValue.length < 9 || phoneObjValue.indexOf(" ") != -1) {
 		phoneStr = "連絡電話格式錯誤";
 		phoneIsOk = false;
 	} else if (!phoneObjValue.match(phoneReg)) {
@@ -338,8 +358,11 @@ function checkPhone() {
 	} else if (phoneObjValue.substring(0, 2) != "09" && phoneObjValue.length == 10) {
 		phoneStr = "室內電話格式錯誤";
 		phoneIsOk = false;
-	} else {
+	} else if (phoneObjValue == oldPhoneObjValue){
 		phoneStr = "連絡電話已填寫完畢";
+		phoneIsOk = true;
+	} else {
+		phoneStr = "連絡電話已修改完畢";
 		phoneIsOk = true;
 	}
 	if (!phoneIsOk) {
@@ -349,12 +372,13 @@ function checkPhone() {
 		return false;
 	}
 	else {
-		if (phoneObjValue == "" || phoneObjValue.length == 0) {
+		if (phoneObjValue == oldPhoneObjValue) {
 			phoneSpan.innerHTML = "";
 		} else {
 			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 			phoneSpan.style.color = "black";
 			phoneSpan.style.fontStyle = "normal";
+			document.getElementById("checkEmailUsed").style = "display:inline";
 		}
 		return true;
 	}
@@ -365,16 +389,17 @@ function checkgetEmail() {
 	getEmailObjValue = (document.getElementById("updatedgetEmail1") == null) ? "" : document.getElementById("updatedgetEmail1").value;
 	getEmailObjValue = (document.getElementById("updatedgetEmail2") == null) ? "" : document.getElementById("updatedgetEmail2").value;
 	let getEmailSpan = document.getElementById("getEmailSpan");
+	let oldGetEmailObjValue = document.getElementById("originalGetEmail").value;
 	
 	let getEmailIsOk = true;
 	let getEmailStr;
 	
-	if (getEmailObjValue != "" || getEmailObjValue.length != 0) {
-		getEmailStr = "接收促銷/優惠意願已選擇完畢";
+	if (getEmailObjValue != oldGetEmailObjValue) {
+		getEmailStr = "接收促銷/優惠意願已修改完畢";
 		getEmailIsOk = true;
 	}
 	if (getEmailIsOk) {
-		if (getEmailObjValue == "" || getEmailObjValue.length == 0) {
+		if (getEmailObjValue == oldGetEmailObjValue) {
 			getEmailSpan.innerHTML = "";
 		} else {
 			getEmailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + getEmailStr;
@@ -382,7 +407,7 @@ function checkgetEmail() {
 			getEmailSpan.style.fontStyle = "normal";
 		}
 		return true;
-	}
+	} 
 }
 
 function checkLocationCode() {
@@ -393,8 +418,8 @@ function checkLocationCode() {
 	let locationCodeIsOk = true;
 	let locationCodeStr;
 	
-	if (locationCodeObjValue != "" || locationCodeObjValue.length != 0) {
-		locationCodeStr = "居住區域已選擇完畢";
+	if (locationCodeObjValue != oldLocationCodeObjValue) {
+		locationCodeStr = "居住區域已修改完畢";
 		locationCodeIsOk = true;
 	}
 	if (locationCodeIsOk) {
@@ -421,10 +446,7 @@ function checkAddr0() {
 	let addr0IsOk = true;
 	let addr0Str;
 	
-	if (addr0ObjValue == oldAddr0ObjValue) {
-		addr0Str = "生活地點一已填寫完畢";
-		addr0IsOk = true;
-	} else if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
+	if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
 		addr0Str = "生活地點一不可為空";
 		addr0IsOk = false;
 	} else if ((addr0ObjValue == addr1ObjValue && addr1ObjValue != "") || (addr0ObjValue == addr2ObjValue && addr2ObjValue != "")) {
@@ -438,9 +460,13 @@ function checkAddr0() {
 		addr0IsOk = true;
 	}
 	if (addr0IsOk) {
-		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
-		addr0Span.style.color = "black";
-		addr0Span.style.fontStyle = "normal";
+		if (addr0ObjValue == oldAddr0ObjValue) {
+			addr0Span.innerHTML = "";
+		} else {			
+			addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
+			addr0Span.style.color = "black";
+			addr0Span.style.fontStyle = "normal";
+		}
 		return true;
 	} else {
 		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr0Str;
@@ -462,10 +488,7 @@ function checkAddr1() {
 	let addr1IsOk = true;
 	let addr1Str;
 	
-	if (addr1ObjValue == oldAddr1ObjValue || (addr1ObjValue == "" || addr1ObjValue.length == 0)) {
-		addr1Str = "生活地點二已填寫完畢";
-		addr1IsOk = true;
-	} else if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+	if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
 		addr1Str = "生活地點重複填寫";
 		addr1IsOk = false;
 	} else if ((addr1ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr2ObjValue) || (addr1ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr0ObjValue)) {
@@ -476,7 +499,7 @@ function checkAddr1() {
 		addr1IsOk = true;
 	}
 	if (addr1IsOk) {
-		if (addr1ObjValue == "" || addr1ObjValue.length == 0) {
+		if (addr1ObjValue == oldAddr1ObjValue || (addr1ObjValue == "" || addr1ObjValue.length == 0)) {
 			addr1Span.innerHTML = "";
 		} else {
 			addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr1Str;
@@ -504,10 +527,7 @@ function checkAddr2() {
 	let addr2IsOk = true;
 	let addr2Str;
 	
-	if (addr2ObjValue != oldAddr2ObjValue || (addr2ObjValue == "" || addr2ObjValue.length == 0)) {
-		addr2Str = "生活地點三已填寫完畢";
-		addr2IsOk = true;
-	} else if ((addr2ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr2ObjValue == addr1ObjValue && addr1ObjValue != "")) {
+	if ((addr2ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr2ObjValue == addr1ObjValue && addr1ObjValue != "")) {
 		addr2Str = "生活地點重複填寫";
 		addr2IsOk = false;
 	} else if ((addr2ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr1ObjValue) || (addr2ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr0ObjValue)) {
@@ -518,7 +538,7 @@ function checkAddr2() {
 		addr2IsOk = true;
 	}
 	if (addr2IsOk) {
-		if (addr2ObjValue == "" || addr2ObjValue.length == 0) {
+		if (addr2ObjValue != oldAddr2ObjValue || (addr2ObjValue == "" || addr2ObjValue.length == 0)) {
 			addr2Span.innerHTML = "";
 		} else {
 			addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr2Str;
@@ -535,16 +555,31 @@ function checkAddr2() {
 }
 
 function clearMessage() {
-	document.getElementById("first_nameSpan").innerHTML = "";
-	document.getElementById("last_nameSpan").innerHTML = "";
+	document.getElementById("firstNameSpan").innerHTML = "";
+	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("location_codeSpan").innerHTML = "";
+	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";
 	document.getElementById("addr2Span").innerHTML = "";
 	/* 刷新 */
 	location.reload(true);
+}
+
+function checkSameEmail(){
+	let emailSpan = document.getElementById("emailSpan");
+	
+	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		alert("請先執行電子信箱檢查");
+		return false;
+	} else {
+		if (!checkEmail()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }

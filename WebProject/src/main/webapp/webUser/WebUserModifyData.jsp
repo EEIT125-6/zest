@@ -272,6 +272,7 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${userFullData.email}" />
+						<input type="button" name="update" id="checkEmailUsed" value="檢查信箱">
 						<span id="emailSpan"></span>
 						<hr />
 						<input type="hidden" name="originalPhone" id="originalPhone" value="${userFullData.phone}">
@@ -918,7 +919,58 @@
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
                 </form>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="scripts/WebUserModifyData.js"></script>
+                <script>
+					$("#checkEmailUsed").click(function () {
+				        checkSameEmail();
+				    });
+					function checkSameEmail(){
+						let email = document.getElementById("updatedEmail").value.trim();
+						let emailSpan = document.getElementById("emailSpan");
+						let emailStr;
+						let emailIsOk = true;
+						
+						$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'update':'檢查信箱',
+				            	'inputEmail':email
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == '1') {
+				            		emailStr = "此電子信箱已有人使用！";
+				            		emailIsOk = false;
+				            	} else if(resultSpace[0] == '0') {
+				            		emailStr = "可使用此電子信箱！";
+				            		emailIsOk = true;
+				            	} else if(resultSpace[0] == '-1') {
+				            		emailStr = "檢查途中遭遇錯誤！";
+				            		emailIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!emailIsOk) {
+				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+				            		emailSpan.style.color = "red";
+				            		emailSpan.style.fontStyle = "italic";
+				            	} else {
+				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
+				            		emailSpan.style.color = "black";
+				            		emailSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	emailStr = "發生錯誤，無法執行檢查";
+				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+				            	emailSpan.style.color = "red";
+				            	emailSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+				</script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

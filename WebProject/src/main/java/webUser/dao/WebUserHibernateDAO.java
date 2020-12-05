@@ -16,9 +16,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public int checkAccountExist(String inputAccount) throws SQLException {
+	public Integer checkAccountExist(String inputAccount) throws SQLException {
 		/* 變數宣告 */
-		int checkResult = -1;
+		Integer checkResult = -1;
 		/* HQL */
 		String hql = "FROM WebUserData AS wu WHERE wu.account = :inputAccount";
 		/* 取得當前Session */
@@ -34,9 +34,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int checkEmailExist(String inputEmail) throws SQLException {
+	public Integer checkEmailExist(String inputEmail) throws SQLException {
 		/* 變數宣告 */
-		int checkResult = -1;
+		Integer checkResult = -1;
 		/* HQL */
 		String hql = "FROM WebUserData AS wu WHERE wu.email = :inputEmail";
 		/* 取得當前Session */
@@ -52,7 +52,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String createNewUserId(String selectedId, int lv) throws SQLException {
+	public String createNewUserId(String selectedId, Integer lv) throws SQLException {
 		/* 變數宣告 */
 		String createIdResult = "";
 		String lastAccount = "";
@@ -73,7 +73,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 	}
 
 	@Override
-	public int insertWebUserData(String insertId, WebUserData registerData) throws SQLException {
+	public Integer insertWebUserData(String insertId, WebUserData registerData) throws SQLException {
 		/* 變數宣告 */
 		int instertResult = 0;
 		/* 取得當前Session */
@@ -87,7 +87,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int checkPassword(String inputAccount, String inputPassword) throws SQLException {
+	public Integer checkPassword(String inputAccount, String inputPassword) throws SQLException {
 		/* 變數宣告 */
 		int checkResult = 0;
 		/* HQL */
@@ -127,9 +127,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 	}
 
 	@Override
-	public int quitWebUserData(WebUserData quitUserData) throws SQLException {
+	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
 		/* 變數宣告 */
-		int quitResult = 0;
+		Integer quitResult = 0;
 		/* 取得當前Session */
 		Session session = factory.getCurrentSession();
 		/* 執行變更 */
@@ -140,9 +140,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int checkAccountQuit(String inputAccount) throws SQLException {
+	public Integer checkAccountQuit(String inputAccount) throws SQLException {
 		/* 變數宣告 */
-		int checkResult = -1;
+		Integer checkResult = -1;
 		/* HQL */
 		String hql = "FROM WebUserData AS wu WHERE wu.account = :inputAccount AND wu.status = 'active'";
 		/* 取得當前Session */

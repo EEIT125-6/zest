@@ -165,6 +165,9 @@
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
+				<c:if test="${updateResultMessage != null}">
+					<c:out value="${updateResultMessage}" />
+				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>
 						<legend><c:out value="${getResultMessage}"></c:out></legend>

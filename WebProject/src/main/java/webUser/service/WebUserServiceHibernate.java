@@ -19,9 +19,9 @@ public class WebUserServiceHibernate implements WebUserService {
 	 *  檢查帳號是否存在 -1->異常、0->不存在、1->存在
 	 */
 	@Override
-	public int checkAccountExist(String inputAccount) throws SQLException {
+	public Integer checkAccountExist(String inputAccount) throws SQLException {
 		/* 變數宣告 */
-		int checkResult = -1;
+		Integer checkResult = -1;
 		/* 取得Session */
 		Session session = factory.getCurrentSession();
 		/* 設定交易 */
@@ -46,9 +46,9 @@ public class WebUserServiceHibernate implements WebUserService {
 	 * 檢查信箱是否已使用 -1->異常、0->不存在、1->存在
 	 */
 	@Override
-	public int checkEmailExist(String inputEmail) throws SQLException {
+	public Integer checkEmailExist(String inputEmail) throws SQLException {
 		/* 變數宣告 */
-		int checkResult = -1;
+		Integer checkResult = -1;
 		/* 取得Session */
 		Session session = factory.getCurrentSession();
 		/* 設定交易 */
@@ -71,10 +71,10 @@ public class WebUserServiceHibernate implements WebUserService {
 
 	/* 執行資料新增 1->成功、0->失敗 */
 	@Override
-	public int insertWebUserData(WebUserData registerData) throws SQLException {
-		int insertResult = 0;
+	public Integer insertWebUserData(WebUserData registerData) throws SQLException {
+		Integer insertResult = 0;
 		/* 取出參數 */
-		int lv = registerData.getLv();
+		Integer lv = registerData.getLv();
 		/* 第一碼 = lv + 1 */
 		String selectedId = String.valueOf(lv + 1) + "%";
 		/* 取得Session */
@@ -102,12 +102,12 @@ public class WebUserServiceHibernate implements WebUserService {
 	}
 
 	@Override
-	public int checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException {
+	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException {
 		/* 變數宣告 */
-		int checkLoginResult = -2;
-		int checkAccountResult = -1;
-		int checkAccountQuit = -1;
-		int checkPasswordResult = -1;
+		Integer checkLoginResult = -2;
+		Integer checkAccountResult = -1;
+		Integer checkAccountQuit = -1;
+		Integer checkPasswordResult = -1;
 		/* 取得Session */
 		Session session = factory.getCurrentSession();
 		/* 設定交易 */
@@ -178,9 +178,9 @@ public class WebUserServiceHibernate implements WebUserService {
 	}
 
 	@Override
-	public int quitWebUserData(WebUserData quitUserData) throws SQLException {
+	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
 		/* 變數宣告 */
-		int quitResult = -1;
+		Integer quitResult = -1;
 		/* 取得Session */
 		Session session = factory.getCurrentSession();
 		/* 設定交易 */
