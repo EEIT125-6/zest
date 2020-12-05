@@ -12,12 +12,14 @@ function checkForm() {
 	
 	let fervorObj = document.getElementsByName("updatedFervor");
 	let fervorObjValue = "";
-	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
-		if (fervorObjValue != null && fervorObj[fervorIndex].checked) {
-			fervorObjValue += ",";
+	if (fervorObj.length > 0) {
+		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+			if (fervorObjValue != null && fervorObj[fervorIndex].checked) {
+				fervorObjValue += ",";
+			}
+			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 		}
-		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
-	}
+	} 
 	let oldFervorObjValue = document.getElementById("originalFervor").value.trim();
 	
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();

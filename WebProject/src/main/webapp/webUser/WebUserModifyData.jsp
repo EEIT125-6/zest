@@ -168,6 +168,12 @@
                 <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>可修改的個人相關資料</legend>
+                		<span id="updateResultMessageSpan">
+							<c:if test="${updateResultMessage != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${updateResultMessage}" />
+							</c:if>
+						</span>
                 		<hr />
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${userFullData.firstName}">
 						<label>中文姓氏：</label>

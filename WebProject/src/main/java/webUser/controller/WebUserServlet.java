@@ -554,8 +554,6 @@ public class WebUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		/* 返回的參數 */
 		String updateResultMessage = "";
-		String updateResultPage = "WebUserMain.jsp";
-		boolean updateDataResult;
 		
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
@@ -572,9 +570,6 @@ public class WebUserServlet extends HttpServlet {
 				: request.getParameter("updatedNickname").trim();
 		String updatedFervor = (request.getParameter("updatedFervor") == null) ? "?"
 				: request.getParameter("updatedFervor").trim();
-		if (updatedFervor.substring(0,1).equals(",")) {
-			updatedFervor = updatedFervor.substring(1);
-		}
 		String updatedEmail = (request.getParameter("updatedEmail").length() == 0) ? "?"
 				: request.getParameter("updatedEmail").trim();
 		String updatedPhone = (request.getParameter("updatedPhone").length() == 0) ? "?"
@@ -596,13 +591,11 @@ public class WebUserServlet extends HttpServlet {
 				+ ":" + updatedAddr0 + ":" + updatedAddr1 + ":" + updatedAddr2 + ":" + version;
 		
 		/* 預防性後端輸入檢查 */
-		updateResultMessage = doUpdateDataInputCheck(updatedParameters);
+		updateResultMessage = doUpdateDataInputCheck(updatedParameters, userData);
 		
 		if (updateResultMessage.equals("")) {
 			
-		} else {
-			
-		}
+		} 
 	}
 	
 	/* Undo */
@@ -630,7 +623,7 @@ public class WebUserServlet extends HttpServlet {
 		String submitMessage = "";
 		
 		/* 是否符合條件 */
-		boolean inputIsOk = true;
+		Boolean inputIsOk = true;
 		
 		/* 參數宣告 */
 		Integer lv;
@@ -742,7 +735,7 @@ public class WebUserServlet extends HttpServlet {
 				inputIsOk = false;
 			} else {
 				Integer charCountBegin = 0;
-				boolean firstNameIsOk = true;
+				Boolean firstNameIsOk = true;
 				/* 16進位表示 */
 				Integer charChineseWordCountBegin = 0x4e00;
 				Integer charChineseWordCountEnd = 0x9fff;
@@ -777,7 +770,7 @@ public class WebUserServlet extends HttpServlet {
 				inputIsOk = false;
 			} else {
 				Integer charCountBegin = 0;
-				boolean lastNameIsOk = true;
+				Boolean lastNameIsOk = true;
 				/* 16進位表示 */
 				Integer charChineseWordCountBegin = 0x4e00;
 				Integer charChineseWordCountEnd = 0x9fff;
@@ -1034,8 +1027,243 @@ public class WebUserServlet extends HttpServlet {
 		return inputCheckResult;
 	}
 	
-	public String doUpdateDataInputCheck(String updatedParameters) {
+	public String doUpdateDataInputCheck(String updatedParameters, WebUserData userData) {
 		String updateResultMessage = "";
+		Integer count = 0;
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 檢查JavaBean物件 */
+		if (userData == null) {
+			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		}
+		
+		/* 檢查姓氏 */
+		String firstName = updatedParameters.split(":")[1];
+		if (updateResultMessage.equals("")) {
+			if (firstName.equals("?")) {
+				updateResultMessage = "姓氏不可為空白";
+			} else if (firstName.length() > 3) {
+				updateResultMessage = "姓氏長度過長，最多僅3個字元";
+			} else {
+				Integer charCountBegin = 0;
+				Boolean firstNameIsOk = true;
+				/* 16進位表示 */
+				Integer charChineseWordCountBegin = 0x4e00;
+				Integer charChineseWordCountEnd = 0x9fff;
+				
+				for (Integer charIndex = charCountBegin; charIndex < firstName.length(); charIndex++) {
+					int firstNameChar = firstName.charAt(charIndex);
+					
+					if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
+						firstNameIsOk = false;
+					}
+					if (!firstNameIsOk) {
+						break;
+					}
+				}
+				
+				if (!firstNameIsOk) {
+					updateResultMessage = "姓氏中含有非中文";
+				} else if (firstName.equals(userData.getFirstName())){
+					count++;
+				}
+			}
+		}
+		
+		/* 檢查名字 */
+		String lastName = updatedParameters.split(":")[2];
+		if (updateResultMessage.equals("")) {
+			if (lastName.equals("?")) {
+				updateResultMessage = "名字不可為空白";
+			} else if (lastName.length() > 3) {
+				updateResultMessage = "名字長度過長，最多僅3個字元";
+			} else {
+				Integer charCountBegin = 0;
+				Boolean lastNameIsOk = true;
+				/* 16進位表示 */
+				Integer charChineseWordCountBegin = 0x4e00;
+				Integer charChineseWordCountEnd = 0x9fff;
+				
+				for (Integer charIndex = charCountBegin; charIndex < lastName.length(); charIndex++) {
+					int lastNameChar = lastName.charAt(charIndex);
+					
+					if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
+						lastNameIsOk = false;
+					}
+					if (!lastNameIsOk) {
+						break;
+					}
+				}
+				
+				if (!lastNameIsOk) {
+					updateResultMessage = "名字中含有非中文";
+				} else if (lastName.equals(userData.getLastName())){
+					count++;
+				}
+			}
+		}
+		
+		/* 檢查稱呼 */
+		String nickname = updatedParameters.split(":")[3];
+		if (updateResultMessage.equals("")) {
+			if (nickname.equals("?") && lastName.equals("?")) {
+				updateResultMessage = "稱呼不可為空白";
+			} else if (nickname.equals("?") && !lastName.equals("?")) {
+				nickname = lastName;
+			} else if (nickname.length() > 20){
+				updateResultMessage = "稱呼長度過長";
+			} else if (nickname.equals(userData.getNickname())){
+				count++;
+			}
+		}
+		
+		/* 檢查偏好食物 */
+		String fervor = updatedParameters.split(":")[4];
+		if (updateResultMessage.equals("")) {
+			if (fervor.equals("?")) {
+				updateResultMessage = "偏好食物不可為空白";
+			} else if (fervor.length() > 50){
+				updateResultMessage = "偏好食物長度過長";
+			} else if (fervor.equals(userData.getFervor())) {
+				count++;
+			}
+		}
+		
+		/* 檢查email */
+		String email = updatedParameters.split(":")[5];
+		if (updateResultMessage.equals("")) {
+			if (email.equals("?")) {
+				updateResultMessage = "信箱資訊不可為空白";
+			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
+				updateResultMessage = "信箱資訊格式錯誤";
+			} else if (email.equals(userData.getEmail())) {
+				count++;
+			} else {
+				Integer emailCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					emailCheckResult = wus.checkEmailExist(email);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (emailCheckResult == 1){
+					updateResultMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
+				} 
+			}
+		}
+		
+		/* 檢查聯絡電話 */
+		String phone = updatedParameters.split(":")[6];
+		if (updateResultMessage.equals("")) {
+			if (phone.equals("?")) {
+				updateResultMessage = "連絡電話不可為空白";
+			} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
+				updateResultMessage = "連絡電話格式錯誤";
+			} else if (!phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
+				updateResultMessage = "連絡電話格式錯誤";
+			} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
+				updateResultMessage = "行動電話格式錯誤";
+			} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
+				updateResultMessage = "室內電話格式錯誤";
+			} else if (phone.equals(userData.getPhone())) {
+				count++;
+			}
+		}
+		
+		/* 檢查接收促銷/優惠訊息 */
+		String getEmail = updatedParameters.split(":")[7];
+		if (updateResultMessage.equals("")) {
+			if (getEmail.equals(userData.getGetEmail())) {
+				count++;
+			} else if (!getEmail.equals("Y") && !getEmail.equals("N")){ 
+				updateResultMessage = "接收促銷/優惠訊息輸入異常";
+			}
+		}
+		
+		/* 檢查區住區域 */
+		String locationCode = updatedParameters.split(":")[8];
+		if (updateResultMessage.equals("")) {
+			if (locationCode.equals(userData.getLocationCode())) {
+				count++;
+			} else {	
+				switch(locationCode) {
+					case "t01":
+					case "t02":
+					case "t03":
+					case "t04":
+					case "t05":
+					case "t06":
+					case "t07":
+					case "t08":
+					case "t09":
+					case "t10":
+					case "t11":
+					case "t12":
+					case "t13":
+					case "t14":
+					case "t15":
+					case "t16":
+					case "t19":
+					case "t20":
+					case "t21":
+					case "t22":
+					case "t23":
+						break;
+					default:
+						updateResultMessage = "居住區域設定異常";
+						break;
+				}
+			}
+		}
+		
+		/* 檢查地點一 */
+		String addr0 = updatedParameters.split(":")[9];
+		String addr1 = updatedParameters.split(":")[10];
+		String addr2 = updatedParameters.split(":")[11];
+		
+		if (updateResultMessage.equals("")) {
+			if (addr0.equals("")) {
+				updateResultMessage = "生活地點一不可為空白";
+			} else if (addr0.length() > 65) {
+				updateResultMessage = "生活地點一超過長度限制";
+			} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (addr0.equals(userData.getAddr0())) {
+				count++;
+			}
+		}
+		
+		/* 檢查地點二 */
+		if (updateResultMessage.equals("")) {
+			if (addr1.length() > 65) {
+				updateResultMessage = "生活地點二超過長度限制";
+			} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (addr1.equals(userData.getAddr1())) {
+				count++;
+			}
+		}
+		
+		/* 檢查地點三 */
+		if (updateResultMessage.equals("")) {
+			if (addr2.length() > 65) {
+				updateResultMessage = "生活地點三超過長度限制";
+			} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (addr2.equals(userData.getAddr2())) {
+				count++;
+			}
+		}
+		
+		/* 結算有效變動項目 */
+		if (count == 11) {
+			updateResultMessage = "沒有輸入任何有效的修改內容，請重新操作";
+		}
+		
 		return updateResultMessage;
 	}
 }
