@@ -29,4 +29,6 @@ public interface WebUserDAO {
 	/* 檢查帳號是否為棄用 -1->異常、0->失敗、1->成功 */
 	public Integer checkAccountQuit(String inputAccount) throws SQLException;
 	
+	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
+	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
 }

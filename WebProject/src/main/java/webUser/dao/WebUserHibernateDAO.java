@@ -155,4 +155,16 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		checkResult = (list.size() > 0) ? 1 : 0;
 		return checkResult;
 	}
+
+	@Override
+	public Integer updateWebUserData(WebUserData updateUserData) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = 0;
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行變更 */
+		session.saveOrUpdate(updateUserData);
+		updateResult++;
+		return updateResult;
+	}
 }

@@ -457,8 +457,6 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 從session中取出物件userFullData */
 		WebUserData quitUserData = (WebUserData) request.getSession(true).getAttribute("userFullData");
-		/* 設定使用者狀態 */
-		quitUserData.setStatus("quit");
 		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
@@ -554,6 +552,9 @@ public class WebUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		/* 返回的參數 */
 		String updateResultMessage = "";
+		Integer updateResult = -1;
+		/* 更新用的同型物件 */
+		WebUserData updatedUserData = new WebUserData();
 		
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
@@ -593,9 +594,64 @@ public class WebUserServlet extends HttpServlet {
 		/* 預防性後端輸入檢查 */
 		updateResultMessage = doUpdateDataInputCheck(updatedParameters, userData);
 		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
 		if (updateResultMessage.equals("")) {
+			updatedUserData = new WebUserData(
+					updatedUserId, 
+					userData.getAccount(), 
+					userData.getPassword(), 
+					updatedFirstName, 
+					updatedLastName, 
+					updatedNickname,
+					userData.getGender(),
+					userData.getBirth(),
+					updatedFervor,
+					updatedEmail,
+					updatedPhone,
+					updatedGetEmail,
+					updatedLocationCode,
+					userData.getJoinDate(),
+					userData.getLv(),
+					updatedAddr0,
+					updatedAddr1,
+					updatedAddr2,
+					userData.getZest(),
+					userData.getVersion(),
+					userData.getStatus());
 			
+			/* 調用服務裡的方法 */
+			try {
+				updateResult = wus.updateWebUserData(updatedUserData);
+			} catch (SQLException sqlE) {
+				updateResultMessage = sqlE.getMessage();
+			}
+			
+			/* 成功 */
+			if (updateResult == 1) {
+				/* 將物件selfData以"UserFullData"的名稱放入Session中 */
+				request.getSession(true).setAttribute("UserFullData", updatedUserData);
+			}
 		} 
+		
+		if (!updateResultMessage.equals("")) {
+			if (updateResultMessage.indexOf(":") != -1) {	
+				updateResultMessage = updateResultMessage.split(":")[1];
+			}
+		} else {
+			updateResultMessage = "更新操作順利完成";
+		}
+		
+		/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+		if (updateResult == 1) {
+			/* 導向顯示個人資料畫面 */
+			response.sendRedirect(request.getContextPath() + "/webUser/DisplayWebUserData.jsp");
+		} else {
+			/* 導向修改個人資料畫面 */
+			request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
+		}
 	}
 	
 	/* Undo */

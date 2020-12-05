@@ -188,10 +188,14 @@ public class WebUserServiceHibernate implements WebUserService {
 		try {
 			/* 交易開始 */
 			tx = session.beginTransaction();
+			/* 設定使用者狀態 */
+			quitUserData.setStatus("quit");
 			/* 變更帳號狀態 */
 			quitResult = webUserDao.quitWebUserData(quitUserData);
 			/* 變更失敗 */
 			if (quitResult != 1) {
+				/* 還原使用者狀態 */
+				quitUserData.setStatus("active");
 				throw new SQLException("變更失敗");
 			} 
 			/* 交易確認 */
@@ -204,5 +208,30 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return quitResult;
+	}
+
+	@Override
+	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 執行變更 */
+			updateResult = webUserDao.updateWebUserData(updatedUserData);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return updateResult;
 	}
 }
