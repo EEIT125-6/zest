@@ -179,4 +179,29 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		updateResult++;
 		return updateResult;
 	}
+
+	@Override
+	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
+		
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.lv >= -1 AND wu.status = :status";
+		if (lv == 0) {
+			hql = "FROM WebUserData AS wu WHERE wu.lv == 0 AND wu.status = :status";
+		} else if (lv == 1) {
+			hql = "FROM WebUserData AS wu WHERE wu.lv >= 0 AND wu.status = :status";
+		}
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("status", status).getResultList();
+		return list;
+	}
 }

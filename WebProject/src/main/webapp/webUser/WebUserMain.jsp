@@ -172,7 +172,7 @@
                 			<hr />
                 			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
                 			<hr />
-                			<a href="WebUserSearchForm.jsp"><input type="button" id="select" name="login" value="進行搜索"></a>
+                			<input type="submit" id="select" name="search" value="進行搜索">
                 			<hr />
                 			<input type="submit" id="quit" name="update" value="放棄使用帳戶">
                 			<hr />

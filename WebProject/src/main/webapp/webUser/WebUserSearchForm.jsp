@@ -1,30 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
+<!DOCTYPE html>
+<% 
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
+	response.setHeader("Pragma","no-cache"); // HTTP 1.0
+	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- taglib宣告 -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        
-    <title>進行登入</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+   
+    <title>進行搜索</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -151,128 +145,89 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br>登入 |<a href="WebUserRegisterForm.jsp">註冊</a>  |
+              <br><c:out value="${userFullData.nickname}" />|
+              <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
+               <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
+				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
+					scope="session" />
+				<c:if test="${userFullData.password == null}">
+					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-                <form method="post">
-                	<fieldset>
-                		<legend>登入相關資料</legend>
-                		<hr />
-                		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字" required="required" />
+               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+					<fieldset>
+						<legend>搜尋選項</legend>
+						<hr />
+						<label>帳號名稱：</label> 
+						<input type="text" name="selectedAccount" id="account" size="40" maxlength="20" onblur="checkAccountName()"
+							placeholder="請輸入要查詢的帳號，8~20個字" />
 						<span id="accountSpan"></span>
 						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-						<br />
-						<span id="loginSpan">
-							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${loginMessage}" />
-							</c:if>
-							<c:if test="${loginMessage.substring(0,2) != '歡迎' && loginMessage != null}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${loginMessage}" />
-							</c:if>
-						</span>
-                	</fieldset>
-                	<div align="center">
-						<input type="submit" id="submit" name="login" value="登入">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
+						<label>用戶暱稱：</label>
+						<input type="text" name="selectedNickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
+						    placeholder="請輸入要查詢的暱稱" />
+						<span id="nicknameSpan"></span>
+						<hr />
+						<label>偏好食物：</label>
+						<input type="checkbox" name="selectedFervor" value="中式" onblur="checkFervor()" />
+						<label>中式</label>
+						<input type="checkbox" name="selectedFervor" value="快餐" onblur="checkFervor()" />
+						<label>快餐</label>
+						<input type="checkbox" name="selectedFervor" value="燒肉" onblur="checkFervor()" />
+						<label>燒肉</label>
+						<input type="checkbox" name="selectedFervor" value="西式" onblur="checkFervor()" />
+						<label>西式</label>
+						<input type="checkbox" name="selectedFervor" value="下午茶" onblur="checkFervor()" />
+						<label>下午茶</label>
+						<input type="checkbox" name="selectedFervor" value="日式" onblur="checkFervor()" />
+						<label>日式</label>
+						<input type="checkbox" name="selectedFervor" value="皆可" onblur="checkFervor()" />
+						<label>皆可</label>
+						<span id="fervorSpan"></span>
+						<hr />
+					    <label>居住區域：</label>
+				    	<select name="selectedLocationCode" id="locationCode" onblur="checkLocationCode()">
+							<option value="">請選擇要查詢的區域</option>
+							<option value="t01">臺北市</option>
+							<option value="t02">新北市</option>
+							<option value="t03">桃園市</option>
+							<option value="t04">臺中市</option>
+							<option value="t05">臺南市</option>
+							<option value="t06">高雄市</option>
+							<option value="t07">基隆市</option>
+							<option value="t08">新竹市</option>
+							<option value="t09">嘉義市</option>
+							<option value="t10">新竹縣</option>
+							<option value="t11">苗栗縣</option>
+							<option value="t12">彰化縣</option>
+							<option value="t13">南投縣</option>
+							<option value="t14">雲林縣</option>
+							<option value="t15">嘉義縣</option>
+							<option value="t16">屏東縣</option>
+							<option value="t17">宜蘭縣</option>
+							<option value="t18">花蓮縣</option>
+							<option value="t19">臺東縣</option>
+							<option value="t20">澎湖縣</option>
+							<option value="t21">金門縣</option>
+							<option value="t22">連江縣</option>
+							<option value="t23">其他區</option>
+						</select>
+						<span id="locationCodeSpan"></span>
+					    <hr />
+					    <span id="searchSpan"></span>
+					</fieldset>
+					<div align="center">
+						<a href="WebUserMain.jsp"><input type="button" id="back" name="back" value="返回"></a>
+						<input type="submit" id="submit" name="select" value="執行查詢">
+						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
 					</div>
-                </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserLogin.js"></script>
-                <script>
-	                $("#submit").click(function () {
-	                	inputCheck();
-				    });
-	                function inputCheck() {
-	                	if(!checkForm()) {
-	                		alert("帳號或密碼不符規範，請再檢查一次！");
-	                	} else {
-	                		loginCheck();	
-	                	}
-	                }
-	                function loginCheck() {
-	                	let account = document.getElementById("account").value.trim();
-	                	let password = document.getElementById("password").value.trim();
-	                	
-	                	let loginSpan = document.getElementById("loginSpan");
-						let loginStr;
-						let loginIsOk = true;
-						
-	                	$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            async  : false,
-				            data:{
-				            	'login':'登入',
-				            	'account':account,
-				            	'password':password
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		loginStr = "登入成功！";
-				            		loginIsOk = true;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '0') {
-				            		loginStr = "密碼錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-1') {
-				            		loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-2') {
-				            		loginStr = "帳號錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-3') {
-				            		loginStr = "檢查途中遭遇錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!loginIsOk) {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            		loginSpan.style.color = "red";
-				            		loginSpan.style.fontStyle = "italic";
-				            	} else {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
-				            		loginSpan.style.color = "black";
-				            		loginSpan.style.fontStyle = "normal";
-				            		/* 刷新 */
-				            		location.reload(true);
-				            	}
-				            },
-				            error:function(err) {
-				            	loginStr = "發生錯誤，無法執行檢查";
-				            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            	loginSpan.style.color = "red";
-			            		loginSpan.style.fontStyle = "italic";
-			            		/* 顯示彈窗訊息 */
-			            		alert(loginStr);
-				            }
-						});
-	                }
-                </script>
+				</form>
+				<script src="scripts/WebUserSearchForm.js"></script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

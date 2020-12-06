@@ -1,6 +1,8 @@
 package webUser.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -258,5 +260,34 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return updateResult;
+	}
+
+	@Override
+	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
+		return null;
+	}
+
+	@Override
+	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
+		List<WebUserData> list = new ArrayList<>();
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 執行查詢 */
+			list = webUserDao.getAllWebUserData(lv, status);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return list;
 	}
 }

@@ -20,7 +20,7 @@ function checkForm() {
 			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 		}
 	} 
-	console.log(fervorObjValue);
+
 	let oldFervorObjValue = document.getElementById("originalFervor").value.trim();
 	
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();

@@ -1,6 +1,7 @@
 package webUser.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import webUser.model.WebUserData;
 
@@ -19,6 +20,12 @@ public interface WebUserService {
 	
 	/* 取得使用者個人資料 */
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;
+	
+	/* 取得查詢的使用者資料 */
+	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException;
+	
+	/* 取得所有使用者資料 */
+	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException;
 	
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;

@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -124,6 +126,14 @@ public class WebUserServlet extends HttpServlet {
 				case "檢視/修改個人資料":
 					/* 查詢個人資料 */
 					doSelectSelfData(request, response);
+					break;
+				case "執行查詢":
+					/* 查詢其他使用者資料 */
+					doSelectUserData(request, response);
+					break;
+				case "進行搜索":
+					/* 查詢所有使用者資料 */
+					doSelectAllUserData(request, response);
 					break;
 				default:
 					/* 返回主畫面 */
@@ -548,6 +558,60 @@ public class WebUserServlet extends HttpServlet {
 		}
 	}
 	
+	/* Select certain data */
+	public void doSelectUserData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告回傳參數 */
+		List<WebUserData> selectedResult = new ArrayList<>();
+		String selectResultMessage = "";
+		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		
+		/* 從request中取得查詢參數 */
+		String selectedAccount = (request.getParameter("selectedAccount").length() == 0) ? "?"
+				: request.getParameter("selectedAccount").trim();
+		String selectedNickname = (request.getParameter("selectedNickname").length() == 0) ? "?"
+				: request.getParameter("selectedNickname").trim();
+		String selectedFervor = (request.getParameter("selectedFervor") == null) ? "?"
+				: request.getParameter("selectedFervor");
+		String selectedLocationCode = (request.getParameter("selectedLocationCode").length() == 0) ? "?"
+				: request.getParameter("selectedLocationCode");
+		String selectedParameters = selectedAccount + ":" + selectedNickname + ":" + selectedFervor + ":"
+				+ selectedLocationCode + ":" + String.valueOf(userData.getLv()) + ":" + userData.getStatus();
+		
+		/* 預防性後端輸入檢查 */
+		selectResultMessage = doSelectUserDataInputCheck(selectedParameters, userData);
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		if (selectResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			
+		}
+	}
+	
+	/* Select all user data */
+	public void doSelectAllUserData(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		
+	}
+	
 	/* Go to certain page */
 	public void doGoToModifyPages(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
 		/* 導向新畫面 */
@@ -632,8 +696,8 @@ public class WebUserServlet extends HttpServlet {
 			
 			/* 成功 */
 			if (updateResult == 1) {
-				/* 將物件updatedUserData以"updateFullData"的名稱重新放入Session中 */
-				request.getSession(true).setAttribute("updatFullData", updatedUserData);
+				/* 無效session */
+				request.getSession(true).invalidate();
 			}
 		} 
 		
@@ -649,7 +713,7 @@ public class WebUserServlet extends HttpServlet {
 		request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
 		if (updateResult == 1) {
 			/* 導向顯示個人資料畫面 */
-			response.sendRedirect(request.getContextPath() + "/webUser/DisplayWebUserData.jsp");
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserChangeResult.jsp");
 		} else {
 			/* 導向修改個人資料畫面 */
 			request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
@@ -1155,6 +1219,8 @@ public class WebUserServlet extends HttpServlet {
 		/* 檢查JavaBean物件 */
 		if (userData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getStatus().equals("quit")) {
+			updateResultMessage = "本帳號無法使用此功能";
 		}
 		
 		/* 檢查姓氏 */
@@ -1390,6 +1456,8 @@ public class WebUserServlet extends HttpServlet {
 		
 		if (userData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getStatus().equals("quit")) {
+			updateResultMessage = "本帳號無法使用此功能";
 		} else {
 			String oldPassword = userData.getPassword();
 			
@@ -1401,5 +1469,82 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		return updateResultMessage;
+	}
+	
+	public String doSelectUserDataInputCheck(String selectedParameters, WebUserData userData) {
+		String checkResult = "";
+		Integer count = 0;
+		
+		if (userData == null) {
+			checkResult = "使用者未登入系統！請登入後再嘗試";
+		} else if (userData.getStatus().equals("quit")) {
+			checkResult = "本帳號無法使用此功能";
+		}
+		
+		String selectedAccount = selectedParameters.split(":")[0];
+		if (checkResult.equals("")) {
+			if (selectedAccount.length() > 20) {
+				checkResult = "搜尋的帳號名稱過長！";
+			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,20}")) {
+				checkResult = "搜尋的帳號含有無效字元！";
+			} else if(selectedAccount.equals("?")) {
+				count++;
+			}
+		}
+		
+		String selectedNickname = selectedParameters.split(":")[1];
+		if (checkResult.equals("")) {
+			if (selectedNickname.equals("?")) {
+				count++;
+			} else if (selectedNickname.length() > 20) {
+				checkResult = "搜尋的稱呼名稱過長！";
+			}
+		}
+		
+		String selectedFervor = selectedParameters.split(":")[2];
+		if (checkResult.equals("")) {
+			if (selectedFervor.equals("?")) {
+				count++;
+			}
+		}
+		
+		String selectedLocationCode = selectedParameters.split(":")[3];
+		if (checkResult.equals("")) {
+			if (!selectedLocationCode.equals("?"))  {
+				switch(selectedLocationCode) {
+					case "t01":
+					case "t02":
+					case "t03":
+					case "t04":
+					case "t05":
+					case "t06":
+					case "t07":
+					case "t08":
+					case "t09":
+					case "t10":
+					case "t11":
+					case "t12":
+					case "t13":
+					case "t14":
+					case "t15":
+					case "t16":
+					case "t19":
+					case "t20":
+					case "t21":
+					case "t22":
+					case "t23":
+						break;
+					default:
+						checkResult = "居住區域設定異常";
+						break;
+				}
+			}
+		}
+		
+		if (count == 4) {
+			checkResult = "至少需填寫/選擇一項條件才能執行特定搜尋！";
+		}
+		
+		return checkResult;
 	}
 }
