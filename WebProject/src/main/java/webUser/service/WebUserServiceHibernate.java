@@ -234,4 +234,29 @@ public class WebUserServiceHibernate implements WebUserService {
 		}
 		return updateResult;
 	}
+
+	@Override
+	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 執行變更 */
+			updateResult = webUserDao.updateWebUserPassword(updatedUserData);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return updateResult;
+	}
 }

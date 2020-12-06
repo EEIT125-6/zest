@@ -111,6 +111,10 @@ public class WebUserServlet extends HttpServlet {
 					/* 準備執行其他個人資料更新 */
 					doUpdateData(request, response);
 					break;
+				case "密碼修改完畢":
+					/* 準備執行個人密碼更新 */
+					doUpdatePassword(request, response);
+					break;
 			}
 		}
 		/* 刪除部分已改為變更帳號狀態為quit */
@@ -198,6 +202,10 @@ public class WebUserServlet extends HttpServlet {
 	/* Register submit */
 	public void doRegisterSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
 		/* 傳回參數宣告 */
 		String submitMessage = "";
 		
@@ -427,6 +435,10 @@ public class WebUserServlet extends HttpServlet {
 	/* Logout */
 	public void doLogout(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
 		/* 宣告要傳回的參數 */
 		String logoutMessage = "";
 		
@@ -446,14 +458,14 @@ public class WebUserServlet extends HttpServlet {
 	/* Quit account */
 	public void doQuitAccount(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
 		/* 宣告要傳回的參數 */
 		Integer deleteResult = -1;
 		String quitMessage = "";
 		String redirectPage = "";
-		
-		/* 收/發資料前先設定request/response編碼 */
-		request.setCharacterEncoding(CHARSET_CODE);
-		response.setContentType(CONTENT_TYPE);
 		
 		/* 從session中取出物件userFullData */
 		WebUserData quitUserData = (WebUserData) request.getSession(true).getAttribute("userFullData");
@@ -488,6 +500,10 @@ public class WebUserServlet extends HttpServlet {
 	/* Select user's own data */
 	public void doSelectSelfData(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
 		/* 宣告要傳回的參數 */
 		WebUserData selfData = new WebUserData();
 		String getResultMessage = "";
@@ -550,6 +566,10 @@ public class WebUserServlet extends HttpServlet {
 	/* Update other data */
 	public void doUpdateData(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
 		/* 返回的參數 */
 		String updateResultMessage = "";
 		Integer updateResult = -1;
@@ -560,39 +580,21 @@ public class WebUserServlet extends HttpServlet {
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
 		/* 取得目前使用者ID */
 		String updatedUserId = userData.getUserId();
-		/* 取得目前使用者資料版本 */
-		String version = String.valueOf(userData.getVersion());
 		/* 從request中取得查詢參數 */
-		String updatedFirstName = (request.getParameter("updatedFirstName").length() == 0) ? "?"
-				: request.getParameter("updatedFirstName").trim();
-		String updatedLastName = (request.getParameter("updatedLastName").length() == 0) ? "?"
-				: request.getParameter("updatedLastName").trim();
-		String updatedNickname = (request.getParameter("updatedNickname").length() == 0) ? "?"
-				: request.getParameter("updatedNickname").trim();
-		String updatedFervor = (request.getParameter("updatedFervor") == null) ? "?"
-				: request.getParameter("updatedFervor").trim();
-		String updatedEmail = (request.getParameter("updatedEmail").length() == 0) ? "?"
-				: request.getParameter("updatedEmail").trim();
-		String updatedPhone = (request.getParameter("updatedPhone").length() == 0) ? "?"
-				: request.getParameter("updatedPhone").trim();
-		String updatedGetEmail = (request.getParameter("updatedGetEmail") == null) ? "?"
-				: request.getParameter("updatedGetEmail");
-		String updatedLocationCode = (request.getParameter("updatedLocationCode") == null) ? "?"
-				:request.getParameter("updatedLocationCode").trim();
-		String updatedAddr0 = (request.getParameter("updatedAddr0").length() == 0) ? "?"
-				: request.getParameter("updatedAddr0").trim();
-		String updatedAddr1 = (request.getParameter("updatedAddr1").length() == 0) ? "?"
-				: request.getParameter("updatedAddr1").trim();
-		String updatedAddr2 = (request.getParameter("updatedAddr2").length() == 0) ? "?"
-				: request.getParameter("updatedAddr2").trim();
-		
-		/* 設定準備傳入方法的參數 */
-		String updatedParameters = updatedUserId + ":" + updatedFirstName + ":" + updatedLastName + ":" + updatedNickname 
-				+ ":" + updatedFervor + ":" + updatedEmail + ":" + updatedPhone + ":" + updatedGetEmail + ":" + updatedLocationCode 
-				+ ":" + updatedAddr0 + ":" + updatedAddr1 + ":" + updatedAddr2 + ":" + version;
+		String updatedFirstName = request.getParameter("updatedFirstName").trim();
+		String updatedLastName = request.getParameter("updatedLastName").trim();
+		String updatedNickname = request.getParameter("updatedNickname").trim();
+		String updatedFervor = request.getParameter("updatedFervor").trim();
+		String updatedEmail = request.getParameter("updatedEmail").trim();
+		String updatedPhone = request.getParameter("updatedPhone").trim();
+		String updatedGetEmail = request.getParameter("updatedGetEmail").trim();
+		String updatedLocationCode = request.getParameter("updatedLocationCode").trim();
+		String updatedAddr0 = request.getParameter("updatedAddr0").trim();
+		String updatedAddr1 = request.getParameter("updatedAddr1").trim();
+		String updatedAddr2 = request.getParameter("updatedAddr2").trim();
 		
 		/* 預防性後端輸入檢查 */
-		updateResultMessage = doUpdateDataInputCheck(updatedParameters, userData);
+		updateResultMessage = doUpdateDataInputCheck(userData, request, response);
 		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
@@ -618,7 +620,7 @@ public class WebUserServlet extends HttpServlet {
 					updatedAddr1,
 					updatedAddr2,
 					userData.getZest(),
-					userData.getVersion(),
+					userData.getVersion() + 1,
 					userData.getStatus());
 			
 			/* 調用服務裡的方法 */
@@ -630,8 +632,8 @@ public class WebUserServlet extends HttpServlet {
 			
 			/* 成功 */
 			if (updateResult == 1) {
-				/* 將物件selfData以"UserFullData"的名稱放入Session中 */
-				request.getSession(true).setAttribute("UserFullData", updatedUserData);
+				/* 將物件updatedUserData以"updateFullData"的名稱重新放入Session中 */
+				request.getSession(true).setAttribute("updatFullData", updatedUserData);
 			}
 		} 
 		
@@ -640,7 +642,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
 		} else {
-			updateResultMessage = "更新操作順利完成";
+			updateResultMessage = "更新操作順利完成，請重新登入以獲得最新的資料";
 		}
 		
 		/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
@@ -651,6 +653,65 @@ public class WebUserServlet extends HttpServlet {
 		} else {
 			/* 導向修改個人資料畫面 */
 			request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
+		}
+	}
+	
+	/* Update password */
+	public void doUpdatePassword(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 返回的參數 */
+		String updateResultMessage = "";
+		Integer updateResult = -1;
+		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirmPassword");
+		
+		/* 預防性後端輸入檢查 */
+		updateResultMessage = doUpdatePasswordInputCheck(userData, password, confirmPassword);
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		if (updateResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				userData.setVersion(userData.getVersion() + 1);
+				userData.setPassword(password);
+				updateResult = wus.updateWebUserPassword(userData);
+			} catch (SQLException sqlE) {
+				updateResultMessage = sqlE.getMessage();
+				userData.setVersion(userData.getVersion() - 1);
+			}
+			
+			/* 成功 */
+			if (updateResult == 1) {
+				/* 無效session */
+				request.getSession(true).invalidate();
+			}
+		}
+		
+		if (!updateResultMessage.equals("")) {
+			if (updateResultMessage.indexOf(":") != -1) {	
+				updateResultMessage = updateResultMessage.split(":")[1];
+			}
+		} else {
+			updateResultMessage = "密碼變更成功！5秒後將返回登入畫面";
+		}
+		
+		/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+		if (updateResult == 1) {
+			/* 導向密碼修改結果畫面 */
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserChangeResult.jsp");
+		} else {
+			/* 導向修改個人密碼畫面 */
+			request.getRequestDispatcher("/webUser/WebUserModifyPassword.jsp").forward(request, response);
 		}
 	}
 	
@@ -1083,7 +1144,8 @@ public class WebUserServlet extends HttpServlet {
 		return inputCheckResult;
 	}
 	
-	public String doUpdateDataInputCheck(String updatedParameters, WebUserData userData) {
+	public String doUpdateDataInputCheck(WebUserData userData, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
 		String updateResultMessage = "";
 		Integer count = 0;
 		
@@ -1096,9 +1158,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查姓氏 */
-		String firstName = updatedParameters.split(":")[1];
+		String firstName = request.getParameter("updatedFirstName").trim();
 		if (updateResultMessage.equals("")) {
-			if (firstName.equals("?")) {
+			if (firstName.equals("")) {
 				updateResultMessage = "姓氏不可為空白";
 			} else if (firstName.length() > 3) {
 				updateResultMessage = "姓氏長度過長，最多僅3個字元";
@@ -1129,9 +1191,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查名字 */
-		String lastName = updatedParameters.split(":")[2];
+		String lastName = request.getParameter("updatedLastName").trim();
 		if (updateResultMessage.equals("")) {
-			if (lastName.equals("?")) {
+			if (lastName.equals("")) {
 				updateResultMessage = "名字不可為空白";
 			} else if (lastName.length() > 3) {
 				updateResultMessage = "名字長度過長，最多僅3個字元";
@@ -1162,11 +1224,11 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查稱呼 */
-		String nickname = updatedParameters.split(":")[3];
+		String nickname = request.getParameter("updatedNickname").trim();
 		if (updateResultMessage.equals("")) {
-			if (nickname.equals("?") && lastName.equals("?")) {
+			if (nickname.equals("") && lastName.equals("")) {
 				updateResultMessage = "稱呼不可為空白";
-			} else if (nickname.equals("?") && !lastName.equals("?")) {
+			} else if (nickname.equals("") && !lastName.equals("")) {
 				nickname = lastName;
 			} else if (nickname.length() > 20){
 				updateResultMessage = "稱呼長度過長";
@@ -1176,9 +1238,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查偏好食物 */
-		String fervor = updatedParameters.split(":")[4];
+		String fervor = request.getParameter("updatedFervor").trim();
 		if (updateResultMessage.equals("")) {
-			if (fervor.equals("?")) {
+			if (fervor.equals("")) {
 				updateResultMessage = "偏好食物不可為空白";
 			} else if (fervor.length() > 50){
 				updateResultMessage = "偏好食物長度過長";
@@ -1188,9 +1250,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查email */
-		String email = updatedParameters.split(":")[5];
+		String email = request.getParameter("updatedEmail").trim();
 		if (updateResultMessage.equals("")) {
-			if (email.equals("?")) {
+			if (email.equals("")) {
 				updateResultMessage = "信箱資訊不可為空白";
 			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
 				updateResultMessage = "信箱資訊格式錯誤";
@@ -1213,9 +1275,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查聯絡電話 */
-		String phone = updatedParameters.split(":")[6];
+		String phone = request.getParameter("updatedPhone").trim();
 		if (updateResultMessage.equals("")) {
-			if (phone.equals("?")) {
+			if (phone.equals("")) {
 				updateResultMessage = "連絡電話不可為空白";
 			} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
 				updateResultMessage = "連絡電話格式錯誤";
@@ -1231,7 +1293,7 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查接收促銷/優惠訊息 */
-		String getEmail = updatedParameters.split(":")[7];
+		String getEmail = request.getParameter("updatedGetEmail").trim();
 		if (updateResultMessage.equals("")) {
 			if (getEmail.equals(userData.getGetEmail())) {
 				count++;
@@ -1241,7 +1303,7 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查區住區域 */
-		String locationCode = updatedParameters.split(":")[8];
+		String locationCode = request.getParameter("updatedLocationCode").trim();
 		if (updateResultMessage.equals("")) {
 			if (locationCode.equals(userData.getLocationCode())) {
 				count++;
@@ -1277,9 +1339,9 @@ public class WebUserServlet extends HttpServlet {
 		}
 		
 		/* 檢查地點一 */
-		String addr0 = updatedParameters.split(":")[9];
-		String addr1 = updatedParameters.split(":")[10];
-		String addr2 = updatedParameters.split(":")[11];
+		String addr0 = request.getParameter("updatedAddr0").trim();
+		String addr1 = request.getParameter("updatedAddr1").trim();
+		String addr2 = request.getParameter("updatedAddr2").trim();
 		
 		if (updateResultMessage.equals("")) {
 			if (addr0.equals("")) {
@@ -1318,6 +1380,24 @@ public class WebUserServlet extends HttpServlet {
 		/* 結算有效變動項目 */
 		if (count == 11) {
 			updateResultMessage = "沒有輸入任何有效的修改內容，請重新操作";
+		}
+		
+		return updateResultMessage;
+	}
+	
+	public String doUpdatePasswordInputCheck(WebUserData userData, String password, String confirmPassword) {
+		String updateResultMessage = "";
+		
+		if (userData == null) {
+			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else {
+			String oldPassword = userData.getPassword();
+			
+			if (!password.equals(confirmPassword)) {
+				updateResultMessage = "密碼與確認密碼不一致！";
+			} else if (password.equals(oldPassword)){
+				updateResultMessage = "密碼未修改！";
+			}
 		}
 		
 		return updateResultMessage;

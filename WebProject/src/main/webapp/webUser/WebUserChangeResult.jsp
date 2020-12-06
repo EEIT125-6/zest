@@ -22,9 +22,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
-    <title>進行登入</title>
+    <title>修改資料結束</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -151,130 +150,28 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br>登入 |<a href="WebUserRegisterForm.jsp">註冊</a>  |
+              <br><a href="../webUser/WebUserLogin.jsp">登入</a>|
+              <a href="../webUser/WebUserRegisterForm.jsp">註冊</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
               </div>
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
-				</c:if>
-                <form method="post">
-                	<fieldset>
-                		<legend>登入相關資料</legend>
-                		<hr />
-                		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~20個字" required="required" />
-						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-						<br />
-						<span id="loginSpan">
-							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${loginMessage}" />
-							</c:if>
-							<c:if test="${loginMessage.substring(0,2) != '歡迎' && loginMessage != null}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${loginMessage}" />
-							</c:if>
-						</span>
-                	</fieldset>
-                	<div align="center">
-						<input type="submit" id="submit" name="login" value="登入">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
-					</div>
-                </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserLogin.js"></script>
+                <p>${updateResultMessage}</p>
+                <p>5秒後將移至</p>
+                <p id = "pPage">${updateResultPage}</p>
                 <script>
-	                $("#submit").click(function () {
-	                	inputCheck();
-				    });
-	                function inputCheck() {
-	                	if(!checkForm()) {
-	                		alert("帳號或密碼不符規範，請再檢查一次！");
-	                	} else {
-	                		loginCheck();	
-	                	}
-	                }
-	                function loginCheck() {
-	                	let account = document.getElementById("account").value.trim();
-	                	let password = document.getElementById("password").value.trim();
-	                	
-	                	let loginSpan = document.getElementById("loginSpan");
-						let loginStr;
-						let loginIsOk = true;
-						
-	                	$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            async  : false,
-				            data:{
-				            	'login':'登入',
-				            	'account':account,
-				            	'password':password
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		loginStr = "登入成功！";
-				            		loginIsOk = true;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '0') {
-				            		loginStr = "密碼錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-1') {
-				            		loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-2') {
-				            		loginStr = "帳號錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-3') {
-				            		loginStr = "檢查途中遭遇錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!loginIsOk) {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            		loginSpan.style.color = "red";
-				            		loginSpan.style.fontStyle = "italic";
-				            	} else {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
-				            		loginSpan.style.color = "black";
-				            		loginSpan.style.fontStyle = "normal";
-				            		/* 刷新 */
-				            		location.reload(true);
-				            	}
-				            },
-				            error:function(err) {
-				            	loginStr = "發生錯誤，無法執行檢查";
-				            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            	loginSpan.style.color = "red";
-			            		loginSpan.style.fontStyle = "italic";
-			            		/* 顯示彈窗訊息 */
-			            		alert(loginStr);
-				            }
-						});
-	                }
+                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
+                		document.getElementById("pPage").innerHTML = "登入";
+                	} 
+                	let redirectPage = "WebUserLogin.jsp";
+                	setTimeout(function () {
+	                	   window.location.href = redirectPage;
+               	  	}
+	                , 5000);
                 </script>
             </div>
-            
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->

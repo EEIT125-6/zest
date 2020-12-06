@@ -14,12 +14,13 @@ function checkForm() {
 	let fervorObjValue = "";
 	if (fervorObj.length > 0) {
 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
-			if (fervorObjValue != null && fervorObj[fervorIndex].checked) {
+			if (fervorObjValue != "" && fervorObj[fervorIndex].checked) {
 				fervorObjValue += ",";
 			}
 			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 		}
 	} 
+	console.log(fervorObjValue);
 	let oldFervorObjValue = document.getElementById("originalFervor").value.trim();
 	
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();
@@ -28,13 +29,10 @@ function checkForm() {
 	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
 	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
-	let getEmailObjValue;
-	getEmailObjValue = (document.getElementById("updatedgetEmail1") == null) ? "" : document.getElementById("updatedgetEmail1").value;
-	getEmailObjValue = (document.getElementById("updatedgetEmail2") == null) ? "" : document.getElementById("updatedgetEmail2").value;
-	console.log(getEmailObjValue);
-	let oldgetEmailObjValue = document.getElementById("originalgetEmail").value;
+	let getEmailObjValue = document.getElementsByName("updatedGetEmail");
+	let oldgetEmailObjValue = document.getElementById("originalGetEmail").value;
 	
-	let locationCodeObjValue = (document.getElementById("updatedLocationCode") == null) ? "" : document.getElementById("updatedLocationCode").value;
+	let locationCodeObjValue = document.getElementById("updatedLocationCode").value;
 	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
 	
 	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
@@ -63,7 +61,7 @@ function checkForm() {
 			return false;
 		} else if (!checkPhone()) {
 			return false;
-		} else if (!checkgetEmail()) {
+		} else if (!checkGetEmail()) {
 			return false;
 		} else if (!checkLocationCode()) {
 			return false;
@@ -74,51 +72,37 @@ function checkForm() {
 		} else if (!checkAddr2()){
 			return false;
 		} else {
-			if (firstNameObjValue == "" || firstNameObjValue.length == 0 || firstNameObjValue == oldFirstNameObjValue) {
-				document.getElementById("updatedFirstName").value = "";
+			if (firstNameObjValue == oldFirstNameObjValue) {
 				counter++;
 			}
-			if (lastNameObjValue == "" || lastNameObjValue.length == 0 || lastNameObjValue == oldLastNameObjValue) {
-				document.getElementById("updatedLastName").value = "";
+			if (lastNameObjValue == oldLastNameObjValue) {
 				counter++;
 			}
-			if (nicknameObjValue == "" || nicknameObjValue.length == 0 || nicknameObjValue == oldNicknameObjValue) {
-				document.getElementById("updatedNickname").value = "";
+			if (nicknameObjValue == oldNicknameObjValue) {
 				counter++;
 			}
-			if (fervorObjValue == "" || fervorObjValue.length == 0 || fervorObjValue == oldFervorObjValue) {
-				for (let fervorIndex = 0; fervorIndex < 7; fervorIndex++) {
-					document.getElementById("updatedFervor"+fervorIndex.toString()).checked = false;
-				}
+			if (fervorObjValue == oldFervorObjValue) {
 				counter++;
 			}
-			if (emailObjValue == "" || emailObjValue.length == 0 || emailObjValue == oldEmailObjValue) {
-				document.getElementById("updatedEmail").value = "";
+			if (emailObjValue == oldEmailObjValue) {
 				counter++;
 			}
-			if (phoneObjValue == "" || phoneObjValue.length == 0 || phoneObjValue == oldPhoneObjValue) {
-				document.getElementById("updatedPhone").value = "";
+			if (phoneObjValue == oldPhoneObjValue) {
 				counter++;
 			}
-			if (getEmailObjValue == "" || getEmailObjValue.length == 0 || getEmailObjValue == oldgetEmailObjValue) {
-				document.getElementById("updatedgetEmail1").value = "";
-				document.getElementById("updatedgetEmail2").value = "";
+			if (getEmailObjValue == oldgetEmailObjValue) {
 				counter++;
 			}
-			if (locationCodeObjValue == "" || locationCodeObjValue.length == 0 || locationCodeObjValue == oldLocationCodeObjValue) {
-				document.getElementById("updatedLocationCode").value = "";
+			if (locationCodeObjValue == oldLocationCodeObjValue) {
 				counter++;
 			}
-			if (addr0ObjValue == "" || addr0ObjValue.length == 0 || addr0ObjValue == oldAddr0ObjValue) {
-				document.getElementById("updatedAddr0").value = "";
+			if (addr0ObjValue == oldAddr0ObjValue) {
 				counter++;
 			}
-			if (addr1ObjValue == oldAddr1ObjValue) {
-				document.getElementById("updatedAddr1").value = "";
+			if (addr1ObjValue == oldAddr1ObjValue && addr1ObjValue != null) {
 				counter++;
 			}
-			if (addr2ObjValue == oldAddr2ObjValue) {
-				document.getElementById("updatedAddr2").value = "";
+			if (addr2ObjValue == oldAddr2ObjValue && addr2ObjValue != null) {
 				counter++;
 			}
 			
@@ -386,7 +370,7 @@ function checkPhone() {
 	}
 }
 
-function checkgetEmail() {
+function checkGetEmail() {
 	let getEmailObjValue;
 	getEmailObjValue = (document.getElementById("updatedgetEmail1") == null) ? "" : document.getElementById("updatedgetEmail1").value;
 	getEmailObjValue = (document.getElementById("updatedgetEmail2") == null) ? "" : document.getElementById("updatedgetEmail2").value;
@@ -572,16 +556,22 @@ function clearMessage() {
 }
 
 function checkSameEmail(){
+	let emailObjValue = document.getElementById("updatedEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
+	let oldEmailObjValue = document.getElementById("originalEmail").value;
 	
-	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-		alert("請先執行電子信箱檢查");
-		return false;
-	} else {
-		if (!checkEmail()) {
+	if (emailObjValue != oldEmailObjValue) {
+		if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+			alert("請先執行電子信箱檢查");
 			return false;
 		} else {
-			return true;
+			if (!checkEmail()) {
+				return false;
+			} else {
+				return true;
+			}
 		}
+	} else {
+		return true;
 	}
 }

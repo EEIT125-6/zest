@@ -169,10 +169,16 @@
                 	<fieldset>
                 		<legend>可修改的個人相關資料</legend>
                 		<span id="updateResultMessageSpan">
-							<c:if test="${updateResultMessage != null}">
+                		<c:if test="${updateResultMessage != null}">
+							<c:if test="${updateResultMessage != '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${updateResultMessage}" />
 							</c:if>
+							<c:if test="${updateResultMessage == '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
+								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
+								<c:out value="${updateResultMessage}" />
+							</c:if>
+						</c:if>
 						</span>
                 		<hr />
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${userFullData.firstName}">
@@ -929,9 +935,9 @@
                 <script src="scripts/WebUserModifyData.js"></script>
                 <script>
 					$("#checkEmailUsed").click(function () {
-				        checkSameEmail();
+				        checkUpdateEmail();
 				    });
-					function checkSameEmail(){
+					function checkUpdateEmail(){
 						let email = document.getElementById("updatedEmail").value.trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr;
