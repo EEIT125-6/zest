@@ -7,7 +7,7 @@
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <%
-	session.invalidate();
+	session.invalidate(); //無效session
 %>
 <!DOCTYPE html>
 <html lang="en">

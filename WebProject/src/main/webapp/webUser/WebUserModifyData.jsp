@@ -152,7 +152,7 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><c:out value="${userFullData.nickname}" />|
+              <br><c:out value="${userFullData.account}" />|
               <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
@@ -170,109 +170,107 @@
                 		<legend>可修改的個人相關資料</legend>
                 		<span id="updateResultMessageSpan">
                 		<c:if test="${updateResultMessage != null}">
-							<c:if test="${updateResultMessage != '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
+							<c:if test="${updateResultMessage != '更新操作順利完成'}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${updateResultMessage}" />
 							</c:if>
-							<c:if test="${updateResultMessage == '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
+						</c:if>
+						<c:if test="${updateResultMessage == null}">
 						</c:if>
 						</span>
                 		<hr />
-                		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${userFullData.firstName}">
+                		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${originalData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
-							placeholder="請輸入姓氏，1~3個中文字" value="${userFullData.firstName}" />
+							placeholder="請輸入姓氏，1~3個中文字" value="${originalData.firstName}" />
 						<span id="firstNameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalLastName" id="originalLastName" value="${userFullData.lastName}">
+						<input type="hidden" name="originalLastName" id="originalLastName" value="${originalData.lastName}">
 						<label>中文名字：</label>
 						<input type="text" name="updatedLastName" id="updatedLastName" size="40" maxlength="3" onblur="checkLastName()"
-							placeholder="請輸入名字，1~3個中文字" value="${userFullData.lastName}" />
+							placeholder="請輸入名字，1~3個中文字" value="${originalData.lastName}" />
 						<span id="lastNameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalNickname" id="originalNickname" value="${userFullData.nickname}">
+						<input type="hidden" name="originalNickname" id="originalNickname" value="${originalData.nickname}">
 						<label>稱呼方式：</label>
 						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
-							placeholder="請輸入想要的稱呼" value="${userFullData.nickname}" />
+							placeholder="請輸入想要的稱呼" value="${originalData.nickname}" />
 						<span id="nicknameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalFervor" id="originalFervor" value="${userFullData.fervor}">
+						<input type="hidden" name="originalFervor" id="originalFervor" value="${originalData.fervor}">
 						<label>偏好食物：</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('中式')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('中式')!=-1}">
 								<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="中式" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('中式')==-1}">
+							<c:when test="${originalData.fervor.indexOf('中式')==-1}">
 								<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="中式" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>中式</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('快餐')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('快餐')!=-1}">
 								<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('快餐')==-1}">
+							<c:when test="${originalData.fervor.indexOf('快餐')==-1}">
 								<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>快餐</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('燒肉')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('燒肉')!=-1}">
 								<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('燒肉')==-1}">
+							<c:when test="${originalData.fervor.indexOf('燒肉')==-1}">
 								<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>燒肉</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('西式')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('西式')!=-1}">
 								<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('西式')==-1}">
+							<c:when test="${originalData.fervor.indexOf('西式')==-1}">
 								<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>西式</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('下午茶')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('下午茶')!=-1}">
 								<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('下午茶')==-1}">
+							<c:when test="${originalData.fervor.indexOf('下午茶')==-1}">
 								<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>下午茶</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('日式')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('日式')!=-1}">
 								<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('日式')==-1}">
+							<c:when test="${originalData.fervor.indexOf('日式')==-1}">
 								<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
 						</c:choose>
 						<label>日式</label>
 						<c:choose>
-							<c:when test="${userFullData.fervor.indexOf('皆可')!=-1}">
+							<c:when test="${originalData.fervor.indexOf('皆可')!=-1}">
 								<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" checked="checked" />
 							</c:when>
-							<c:when test="${userFullData.fervor.indexOf('皆可')==-1}">
+							<c:when test="${originalData.fervor.indexOf('皆可')==-1}">
 								<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="快餐" 
 									onblur="checkFervor()" />
 							</c:when>
@@ -280,38 +278,38 @@
 						<label>皆可</label>
 						<span id="fervorSpan"></span>
 						<hr />
-						<input type="hidden" name="originalEmail" id="originalEmail" value="${userFullData.email}">
+						<input type="hidden" name="originalEmail" id="originalEmail" value="${originalData.email}">
 						<label>聯絡信箱：</label>
 						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
-						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${userFullData.email}" />
+						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${originalData.email}" />
 						<input type="button" name="update" id="checkEmailUsed" value="檢查信箱">
 						<span id="emailSpan"></span>
 						<hr />
-						<input type="hidden" name="originalPhone" id="originalPhone" value="${userFullData.phone}">
+						<input type="hidden" name="originalPhone" id="originalPhone" value="${originalData.phone}">
 						<label>聯絡電話：</label>
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
-						    placeholder="請輸入行動電話或市內電話號碼" value="${userFullData.phone}" />
+						    placeholder="請輸入行動電話或市內電話號碼" value="${originalData.phone}" />
 						<span id="phoneSpan"></span>
 					    <hr />
-					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${userFullData.getEmail}">
+					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${originalData.getEmail}">
 					    <label>接收促銷/優惠意願：</label>
 					    <c:choose>
-					    	<c:when test="${userFullData.getEmail=='Y'}">
+					    	<c:when test="${originalData.getEmail=='Y'}">
 								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
 								onblur="checkGetEmail()" checked="checked">
 							</c:when>
-							<c:when test="${userFullData.getEmail!='Y'}">
+							<c:when test="${originalData.getEmail!='Y'}">
 								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
 									onblur="checkGetEmail()" >
 							</c:when>
 						</c:choose>
 					    <label for="Y">願意</label>
 					    <c:choose>
-					    	<c:when test="${userFullData.getEmail!='N'}">
+					    	<c:when test="${originalData.getEmail!='N'}">
 							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
 							    	onblur="checkGetEmail()" >
 						    </c:when>
-						    <c:when test="${userFullData.getEmail=='N'}">
+						    <c:when test="${originalData.getEmail=='N'}">
 							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
 							    	onblur="checkGetEmail()" checked="checked">
 						    </c:when>
@@ -319,11 +317,11 @@
 					    <label for="N">不願意</label>
 					    <span id="getEmailSpan"></span>
 						<hr />
-						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${userFullData.locationCode}">
+						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${originalData.locationCode}">
 					    <label>居住區域：</label>
 				    	<select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
 							<c:choose>
-								<c:when test="${userFullData.locationCode=='t01'}">
+								<c:when test="${originalData.locationCode=='t01'}">
 									<option value="t01" selected="selected">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -348,7 +346,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t02'}">
+								<c:when test="${originalData.locationCode=='t02'}">
 									<option value="t01">臺北市</option>
 									<option value="t02" selected="selected">新北市</option>
 									<option value="t03">桃園市</option>
@@ -373,7 +371,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t03'}">
+								<c:when test="${originalData.locationCode=='t03'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03" selected="selected">桃園市</option>
@@ -398,7 +396,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t04'}">
+								<c:when test="${originalData.locationCode=='t04'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -423,7 +421,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t05'}">
+								<c:when test="${originalData.locationCode=='t05'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -448,7 +446,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t06'}">
+								<c:when test="${originalData.locationCode=='t06'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -473,7 +471,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t07'}">
+								<c:when test="${originalData.locationCode=='t07'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -498,7 +496,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t08'}">
+								<c:when test="${originalData.locationCode=='t08'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -523,7 +521,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t09'}">
+								<c:when test="${originalData.locationCode=='t09'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -548,7 +546,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t10'}">
+								<c:when test="${originalData.locationCode=='t10'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -573,7 +571,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t11'}">
+								<c:when test="${originalData.locationCode=='t11'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -598,7 +596,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t12'}">
+								<c:when test="${originalData.locationCode=='t12'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -623,7 +621,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t13'}">
+								<c:when test="${originalData.locationCode=='t13'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -648,7 +646,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t14'}">
+								<c:when test="${originalData.locationCode=='t14'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -673,7 +671,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t15'}">
+								<c:when test="${originalData.locationCode=='t15'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -698,7 +696,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t16'}">
+								<c:when test="${originalData.locationCode=='t16'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -723,7 +721,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t17'}">
+								<c:when test="${originalData.locationCode=='t17'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -748,7 +746,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t18'}">
+								<c:when test="${originalData.locationCode=='t18'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -773,7 +771,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t19'}">
+								<c:when test="${originalData.locationCode=='t19'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -798,7 +796,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t20'}">
+								<c:when test="${originalData.locationCode=='t20'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -823,7 +821,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t21'}">
+								<c:when test="${originalData.locationCode=='t21'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -848,7 +846,7 @@
 									<option value="t22">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t22'}">
+								<c:when test="${originalData.locationCode=='t22'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -873,7 +871,7 @@
 									<option value="t22" selected="selected">連江縣</option>
 									<option value="t23">其他區</option>
 								</c:when>
-								<c:when test="${userFullData.locationCode=='t23'}">
+								<c:when test="${originalData.locationCode=='t23'}">
 									<option value="t01">臺北市</option>
 									<option value="t02">新北市</option>
 									<option value="t03">桃園市</option>
@@ -902,24 +900,24 @@
 						</select>
 						<span id="locationCodeSpan"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr0" id="originalAddr0" value="${userFullData.addr0}">
+					    <input type="hidden" name="originalAddr0" id="originalAddr0" value="${originalData.addr0}">
 					    <label>生活地點一：</label>
 					    <input type="text" name="updatedAddr0" id="updatedAddr0" size="65" maxlength="65" onblur="checkAddr0()"
-						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr0}" />
+						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" value="${originalData.addr0}" />
 						<br />
 						<span id="addr0Span"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr1" id="originalAddr1" value="${userFullData.addr1}">
+					    <input type="hidden" name="originalAddr1" id="originalAddr1" value="${originalData.addr1}">
 					    <label>生活地點二：</label>
 					    <input type="text" name="updatedAddr1" id="updatedAddr1" size="65" maxlength="65" onblur="checkAddr1()"
-						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr1}" />
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${originalData.addr1}" />
 						<br />
 						<span id="addr1Span"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr2" id="originalAddr2" value="${userFullData.addr2}">
+					    <input type="hidden" name="originalAddr2" id="originalAddr2" value="${originalData.addr2}">
 					    <label>生活地點三：</label>
 					    <input type="text" name="updatedAddr2" id="updatedAddr2" size="65" maxlength="65" onblur="checkAddr2()"
-						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${userFullData.addr2}" />
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${originalData.addr2}" />
 						<br />
 						<span id="addr2Span"></span>
 					    <hr />

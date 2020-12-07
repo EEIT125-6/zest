@@ -151,7 +151,7 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><c:out value="${userFullData.nickname}" />|
+              <br><c:out value="${userFullData.account}" />|
               <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
@@ -162,7 +162,7 @@
 		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${userFullData.password == null}">
+				<c:if test="${empty selfData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
@@ -175,92 +175,103 @@
 						</c:if>
 						<hr />
 							<label>帳號名稱：</label>
-							<c:out value="${userFullData.account}" />
+							<c:out value="${selfData.account}" />
 							<hr />
 							<label>帳號密碼：</label>
-							<c:if test="${userFullData.password.length() > 0}">
-								<c:forEach var="passwordChar" begin="0" end="${userFullData.password.length()-1}">
+							<c:if test="${selfData.password.length() > 0}">
+								<c:forEach var="passwordChar" begin="0" end="${selfData.password.length()-1}">
 									<c:out value = "*" />
 								</c:forEach>
 							</c:if>
 							<hr />
 							<label>中文姓氏：</label>
-							<c:out value="${userFullData.firstName}" />
+							<c:out value="${selfData.firstName}" />
+							<input type="hidden" name="firstName" id="firstName" value="${selfData.firstName}">
 							<hr />
 							<label>中文名字：</label>
-							<c:out value="${userFullData.lastName}" />
+							<c:out value="${selfData.lastName}" />
+							<input type="hidden" name="lastName" id="lastName" value="${selfData.lastName}">
 							<hr />
 							<label>稱呼方式：</label>
-							<c:out value="${userFullData.nickname}" />
+							<c:out value="${selfData.nickname}" />
+							<input type="hidden" name="nickname" id="nickname" value="${selfData.nickname}">
 							<hr />
 							<label>生理性別：</label>
 							<c:choose>
-								<c:when test="${userFullData.gender == 'M'}">男性</c:when>
-								<c:when test="${userFullData.gender == 'F'}">女性</c:when>
-								<c:when test="${userFullData.gender == 'N'}">不方便提供</c:when>
+								<c:when test="${selfData.gender == 'M'}">男性</c:when>
+								<c:when test="${selfData.gender == 'F'}">女性</c:when>
+								<c:when test="${selfData.gender == 'N'}">不方便提供</c:when>
 							</c:choose>
 							<hr />
 							<label>西元生日：</label>
-							<c:out value="${userFullData.birth}" />
+							<c:out value="${selfData.birth}" />
 							<hr />
 							<label>偏好食物：</label>
-							<c:out value="${userFullData.fervor}" />
+							<c:out value="${selfData.fervor}" />
+							<input type="hidden" name="fervor" id="fervor" value="${selfData.fervor}">
 							<hr />
 							<label>聯絡信箱：</label>
-							<c:out value="${userFullData.email}" />
+							<c:out value="${selfData.email}" />
+							<input type="hidden" name="email" id="email" value="${selfData.email}">
 							<hr />
 							<label>聯絡電話：</label>
-							<c:out value="${userFullData.phone}" />
+							<c:out value="${selfData.phone}" />
+							<input type="hidden" name="phone" id="phone" value="${selfData.phone}">
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
 							<c:choose>
-								<c:when test="${userFullData.getEmail=='Y'}">願意</c:when>
-								<c:when test="${userFullData.getEmail=='N'}">不願意</c:when>
+								<c:when test="${selfData.getEmail=='Y'}">願意</c:when>
+								<c:when test="${selfData.getEmail=='N'}">不願意</c:when>
 							</c:choose>
+							<input type="hidden" name="getEmail" id="getEmail" value="${selfData.getEmail}">
 							<hr />
 							<label>居住區域：</label>
 							<c:choose>
-								<c:when test="${userFullData.locationCode=='t01'}">臺北市</c:when>
-								<c:when test="${userFullData.locationCode=='t02'}">新北市</c:when>
-								<c:when test="${userFullData.locationCode=='t03'}">桃園市</c:when>
-								<c:when test="${userFullData.locationCode=='t04'}">臺中市</c:when>
-								<c:when test="${userFullData.locationCode=='t05'}">臺南市</c:when>
-								<c:when test="${userFullData.locationCode=='t06'}">高雄市</c:when>
-								<c:when test="${userFullData.locationCode=='t07'}">基隆市</c:when>
-								<c:when test="${userFullData.locationCode=='t08'}">新竹市</c:when>
-								<c:when test="${userFullData.locationCode=='t09'}">嘉義市</c:when>
-								<c:when test="${userFullData.locationCode=='t10'}">新竹縣</c:when>
-								<c:when test="${userFullData.locationCode=='t11'}">苗栗縣</c:when>
-								<c:when test="${userFullData.locationCode=='t12'}">彰化縣</c:when>
-								<c:when test="${userFullData.locationCode=='t13'}">南投縣</c:when>
-								<c:when test="${userFullData.locationCode=='t14'}">雲林縣</c:when>
-								<c:when test="${userFullData.locationCode=='t15'}">嘉義縣</c:when>
-								<c:when test="${userFullData.locationCode=='t16'}">屏東縣</c:when>
-								<c:when test="${userFullData.locationCode=='t17'}">宜蘭縣</c:when>
-								<c:when test="${userFullData.locationCode=='t18'}">花蓮縣</c:when>
-								<c:when test="${userFullData.locationCode=='t19'}">臺東縣</c:when>
-								<c:when test="${userFullData.locationCode=='t20'}">澎湖縣</c:when>
-								<c:when test="${userFullData.locationCode=='t21'}">金門縣</c:when>
-								<c:when test="${userFullData.locationCode=='t22'}">連江縣</c:when>
-								<c:when test="${userFullData.locationCode=='t23'}">其他區</c:when>
+								<c:when test="${selfData.locationCode=='t01'}">臺北市</c:when>
+								<c:when test="${selfData.locationCode=='t02'}">新北市</c:when>
+								<c:when test="${selfData.locationCode=='t03'}">桃園市</c:when>
+								<c:when test="${selfData.locationCode=='t04'}">臺中市</c:when>
+								<c:when test="${selfData.locationCode=='t05'}">臺南市</c:when>
+								<c:when test="${selfData.locationCode=='t06'}">高雄市</c:when>
+								<c:when test="${selfData.locationCode=='t07'}">基隆市</c:when>
+								<c:when test="${selfData.locationCode=='t08'}">新竹市</c:when>
+								<c:when test="${selfData.locationCode=='t09'}">嘉義市</c:when>
+								<c:when test="${selfData.locationCode=='t10'}">新竹縣</c:when>
+								<c:when test="${selfData.locationCode=='t11'}">苗栗縣</c:when>
+								<c:when test="${selfData.locationCode=='t12'}">彰化縣</c:when>
+								<c:when test="${selfData.locationCode=='t13'}">南投縣</c:when>
+								<c:when test="${selfData.locationCode=='t14'}">雲林縣</c:when>
+								<c:when test="${selfData.locationCode=='t15'}">嘉義縣</c:when>
+								<c:when test="${selfData.locationCode=='t16'}">屏東縣</c:when>
+								<c:when test="${selfData.locationCode=='t17'}">宜蘭縣</c:when>
+								<c:when test="${selfData.locationCode=='t18'}">花蓮縣</c:when>
+								<c:when test="${selfData.locationCode=='t19'}">臺東縣</c:when>
+								<c:when test="${selfData.locationCode=='t20'}">澎湖縣</c:when>
+								<c:when test="${selfData.locationCode=='t21'}">金門縣</c:when>
+								<c:when test="${selfData.locationCode=='t22'}">連江縣</c:when>
+								<c:when test="${selfData.locationCode=='t23'}">其他區</c:when>
 							</c:choose>
+							<input type="hidden" name="locationCode" id="locationCode" value="${selfData.locationCode}">
 							<hr />
 							<label>生活地點一：</label>
-							<c:out value="${userFullData.addr0}" />
+							<c:out value="${selfData.addr0}" />
+							<input type="hidden" name="addr0" id="addr0" value="${selfData.addr0}">
 							<hr />
 							<label>生活地點二：</label>
-							<c:out value="${userFullData.addr1}" />
+							<c:out value="${selfData.addr1}" />
+							<input type="hidden" name="addr1" id="addr1" value="${selfData.addr1}">
 							<hr />
 							<label>生活地點三：</label>
-							<c:out value="${userFullData.addr2}" />
+							<c:out value="${selfData.addr2}" />
+							<input type="hidden" name="addr2" id="addr2" value="${selfData.addr2}">
 							<hr />
 							<label>所擁有的橙幣：</label>
-							<c:out value="${userFullData.zest}" />
+							<c:out value="${selfData.zest}" />
 							<hr />
 							<label>帳號狀態：</label>
 							<c:choose>
-								<c:when test="${userFullData.status=='active'}">已啟用</c:when>
-								<c:when test="${userFullData.status=='quit'}">已棄用</c:when>
+								<c:when test="${selfData.status=='active'}">已啟用</c:when>
+								<c:when test="${selfData.status=='quit'}">已棄用</c:when>
 							</c:choose>
 							<hr />
 					</fieldset>

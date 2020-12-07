@@ -151,7 +151,7 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><c:out value="${userFullData.nickname}" />|
+              <br><c:out value="${userFullData.account}" />|
               <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
@@ -167,22 +167,17 @@
 				</c:if>
                 <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
                 	<fieldset>
-                		<legend>${loginMessage}</legend>
+                		<legend>${userFullData.account}</legend>
                 		<div align="center">
                 			<hr />
                 			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
                 			<hr />
-                			<input type="submit" id="select" name="search" value="進行搜索">
+                			<input type="submit" id="select" name="select" value="進行搜索">
                 			<hr />
                 			<input type="submit" id="quit" name="update" value="放棄使用帳戶">
                 			<hr />
 							<input type="submit" id="logout" name="login" value="登出帳戶">
 							<hr />
-							<c:if test="${updateMessage != null}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${updateMessage}" />
-								<hr />
-							</c:if>
 						</div>
                 	</fieldset>
                 </form>

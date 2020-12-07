@@ -145,7 +145,7 @@
               <div class="container" >
               <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><c:out value="${userFullData.nickname}" />|
+              <br><c:out value="${userFullData.account}" />|
               <a href="../webUser/WebUserLogoutManual.jsp">登出</a>|
               <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
             </p>
@@ -227,6 +227,79 @@
 						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
 					</div>
 				</form>
+				<c:if test="${selectResultMessage.length() > 0}">
+					<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+					<c:out value="${selectResultMessage}" />
+				</c:if>
+				<c:if test="${empty userDataList}">
+					<div align="center">
+						<p>沒有查詢到任何符合條件的資料</p>
+					</div>
+				</c:if>
+				<c:if test="${not empty userDataList}">
+					<form method="post">
+						<fieldset>
+							<legend>查詢到 <c:out value="${userDataList.size()}"/> 筆符合條件的資料</legend>
+							<hr />
+							<c:forEach var="userData" varStatus="index" items="${userDataList}">
+								<c:if test='${index.first }'>
+									<c:out value="<table border='1'>" escapeXml='false'/>
+									<c:out value=
+									"<tr>
+										<td>帳號名稱</td>
+										<td>稱呼名稱</td>
+										<td>偏好食物</td>
+										<td>居住區域</td>
+										<c:if test='${userFullData.lv == -1}'>
+										<td>帳號狀態</td>
+										</c:if>
+									</tr>" escapeXml='false'/>
+								</c:if>
+								
+								<tr>
+									<td>${userData.account}</td>
+									<td>${userData.nickname}</td>
+									<td>${userData.fervor}</td>
+									<td>
+										<c:choose>
+											<c:when test="${userData.locationCode=='t01'}">臺北市</c:when>
+											<c:when test="${userData.locationCode=='t02'}">新北市</c:when>
+											<c:when test="${userData.locationCode=='t03'}">桃園市</c:when>
+											<c:when test="${userData.locationCode=='t04'}">臺中市</c:when>
+											<c:when test="${userData.locationCode=='t05'}">臺南市</c:when>
+											<c:when test="${userData.locationCode=='t06'}">高雄市</c:when>
+											<c:when test="${userData.locationCode=='t07'}">基隆市</c:when>
+											<c:when test="${userData.locationCode=='t08'}">新竹市</c:when>
+											<c:when test="${userData.locationCode=='t09'}">嘉義市</c:when>
+											<c:when test="${userData.locationCode=='t10'}">新竹縣</c:when>
+											<c:when test="${userData.locationCode=='t11'}">苗栗縣</c:when>
+											<c:when test="${userData.locationCode=='t12'}">彰化縣</c:when>
+											<c:when test="${userData.locationCode=='t13'}">南投縣</c:when>
+											<c:when test="${userData.locationCode=='t14'}">雲林縣</c:when>
+											<c:when test="${userData.locationCode=='t15'}">嘉義縣</c:when>
+											<c:when test="${userData.locationCode=='t16'}">屏東縣</c:when>
+											<c:when test="${userData.locationCode=='t17'}">宜蘭縣</c:when>
+											<c:when test="${userData.locationCode=='t18'}">花蓮縣</c:when>
+											<c:when test="${userData.locationCode=='t19'}">臺東縣</c:when>
+											<c:when test="${userData.locationCode=='t20'}">澎湖縣</c:when>
+											<c:when test="${userData.locationCode=='t21'}">金門縣</c:when>
+											<c:when test="${userData.locationCode=='t22'}">連江縣</c:when>
+											<c:when test="${userData.locationCode=='t23'}">其他區</c:when>
+										</c:choose>
+									</td>
+									<c:if test='${userFullData.lv == -1}'>
+										<td>${userData.status}</td>
+									</c:if>
+								</tr>
+								
+								<c:if test='${index.last }'>
+									<c:out value="</table>" escapeXml='false'/>
+									<hr />
+								</c:if>
+							</c:forEach>
+						</fieldset>
+					</form>
+				</c:if>
 				<script src="scripts/WebUserSearchForm.js"></script>
             </div>
             

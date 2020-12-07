@@ -429,8 +429,8 @@ public class WebUserServlet extends HttpServlet {
 			request.getSession(true).setAttribute("userFullData", userFullData);
 		} 
 		
-		/* 將訊息loginMessage以"loginMessage"的名稱放入session中 */
-		request.getSession(true).setAttribute("loginMessage", loginMessage);;
+		/* 將訊息loginMessage以"loginMessage"的名稱放入request中 */
+		request.setAttribute("loginMessage", loginMessage);;
 		
 		/* 宣告printer */
 		PrintWriter out = response.getWriter();
@@ -455,7 +455,7 @@ public class WebUserServlet extends HttpServlet {
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
 		/* 取出部分資訊以組成訊息 */
-		logoutMessage = "感謝您的使用，" + userData.getNickname() + "！";
+		logoutMessage = "感謝您的使用，" + userData.getAccount() + "！";
 		
 		/* 無效session */
 		request.getSession(true).invalidate();
@@ -493,7 +493,7 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 成功變更 */
 		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用，" + quitUserData.getNickname() + "！我們有緣再見...";
+			quitMessage = "感謝您的使用，" + quitUserData.getAccount() + "！我們有緣再見...";
 			redirectPage = "WebUserRegisterForm.jsp";
 			/* 無效session */
 			request.getSession(true).invalidate();
@@ -503,8 +503,8 @@ public class WebUserServlet extends HttpServlet {
 		request.getSession(true).setAttribute("quitMessage", quitMessage);
 		/* 將導向的網頁redirectPage以"redirectPage"的名稱放入Session中 */
 		request.getSession(true).setAttribute("redirectPage", redirectPage);
-		/* 導向刪除結果畫面 */
-		request.getRequestDispatcher("/webUser/WebUserDeleteResult.jsp").forward(request, response);
+		/* 導向顯示刪除結果畫面，改用response.sendRedirect() */
+		response.sendRedirect(request.getContextPath() + "/webUser/WebUserDeleteResult.jsp");
 	}
 	
 	/* Select user's own data */
@@ -536,18 +536,17 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 成功取得資料時，selfData不為Null */
 		if (selfData != null) {
-			userData = selfData;
 			getResultMessage = "以下為您的個人資料...";
-			/* 將物件selfData以"UserFullData"的名稱放入Session中 */
-			request.getSession(true).setAttribute("UserFullData", selfData);
+			/* 將物件selfData放入request中 */
+			request.setAttribute("selfData", selfData);
 		} else if (getResultMessage.equals("")) {
 			getResultMessage = "無法取得使用者資料";
-			/* 將導向的網頁failResultPage以"failResultPage"的名稱放入Session中 */
-			request.getSession(true).setAttribute("failResultPage", "WebUserMain.jsp");
+			/* 將導向的網頁failResultPage以"failResultPage"的名稱放入request中 */
+			request.setAttribute("failResultPage", "WebUserMain.jsp");
 		}
 		
-		/* 將訊息getResultMessage以"getResultMessage"的名稱放入Session中 */
-		request.getSession(true).setAttribute("getResultMessage", getResultMessage);
+		/* 將訊息getResultMessage以"getResultMessage"的名稱放入request中 */
+		request.setAttribute("getResultMessage", getResultMessage);
 		
 		if (selfData != null) {
 			/* 導向個人查詢結果畫面 */
@@ -581,8 +580,17 @@ public class WebUserServlet extends HttpServlet {
 				: request.getParameter("selectedFervor");
 		String selectedLocationCode = (request.getParameter("selectedLocationCode").length() == 0) ? "?"
 				: request.getParameter("selectedLocationCode");
-		String selectedParameters = selectedAccount + ":" + selectedNickname + ":" + selectedFervor + ":"
-				+ selectedLocationCode + ":" + String.valueOf(userData.getLv()) + ":" + userData.getStatus();
+		
+		String oldAccount = request.getParameter("originalAccount");
+		String oldNickname = request.getParameter("originalNickname");
+		String oldFervor = request.getParameter("originalFervor");
+		String oldLocationCode = request.getParameter("originalLocationCode");
+		
+		String selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
+				+ selectedFervor + ":" + selectedLocationCode + ":" 
+				+ oldAccount + ":" + oldNickname + ":" 
+				+ oldFervor + ":" + oldLocationCode + ":" 
+				+ String.valueOf(userData.getLv()) + ":" + userData.getStatus();
 		
 		/* 預防性後端輸入檢查 */
 		selectResultMessage = doSelectUserDataInputCheck(selectedParameters, userData);
@@ -592,8 +600,22 @@ public class WebUserServlet extends HttpServlet {
 		
 		if (selectResultMessage.equals("")) {
 			/* 調用服務裡的方法 */
-			
+			try {
+				selectedResult = wus.getOtherWebUserData(selectedParameters);
+			} catch (SQLException sqlE) {
+				String getDataMessageTmp = sqlE.getMessage();
+				selectResultMessage = getDataMessageTmp.split(":")[1];
+			}
 		}
+		
+		/* 將訊息electResultMessage以"electResultMessage"的名稱放入request中 */
+		request.setAttribute("selectResultMessage", selectResultMessage);
+		if (selectedResult != null) {
+			/* 將物件userDataList放入request中 */
+			request.setAttribute("userDataList", selectedResult);
+		}
+		/* 前往查詢畫面 */
+		request.getRequestDispatcher("/webUser/WebUserSearchForm.jsp").forward(request, response);
 	}
 	
 	/* Select all user data */
@@ -603,13 +625,45 @@ public class WebUserServlet extends HttpServlet {
 		request.setCharacterEncoding(CHARSET_CODE);
 		response.setContentType(CONTENT_TYPE);
 		
+		/* 產生資料陣列 */
+		List<WebUserData> userDataList = new ArrayList<>();
+		/* 訊息 */
+		String queryMessage = "";
+		
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
 		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
+		/* 調用服務裡的方法 */
+		try {
+			userDataList = wus.getAllWebUserData(userData.getLv(), userData.getStatus());
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			queryMessage = getDataMessageTmp.split(":")[1];
+		}
 		
+		/* 成功取得資料時，userDataList不為Null */
+		if (userDataList != null) {
+			queryMessage = "以下為可查詢的所有使用者資料...";
+			/* 將物件userDataList放入request中 */
+			request.setAttribute("userDataList", userDataList);
+		} else if (queryMessage.equals("")) {
+			queryMessage = "無法取得使用者資料";
+			/* 將導向的網頁failResultPage以"failResultPage"的名稱放入request中 */
+			request.setAttribute("failResultPage", "WebUserMain.jsp");
+		}
+		
+		/* 將訊息getResultMessage以"queryMessage"的名稱放入request中 */
+		request.setAttribute("queryMessage", queryMessage);
+		if (userDataList != null) {
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserSearchForm.jsp").forward(request, response);
+		} else {
+			/* 導向個人查詢結果畫面 */
+			request.getRequestDispatcher("/webUser/WebUserSearchResult.jsp").forward(request, response);
+		}
 	}
 	
 	/* Go to certain page */
@@ -621,6 +675,47 @@ public class WebUserServlet extends HttpServlet {
 				request.getRequestDispatcher("/webUser/WebUserModifyPassword.jsp").forward(request, response);
 				break;
 			case "other data":
+				/* 擷取查詢頁的資料 */
+				String firstName = request.getParameter("firstName");
+				String lastName = request.getParameter("lastName");
+				String nickname = request.getParameter("nickname");
+				String fervor = request.getParameter("fervor");
+				String email = request.getParameter("email");
+				String phone = request.getParameter("phone");
+				String getEmail = request.getParameter("getEmail");
+				String locationCode = request.getParameter("locationCode");
+				String addr0 = request.getParameter("addr0");
+				String addr1 = request.getParameter("addr1");
+				String addr2 = request.getParameter("addr2");
+				
+				/* 從session中取出物件userFullData */
+				WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+				/* 產生新物件 */
+				WebUserData originalData = new WebUserData(
+						userData.getUserId(),
+						userData.getAccount(),
+						userData.getPassword(),
+						firstName,
+						lastName,
+						nickname,
+						userData.getGender(),
+						userData.getBirth(),
+						fervor,
+						email,
+						phone,
+						getEmail,
+						locationCode,
+						userData.getJoinDate(),
+						userData.getLv(),
+						addr0,
+						addr1,
+						addr2,
+						userData.getZest(),
+						userData.getVersion(),
+						userData.getStatus());
+				
+				/* 將物件originalData放入request中 */
+				request.setAttribute("originalData", originalData);
 				/* 前往修改畫面 */
 				request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
 				break;
@@ -637,8 +732,6 @@ public class WebUserServlet extends HttpServlet {
 		/* 返回的參數 */
 		String updateResultMessage = "";
 		Integer updateResult = -1;
-		/* 更新用的同型物件 */
-		WebUserData updatedUserData = new WebUserData();
 		
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
@@ -663,41 +756,36 @@ public class WebUserServlet extends HttpServlet {
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
+		/* 更新用的同型物件 */
+		WebUserData updatedUserData = new WebUserData(
+				updatedUserId, 
+				userData.getAccount(), 
+				userData.getPassword(), 
+				updatedFirstName, 
+				updatedLastName, 
+				updatedNickname,
+				userData.getGender(),
+				userData.getBirth(),
+				updatedFervor,
+				updatedEmail,
+				updatedPhone,
+				updatedGetEmail,
+				updatedLocationCode,
+				userData.getJoinDate(),
+				userData.getLv(),
+				updatedAddr0,
+				updatedAddr1,
+				updatedAddr2,
+				userData.getZest(),
+				userData.getVersion() + 1,
+				userData.getStatus());
+		
 		if (updateResultMessage.equals("")) {
-			updatedUserData = new WebUserData(
-					updatedUserId, 
-					userData.getAccount(), 
-					userData.getPassword(), 
-					updatedFirstName, 
-					updatedLastName, 
-					updatedNickname,
-					userData.getGender(),
-					userData.getBirth(),
-					updatedFervor,
-					updatedEmail,
-					updatedPhone,
-					updatedGetEmail,
-					updatedLocationCode,
-					userData.getJoinDate(),
-					userData.getLv(),
-					updatedAddr0,
-					updatedAddr1,
-					updatedAddr2,
-					userData.getZest(),
-					userData.getVersion() + 1,
-					userData.getStatus());
-			
 			/* 調用服務裡的方法 */
 			try {
 				updateResult = wus.updateWebUserData(updatedUserData);
 			} catch (SQLException sqlE) {
 				updateResultMessage = sqlE.getMessage();
-			}
-			
-			/* 成功 */
-			if (updateResult == 1) {
-				/* 無效session */
-				request.getSession(true).invalidate();
 			}
 		} 
 		
@@ -705,15 +793,13 @@ public class WebUserServlet extends HttpServlet {
 			if (updateResultMessage.indexOf(":") != -1) {	
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
-		} else {
-			updateResultMessage = "更新操作順利完成，請重新登入以獲得最新的資料";
-		}
+		} 
 		
-		/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入Session中 */
-		request.getSession(true).setAttribute("updateResultMessage", updateResultMessage);
+		/* 將訊息updateResultMessage以"updateResultMessage"的名稱放入request中 */
+		request.setAttribute("updateResultMessage", updateResultMessage);
 		if (updateResult == 1) {
-			/* 導向顯示個人資料畫面 */
-			response.sendRedirect(request.getContextPath() + "/webUser/WebUserChangeResult.jsp");
+			/* 導向主畫面，改用response.sendRedirect() */
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserMain.jsp");
 		} else {
 			/* 導向修改個人資料畫面 */
 			request.getRequestDispatcher("/webUser/WebUserModifyData.jsp").forward(request, response);
@@ -1250,7 +1336,7 @@ public class WebUserServlet extends HttpServlet {
 				
 				if (!firstNameIsOk) {
 					updateResultMessage = "姓氏中含有非中文";
-				} else if (firstName.equals(userData.getFirstName())){
+				} else if (firstName.equals(request.getParameter("originalFirstName"))){
 					count++;
 				}
 			}
@@ -1283,7 +1369,7 @@ public class WebUserServlet extends HttpServlet {
 				
 				if (!lastNameIsOk) {
 					updateResultMessage = "名字中含有非中文";
-				} else if (lastName.equals(userData.getLastName())){
+				} else if (lastName.equals(request.getParameter("originalLastName"))){
 					count++;
 				}
 			}
@@ -1298,14 +1384,14 @@ public class WebUserServlet extends HttpServlet {
 				nickname = lastName;
 			} else if (nickname.length() > 20){
 				updateResultMessage = "稱呼長度過長";
-			} else if (nickname.equals(userData.getNickname())){
+			} else if (nickname.equals(request.getParameter("originalNickname"))){
 				count++;
 			}
 		}
 		
 		/* 檢查偏好食物 */
 		String fervor = request.getParameter("updatedFervor").trim();
-		if (updateResultMessage.equals("")) {
+		if (updateResultMessage.equals(request.getParameter("originalFervor"))) {
 			if (fervor.equals("")) {
 				updateResultMessage = "偏好食物不可為空白";
 			} else if (fervor.length() > 50){
@@ -1322,7 +1408,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "信箱資訊不可為空白";
 			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
 				updateResultMessage = "信箱資訊格式錯誤";
-			} else if (email.equals(userData.getEmail())) {
+			} else if (email.equals(request.getParameter("originalEmail"))) {
 				count++;
 			} else {
 				Integer emailCheckResult = -1;
@@ -1353,7 +1439,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "行動電話格式錯誤";
 			} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
 				updateResultMessage = "室內電話格式錯誤";
-			} else if (phone.equals(userData.getPhone())) {
+			} else if (phone.equals(request.getParameter("originalPhone"))) {
 				count++;
 			}
 		}
@@ -1361,7 +1447,7 @@ public class WebUserServlet extends HttpServlet {
 		/* 檢查接收促銷/優惠訊息 */
 		String getEmail = request.getParameter("updatedGetEmail").trim();
 		if (updateResultMessage.equals("")) {
-			if (getEmail.equals(userData.getGetEmail())) {
+			if (getEmail.equals(request.getParameter("originalGetEmail"))) {
 				count++;
 			} else if (!getEmail.equals("Y") && !getEmail.equals("N")){ 
 				updateResultMessage = "接收促銷/優惠訊息輸入異常";
@@ -1371,7 +1457,7 @@ public class WebUserServlet extends HttpServlet {
 		/* 檢查區住區域 */
 		String locationCode = request.getParameter("updatedLocationCode").trim();
 		if (updateResultMessage.equals("")) {
-			if (locationCode.equals(userData.getLocationCode())) {
+			if (locationCode.equals(request.getParameter("originalLocationCode"))) {
 				count++;
 			} else {	
 				switch(locationCode) {
@@ -1416,7 +1502,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "生活地點一超過長度限制";
 			} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
 				updateResultMessage = "生活地點重複填寫";
-			} else if (addr0.equals(userData.getAddr0())) {
+			} else if (addr0.equals(request.getParameter("originalAddr0"))) {
 				count++;
 			}
 		}
@@ -1427,7 +1513,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "生活地點二超過長度限制";
 			} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
 				updateResultMessage = "生活地點重複填寫";
-			} else if (addr1.equals(userData.getAddr1())) {
+			} else if (addr1.equals(request.getParameter("originalAddr1"))) {
 				count++;
 			}
 		}
@@ -1438,7 +1524,7 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "生活地點三超過長度限制";
 			} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
 				updateResultMessage = "生活地點重複填寫";
-			} else if (addr2.equals(userData.getAddr2())) {
+			} else if (addr2.equals(request.getParameter("originalAddr2"))) {
 				count++;
 			}
 		}
@@ -1473,7 +1559,6 @@ public class WebUserServlet extends HttpServlet {
 	
 	public String doSelectUserDataInputCheck(String selectedParameters, WebUserData userData) {
 		String checkResult = "";
-		Integer count = 0;
 		
 		if (userData == null) {
 			checkResult = "使用者未登入系統！請登入後再嘗試";
@@ -1485,26 +1570,15 @@ public class WebUserServlet extends HttpServlet {
 		if (checkResult.equals("")) {
 			if (selectedAccount.length() > 20) {
 				checkResult = "搜尋的帳號名稱過長！";
-			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,20}")) {
+			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,20}") && !selectedAccount.equals("?")) {
 				checkResult = "搜尋的帳號含有無效字元！";
-			} else if(selectedAccount.equals("?")) {
-				count++;
-			}
+			} 
 		}
 		
 		String selectedNickname = selectedParameters.split(":")[1];
 		if (checkResult.equals("")) {
-			if (selectedNickname.equals("?")) {
-				count++;
-			} else if (selectedNickname.length() > 20) {
+			if (selectedNickname.length() > 20) {
 				checkResult = "搜尋的稱呼名稱過長！";
-			}
-		}
-		
-		String selectedFervor = selectedParameters.split(":")[2];
-		if (checkResult.equals("")) {
-			if (selectedFervor.equals("?")) {
-				count++;
 			}
 		}
 		
@@ -1539,10 +1613,6 @@ public class WebUserServlet extends HttpServlet {
 						break;
 				}
 			}
-		}
-		
-		if (count == 4) {
-			checkResult = "至少需填寫/選擇一項條件才能執行特定搜尋！";
 		}
 		
 		return checkResult;

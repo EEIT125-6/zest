@@ -33,11 +33,13 @@ function checkForm() {
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + searchStr;
 				searchSpan.style.color = "red";
 				searchSpan.style.fontStyle = "italic";
-				return false;
+				
+				alert("您沒有選擇任何一項，將使用預設搜尋");
 			} else {
 				searchSpan.innerHTML = "";
-				return true;
 			} 
+			
+			return true;
 		}
 	} else {
 		return false;
