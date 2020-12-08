@@ -135,7 +135,17 @@ public class WebUserServlet extends HttpServlet {
 					break;
 			}
 		}
-		/* 刪除部分已改為變更帳號狀態為quit */
+		/* 刪除部分 */
+		/* 個人刪除部分已改為變更帳號狀態為quit */
+		if (request.getParameter("delete") != null) {
+			switch (request.getParameter("delete")) {
+				case "刪除帳號":
+					doDeleteUser(request, response);
+					break;
+				default:
+					break;
+			}
+		}
 		/* 查詢部分 */
 		if (request.getParameter("select") != null) {
 			switch (request.getParameter("select")) {
@@ -248,7 +258,7 @@ public class WebUserServlet extends HttpServlet {
 		if (checkCode == null && registerEmail == null) {
 			checkCode = doCreateCheckCode();
 			try {
-				sendResult = doSendEmail(inputAccount, inputEmail, checkCode);
+				sendResult = doSendEmail(inputAccount, inputEmail, checkCode, "submit");
 			} catch (Exception e) {
 				message = e.getMessage();
 			}
@@ -959,6 +969,45 @@ public class WebUserServlet extends HttpServlet {
 		} else {
 			/* 導向修改個人密碼畫面 */
 			request.getRequestDispatcher("/webUser/WebUserModifyPassword.jsp").forward(request, response);
+		}
+	}
+	
+	/* webAdmin delete user*/
+	public void doDeleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 從session中取出物件userFullData */
+		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		
+		/* 從request取得該帳號的userId */
+		String userId = request.getParameter("userId");
+		
+		/* 訊息 */
+		String deleteMessage = "";
+		/* 紀錄結果用參數 */
+		Integer deleteResult = 0;
+		
+		/* 身分檢查 */
+		if (userData == null) {
+			deleteMessage = "使用者未登入！無法執行操作";
+		} else if (userData.getLv() != -1) {
+			deleteMessage = "帳號身分不符，無法執行該操作！";
+		}
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		if (deleteMessage.equals("")) {
+			
+		}
+		
+		/* 成功 */
+		if (deleteResult == 1) {
+			
+		} else {
+			
 		}
 	}
 	
@@ -1751,7 +1800,7 @@ public class WebUserServlet extends HttpServlet {
 		return checkCode;
 	}
 	
-	public Boolean doSendEmail(String account, String email, String checkCode) 
+	public Boolean doSendEmail(String account, String email, String checkCode, String mode) 
 			throws Exception {
 		Boolean sendResult = false;
 		/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
@@ -1759,15 +1808,22 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "your-email-address@gmail.com";
+		final String mailUser = "your-email@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "your-email-password";
+		final String mailPassword = "your-password";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */
-		String mailContext = "親愛的 " + account + " ！<br />" 
-		+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
-		+ "<br /><p>" + checkCode + "</P>";
+		String mailContext = "";
+		if (mode.equals("submit")) {
+			mailContext = "親愛的 " + account + " ！<br />" 
+					+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
+					+ "<br /><p>" + checkCode + "</P>";
+		} else if (mode.equals("forget")) {
+			mailContext = "親愛的 " + account + " ！<br />" 
+					+ "請按下方的連結以重設您的帳號資訊"
+					+ "<br /><p><a href=" + checkCode + ">本連結將定時失效</a></P>";
+		}
 		
 		Properties props = new Properties();
 		/* SMTP設定 */

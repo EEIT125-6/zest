@@ -1,24 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% 
+	pageEncoding="UTF-8"%>
+<%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-	response.setHeader("Pragma","no-cache"); // HTTP 1.0
-	response.setDateHeader ("Expires", -1); // 防止proxy server進行快取
+	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- taglib宣告 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-   
-    <title>進行搜索</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
+        <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+        
+    <title>查詢結果</title>
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
@@ -153,175 +159,152 @@
             </div>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-               <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
+		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${userFullData.password == null}">
+				<c:if test="${empty managedUserData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return lastCheck();">
 					<fieldset>
-						<legend>搜尋選項</legend>
-						<input type="hidden" name="userLv" id="userLv" value=<c:out value="${userFullData.lv}"></c:out> />
-						<hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="selectedAccount" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入要查詢的帳號，8~20個字" />
-						<span id="accountSpan"></span>
-						<hr />
-						<label>用戶暱稱：</label>
-						<input type="text" name="selectedNickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入要查詢的暱稱" />
-						<span id="nicknameSpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="selectedFervor" value="中式" onblur="checkFervor()" />
-						<label>中式</label>
-						<input type="checkbox" name="selectedFervor" value="快餐" onblur="checkFervor()" />
-						<label>快餐</label>
-						<input type="checkbox" name="selectedFervor" value="燒肉" onblur="checkFervor()" />
-						<label>燒肉</label>
-						<input type="checkbox" name="selectedFervor" value="西式" onblur="checkFervor()" />
-						<label>西式</label>
-						<input type="checkbox" name="selectedFervor" value="下午茶" onblur="checkFervor()" />
-						<label>下午茶</label>
-						<input type="checkbox" name="selectedFervor" value="日式" onblur="checkFervor()" />
-						<label>日式</label>
-						<input type="checkbox" name="selectedFervor" value="皆可" onblur="checkFervor()" />
-						<label>皆可</label>
-						<span id="fervorSpan"></span>
-						<hr />
-					    <label>居住區域：</label>
-				    	<select name="selectedLocationCode" id="locationCode" onblur="checkLocationCode()">
-							<option value="">請選擇要查詢的區域</option>
-							<option value="t01">臺北市</option>
-							<option value="t02">新北市</option>
-							<option value="t03">桃園市</option>
-							<option value="t04">臺中市</option>
-							<option value="t05">臺南市</option>
-							<option value="t06">高雄市</option>
-							<option value="t07">基隆市</option>
-							<option value="t08">新竹市</option>
-							<option value="t09">嘉義市</option>
-							<option value="t10">新竹縣</option>
-							<option value="t11">苗栗縣</option>
-							<option value="t12">彰化縣</option>
-							<option value="t13">南投縣</option>
-							<option value="t14">雲林縣</option>
-							<option value="t15">嘉義縣</option>
-							<option value="t16">屏東縣</option>
-							<option value="t17">宜蘭縣</option>
-							<option value="t18">花蓮縣</option>
-							<option value="t19">臺東縣</option>
-							<option value="t20">澎湖縣</option>
-							<option value="t21">金門縣</option>
-							<option value="t22">連江縣</option>
-							<option value="t23">其他區</option>
-						</select>
-						<span id="locationCodeSpan"></span>
-						<c:if test='${userFullData.lv == -1}'>
-							<hr />
-					    	<label>帳號狀態：</label>
-					    	<select name="selectedStatus" id="status" onblur="checkStatus()">
-					    		<option value="">請選擇要查詢的狀態</option>
-					    		<option value="active">已啟用</option>
-					    		<option value="quit">已棄用</option>
-					    	</select>
-					    	<span id="statusSpan"></span>
+						<c:if test="${updateResultMessage != null}">
+							<legend><c:out value="${updateResultMessage}" /></legend>
 						</c:if>
-					    <hr />
-					    <span id="searchSpan"></span>
+						<c:if test="${updateResultMessage == null}">
+							<legend><c:out value="${getResultMessage}" /></legend>
+						</c:if>
+						<hr />
+							<input type="hidden" name="userId" id="userId" value="${managedUserData.userId}" />
+							<label>帳號名稱：</label>
+							<c:out value="${managedUserData.account}" />
+							<hr />
+							<label>帳號密碼：</label>
+							<c:if test="${managedUserData.password.length() > 0}">
+								<c:forEach var="passwordChar" begin="0" end="${managedUserData.password.length()-1}">
+									<c:out value = "*" />
+								</c:forEach>
+							</c:if>
+							<hr />
+							<label>中文姓氏：</label>
+							<c:out value="${managedUserData.firstName}" />
+							<input type="hidden" name="firstName" id="firstName" value="${managedUserData.firstName}">
+							<hr />
+							<label>中文名字：</label>
+							<c:out value="${managedUserData.lastName}" />
+							<input type="hidden" name="lastName" id="lastName" value="${managedUserData.lastName}">
+							<hr />
+							<label>稱呼方式：</label>
+							<c:out value="${managedUserData.nickname}" />
+							<input type="hidden" name="nickname" id="nickname" value="${managedUserData.nickname}">
+							<hr />
+							<label>生理性別：</label>
+							<c:choose>
+								<c:when test="${managedUserData.gender == 'M'}">男性</c:when>
+								<c:when test="${managedUserData.gender == 'F'}">女性</c:when>
+								<c:when test="${managedUserData.gender == 'N'}">不方便提供</c:when>
+							</c:choose>
+							<hr />
+							<label>西元生日：</label>
+							<c:out value="${managedUserData.birth}" />
+							<hr />
+							<label>偏好食物：</label>
+							<c:out value="${managedUserData.fervor}" />
+							<input type="hidden" name="fervor" id="fervor" value="${managedUserData.fervor}">
+							<hr />
+							<label>聯絡信箱：</label>
+							<c:out value="${managedUserData.email}" />
+							<input type="hidden" name="email" id="email" value="${managedUserData.email}">
+							<hr />
+							<label>聯絡電話：</label>
+							<c:out value="${managedUserData.phone}" />
+							<input type="hidden" name="phone" id="phone" value="${managedUserData.phone}">
+							<hr />
+							<label>是否願意接收促銷/優惠訊息：</label>
+							<c:choose>
+								<c:when test="${managedUserData.getEmail=='Y'}">願意</c:when>
+								<c:when test="${managedUserData.getEmail=='N'}">不願意</c:when>
+							</c:choose>
+							<input type="hidden" name="getEmail" id="getEmail" value="${managedUserData.getEmail}">
+							<hr />
+							<label>居住區域：</label>
+							<c:choose>
+								<c:when test="${managedUserData.locationCode=='t01'}">臺北市</c:when>
+								<c:when test="${managedUserData.locationCode=='t02'}">新北市</c:when>
+								<c:when test="${managedUserData.locationCode=='t03'}">桃園市</c:when>
+								<c:when test="${managedUserData.locationCode=='t04'}">臺中市</c:when>
+								<c:when test="${managedUserData.locationCode=='t05'}">臺南市</c:when>
+								<c:when test="${managedUserData.locationCode=='t06'}">高雄市</c:when>
+								<c:when test="${managedUserData.locationCode=='t07'}">基隆市</c:when>
+								<c:when test="${managedUserData.locationCode=='t08'}">新竹市</c:when>
+								<c:when test="${managedUserData.locationCode=='t09'}">嘉義市</c:when>
+								<c:when test="${managedUserData.locationCode=='t10'}">新竹縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t11'}">苗栗縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t12'}">彰化縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t13'}">南投縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t14'}">雲林縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t15'}">嘉義縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t16'}">屏東縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t17'}">宜蘭縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t18'}">花蓮縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t19'}">臺東縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t20'}">澎湖縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t21'}">金門縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t22'}">連江縣</c:when>
+								<c:when test="${managedUserData.locationCode=='t23'}">其他區</c:when>
+							</c:choose>
+							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationCode}">
+							<hr />
+							<label>生活地點一：</label>
+							<c:out value="${managedUserData.addr0}" />
+							<input type="hidden" name="addr0" id="addr0" value="${managedUserData.addr0}">
+							<hr />
+							<label>生活地點二：</label>
+							<c:out value="${managedUserData.addr1}" />
+							<input type="hidden" name="addr1" id="addr1" value="${managedUserData.addr1}">
+							<hr />
+							<label>生活地點三：</label>
+							<c:out value="${managedUserData.addr2}" />
+							<input type="hidden" name="addr2" id="addr2" value="${managedUserData.addr2}">
+							<hr />
+							<label>所擁有的橙幣：</label>
+							<c:out value="${managedUserData.zest}" />
+							<hr />
+							<label>帳號狀態：</label>
+							<c:choose>
+								<c:when test="${managedUserData.status=='active'}">已啟用</c:when>
+								<c:when test="${managedUserData.status=='quit'}">已棄用</c:when>
+							</c:choose>
+							<hr />
 					</fieldset>
 					<div align="center">
-						<a href="WebUserMain.jsp"><input type="button" id="back" name="back" value="返回"></a>
-						<input type="submit" id="submit" name="select" value="執行查詢">
-						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
+						<c:choose>
+							<c:when test="${managedUserData.status=='active'}">
+								<input type="submit" id="quitAccount" name="update" value="棄用帳號">
+							</c:when>
+							<c:when test="${managedUserData.status=='quit'}">
+								<input type="submit" id="activeAccount" name="update" value="啟用帳號">
+							</c:when>
+							<input type="submit" id="deleteAccount" name="delete" value="刪除帳號">
+						</c:choose>
+						<a href="WebUserSearchForm.jsp"><input type="button" name="select" value="返回上一頁"></a>
 					</div>
 				</form>
-				<c:if test="${selectResultMessage.length() > 0}">
-					<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-					<c:out value="${selectResultMessage}" />
-				</c:if>
-				<c:if test="${empty userDataList}">
-					<div align="center">
-						<p>沒有查詢到任何符合條件的資料</p>
-					</div>
-				</c:if>
-				<c:if test="${not empty userDataList}">
-					<form method="post">
-						<fieldset>
-							<legend>查詢到 <c:out value="${userDataList.size()}"/> 筆符合條件的資料</legend>
-							<hr />
-							<c:forEach var="userData" varStatus="index" items="${userDataList}">
-								<c:if test='${index.first }'>
-									<c:out value="<table border='1'>" escapeXml='false'/>
-									<c:out value=
-									"<tr>
-										<td>帳號名稱</td>
-										<td>稱呼名稱</td>
-										<td>偏好食物</td>
-										<td>居住區域</td>
-										<c:if test='${userFullData.lv == -1}'>
-										<td>帳號狀態</td>
-										</c:if>
-									</tr>" escapeXml='false'/>
-								</c:if>
-								
-								<tr>
-									<c:if test='${userFullData.lv == -1}'>
-										<td><a href='${pageContext.request.contextPath}/webUser/ManageWebUserServlet?account=${userData.account}'>${userData.account}</a></td>
-									</c:if>
-									<c:if test='${userFullData.lv != -1}'>
-										<td>${userData.account}</td>
-									</c:if>
-									<td>${userData.nickname}</td>
-									<td>${userData.fervor}</td>
-									<td>
-										<c:choose>
-											<c:when test="${userData.locationCode=='t01'}">臺北市</c:when>
-											<c:when test="${userData.locationCode=='t02'}">新北市</c:when>
-											<c:when test="${userData.locationCode=='t03'}">桃園市</c:when>
-											<c:when test="${userData.locationCode=='t04'}">臺中市</c:when>
-											<c:when test="${userData.locationCode=='t05'}">臺南市</c:when>
-											<c:when test="${userData.locationCode=='t06'}">高雄市</c:when>
-											<c:when test="${userData.locationCode=='t07'}">基隆市</c:when>
-											<c:when test="${userData.locationCode=='t08'}">新竹市</c:when>
-											<c:when test="${userData.locationCode=='t09'}">嘉義市</c:when>
-											<c:when test="${userData.locationCode=='t10'}">新竹縣</c:when>
-											<c:when test="${userData.locationCode=='t11'}">苗栗縣</c:when>
-											<c:when test="${userData.locationCode=='t12'}">彰化縣</c:when>
-											<c:when test="${userData.locationCode=='t13'}">南投縣</c:when>
-											<c:when test="${userData.locationCode=='t14'}">雲林縣</c:when>
-											<c:when test="${userData.locationCode=='t15'}">嘉義縣</c:when>
-											<c:when test="${userData.locationCode=='t16'}">屏東縣</c:when>
-											<c:when test="${userData.locationCode=='t17'}">宜蘭縣</c:when>
-											<c:when test="${userData.locationCode=='t18'}">花蓮縣</c:when>
-											<c:when test="${userData.locationCode=='t19'}">臺東縣</c:when>
-											<c:when test="${userData.locationCode=='t20'}">澎湖縣</c:when>
-											<c:when test="${userData.locationCode=='t21'}">金門縣</c:when>
-											<c:when test="${userData.locationCode=='t22'}">連江縣</c:when>
-											<c:when test="${userData.locationCode=='t23'}">其他區</c:when>
-										</c:choose>
-									</td>
-									<c:if test='${userFullData.lv == -1}'>
-										<c:choose>
-											<c:when test="${userData.status=='active'}"><td>已啟用</td></c:when>
-											<c:when test="${userData.status=='quit'}"><td>已棄用</td></c:when>
-										</c:choose>
-									</c:if>
-								</tr>
-								
-								<c:if test='${index.last }'>
-									<c:out value="</table>" escapeXml='false'/>
-									<hr />
-								</c:if>
-							</c:forEach>
-						</fieldset>
-					</form>
-				</c:if>
-				<script src="scripts/WebUserSearchForm.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				<script>
+					$("#deleteAccount").click(function () {
+				        alert("您即將刪除此帳號，本操作不可逆");
+				    });
+					function lastCheck() {
+						let choice=confirm("是否要執行特定的操作？");
+						if (choice) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				</script>
             </div>
-            
+ 
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
                 <!-- Footer -->
