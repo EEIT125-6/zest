@@ -9,7 +9,9 @@ function checkForm() {
 	}
 	let locationCodeObjValue = document.getElementById("locationCode").value;
 	let searchSpan = document.getElementById("searchSpan");
-	let searchStr;
+	let statusObjValue = document.getElementById("status").value;
+	console.log(statusObjValue);
+	let userLv = document.getElementById("userLv").value.trim();
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
 	if (choice) {
@@ -28,16 +30,22 @@ function checkForm() {
 			if (locationCodeObjValue == "" || locationCodeObjValue.length == 0) {
 				counter++;
 			}
-			if (counter == 4){
-				searchStr = "至少需填寫/選擇一項條件才能執行特定搜尋！";
-				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + searchStr;
-				searchSpan.style.color = "red";
-				searchSpan.style.fontStyle = "italic";
-				
-				alert("您沒有選擇任何一項，將使用預設搜尋");
+			if (userLv != -1) {
+				if (counter == 4){
+					alert("您沒有選擇任何一項，將使用預設搜尋");
+				} else {
+					searchSpan.innerHTML = "";
+				} 
 			} else {
-				searchSpan.innerHTML = "";
-			} 
+				if (statusObjValue == "" || statusObjValue.length == 0) {
+					counter++;
+				}
+				if (counter == 5){
+					alert("您沒有選擇任何一項，將使用預設搜尋");
+				} else {
+					searchSpan.innerHTML = "";
+				} 
+			}
 			
 			return true;
 		}
@@ -52,7 +60,6 @@ function checkAccountName() {
 
 	let accountIsOk = true;
 	let accountStr;
-	let startCharReg = /[0-9]/;
 
 	if (accountObjValue == "" || accountObjValue.length == 0) {
 		accountStr = "";
@@ -168,9 +175,40 @@ function checkLocationCode() {
 	}
 }
 
+function checkStatus() {
+	let statusObjValue = document.getElementById("status").value;
+	let statusSpan = document.getElementById("statusSpan");
+	
+	let statusIsOk = true;
+	let statusStr;
+	
+	if (statusObjValue == "" || statusObjValue.length == 0) {
+		statusStr = "";
+		statusIsOk = true;
+	} else {
+		statusStr = "帳號狀態已選擇完畢";
+		statusIsOk = true;
+	}
+	if (!statusIsOk) {
+		statusSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + statusStr;
+		statusSpan.style.color = "red";
+		statusSpan.style.fontStyle = "italic";
+	}
+	if (statusIsOk) {
+		if (statusObjValue == "" || statusObjValue.length == 0) {
+			statusSpan.innerHTML = "";
+		} else {
+			statusSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + statusStr;
+			statusSpan.style.color = "black";
+			statusSpan.style.fontStyle = "normal";
+		}
+	}
+}
+
 function clearMessage() {
 	document.getElementById("accountSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("locationCodeSpan").innerHTML = "";
+	document.getElementById("statusSpan").innerHTML = "";
 }

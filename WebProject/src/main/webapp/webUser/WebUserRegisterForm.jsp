@@ -242,15 +242,23 @@
 						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱">
 						<span id="emailSpan"></span>
 						<hr />
+						<label>信箱驗證：</label>
+						<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
+						    placeholder="請輸入E-Mail中所收到的驗證碼" required="required" />
+						<input type="button" name="register" id="sendCheckCode" value="傳送驗證碼">
+						<span id="emailCheckCodeSpan"></span>
+						<br />
+						<input type="hidden" name="checkCode" id="checkCode" value="" />
+						<hr />
 						<label>聯絡電話：</label>
 						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
-						<input type="radio" id="getEmail" name="getEmail" value="Y" checked="checked">
+						<input type="radio" id="getEmail1" name="getEmail" value="Y" checked="checked">
 					    <label for="Y">願意</label>
-					    <input type="radio" id="getEmail" name="getEmail" value="N">
+					    <input type="radio" id="getEmail2" name="getEmail" value="N">
 					    <label for="N">不願意</label>
 					    <hr />
 					    <label>居住區域：</label>
@@ -343,10 +351,12 @@
 				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 				            		accountSpan.style.color = "red";
 				            		accountSpan.style.fontStyle = "italic";
+				            		document.getElementById("sendCheckCode").style = "display:none";
 				            	} else {
 				            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
 				            		accountSpan.style.color = "black";
 				            		accountSpan.style.fontStyle = "normal";
+				            		document.getElementById("sendCheckCode").style = "display:inline";
 				            	}
 				            },
 				            error:function(err) {
@@ -403,6 +413,62 @@
 				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            	emailSpan.style.color = "red";
 				            	emailSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+					
+					$("#sendCheckCode").click(function (){
+						sendEmailCheckCode();
+					});
+					function sendEmailCheckCode() {
+						let email = document.getElementById("email").value.trim();
+						let account = document.getElementById("account").value.trim();
+						let checkCode = document.getElementById("checkCode");
+						let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+						let checkCodeStr;
+						let emailCheckCodeStr;
+						let emailCheckCodeIsOk = true;
+						
+						$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'register':'信箱驗證',
+				            	'inputEmail':email,
+				            	'inputAccount':account
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == 'true') {
+				            		emailCheckCodeStr = "驗證碼已成功寄出！";
+				            		emailCheckCodeIsOk = true;
+				            		checkCodeStr = resultSpace[2];
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	} else if(resultSpace[0] == 'false') {
+				            		emailCheckCodeStr = "遭遇錯誤！請稍後再試！";
+				            		emailCheckCodeIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!emailCheckCodeIsOk) {
+				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+				            		emailCheckCodeSpan.style.color = "red";
+				            		emailCheckCodeSpan.style.fontStyle = "italic";
+				            		checkCode.innerHTML = "";
+				            	} else {
+				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+				            		emailCheckCodeSpan.style.color = "black";
+				            		emailCheckCodeSpan.style.fontStyle = "normal";
+				            		document.getElementById("checkCode").value = checkCodeStr;
+				            		console.log(checkCodeStr);
+				            	}
+				            },
+				            error:function(err) {
+				            	emailCheckCodeStr = "發生錯誤，無法送出驗證碼";
+				            	emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+				            	emailCheckCodeSpan.style.color = "red";
+				            	emailCheckCodeSpan.style.fontStyle = "italic";
 				            }
 						});
 					}

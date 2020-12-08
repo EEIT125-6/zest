@@ -353,6 +353,41 @@ function checkEmail() {
 	}
 }
 
+function checkEmailCheckCode() {
+	let emailCheckCodeObjValue = document.getElementById("emailCheckCode").value.trim();
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let checkCode = document.getElementById("checkCode").value.trim();
+	
+	let emailCheckCodeIsOk = true;
+	let emailCheckCodeStr;
+	
+	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		emailCheckCodeStr = "請先執行聯絡信箱檢查";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode == "" || checkCode.length == 0) {
+		emailCheckCodeStr = "尚未產生驗證碼";
+		emailCheckCodeIsOk = false;
+	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
+		emailCheckCodeStr = "驗證碼不可為空值";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode == emailCheckCodeObjValue) {
+		emailCheckCodeStr = "聯絡信箱驗證成功";
+		emailCheckCodeIsOk = true;
+	}
+	if (!emailCheckCodeIsOk) {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "red";
+		emailCheckCodeSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "black";
+		emailCheckCodeSpan.style.fontStyle = "normal";
+		return true;
+	}
+}
+
 function checkPhone() {
 	let phoneObjValue = document.getElementById("phone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
@@ -541,6 +576,7 @@ function clearMessage() {
 function checkSameAccountAndEmail(){
 	let accountSpan = document.getElementById("accountSpan");
 	let emailSpan = document.getElementById("emailSpan");
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
 	
 	if (accountSpan.textContent != "check_circle可建立此帳號！") {
 		alert("請先執行帳號檢查");
@@ -548,10 +584,13 @@ function checkSameAccountAndEmail(){
 	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
 		alert("請先執行電子信箱檢查");
 		return false;
+	} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
+		alert("請先執行電子信箱驗證");
+		return false;
 	} else {
 		if (!checkAccountName()) {
 			return false;
-		} else if (!checkEmail()) {
+		} else if (!checkEmailCheckCode()) {
 			return false;
 		} else {
 			return true;

@@ -162,6 +162,7 @@
                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>搜尋選項</legend>
+						<input type="hidden" name="userLv" id="userLv" value=<c:out value="${userFullData.lv}"></c:out> />
 						<hr />
 						<label>帳號名稱：</label> 
 						<input type="text" name="selectedAccount" id="account" size="40" maxlength="20" onblur="checkAccountName()"
@@ -218,6 +219,16 @@
 							<option value="t23">其他區</option>
 						</select>
 						<span id="locationCodeSpan"></span>
+						<c:if test='${userFullData.lv == -1}'>
+							<hr />
+					    	<label>帳號狀態：</label>
+					    	<select name="selectedStatus" id="status" onblur="checkStatus()">
+					    		<option value="">請選擇要查詢的狀態</option>
+					    		<option value="active">已啟用</option>
+					    		<option value="quit">已棄用</option>
+					    	</select>
+					    	<span id="statusSpan"></span>
+						</c:if>
 					    <hr />
 					    <span id="searchSpan"></span>
 					</fieldset>
@@ -288,7 +299,10 @@
 										</c:choose>
 									</td>
 									<c:if test='${userFullData.lv == -1}'>
-										<td>${userData.status}</td>
+										<c:choose>
+											<c:when test="${userData.status=='active'}"><td>已啟用</td></c:when>
+											<c:when test="${userData.status=='quit'}"><td>已棄用</td></c:when>
+										</c:choose>
 									</c:if>
 								</tr>
 								

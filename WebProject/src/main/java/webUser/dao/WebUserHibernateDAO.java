@@ -192,48 +192,53 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		String nickname = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
 		String fervor = (selectedParameters.split(":")[2].equals("?")) ? "" : selectedParameters.split(":")[2];
 		String locationCode = (selectedParameters.split(":")[3].equals("?")) ? "" : selectedParameters.split(":")[3];
-		Integer lv = Integer.parseInt(selectedParameters.split(":")[8]);
-		String status = selectedParameters.split(":")[9];
+		Integer lv = Integer.parseInt(selectedParameters.split(":")[4]);
+		String status = selectedParameters.split(":")[5];
+		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? "" : "'" + selectedParameters.split(":")[6] + "'";
 		
-		if (!account.equals("") && !account.equals(selectedParameters.split(":")[4])) {
+		if (!account.equals("")) {
 			account = "'%" + selectedParameters.split(":")[0] + "%'";
 			sb.append("wu.account LIKE " + account);
 		} 
 		
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!nickname.equals(selectedParameters.split(":")[5])) 
 				&& !nickname.equals("")) {
 			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
 			sb.append("wu.nickname LIKE " + nickname);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!nickname.equals(selectedParameters.split(":")[5]))
 				&& !nickname.equals("")){
 			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
 			sb.append(" AND wu.nickname LIKE " + nickname);
 		}
 		
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!fervor.equals(selectedParameters.split(":")[6]))
 				&& !fervor.equals("")) {
 			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
 			sb.append("wu.fervor LIKE " + fervor);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!fervor.equals(selectedParameters.split(":")[6]))
 				&& !fervor.equals("")){
 			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
 			sb.append(" AND wu.fervor LIKE " + fervor);
 		}
 		
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!locationCode.equals(selectedParameters.split(":")[7]))
 				&& !locationCode.equals("")) {
 			locationCode = selectedParameters.split(":")[3];
 			sb.append("wu.locationCode = " + locationCode);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
-				&& (!locationCode.equals(selectedParameters.split(":")[7]))
 				&& !locationCode.equals("")){
 			locationCode = selectedParameters.split(":")[3];
 			sb.append(" AND wu.locationCode LIKE " + locationCode);
+		}
+		
+		if (lv == -1 
+				&& (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.status = " + selectedStatus);
+		} else if (lv == -1 
+				&& (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.status = " + selectedStatus);
 		}
 		
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
@@ -244,16 +249,16 @@ public class WebUserHibernateDAO implements WebUserDAO{
 			sb.append(" AND wu.lv >= :lv");
 		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& (lv == 0)) {
-			sb.append("wu.lv = :lv AND wu.status = :status");
+			sb.append("wu.lv = :lv AND wu.status = " + status);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& (lv == 0)) {
-			sb.append(" AND wu.lv = :lv AND wu.status = :status");
+			sb.append(" AND wu.lv = :lv AND wu.status = " + status);
 		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& (lv == 1)) {
-			sb.append("wu.lv <= :lv AND wu.lv >= 0 AND wu.status = :status");
+			sb.append("wu.lv <= :lv AND wu.lv >= 0 AND wu.status = " + status);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& (lv == 1)) {
-			sb.append(" AND wu.lv <= :lv AND wu.lv >= 0 AND wu.status = :status");
+			sb.append(" AND wu.lv <= :lv AND wu.lv >= 0 AND wu.status = " + status);
 		}
 		
 		hql = sb.toString();
@@ -265,7 +270,6 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		/* 取得陣列 */
 		List<WebUserData> list = query
 				.setParameter("lv", lv)
-				.setParameter("status", status)
 				.getResultList();
 		
 		return list;
@@ -279,9 +283,9 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		if (lv == -1) {
 			hql = "FROM WebUserData AS wu WHERE wu.lv >= :lv";
 		} else if (lv == 0) {
-			hql = "FROM WebUserData AS wu WHERE wu.lv = :lv AND wu.status = :status";
+			hql = "FROM WebUserData AS wu WHERE wu.lv = :lv AND wu.status = " + status;
 		} else if (lv == 1) {
-			hql = "FROM WebUserData AS wu WHERE wu.lv <= :lv AND wu.lv >= 0 AND wu.status = :status";
+			hql = "FROM WebUserData AS wu WHERE wu.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ status;
 		}
 		/* 取得當前Session */
 		Session session = factory.getCurrentSession();
@@ -290,7 +294,6 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		/* 取得陣列 */
 		List<WebUserData> list = query
 				.setParameter("lv", lv)
-				.setParameter("status", status)
 				.getResultList();
 		return list;
 	}

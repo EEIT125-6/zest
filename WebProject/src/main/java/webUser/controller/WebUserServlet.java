@@ -8,12 +8,24 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.sun.mail.smtp.SMTPSendFailedException;
 
 import webUser.model.WebUserData;
 import webUser.service.WebUserService;
@@ -52,6 +64,10 @@ public class WebUserServlet extends HttpServlet {
 				case "檢查信箱":
 					/* 返回查詢結果給使用者確認 */
 					doCheckEmail(request, response);
+					break;
+				case "信箱驗證":
+					/* 返回執行結果給使用者 */
+					doSendCheckCode(request, response);
 					break;
 				case "送出":
 					/* 返回資料給使用者確認 */
@@ -209,6 +225,56 @@ public class WebUserServlet extends HttpServlet {
 		out.close();
 	}
 	
+	/* Create a random code and send a email */
+	public void doSendCheckCode(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告欲回傳的參數 */
+		Boolean sendResult = false;
+		String message = "";
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		/* 取得使用者輸入的參數 */
+		String inputEmail = request.getParameter("inputEmail");
+		String inputAccount = request.getParameter("inputAccount");
+		
+		/* 檢查是否已送出過驗證碼 */
+		String checkCode = (String) request.getSession(true).getAttribute("checkCode");
+		String registerEmail = (String) request.getSession(true).getAttribute("email");
+		
+		if (checkCode == null && registerEmail == null) {
+			checkCode = doCreateCheckCode();
+			try {
+				sendResult = doSendEmail(inputAccount, inputEmail, checkCode);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+			if (sendResult) {
+				/* 將產生的checkCode放入session中 */
+				request.getSession(true).setAttribute("checkCode", checkCode);
+				/* 將獲得驗證碼的email放入session中 */
+				request.getSession(true).setAttribute("email", inputEmail);
+				message = "驗證碼已寄出，請至您填寫的信箱收信，並將驗證碼複製貼上至指定欄位";
+				sendResult = true;
+			} else if (checkCode == null) {
+				sendResult = false;
+			}
+		} else {
+			message = "已產生過驗證碼，如需重新產生，請完整關閉瀏覽器後再次連接至本站！";
+			sendResult = false;
+		} 
+		
+		/* 將結果返回aJax */
+		out.write(String.valueOf(sendResult));
+		out.write("," + message);
+		out.write("," + checkCode);
+		out.flush();
+		out.close();
+	}
+	
 	/* Register submit */
 	public void doRegisterSubmit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -277,6 +343,26 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
 		submitMessage = doRegisterInputCheck(reg_webUser);
+		/* 追加檢查項目 */
+		String checkCode = (String) request.getSession(true).getAttribute("checkCode");
+		if (checkCode == null) {
+			submitMessage = "未執行信箱驗證";
+		}
+		
+		String inputCheckCode = request.getParameter("emailCheckCode").trim();
+		String receiveCheckCode = request.getParameter("checkCode").trim();
+		if (inputCheckCode.equals(receiveCheckCode) && inputCheckCode.equals(checkCode) && !inputCheckCode.equals("")) {
+			if (!inputCheckCode.matches("[0-9a-zA-Z]{8}")) {
+				submitMessage = "信箱驗證碼格式錯誤";
+			}
+		} else {
+			submitMessage = "信箱驗證碼檢查失敗";
+		}
+		
+		String registereEmail = (String) request.getSession(true).getAttribute("email");
+		if (!email.equals(registereEmail)) {
+			submitMessage = "信箱比對不一致";
+		}
 		
 		if (submitMessage.equals("")) {
 			/* 嘗試建立Session，如果沒有就建立一個，並將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
@@ -319,6 +405,10 @@ public class WebUserServlet extends HttpServlet {
 		}
 		if (registerData.getVersion() != 0) {
 			insertResultMessage = "帳號資料狀態異常";
+		}
+		String registereEmail = (String) request.getSession(true).getAttribute("email");
+		if (!registerData.getEmail().equals(registereEmail)) {
+			insertResultMessage = "信箱比對不一致";
 		}
 		
 		/* 宣告欲回傳的參數 */
@@ -581,16 +671,23 @@ public class WebUserServlet extends HttpServlet {
 		String selectedLocationCode = (request.getParameter("selectedLocationCode").length() == 0) ? "?"
 				: request.getParameter("selectedLocationCode");
 		
-		String oldAccount = request.getParameter("originalAccount");
-		String oldNickname = request.getParameter("originalNickname");
-		String oldFervor = request.getParameter("originalFervor");
-		String oldLocationCode = request.getParameter("originalLocationCode");
+		Integer lv = userData.getLv();
+		String selectedStatus = "?";
+		if (lv == -1) {
+			selectedStatus = (request.getParameter("selectedStatus").length() == 0) ? "?"
+					: request.getParameter("selectedStatus").trim();
+		}
 		
-		String selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
-				+ selectedFervor + ":" + selectedLocationCode + ":" 
-				+ oldAccount + ":" + oldNickname + ":" 
-				+ oldFervor + ":" + oldLocationCode + ":" 
-				+ String.valueOf(userData.getLv()) + ":" + userData.getStatus();
+		String selectedParameters;
+		if (lv != -1) {	
+			selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
+					+ selectedFervor + ":" + selectedLocationCode + ":" 
+					+ String.valueOf(userData.getLv()) + ":" + userData.getStatus();
+		} else {
+			selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
+					+ selectedFervor + ":" + selectedLocationCode + ":" 
+					+ String.valueOf(userData.getLv()) + ":" + userData.getStatus() + ":" + selectedStatus;
+		}
 		
 		/* 預防性後端輸入檢查 */
 		selectResultMessage = doSelectUserDataInputCheck(selectedParameters, userData);
@@ -1615,6 +1712,111 @@ public class WebUserServlet extends HttpServlet {
 			}
 		}
 		
+		if (userData.getLv() == -1) {
+			String selectedStatus = selectedParameters.split(":")[6];
+			if (checkResult.equals("")) {
+				if (!selectedStatus.equals("?")) {
+					switch(selectedStatus) {
+						case "active":
+						case "quit":
+							break;
+						default:
+							checkResult = "帳號狀態設定異常";
+							break;
+					}
+				}
+			}
+		}
+		
 		return checkResult;
+	}
+	
+	public String doCreateCheckCode() {
+		String checkCode = "";
+		String[] leterSpace = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
+				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
+				"O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+				"o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+		StringBuilder sb = new StringBuilder();
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
+		checkCode = sb.toString();
+		return checkCode;
+	}
+	
+	public Boolean doSendEmail(String account, String email, String checkCode) 
+			throws Exception {
+		Boolean sendResult = false;
+		/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
+		final String mailHost = "smtp.gmail.com";
+		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
+		final Integer mailPort = 587;
+		/* 寄件者email帳號 */
+		final String mailUser = "your-email-address@gmail.com";
+		/* 寄件者密碼或應用程式密碼 */
+		final String mailPassword = "your-email-password";
+		/* 收件者email帳號 */
+		String mailObj = email;
+		/* email內文 */
+		String mailContext = "親愛的 " + account + " ！<br />" 
+		+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
+		+ "<br /><p>" + checkCode + "</P>";
+		
+		Properties props = new Properties();
+		/* SMTP設定 */
+		props.put("mail.smtp.auth", "true");
+		/* 啟用TLS */
+		props.put("mail.smtp.starttls.enable", "true");
+		/* 設定寄件者email */
+		props.put("mail.smtp.host", mailHost);
+		/* 設定寄件所需的port */
+		props.put("mail.smtp.port", mailPort);
+		
+		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator(){
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(mailUser, mailPassword);
+			}
+		});
+		
+		try {
+			Message message = new MimeMessage(mailSession);
+			message.setRecipients(
+					Message.RecipientType.TO
+					, InternetAddress.parse(mailObj));
+			
+			/* 設定email主旨 */
+			message.setSubject("您的橙皮驗證碼在此");
+			/* 設定email內容與編碼 */
+			message.setContent(mailContext, "text/html; Charset=UTF-8");
+			
+			/* 正式送出 */
+			Transport.send(message);
+			/* 測試用訊息 */
+			System.out.println("信件已成功寄出給："+mailObj);
+			sendResult = true;
+		} catch (AddressException ae) {
+			/* email地址例外 */
+			System.out.println("信件無法寄出！錯誤資訊為："+ae.getMessage());
+			throw new Exception("信件無法寄出！錯誤資訊為："+ae.getMessage());
+		} catch (NoSuchProviderException nspe) {
+			System.out.println("信件無法寄出！錯誤資訊為："+nspe.getMessage());
+			throw new Exception("信件無法寄出！錯誤資訊為："+nspe.getMessage());
+		} catch(SMTPSendFailedException smtpsfe) {
+			/* 應對免費Mail Server單日發送到達500次時會出現的錯誤 */
+			System.out.println("信件無法寄出！錯誤資訊為："+smtpsfe.getMessage());
+			throw new Exception("信件無法寄出！錯誤資訊為："+smtpsfe.getMessage());
+		} catch (MessagingException me) {
+			System.out.println("信件無法寄出！錯誤資訊為："+me.getMessage());
+			throw new Exception("信件無法寄出！錯誤資訊為："+me.getMessage());
+		}
+		
+		return sendResult;
 	}
 }
