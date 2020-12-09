@@ -12,25 +12,25 @@
 
 <sql:setDataSource var="ds" dataSource="jdbc/zest" />
 
-<c:set var="ss" value="${param.sclass}" />
-<sql:query dataSource="${ds}" var="rs">
-         SELECT * FROM store WHERE sclass = ? 
-         <sql:param value="${ss}" />
-</sql:query>
+<%-- <c:set var="ss" value="${param.sclass}" /> --%>
+<%-- <sql:query dataSource="${ds}" var="rs"> --%>
+<!--          SELECT * FROM store WHERE sclass = ?  -->
+<%--          <sql:param value="${ss}" /> --%>
+<%-- </sql:query> --%>
 
 
 
 
 
-<c:set var="as" value="${param.nsrch}" />
-<c:if test= "${!(empty param.nsrch)}">  
-<c:set var="as" value="%${param.nsrch}%"/> 
-</c:if>
+<%-- <c:set var="as" value="${param.nsrch}" /> --%>
+<%-- <c:if test= "${!(empty param.nsrch)}">   --%>
+<%-- <c:set var="as" value="%${param.nsrch}%"/>  --%>
+<%-- </c:if> --%>
 
-<sql:query dataSource="${ds}" var="rs2">
-         SELECT * FROM store WHERE stname like ? 
-         <sql:param value="${as}" />
-</sql:query>
+<%-- <sql:query dataSource="${ds}" var="rs2"> --%>
+<!--          SELECT * FROM store WHERE stname like ?  -->
+<%--          <sql:param value="${as}" /> --%>
+<%-- </sql:query> --%>
 
 
 
@@ -42,7 +42,10 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-<title>Document</title>
+
+    <%@include file = "Link_Meta-Include.jsp" %>
+
+<title>橙皮</title>
 <style>
 body {
 	background-color: rgb(235, 159, 18);
@@ -70,7 +73,24 @@ body {
             margin-bottom: 10px;
             border-radius: 5px 5px 5px 5px;
             box-shadow: 5px 5px 5px 5px #646262;
-             background-color: white;
+            background-color: white;
+             transition: 0.2s;
+        }
+        .outside:hover{
+        	border:  solid ;
+        	border-width: 0 0 5px 0; 
+			border-image: linear-gradient(to right, #c0392b 0%, #f1c40f 100%);
+			border-image-slice: 1;
+
+			 transition: 0.2s;
+        }
+        .classimg{
+         transition: 0.2s;	
+        	width:80px
+        }
+        .classimg:hover{
+         transition: 0.2s;
+			width: 85px
         }
         .photo{
             float: left;
@@ -96,40 +116,39 @@ body {
 
         }
         
-#gotop {
-    position:fixed;
-    z-index:90;
-    right:30px;
-    bottom:31px;
-    display:none;
-    width:50px;
-    height:50px;
-    color:#fff;
-    background:#ddbe56;
-    line-height:50px;
-    border-radius:50%;
-    transition:all 1.5s;
-    text-align: center;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-}
-#gotop :hover{
-    background:#0099CC;
-}
+		#gotop {
+		    position:fixed;
+		    z-index:90;
+		    right:30px;
+		    bottom:31px;
+		    display:none;
+		    width:50px;
+		    height:50px;
+		    color:#fff;
+		    background:#ddbe56;
+		    line-height:50px;
+		    border-radius:50%;
+		    transition:all 1.5s;
+		    text-align: center;
+		    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+		}
+		#gotop :hover{
+		    background:#0099CC;
+		}
+		.adsearch{
+		
+		}
+		.adsearch:hover{
+		
+		}
 </style>
 </head>
 <body>
 
-            <div class="container-fluid  header" >
-              <div class="container" >
-              <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;float:right"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar">
-
-            </p>
-              </div>
+		<%@include file ="Header-Include-prototype.jsp" %>
             <div class="container-fluid " style="margin-top:10px">
                 <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="SimpleController" method="GET" enctype="UTF-8"  >
+                    <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
                       <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
                         <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳"
                         style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" >
@@ -139,71 +158,101 @@ body {
                         </button>
                       </fieldset>
                     </form>
-            </div>
+            	</div>
             </div>
 	<div class="container" style="margin-top:10px">
 	<div class="jumbotron row"
-		style="padding: 25px; background-color: white;font-size: 150%">
-		<c:url value="SimpleController" var="riceURL">
+		style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
+		<c:url value="StoreGetClassstore" var="riceURL">
 			<c:param name="sclass" value="中式" />
 		</c:url>
 
-		<div class="col-sm-2"
-			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${riceURL }"><img src="Images/S1.jpg"
-				style="width: 80px;"></a><br>中式
+		<div class="col-sm-2 "
+			style="border-right: rgb(204, 203, 203) 1px solid;text-align: center">
+			<a href="${riceURL }"><img class = "classimg"src="Images/S1.jpg"
+				></a><br>中式
 		</div>
 
 
-		<c:url value="SimpleController" var="JPURL">
+		<c:url value="StoreGetClassstore" var="JPURL">
 			<c:param name="sclass" value="日式" />
 		</c:url>
-		<div class="col-sm-2"
+		<div class="col-sm-2 "
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${JPURL}"><img src="Images/S2.jpg" style="width: 80px;" /></a><br>日式
+			<a href="${JPURL}"><img src="Images/S2.jpg" class = "classimg"/></a><br>日式
 		</div>
 
 
-		<c:url value="SimpleController" var="TEAURL">
+		<c:url value="StoreGetClassstore" var="TEAURL">
 			<c:param name="sclass" value="下午茶" />
 		</c:url>
-		<div class="col-sm-2"
+		<div class="col-sm-2 "
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${TEAURL}"><img src="Images/S3.jpg" style="width: 80px;"></a><br>下午茶
+			<a href="${TEAURL}"><img src="Images/S3.jpg" class = "classimg"></a><br>下午茶
 		</div>
 
 		
-		<c:url value="SimpleController" var="WESTURL">
+		<c:url value="StoreGetClassstore" var="WESTURL">
 			<c:param name="sclass" value="西式" />
 		</c:url>
-		<div class="col-sm-2"
+		<div class="col-sm-2 "
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${WESTURL}"><img src="Images/S4.jpg" style="width: 80px;"></a><br>西式
+			<a href="${WESTURL}"><img src="Images/S4.jpg" class = "classimg"></a><br>西式
 		</div>
 		
 		
-		<c:url value="SimpleController" var="fastURL">
+		<c:url value="StoreGetClassstore" var="fastURL">
 			<c:param name="sclass" value="快餐" />
 		</c:url>
-		<div class="col-sm-2"
+		<div class="col-sm-2 "
 			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
 			<a href="${fastURL}"><img src="Images/S5.jpg"
-				style="width: 80px;"></a><br>快餐
+				class = "classimg"></a><br>快餐
 		</div>
 
-		<c:url value="SimpleController" var="metURL">
+		<c:url value="StoreGetClassstore" var="metURL">
 			<c:param name="sclass" value="燒肉" />
 		</c:url>
-		<div class="col-sm-2" style="text-align: center">
+		<div class="col-sm-2 " style="text-align: center">
 			<a href="${metURL }"><img src="Images/S6.jpg"
-				style="width: 80px;"></a><br>燒肉
+				class = "classimg"	></a><br>燒肉
 		</div>
 
 		<!-- <div class="col-sm-4"><i class="fas fa-cloud"></i></div>
                   <div class="col-sm-4"><i class="fas fa-cloud"></i></div> -->
 	</div>
 	</div>
-	<div class="container" >
+	<div class="row">
+	<div class="col-sm-3">
+				<div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:15px ">
+		  <form action="InsertStoreServlet"  
+		  method="post" >
+		      <fieldset style="width: auto;margin:10px 10px 10px 10px;">
+		          <legend>進階搜尋</legend>      
+		          
+		           <label>幾星以上 
+                    <select name="ststar">
+                        <option value="5"
+                         	selected="selected"
+                        >5</option>
+                        <option value="4"
+                        >4</option>
+                        <option value="3"
+                        >3</option>
+                        <option value="2"
+                        >2</option>
+                        <option value="1"
+                        >1</option>
+                    </select>
+                </label>
+		      </fieldset>
+		      <div style="text-align: center;">
+		          <input type="submit" value="查詢">
+		      </div>
+		  </form>
+		</div>
+	</div>
+	<div class="col-sm-6" >
 <!-- 
 <form name="AddForm" action="detailStore.jsp" method="GET">
          <input type="hidden" name="todo" value="add">
@@ -241,12 +290,12 @@ body {
    -->
       
       
-		<div style="margin-bottom:50px;">
-		<c:forEach var="row" items="${rs.rows}">
+		<div class="test1" style="margin-bottom:50px;">
+		<c:forEach var="row" items="${Results}">
 
-		
-				<c:url value="detailStore.jsp" var="GOURL">
-				<c:param name="stname" value="${row.stname}" />
+				<c:url value="StoreGetFullstore" var="GOURL">
+				<c:param name="id" value="${row.id}" />
+				<c:param name="stname" value="${row.stname}" />				
 				</c:url>
 			<a href="${GOURL}" style="text-decoration:none;color:black">  
 			    <div class="outside" >
@@ -272,36 +321,11 @@ body {
 		</c:forEach>
 		</div>
 		
-		
-		<div style="margin-bottom:50px">
-		<c:forEach var="row" items="${rs2.rows}">
-				<c:url value="detailStore.jsp" var="GOURL">
-				<c:param name="stname" value="${row.stname}" />
-				</c:url>
-			<a href="${GOURL}" style="text-decoration:none;color:black">  
-			    <div class="outside">
-       				 <div class="photo"style="background-image: url('${row.photourl}');background-size:100% 100%">
-            
-      				  </div>
-			        <div class="textdiv">
-			            <h1 class="h11">
-			                ${row.stname }
-			            </h1>
-			            <div class="postion">
-			                ${row.saddress }
-			            </div>
-			            <hr>
-			            <span class="itdc">
-			                ${row.sclass}<br>
-			                ${row.stitd}	
-			            </span>
-			        </div>
-			    </div>
-			</a> 
-		</c:forEach>
 		</div>
-		
-		</div>
+	<div class="col-sm-3">
+	</div>
+	</div>
+	
 <!-- 		
 		<div class="jumbotron">
 			<span> 美食照片 </span>
@@ -336,113 +360,114 @@ $(function() {
     });
 });
 </script>    
+<%@include file ="Footer-Include.jsp" %>
 <!-- -------------------------------------------------------------------------------------------- -->
-             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;bottom: 0">
-                <!-- Footer -->
-                <footer class="page-footer font-small mdb-color lighten-3 pt-4">
+<!--              <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;bottom: 0"> -->
+<!--                 Footer -->
+<!--                 <footer class="page-footer font-small mdb-color lighten-3 pt-4"> -->
                 
-                  <!-- Footer Links -->
-                  <div class="container text-center text-md-left">
+<!--                   Footer Links -->
+<!--                   <div class="container text-center text-md-left"> -->
                 
-                    <!-- Grid row -->
-                    <div class="row">
+<!--                     Grid row -->
+<!--                     <div class="row"> -->
                 
-                      <!-- Grid column -->
-                      <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
+<!--                       Grid column -->
+<!--                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1"> -->
                 
-                        <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
-                        <p>商務合作</p>
-                        <p>	餐飲代理商招募<br>
-                        	商業企劃<br>
-                        	申請掃碼點餐<br>
-                        	美國收單代理商招募<br>
-                        	美國收銀代理商招募<br>
-                        	免費使用美國排隊<br></p>
+<!--                         Content -->
+<!--                         <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5> -->
+<!--                         <p>商務合作</p> -->
+<!--                         <p>	餐飲代理商招募<br> -->
+<!--                         	商業企劃<br> -->
+<!--                         	申請掃碼點餐<br> -->
+<!--                         	美國收單代理商招募<br> -->
+<!--                         	美國收銀代理商招募<br> -->
+<!--                         	免費使用美國排隊<br></p> -->
                 
-                      </div>
-                      <!-- Grid column -->
+<!--                       </div> -->
+<!--                       Grid column -->
                 
-                      <hr class="clearfix w-100 d-md-none">
+<!--                       <hr class="clearfix w-100 d-md-none"> -->
                 
-                      <!-- Grid column -->
-                      <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
+<!--                       Grid column -->
+<!--                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1"> -->
                 
-                        <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
+<!--                         Links -->
+<!--                         <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5> -->
                 
-                        <ul class="list-unstyled">
-                          <li>
-                            <p>
-                              <a href="#!">計畫</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">關於我們</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">Facebook</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">AWARDS</a>
-                            </p>
-                          </li>
-                        </ul>
+<!--                         <ul class="list-unstyled"> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <a href="#!">計畫</a> -->
+<!--                             </p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <a href="#!">關於我們</a> -->
+<!--                             </p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <a href="#!">Facebook</a> -->
+<!--                             </p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <a href="#!">AWARDS</a> -->
+<!--                             </p> -->
+<!--                           </li> -->
+<!--                         </ul> -->
                 
-                      </div>
-                      <!-- Grid column -->
+<!--                       </div> -->
+<!--                       Grid column -->
                 
-                      <hr class="clearfix w-100 d-md-none">
+<!--                       <hr class="clearfix w-100 d-md-none"> -->
                 
-                      <!-- Grid column -->
-                      <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1">
+<!--                       Grid column -->
+<!--                       <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1"> -->
                 
-                        <!-- Contact details -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">Address</h5>
+<!--                         Contact details -->
+<!--                         <h5 class="font-weight-bold text-uppercase mb-4">Address</h5> -->
                 
-                        <ul class="list-unstyled">
-                          <li>
-                            <p>
-                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-print mr-3"></i> + 02 453 249 89</p>
-                          </li>
-                        </ul>
+<!--                         <ul class="list-unstyled"> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <i class="fas fa-home mr-3"></i> 四川 中壢 </p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p> -->
+<!--                           </li> -->
+<!--                           <li> -->
+<!--                             <p> -->
+<!--                               <i class="fas fa-print mr-3"></i> + 02 453 249 89</p> -->
+<!--                           </li> -->
+<!--                         </ul> -->
                 
-                      </div>
-                      <!-- Grid column -->
-                      <hr class="clearfix w-100 d-md-none">
-                      <!-- Grid column -->
+<!--                       </div> -->
+<!--                       Grid column -->
+<!--                       <hr class="clearfix w-100 d-md-none"> -->
+<!--                       Grid column -->
                 
-                    </div>
-                    <!-- Grid row -->
+<!--                     </div> -->
+<!--                     Grid row -->
                 
-                  </div>
-                  <!-- Footer Links -->
+<!--                   </div> -->
+<!--                   Footer Links -->
                 
-                  <!-- Copyright -->
-                  <div class="footer-copyright text-center py-3">© 2020 Copyright:
-                    <a > 橙皮美食平台</a>
-                  </div>
-                  <!-- Copyright -->
+<!--                   Copyright -->
+<!--                   <div class="footer-copyright text-center py-3">© 2020 Copyright: -->
+<!--                     <a > 橙皮美食平台</a> -->
+<!--                   </div> -->
+<!--                   Copyright -->
                 
-                </footer>
-                <!-- Footer -->
-                    </div>
+<!--                 </footer> -->
+<!--                 Footer -->
+<!--                     </div> -->
 </body>
 </html>

@@ -60,7 +60,7 @@ public class StorePhotoServlet extends HttpServlet {
 		String bannerurl = null;
 		
 		
-		System.out.println("id:   "+id+"  Stname:  "+stname+"   photourl:   "+photourl);
+//		System.out.println("id:   "+id+"  Stname:  "+stname+"   photourl:   "+photourl);
 		
 		StoreService ss = new StoreServiceImpl();
 		
@@ -69,10 +69,10 @@ public class StorePhotoServlet extends HttpServlet {
 		
 		ss.photoStore(sb);
 		
-		System.out.println("id:   "+sb.getId()+"  Stname:  "+sb.getStname()+"   photourl:   "+sb.getPhotourl());
+//		System.out.println("id:   "+sb.getId()+"  Stname:  "+sb.getStname()+"   photourl:   "+sb.getPhotourl());
 		
 		String url = request.getContextPath()+"/detailStore.jsp";
-		request.getSession().setAttribute("stname", stname);
+//		request.getSession().setAttribute("stname", stname);
 		String newurl = response.encodeRedirectURL(url);
 		response.sendRedirect(newurl);
 	}

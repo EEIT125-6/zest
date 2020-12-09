@@ -30,6 +30,7 @@ public class StoreUpdateServlet extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println((String)request.getSession(true).getAttribute("restname"));
 		request.setCharacterEncoding("UTF-8");
 		HttpSession hsession = request.getSession();
 		Map<String, String> errorMsg = new HashMap<String, String>();
@@ -53,7 +54,7 @@ public class StoreUpdateServlet extends HttpServlet {
 		}
 		
 		StoreService ss = new StoreServiceImpl();
-		if(ss.isDup(stname) && !stname.equals((String)request.getSession().getAttribute("restname"))) {
+		if(ss.isDup(stname) && !stname.equals((String)request.getSession(true).getAttribute("restname"))) {
 			errorMsg.put("stname","商店名稱重複請改名");
 			RequestDispatcher rd = request.getRequestDispatcher("Update.jsp");
 			rd.forward(request, response);
@@ -70,7 +71,9 @@ public class StoreUpdateServlet extends HttpServlet {
 //			hsession.setAttribute("modify", "修改時發生異常");
 //		}
 		String url = request.getContextPath()+"/exUpdate.jsp";
-		request.getSession().setAttribute("stname", stname);
+		request.getSession().setAttribute("id", id);
+		request.getSession().setAttribute("stname1", stname);
+		
 		String newurl = response.encodeRedirectURL(url);
 		response.sendRedirect(newurl);
 

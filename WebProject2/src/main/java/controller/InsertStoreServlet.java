@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -39,11 +40,12 @@ public class InsertStoreServlet extends HttpServlet {
 		Map<String,String> errorMsg = new HashMap<String,String>();
 		request.setAttribute("error", errorMsg);
 		
-		
+		Integer id = null;
 		String stname = request.getParameter("stname");
 		String sclass = request.getParameter("sclass");
 		String saddress = request.getParameter("saddress");
 		String stitd = request.getParameter("stitd");
+		String stitddt = request.getParameter("stitddt");
 		String tel = request.getParameter("tel");
 		
 		StoreService ss = new StoreServiceImpl();
@@ -54,18 +56,27 @@ public class InsertStoreServlet extends HttpServlet {
 			return;
 		}
 		HttpSession session = request.getSession(); 
+		Integer testid = null;
 		try {
-			StoreBean sb = new StoreBean(stname, sclass, saddress, stitd, tel);
+			StoreBean sb = new StoreBean(id,stname, sclass, saddress, stitd,stitddt, tel);
 			session.setAttribute("sb", sb);
 			ss.save(sb);
+			testid = sb.getId();
+			System.out.println("testID:"+testid);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(errorMsg.isEmpty()) {
-			String url = request.getContextPath()+"/exInsert.jsp";
-			String targetURL = response.encodeRedirectURL(url);
-			request.getSession().setAttribute("stname", stname);
-			response.sendRedirect(targetURL);
+//			String url = request.getContextPath()+"/exInsert.jsp";
+//			String targetURL = response.encodeRedirectURL(url);
+//			request.getSession().setAttribute("stname", stname);
+//			response.sendRedirect(targetURL);
+			
+			List<StoreBean> list =ss.getFullstore(testid);
+			request.getSession(true).setAttribute("Results", list);
+			RequestDispatcher rd = null;
+			rd = request.getRequestDispatcher("detailStore.jsp");
+			rd.forward(request, response);
 		}else {
 			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
 			rd.forward(request,response);

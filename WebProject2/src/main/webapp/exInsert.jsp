@@ -32,7 +32,7 @@
 		<c:url value="detailStore.jsp" var="GOURL">
 		<c:param name="stname" value="${stname}" />
 		</c:url>
-	<a href="${GOURL}"><h1>點我轉跳到商家頁面 </h1></a>
+<%-- 	<a href="${GOURL}"><h1>點我轉跳到商家頁面 </h1></a> --%>
 	      <c:redirect url = "${GOURL}"/>s
 </body>
 </html>

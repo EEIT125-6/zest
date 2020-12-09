@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -51,6 +53,24 @@ public class StoreServiceImpl implements StoreService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	@Override
+	public List<StoreBean> getSinglest(String stname) {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getSinglest(stname);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
@@ -124,5 +144,98 @@ public class StoreServiceImpl implements StoreService {
 		}
 		
 	}
+
+	@Override
+	public List<StoreBean> getClassstore(String sclass) {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getClassstore(sclass);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<StoreBean> getNamestore(String stname) {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getNamestore(stname);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<StoreBean> getFullstore(Integer id) {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getFullstore(id);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+		
+	}
+
+	@Override
+	public List<StoreBean> getAdvertisementstore() {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getAdvertisementstore();
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<StoreBean> getAdvertisementphotostore() {
+		Session session = factory.getCurrentSession();
+		Transaction tx = null;
+		List<StoreBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getAdvertisementphotostore();
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+
 
 }

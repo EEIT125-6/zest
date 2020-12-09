@@ -51,55 +51,55 @@ public class SimpleController extends HttpServlet {
 		
 //		-------
 //		
-		try {
-		      // Create a JNDI Initial context to be able to lookup the DataSource
-		      InitialContext ctx = new InitialContext();
-		      // Lookup the DataSource, which will be backed by a pool
-		      //   that the application server provides.
-		      ds = (DataSource)ctx.lookup("java:comp/env/jdbc/zest");
-		      if (ds == null)
-		         throw new ServletException("Unknown DataSource 'jdbc/zest'");
-		  } catch (NamingException ex) {
-		      ex.printStackTrace();
-		  }
-		
-		  Connection conn = null;
-	      Statement  stmt = null;
-	      
-	      List <String> stnameList =  new  ArrayList <String> () ;
-	      List <String> sclassList = new  ArrayList <String> ();
-	      List <String> saddressList = new  ArrayList <String> ();
-	      
-	      try {
-	         	 
-	         // Get a connection from the pool
-	         conn = ds.getConnection();
-	 
-	         // Normal JBDC programming hereafter. Close the Connection to return it to the pool
-	         stmt = conn.createStatement();
-	         ResultSet rset = stmt.executeQuery("SELECT stname, sclass, saddress FROM Store ");
-	        
-	         while(rset.next()) {        	 
-	        	 stnameList.add(rset.getString("stname"));
-	        	 sclassList.add(rset.getString("sclass"));
-	        	 saddressList.add(rset.getString("saddress"));
-	         }
-	         
-	         StoreDB.setStname((String[]) stnameList.toArray(new String[0]));
-	         StoreDB.setSclass((String[]) sclassList.toArray(new String[0]));
-	         StoreDB.setSaddress((String[]) saddressList.toArray(new String[0]));
-
-	      } catch (SQLException ex) {
-	         ex.printStackTrace();
-	      } finally {
-	   
-	         try {
-	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();  // return to pool
-	         } catch (SQLException ex) {
-	             ex.printStackTrace();
-	         }
-	      }
+//		try {
+//		      // Create a JNDI Initial context to be able to lookup the DataSource
+//		      InitialContext ctx = new InitialContext();
+//		      // Lookup the DataSource, which will be backed by a pool
+//		      //   that the application server provides.
+//		      ds = (DataSource)ctx.lookup("java:comp/env/jdbc/zest");
+//		      if (ds == null)
+//		         throw new ServletException("Unknown DataSource 'jdbc/zest'");
+//		  } catch (NamingException ex) {
+//		      ex.printStackTrace();
+//		  }
+//		
+//		  Connection conn = null;
+//	      Statement  stmt = null;
+//	      
+//	      List <String> stnameList =  new  ArrayList <String> () ;
+//	      List <String> sclassList = new  ArrayList <String> ();
+//	      List <String> saddressList = new  ArrayList <String> ();
+//	      
+//	      try {
+//	         	 
+//	         // Get a connection from the pool
+//	         conn = ds.getConnection();
+//	 
+//	         // Normal JBDC programming hereafter. Close the Connection to return it to the pool
+//	         stmt = conn.createStatement();
+//	         ResultSet rset = stmt.executeQuery("SELECT stname, sclass, saddress FROM Store ");
+//	        
+//	         while(rset.next()) {        	 
+//	        	 stnameList.add(rset.getString("stname"));
+//	        	 sclassList.add(rset.getString("sclass"));
+//	        	 saddressList.add(rset.getString("saddress"));
+//	         }
+//	         
+//	         StoreDB.setStname((String[]) stnameList.toArray(new String[0]));
+//	         StoreDB.setSclass((String[]) sclassList.toArray(new String[0]));
+//	         StoreDB.setSaddress((String[]) saddressList.toArray(new String[0]));
+//
+//	      } catch (SQLException ex) {
+//	         ex.printStackTrace();
+//	      } finally {
+//	   
+//	         try {
+//	            if (stmt != null) stmt.close();
+//	            if (conn != null) conn.close();  // return to pool
+//	         } catch (SQLException ex) {
+//	             ex.printStackTrace();
+//	         }
+//	      }
 	      
 //	      ------------------------
 	}

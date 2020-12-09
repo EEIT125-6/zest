@@ -61,6 +61,17 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return result;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getSinglest(String stname) {
+		String hql  = "SELECT id FROM StoreBean sb WHERE sb.stname = :stname";
+		Session session = factory.getCurrentSession();
+		Query<StoreBean> query = session.createQuery(hql);
+		List<StoreBean> list=(List<StoreBean>) query.setParameter("stname1", stname).getResultList();
+		return list;
+	}
+	
 	@Override
 	public int deleteStore(StoreBean sb) {
 		int result = 0;
@@ -92,5 +103,60 @@ public class StoreHibernateDaoImpl implements StoreDao {
 								.executeUpdate();
 		
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getClassstore(String sclass) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StoreBean sb WHERE sclass = :sclass" ;
+		
+		List<StoreBean> list = session.createQuery(hql).setParameter("sclass", sclass).getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getNamestore(String stname) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StoreBean WHERE stname like :stname" ;
+		List<StoreBean> list = session.createQuery(hql).setParameter("stname", "%"+stname+"%").getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getFullstore(Integer id) {
+		Session session = factory.getCurrentSession();
+		String hql  = "FROM StoreBean WHERE id = :id1";
+		List<StoreBean> list = session.createQuery(hql).setParameter("id1", id).getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getAdvertisementstore() {
+		Session session = factory.getCurrentSession();
+//		String hql = "FROM StoreBean";
+//		String hql = "SELECT id,stname,bannerurl FROM StoreBean ORDER BY RAND()";
+		String hql = "FROM StoreBean ORDER BY RAND()";
+//		SELECT id FROM user ORDER BY RAND() LIMIT 10
+//		int number = 4;
+		List<StoreBean> list = session.createQuery(hql).getResultList();
+		
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getAdvertisementphotostore() {
+		Session session = factory.getCurrentSession();
+//		String hql = "SELECT id,stname,photourl FROM StoreBean ORDER BY RAND()";
+		String hql = "FROM StoreBean ORDER BY RAND()";
+//		int number = 6;
+		List<StoreBean> list = session.createQuery(hql).getResultList();
+		return list;
+	}
+
+
 
 }

@@ -17,6 +17,7 @@ public class StoreBean {
 	String sclass;
 	String saddress;
 	String stitd;
+	String stitddt;
 	String tel;
 	String bannerurl;
 	String photourl;
@@ -40,13 +41,15 @@ public class StoreBean {
 	}
 	
 	
-	public StoreBean(String stname, String sclass, String saddress, String stitd, String tel
+	public StoreBean(Integer id,String stname, String sclass, String saddress, String stitd,String stitddt, String tel
 			) {
 		super();
+		this.id = id;
 		this.stname = stname;
 		this.sclass = sclass;
 		this.saddress = saddress;
 		this.stitd = stitd;
+		this.stitddt = stitddt;
 		this.tel = tel;
 	}
 	
@@ -124,6 +127,14 @@ public class StoreBean {
 
 	public void setStitd(String stitd) {
 		this.stitd = stitd;
+	}
+	
+	public String getStitddt() {
+		return stitddt;
+	}
+	
+	public void setStitddt(String stitddt) {
+		this.stitddt = stitddt;
 	}
 
 	public String getTel() {

@@ -29,10 +29,11 @@
 <body>
 
 	<h1>SUCCESS!!!</h1>
-		<c:url value="detailStore.jsp" var="GOURL">
-		<c:param name="stname" value="${stname}" />
+		<c:url value="StoreGetFullstore" var="GOURL">
+			<c:param name="id" value="${id}" />
+			<c:param name="stname" value="${stname1}" />			
 		</c:url>
-	<a href="${GOURL}"><h1>點我轉跳到商家頁面</h1></a>
+<%-- 	<a href="${GOURL}"><h1>點我轉跳到商家頁面</h1></a> --%>
 	      <c:redirect url = "${GOURL }"/>
 </body>
 </html>
