@@ -2103,7 +2103,7 @@ public class WebUserServlet extends HttpServlet {
 		/* 寄件者email帳號 */
 		final String mailUser = "your-email-address@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "your-email-password";
+		final String mailPassword = "your-emaill-password";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */
