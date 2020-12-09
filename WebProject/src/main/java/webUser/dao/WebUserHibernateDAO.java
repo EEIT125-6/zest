@@ -263,7 +263,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		String fervor = (selectedParameters.split(":")[2].equals("?")) ? "" : selectedParameters.split(":")[2];
 		String locationCode = (selectedParameters.split(":")[3].equals("?")) ? "" : selectedParameters.split(":")[3];
 		Integer lv = Integer.parseInt(selectedParameters.split(":")[4]);
-		String status = selectedParameters.split(":")[5];
+		String status = "'" + selectedParameters.split(":")[5] + "'";
 		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? "" : "'" + selectedParameters.split(":")[6] + "'";
 		
 		if (!account.equals("")) {
@@ -293,12 +293,12 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& !locationCode.equals("")) {
-			locationCode = selectedParameters.split(":")[3];
+			locationCode = "'" + selectedParameters.split(":")[3] + "'";
 			sb.append("wu.locationCode = " + locationCode);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) 
 				&& !locationCode.equals("")){
-			locationCode = selectedParameters.split(":")[3];
-			sb.append(" AND wu.locationCode LIKE " + locationCode);
+			locationCode = "'" + selectedParameters.split(":")[3] + "'";
+			sb.append(" AND wu.locationCode = " + locationCode);
 		}
 		
 		if (lv == -1 
@@ -332,7 +332,6 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		}
 		
 		hql = sb.toString();
-		System.out.println("hql = "+hql);
 		/* 取得當前Session */
 		Session session = factory.getCurrentSession();
 		/* 執行HQL */
@@ -353,9 +352,11 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		if (lv == -1) {
 			hql = "FROM WebUserData AS wu WHERE wu.lv >= :lv";
 		} else if (lv == 0) {
-			hql = "FROM WebUserData AS wu WHERE wu.lv = :lv AND wu.status = " + status;
+			String inputStatus = "'" + status + "'";
+			hql = "FROM WebUserData AS wu WHERE wu.lv = :lv AND wu.status = " + inputStatus;
 		} else if (lv == 1) {
-			hql = "FROM WebUserData AS wu WHERE wu.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ status;
+			String inputStatus = "'" + status + "'";
+			hql = "FROM WebUserData AS wu WHERE wu.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ inputStatus;
 		}
 		/* 取得當前Session */
 		Session session = factory.getCurrentSession();
