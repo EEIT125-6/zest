@@ -148,7 +148,6 @@
                 <p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
             </div>
 <!-- -------------------------------------------------------------------- -->
- <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:900px;">
             <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

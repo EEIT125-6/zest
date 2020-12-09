@@ -174,7 +174,7 @@
 						<hr />
 						<label>西元生日：</label>
                 		<input type="date" name="birth" id="birth"  onblur=""
-							placeholder="請輸入您的聯絡電話(必填)" required="required" />
+							placeholder="請輸入您的西元出生日期(必填)" required="required" />
 						<span id="brithSpan"></span>
 						<hr />
                 	</fieldset>
@@ -184,7 +184,7 @@
 					</div>
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src=""></script>
+                <script src="WebUserForgetForm.js"></script>
                 <script>
 	                
                 </script>
