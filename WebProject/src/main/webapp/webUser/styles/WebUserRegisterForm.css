@@ -11,3 +11,9 @@ form {
 #sendCheckCode {
 	display: none;
 }
+#checkRegisterNickname {
+	display: none;
+}
+#checkRegisterPhone {
+	display: none;
+}

@@ -195,6 +195,7 @@
 						<label>稱呼方式：</label>
 						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
 							placeholder="請輸入想要的稱呼" value="${originalData.nickname}" />
+						<input type="button" name="update" id="checkNicknameUsed" value="檢查稱呼">
 						<span id="nicknameSpan"></span>
 						<hr />
 						<input type="hidden" name="originalFervor" id="originalFervor" value="${originalData.fervor}">
@@ -289,6 +290,7 @@
 						<label>聯絡電話：</label>
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" value="${originalData.phone}" />
+						<input type="button" name="update" id="checkPhoneUsed" value="檢查電話">
 						<span id="phoneSpan"></span>
 					    <hr />
 					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${originalData.getEmail}">
@@ -932,6 +934,55 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="scripts/WebUserModifyData.js"></script>
                 <script>
+	                $("#checkNicknameUsed").click(function () {
+				        checkSameNickname();
+				    });
+					function checkSameNickname(){
+						let nickname = document.getElementById("nickname").value.trim();
+						let nicknameSpan = document.getElementById("nicknameSpan");
+						let nicknameStr;
+						let nicknameIsOk = true;
+						
+						$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'update':'檢查稱呼',
+				            	'inputNickname':nickname
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == '1') {
+				            		nicknameStr = "此稱呼已有人使用！";
+				            		nicknameIsOk = false;
+				            	} else if(resultSpace[0] == '0') {
+				            		nicknameStr = "可使用此稱呼！";
+				            		nicknameIsOk = true;
+				            	} else if(resultSpace[0] == '-1') {
+				            		nicknameStr = "檢查途中遭遇錯誤！";
+				            		nicknameIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!nicknameIsOk) {
+				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+				            		nicknameSpan.style.color = "red";
+				            		nicknameSpan.style.fontStyle = "italic";
+				            	} else {
+				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+				            		nicknameSpan.style.color = "black";
+				            		nicknameSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	nicknameStr = "發生錯誤，無法執行檢查";
+				            	nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+				            	nicknameSpan.style.color = "red";
+				            	nicknameSpan.style.fontStyle = "italic";
+				            }
+						});
+					}	
+                
 					$("#checkEmailUsed").click(function () {
 				        checkUpdateEmail();
 				    });
@@ -977,6 +1028,55 @@
 				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            	emailSpan.style.color = "red";
 				            	emailSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+					
+					$("#checkPhoneUsed").click(function () {
+				        checkUpdatePhone();
+				    });
+					function checkUpdatePhone(){
+						let phone = document.getElementById("updatedPhone").value.trim();
+						let phoneSpan = document.getElementById("phoneSpan");
+						let phoneStr;
+						let phoneIsOk = true;
+						
+						$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'update':'檢查電話',
+				            	'inputPhone':phone
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == '1') {
+				            		phoneStr = "此聯絡電話已有人使用！";
+				            		phoneIsOk = false;
+				            	} else if(resultSpace[0] == '0') {
+				            		phoneStr = "可使用此聯絡電話！";
+				            		phoneIsOk = true;
+				            	} else if(resultSpace[0] == '-1') {
+				            		phoneStr = "檢查途中遭遇錯誤！";
+				            		phoneIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!phoneIsOk) {
+				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+				            		phoneSpan.style.color = "red";
+				            		phoneSpan.style.fontStyle = "italic";
+				            	} else {
+				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
+				            		phoneSpan.style.color = "black";
+				            		phoneSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	phoneStr = "發生錯誤，無法執行檢查";
+				            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+				            	phoneSpan.style.color = "red";
+				            	phoneSpan.style.fontStyle = "italic";
 				            }
 						});
 					}

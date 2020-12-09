@@ -1,7 +1,7 @@
 function checkForm() {
 	let choice=confirm("是否要送出註冊資料？");
 	if (choice==true) {
-		if (!checkSameAccountAndEmail()) {
+		if (!checkSameInput()) {
 			return false;
 		} else if (!checkAccountPassword()) {
 			return false;
@@ -9,13 +9,9 @@ function checkForm() {
 			return false;
 		} else if (!checkLast_name()) {
 			return false;
-		} else if (!checkNickname()) {
-			return false;
 		} else if (!checkBirthday()) {
 			return false;
 		} else if (!checkFervor()) {
-			return false;
-		} else if (!checkPhone()) {
 			return false;
 		} else if (!checkLocation_code()) {
 			return false;
@@ -229,12 +225,14 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
+		document.getElementById("checkRegisterNickname").style = "display:none";
 		return false;
 	}
 	else {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 		nicknameSpan.style.color = "black";
 		nicknameSpan.style.fontStyle = "normal";
+		document.getElementById("checkRegisterNickname").style = "display:inline";
 		return true;
 	}
 }
@@ -419,12 +417,14 @@ function checkPhone() {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
+		document.getElementById("checkRegisterPhone").style = "display:none";
 		return false;
 	}
 	else {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 		phoneSpan.style.color = "black";
 		phoneSpan.style.fontStyle = "normal";
+		document.getElementById("checkRegisterPhone").style = "display:inline";
 		return true;
 	}
 }
@@ -573,7 +573,7 @@ function clearMessage() {
 }
 
 
-function checkSameAccountAndEmail(){
+function checkSameInput(){
 	let accountSpan = document.getElementById("accountSpan");
 	let emailSpan = document.getElementById("emailSpan");
 	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
@@ -581,16 +581,26 @@ function checkSameAccountAndEmail(){
 	if (accountSpan.textContent != "check_circle可建立此帳號！") {
 		alert("請先執行帳號檢查");
 		return false;
+	} else if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+		alert("請先執行稱呼檢查");
+		return false;
 	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
 		alert("請先執行電子信箱檢查");
 		return false;
 	} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
 		alert("請先執行電子信箱驗證");
 		return false;
+	} else if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+		alert("請先執行聯絡電話檢查");
+		return false;
 	} else {
 		if (!checkAccountName()) {
 			return false;
+		} else if (!checkNickname()) {
+			return false;
 		} else if (!checkEmailCheckCode()) {
+			return false;
+		} else if (!checkPhone()) {
 			return false;
 		} else {
 			return true;

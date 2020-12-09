@@ -53,13 +53,13 @@ function checkForm() {
 			return false;
 		} else if (!checkLastName()) {
 			return false;
-		} else if (!checkNickname()) {
+		} else if (!checkSameNickname()) {
 			return false;
 		} else if (!checkFervor()) {
 			return false;
 		} else if (!checkSameEmail()) {
 			return false;
-		} else if (!checkPhone()) {
+		} else if (!checkSamePhone()) {
 			return false;
 		} else if (!checkGetEmail()) {
 			return false;
@@ -130,8 +130,8 @@ function checkFirstName() {
 	let firstNameStr;
 
 	if (firstNameObjValue == "" || firstNameObjValue.length == 0) {
-		firstNameStr = "";
-		firstNameIsOk = true;
+		firstNameStr = "姓氏不可為空";
+		firstNameIsOk = false;
 	} else if (firstNameObjValue.length < 4) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
@@ -156,13 +156,9 @@ function checkFirstName() {
 		return false;
 	}
 	else {
-		if (firstNameObjValue == "" || firstNameObjValue.length == 0) {
-			firstNameSpan.innerHTML = "";
-		} else {
-			firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
-			firstNameSpan.style.color = "black";
-			firstNameSpan.style.fontStyle = "normal";
-		}
+		firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
+		firstNameSpan.style.color = "black";
+		firstNameSpan.style.fontStyle = "normal";
 		return true;
 	}
 }
@@ -175,8 +171,8 @@ function checkLastName() {
 	let lastNameStr;
 
 	if (lastNameObjValue == "" || lastNameObjValue.length == 0) {
-		lastNameStr = "";
-		lastNameIsOk = true;
+		lastNameStr = "名字不可為空";
+		lastNameIsOk = false;
 	} else if (lastNameObjValue.length < 4) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
@@ -199,15 +195,10 @@ function checkLastName() {
 		lastNameSpan.style.color = "red";
 		lastNameSpan.style.fontStyle = "italic";
 		return false;
-	}
-	else {
-		if (lastNameObjValue == "" || lastNameObjValue.length == 0) {
-			lastNameSpan.innerHTML = "";
-		} else {
-			lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
-			lastNameSpan.style.color = "black";
-			lastNameSpan.style.fontStyle = "normal";
-		}
+	} else {
+		lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
+		lastNameSpan.style.color = "black";
+		lastNameSpan.style.fontStyle = "normal";
 		return true;
 	}
 }
@@ -220,22 +211,29 @@ function checkNickname() {
 	let nicknameStr;
 
 	if (nicknameObjValue == "" || nicknameObjValue.length == 0) {
-		nicknameStr = "";
-		nicknameIsOk = true;
+		if (checkLastName()) {
+			document.getElementById("updatedNickname").value = document.getElementById("updatedLastName").value.trim();
+			nicknameStr = "稱呼已設定為您的名字";
+			nicknameIsOk = true;
+		} else {
+			nicknameStr = "稱呼不可為空";
+			nicknameIsOk = false;
+		}
 	} else {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
 	}
 	if (nicknameIsOk) {
-		if (nicknameObjValue == "" || nicknameObjValue.length == 0) {
-			nicknameSpan.innerHTML = "";
-		} else {
-			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
-			nicknameSpan.style.color = "black";
-			nicknameSpan.style.fontStyle = "normal";
-		}
+		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+		nicknameSpan.style.color = "black";
+		nicknameSpan.style.fontStyle = "normal";
 		return true;
-	}
+	} else {
+		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+		nicknameSpan.style.color = "red";
+		nicknameSpan.style.fontStyle = "italic";
+		return false;
+	} 
 }
 
 function checkFervor() {
@@ -555,6 +553,27 @@ function clearMessage() {
 	location.reload(true);
 }
 
+function checkSameNickname(){
+	let nicknameObjValue = document.getElementById("updatedNickname").value.trim();
+	let nicknameSpan = document.getElementById("nicknameSpan");
+	let oldNicknameObjValue = document.getElementById("originalNickname").value;
+	
+	if (nicknameObjValue != oldNicknameObjValue) {
+		if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+			alert("請先執行稱呼檢查");
+			return false;
+		} else {
+			if (!checkNickname()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	} else {
+		return true;
+	}
+}
+
 function checkSameEmail(){
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
@@ -566,6 +585,27 @@ function checkSameEmail(){
 			return false;
 		} else {
 			if (!checkEmail()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	} else {
+		return true;
+	}
+}
+
+function checkSamePhone(){
+	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
+	let phoneSpan = document.getElementById("phoneSpan");
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	
+	if (phoneObjValue != oldPhoneObjValue) {
+		if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+			alert("請先執行聯絡電話檢查");
+			return false;
+		} else {
+			if (!checkPhone()) {
 				return false;
 			} else {
 				return true;

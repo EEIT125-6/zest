@@ -16,6 +16,24 @@ public class WebUserHibernateDAO implements WebUserDAO{
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public Integer checkUserIdExist(String inputUserId) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.userId = :inputUserId";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputUserId", inputUserId).getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public Integer checkAccountExist(String inputAccount) throws SQLException {
 		/* 變數宣告 */
 		Integer checkResult = -1;
@@ -27,6 +45,24 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		Query<WebUserData> query = session.createQuery(hql);
 		/* 取得陣列 */
 		List<WebUserData> list = query.setParameter("inputAccount", inputAccount).getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer checkNicknameExist(String inputNickname) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.nickname = :inputNickname";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputNickname", inputNickname).getResultList();
 		/* 由size()判結果 */
 		checkResult = (list.size() > 0) ? 1 : 0;
 		return checkResult;
@@ -45,6 +81,24 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		Query<WebUserData> query = session.createQuery(hql);
 		/* 取得陣列 */
 		List<WebUserData> list = query.setParameter("inputEmail", inputEmail).getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer checkPhoneExist(String inputPhone) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.phone = :inputPhone";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputPhone", inputPhone).getResultList();
 		/* 由size()判結果 */
 		checkResult = (list.size() > 0) ? 1 : 0;
 		return checkResult;
@@ -132,6 +186,22 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		Integer quitResult = 0;
 		/* 取得當前Session */
 		Session session = factory.getCurrentSession();
+		/* 執行變更 */
+		session.saveOrUpdate(quitUserData);
+		quitResult++;
+		return quitResult;
+	}
+	
+	@Override
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
+		/* 變數宣告 */
+		Integer quitResult = 0;
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 產生物件 */
+		WebUserData quitUserData = (WebUserData)session.get(WebUserData.class, userId);
+		/* 設定狀態 */
+		quitUserData.setStatus(status);
 		/* 執行變更 */
 		session.saveOrUpdate(quitUserData);
 		quitResult++;
@@ -296,5 +366,19 @@ public class WebUserHibernateDAO implements WebUserDAO{
 				.setParameter("lv", lv)
 				.getResultList();
 		return list;
+	}
+
+	@Override
+	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
+		int count = 0;
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 產生物件 */
+		WebUserData deletedUserData = (WebUserData)session.get(WebUserData.class, deletedUserId);
+		/* 執行刪除 */
+		session.delete(deletedUserData);
+		/* 成功則遞增 */
+		count++;
+		return count;
 	}
 }

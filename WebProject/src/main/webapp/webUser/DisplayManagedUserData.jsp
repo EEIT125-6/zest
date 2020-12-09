@@ -167,14 +167,22 @@
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return lastCheck();">
 					<fieldset>
-						<c:if test="${updateResultMessage != null}">
-							<legend><c:out value="${updateResultMessage}" /></legend>
+						<c:if test="${deleteMessage == null}">
+							<c:if test="${updateResultMessage != null}">
+								<legend><c:out value="${updateResultMessage}" /></legend>
+							</c:if>
 						</c:if>
-						<c:if test="${updateResultMessage == null}">
-							<legend><c:out value="${getResultMessage}" /></legend>
+						<c:if test="${deleteMessage != null}">
+							<legend><c:out value="${deleteMessage}" /></legend>
+						</c:if>
+						<c:if test="${deleteMessage == null}">
+							<c:if test="${updateResultMessage == null}">
+								<legend><c:out value="${getResultMessage}" /></legend>
+							</c:if>
 						</c:if>
 						<hr />
 							<input type="hidden" name="userId" id="userId" value="${managedUserData.userId}" />
+							<input type="hidden" name="account" id="account" value="${managedUserData.account}" />
 							<label>帳號名稱：</label>
 							<c:out value="${managedUserData.account}" />
 							<hr />
@@ -274,6 +282,7 @@
 								<c:when test="${managedUserData.status=='active'}">已啟用</c:when>
 								<c:when test="${managedUserData.status=='quit'}">已棄用</c:when>
 							</c:choose>
+							<input type="hidden" name="status" id="status" value="${managedUserData.status}">
 							<hr />
 					</fieldset>
 					<div align="center">
@@ -284,8 +293,8 @@
 							<c:when test="${managedUserData.status=='quit'}">
 								<input type="submit" id="activeAccount" name="update" value="啟用帳號">
 							</c:when>
-							<input type="submit" id="deleteAccount" name="delete" value="刪除帳號">
 						</c:choose>
+						<input type="submit" id="deleteAccount" name="delete" value="刪除帳號">
 						<a href="WebUserSearchForm.jsp"><input type="button" name="select" value="返回上一頁"></a>
 					</div>
 				</form>

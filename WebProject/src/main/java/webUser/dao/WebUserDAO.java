@@ -6,11 +6,20 @@ import java.util.List;
 import webUser.model.WebUserData;
 
 public interface WebUserDAO {
+	/* 檢查Id是否存在 -1->異常、0->不存在、1->存在 */
+	public Integer checkUserIdExist(String inputUserId) throws SQLException;
+	
 	/* 檢查帳號是否存在 -1->異常、0->不存在、1->存在 */
 	public Integer checkAccountExist(String inputAccount) throws SQLException;
 	
+	/* 檢查稱呼是否已使用 -1->異常、0->未使用、1->使用 */
+	public Integer checkNicknameExist(String inputNickname) throws SQLException;
+	
 	/* 檢查信箱是否已使用 -1->異常、0->不存在、1->存在 */
 	public Integer checkEmailExist(String inputEmail) throws SQLException;
+	
+	/* 檢查電話是否已使用 -1->異常、0->不存在、1->存在 */
+	public Integer checkPhoneExist(String inputPhone) throws SQLException;
 	
 	/* 產生新增使用者所需的ID */
 	public String createNewUserId(String selectedId, Integer lv) throws SQLException;
@@ -33,6 +42,9 @@ public interface WebUserDAO {
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
 	
+	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
+	
 	/* 檢查帳號是否為棄用 -1->異常、0->失敗、1->成功 */
 	public Integer checkAccountQuit(String inputAccount) throws SQLException;
 	
@@ -41,4 +53,7 @@ public interface WebUserDAO {
 	
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
+	
+	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
+	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
 }

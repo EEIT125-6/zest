@@ -18,6 +18,33 @@ public class WebUserServiceHibernate implements WebUserService {
 	WebUserDAO webUserDao = new WebUserHibernateDAO();
 	
 	/*
+	 *  檢查Id是否存在 -1->異常、0->不存在、1->存在
+	 */
+	@Override
+	public Integer checkUserIdExist(String inputUserId) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			checkResult = webUserDao.checkUserIdExist(inputUserId);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return checkResult;
+	}
+	
+	/*
 	 *  檢查帳號是否存在 -1->異常、0->不存在、1->存在
 	 */
 	@Override
@@ -32,6 +59,33 @@ public class WebUserServiceHibernate implements WebUserService {
 			/* 交易開始 */
 			tx = session.beginTransaction();
 			checkResult = webUserDao.checkAccountExist(inputAccount);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return checkResult;
+	}
+	
+	/* 
+	 * 檢查稱呼是否已使用 -1->異常、0->未使用、1->使用
+	 */
+	@Override
+	public Integer checkNicknameExist(String inputNickname) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			checkResult = webUserDao.checkNicknameExist(inputNickname);
 			/* 交易確認 */
 			tx.commit();
 		} catch(SQLException sqlE) {
@@ -59,6 +113,33 @@ public class WebUserServiceHibernate implements WebUserService {
 			/* 交易開始 */
 			tx = session.beginTransaction();
 			checkResult = webUserDao.checkEmailExist(inputEmail);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return checkResult;
+	}
+	
+	/*
+	 * 檢查電話是否已使用 -1->異常、0->不存在、1->存在
+	 */
+	@Override
+	public Integer checkPhoneExist(String inputPhone) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			checkResult = webUserDao.checkPhoneExist(inputPhone);
 			/* 交易確認 */
 			tx.commit();
 		} catch(SQLException sqlE) {
@@ -211,6 +292,31 @@ public class WebUserServiceHibernate implements WebUserService {
 		}
 		return quitResult;
 	}
+	
+	@Override
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
+		/* 變數宣告 */
+		Integer quitResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 變更帳號狀態 */
+			quitResult = webUserDao.adminChangeWebUserData(userId, status);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return quitResult;
+	}
 
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
@@ -308,5 +414,30 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return list;
+	}
+
+	@Override
+	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
+		/* 變數宣告 */
+		Integer deleteResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 執行刪除 */
+			deleteResult = webUserDao.deleteWebUserData(deletedUserId);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return deleteResult;
 	}
 }

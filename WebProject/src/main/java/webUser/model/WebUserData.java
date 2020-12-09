@@ -27,7 +27,7 @@ public class WebUserData {
 	private String firstName;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(3)")
 	private String lastName;
-	@Column(nullable = false , unique = false , columnDefinition="nvarchar(20)")
+	@Column(nullable = false , unique = true , columnDefinition="nvarchar(20)")
 	private String nickname;
 	@Column(nullable = false , unique = false , columnDefinition="char(1)")
 	private String gender;

@@ -61,9 +61,17 @@ public class WebUserServlet extends HttpServlet {
 					/* 返回查詢結果給使用者確認 */
 					doCheckAccount(request, response);
 					break;
+				case "檢查稱呼":
+					/* 返回查詢結果給使用者確認 */
+					doCheckNickname(request, response);
+					break;
 				case "檢查信箱":
 					/* 返回查詢結果給使用者確認 */
 					doCheckEmail(request, response);
+					break;
+				case "檢查電話":
+					/* 返回查詢結果給使用者確認 */
+					doCheckPhone(request, response);
 					break;
 				case "信箱驗證":
 					/* 返回執行結果給使用者 */
@@ -121,9 +129,17 @@ public class WebUserServlet extends HttpServlet {
 					/* 導向修改畫面 */
 					doGoToModifyPages(request, response, "other data");
 					break;
+				case "檢查稱呼":
+					/* 返回查詢結果給使用者確認 */
+					doCheckNickname(request, response);
+					break;
 				case "檢查信箱":
 					/* 返回查詢結果給使用者確認 */
 					doCheckEmail(request, response);
+					break;
+				case "檢查電話":
+					/* 返回查詢結果給使用者確認 */
+					doCheckPhone(request, response);
 					break;
 				case "資料修改完畢":
 					/* 準備執行其他個人資料更新 */
@@ -133,6 +149,16 @@ public class WebUserServlet extends HttpServlet {
 					/* 準備執行個人密碼更新 */
 					doUpdatePassword(request, response);
 					break;
+				case "棄用帳號":
+					doAdminChangeUserAccount(request, response, "quit");
+					break;
+				case "啟用帳號":
+					doAdminChangeUserAccount(request, response, "active");
+					break;
+				default:
+					/* 返回主畫面 */
+					doUndo(request, response, "select");
+					break;
 			}
 		}
 		/* 刪除部分 */
@@ -140,9 +166,11 @@ public class WebUserServlet extends HttpServlet {
 		if (request.getParameter("delete") != null) {
 			switch (request.getParameter("delete")) {
 				case "刪除帳號":
-					doDeleteUser(request, response);
+					doAdminDeleteUserAccount(request, response);
 					break;
 				default:
+					/* 返回主畫面 */
+					doUndo(request, response, "select");
 					break;
 			}
 		}
@@ -204,6 +232,37 @@ public class WebUserServlet extends HttpServlet {
 		out.close();
 	}
 	
+	/* Register checkNickname */
+	public void doCheckNickname(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告欲回傳的參數 */
+		Integer nicknameCheckResult = -1;
+		String message = "";
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		/* 取得使用者輸入的參數 */
+		String inputNickname = request.getParameter("inputNickname");
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 調用服務裡的方法 */
+		try {
+			nicknameCheckResult = wus.checkNicknameExist(inputNickname);
+			
+		} catch (SQLException sqlE) {
+			message = sqlE.getMessage();
+		}
+		/* 將結果返回aJax */
+		out.write(String.valueOf(nicknameCheckResult));
+		out.write("," + message);
+		out.flush();
+		out.close();
+	}
+	
 	/* Register checkEmail */
 	public void doCheckEmail(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -230,6 +289,37 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 將結果返回aJax */
 		out.write(String.valueOf(emailCheckResult));
+		out.write("," + message);
+		out.flush();
+		out.close();
+	}
+	
+	/* Register checkEmail */
+	public void doCheckPhone(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告欲回傳的參數 */
+		Integer phoneCheckResult = -1;
+		String message = "";
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		/* 取得使用者輸入的參數 */
+		String inputPhone = request.getParameter("inputPhone");
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 調用服務裡的方法 */
+		try {
+			phoneCheckResult = wus.checkPhoneExist(inputPhone);
+		} catch (SQLException sqlE) {
+			message = sqlE.getMessage();
+		}
+		
+		/* 將結果返回aJax */
+		out.write(String.valueOf(phoneCheckResult));
 		out.write("," + message);
 		out.flush();
 		out.close();
@@ -433,7 +523,7 @@ public class WebUserServlet extends HttpServlet {
 			}
 			
 			if (insertResult > 0) {
-				insertResultMessage = "恭喜！" + registerData.getNickname() + "，您的帳號已成功建立";
+				insertResultMessage = "恭喜！" + registerData.getAccount() + "，您的帳號已成功建立";
 				insertResultPage = "WebUserLogin.jsp";
 				/* 無效session */
 				request.getSession(true).invalidate();
@@ -972,8 +1062,78 @@ public class WebUserServlet extends HttpServlet {
 		}
 	}
 	
-	/* webAdmin delete user*/
-	public void doDeleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/* webAdmin change user account*/
+	public void doAdminChangeUserAccount(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告要傳回的參數 */
+		Integer changeResult = -1;
+		String quitMessage = "";
+		
+		/* 從session中取出物件userFullData */
+		WebUserData quitUserData = (WebUserData) request.getSession(true).getAttribute("userFullData");
+		
+		/* 從request取得該帳號的相關資訊 */
+		String userId = request.getParameter("userId");
+		String account = request.getParameter("account");
+		String status = request.getParameter("status");
+		
+		/* 預防性後端輸入檢查 */
+		quitMessage = doAdminInputCheck(quitUserData, request, response);
+		
+		/* 追加檢查 */
+		if (quitMessage.equals("") && mode.equals("quit")) {
+				switch(status) {
+				case "active":
+					break;
+				case "quit":
+				default:
+					quitMessage = "帳號狀態錯誤，無法執行本操作";
+					break;
+			}
+		} else if (quitMessage.equals("") && mode.equals("active")) {
+			switch(status) {
+			case "quit":
+				break;
+			case "active":
+			default:
+				quitMessage = "帳號狀態錯誤，無法執行本操作";
+				break;
+		}
+	}
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 檢查無誤才執行操作 */
+		if (quitMessage.equals("")) {
+			if (mode.equals("active") || mode.equals("quit")) {
+				try {
+					changeResult = wus.adminChangeWebUserData(userId, status);
+				} catch (SQLException sqlE) {
+					quitMessage = sqlE.getMessage();
+				}
+			}
+		}
+		
+		/* 將訊息quitMessage以"quitMessage"的名稱放入Session中 */
+		request.getSession(true).setAttribute("quitMessage", quitMessage);
+		
+		/* 成功變更 */
+		if (changeResult == 1) {
+			/* 返回主畫面 */
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserMain.jsp");
+		} else {
+			/* 導回帳號資料畫面 */
+			request.getRequestDispatcher(request.getContextPath() + "/webUser/ManageWebUserServlet?account=" + account)
+			.forward(request, response);
+		}
+	}
+	
+	/* webAdmin delete user account*/
+	public void doAdminDeleteUserAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* 收/發資料前先設定request/response編碼 */
 		request.setCharacterEncoding(CHARSET_CODE);
 		response.setContentType(CONTENT_TYPE);
@@ -981,33 +1141,41 @@ public class WebUserServlet extends HttpServlet {
 		/* 從session中取出物件userFullData */
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
 		
-		/* 從request取得該帳號的userId */
+		/* 從request取得該帳號的相關資訊 */
 		String userId = request.getParameter("userId");
+		String account = request.getParameter("account");
 		
 		/* 訊息 */
 		String deleteMessage = "";
 		/* 紀錄結果用參數 */
 		Integer deleteResult = 0;
 		
-		/* 身分檢查 */
-		if (userData == null) {
-			deleteMessage = "使用者未登入！無法執行操作";
-		} else if (userData.getLv() != -1) {
-			deleteMessage = "帳號身分不符，無法執行該操作！";
-		}
+		/* 預防性後端輸入檢查 */
+		deleteMessage = doAdminInputCheck(userData, request, response);
 		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
+		/* 檢查無誤才執行操作 */
 		if (deleteMessage.equals("")) {
-			
+			try {
+				deleteResult = wus.deleteWebUserData(userId);
+			} catch (SQLException sqlE) {
+				deleteMessage = sqlE.getMessage();
+			}
 		}
+		
+		/* 將deleteMessage以deleteMessage之名存入request */
+		request.setAttribute("deleteMessage", deleteMessage);
 		
 		/* 成功 */
 		if (deleteResult == 1) {
-			
+			/* 返回主畫面 */
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserMain.jsp");
 		} else {
-			
+			/* 導回帳號資料畫面 */
+			request.getRequestDispatcher(request.getContextPath() + "/webUser/ManageWebUserServlet?account=" + account)
+			.forward(request, response);
 		}
 	}
 	
@@ -1235,7 +1403,22 @@ public class WebUserServlet extends HttpServlet {
 				submitMessage = "稱呼長度過長";
 				inputIsOk = false;
 			} else {
-				inputIsOk = true;
+				Integer nicknameCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					nicknameCheckResult = wus.checkNicknameExist(nickname);
+				} catch (SQLException sqlE) {
+					submitMessage = sqlE.getMessage();
+					inputIsOk = false;
+				}
+				
+				if (nicknameCheckResult == 0) {
+					inputIsOk = true;
+				} else if (nicknameCheckResult == 1){
+					submitMessage = "稱呼已存在，請挑選別的名稱作為稱呼";
+					inputIsOk = false;
+				}
 			}
 		}
 		
@@ -1311,7 +1494,22 @@ public class WebUserServlet extends HttpServlet {
 				submitMessage = "室內電話格式錯誤";
 				inputIsOk = false;
 			} else {
-				inputIsOk = true;
+				Integer phoneCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					phoneCheckResult = wus.checkPhoneExist(phone);
+				} catch (SQLException sqlE) {
+					submitMessage = sqlE.getMessage();
+					inputIsOk = false;
+				}
+				
+				if (phoneCheckResult == 0) {
+					inputIsOk = true;
+				} else if (phoneCheckResult == 1){
+					submitMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+					inputIsOk = false;
+				}
 			}
 		}
 		
@@ -1532,6 +1730,19 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "稱呼長度過長";
 			} else if (nickname.equals(request.getParameter("originalNickname"))){
 				count++;
+			} else {
+				Integer nicknameCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					nicknameCheckResult = wus.checkNicknameExist(nickname);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (nicknameCheckResult == 1){
+					updateResultMessage = "稱呼已存在，請挑選別的名稱作為稱呼";
+				}
 			}
 		}
 		
@@ -1587,6 +1798,19 @@ public class WebUserServlet extends HttpServlet {
 				updateResultMessage = "室內電話格式錯誤";
 			} else if (phone.equals(request.getParameter("originalPhone"))) {
 				count++;
+			} else {
+				Integer phoneCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					phoneCheckResult = wus.checkPhoneExist(phone);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (phoneCheckResult == 1){
+					updateResultMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+				}
 			}
 		}
 		
@@ -1780,13 +2004,82 @@ public class WebUserServlet extends HttpServlet {
 		return checkResult;
 	}
 	
+	public String doAdminInputCheck(WebUserData userData, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String checkMessage = "";
+		/* 從request取得該帳號的相關資訊 */
+		String userId = request.getParameter("userId");
+		String account = request.getParameter("account");
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		if (userData == null) {
+			checkMessage = "使用者未登入，無法執行本操作";
+		} else if (userData.getLv() == -1) {
+			checkMessage = "使用者權限不足，無法執行本操作";
+		}
+		
+		if (checkMessage.equals("")) {
+			if (userId.equals("")) {
+				checkMessage = "Id不可為空白";
+			} else if (userId.length() != 7) {
+				checkMessage = "Id長度錯誤";
+			} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
+				checkMessage = "Id格式錯誤";
+			} else {
+				Integer userIdCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					userIdCheckResult = wus.checkUserIdExist(userId);
+				} catch (SQLException sqlE) {
+					checkMessage = sqlE.getMessage();
+				}
+				
+				if (userIdCheckResult == 0){
+					checkMessage = "Id不存在";
+				}
+			}
+		}
+		
+		if (checkMessage.equals("")) {
+			if (account.equals("")) {
+				checkMessage = "帳號不可為空白";
+			} else if(account.length() < 8) {
+				checkMessage = "帳號長度不足";
+			} else if(account.length() > 20) {
+				checkMessage = "帳號長度過長";
+			} else if (account.matches("[1-9]{1}.")) {
+				checkMessage = "帳號不可以數字開頭";
+			} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+				checkMessage = "帳號不符合格式";
+			} else {
+				Integer accountCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					accountCheckResult = wus.checkAccountExist(account);
+				} catch (SQLException sqlE) {
+					checkMessage = sqlE.getMessage();
+				}
+				
+				if (accountCheckResult == 0){
+					checkMessage = "帳號不存在";
+				}
+			}
+		}
+		
+		return checkMessage;
+	}
+	
 	public String doCreateCheckCode() {
-		String checkCode = "";
 		String[] leterSpace = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
 				"O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
 				"o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
 		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
@@ -1796,8 +2089,8 @@ public class WebUserServlet extends HttpServlet {
 		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
 		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
 		sb.append(leterSpace[(int)(Math.random()*(10+26+26))]);
-		checkCode = sb.toString();
-		return checkCode;
+		
+		return sb.toString();
 	}
 	
 	public Boolean doSendEmail(String account, String email, String checkCode, String mode) 
@@ -1808,9 +2101,9 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "your-email@gmail.com";
+		final String mailUser = "your-email-address@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "your-password";
+		final String mailPassword = "your-email-password";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */
