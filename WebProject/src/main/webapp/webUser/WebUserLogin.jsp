@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+// 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+// 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
@@ -145,9 +145,9 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
-				</c:if>
+<%--             	<c:if test="${userFullData.password != null}"> --%>
+<%-- 					<c:redirect url="${pageContext.request.contextPath}/webUser/WebUserMain.jsp" /> --%>
+<%-- 				</c:if> --%>
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>

@@ -14,11 +14,12 @@
 			<c:if test="${userFullData.password == null}">
 			<a href="${pageContext.request.contextPath}/webUser/WebUserLogin.jsp">
 			登入
-			  |
+			  |</a>
 			</c:if>
 			<c:if test="${userFullData.password != null}">
+			<a href="${pageContext.request.contextPath}/webUser/WebUserMain.jsp">
 			<c:out value="${userFullData.account}" />
-			  |
+			  |</a>
 			</c:if>
 			<c:if test="${userFullData.password == null}">
 			<i class="fas fa-user-plus" style="font-size: 25px;color: yellow"></i>

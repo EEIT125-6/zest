@@ -44,6 +44,7 @@ public class BookingDAO_Impl implements BookingDAO {
 	}
 	
 	//查詢單筆
+	@SuppressWarnings("unchecked")
 	@Override
 	public BookingBean singleBooking(String bookingNo) {
 		String hql = "FROM BookingBean b where b.bookingNo= :bookingNo";
@@ -67,6 +68,7 @@ public class BookingDAO_Impl implements BookingDAO {
 	}
 	
 	//check BookingNo
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean checkBooking(String bookingNo) {
 		
