@@ -21,6 +21,7 @@
 	<c:set var = "sclass" value = "${row.sclass}"/>
 	<c:set var = "saddress" value = "${row.saddress}"/>
 	<c:set var = "stitd" value = "${row.stitd }"/>
+	<c:set var = "stitddt" value = "${row.stitddt }"/>	
 	<c:set var = "tel" value = "${row.tel }"/>
 </c:forEach>
 <!DOCTYPE html>
@@ -131,8 +132,14 @@
                     <input type="text" id="idtel" name="tel" value="${tel}">
                 </label>
                 <br>
-                <label style="width: 40px;float: left;text-align: right;padding-right: 3px;">簡介:
-                    <textarea cols="40" rows="5" id="idstitd" name="stitd"><c:out value="${stitd}"></c:out></textarea>
+                <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:
+                    <textarea cols="40" rows="5" id="idstitd" name="stitd" placeholder="限50字">${stitd}</textarea>
+                </label>
+                <br>
+                <font color='red' size='-3'>${error.stitd}</font>
+                <br>
+                <label style="width: 40px;text-align: right;padding-right: 3px;">詳介:
+                    <textarea cols="40" rows="5" id="idstitddetail" name="stitddt" placeholder="">${stitddt}</textarea>
                 </label>
             </fieldset>
             <div style="text-align: center;">

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.cache.spi.FilterKey;
 
+import model.BoardBean;
+import model.ProductInfoBean;
 import model.StoreBean;
 import service.StoreService;
 import service.impl.StoreServiceImpl;
@@ -61,6 +63,13 @@ public class StoreGetFullstore extends HttpServlet {
 		StoreService ss = new StoreServiceImpl();
 		List<StoreBean> list =ss.getFullstore(id);
 		request.getSession(true).setAttribute("Results", list);
+		
+		List<BoardBean> list2 = ss.getComment(id);
+		request.getSession(true).setAttribute("Comments", list2);
+		
+		List<ProductInfoBean> listPIB = ss.getProductInfoBeans(id);
+		request.getSession().setAttribute("Products", listPIB);
+		System.out.println(listPIB);
 		RequestDispatcher rd = null;
 		rd = request.getRequestDispatcher("detailStore.jsp");
 		rd.forward(request, response);

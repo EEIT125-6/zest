@@ -135,12 +135,7 @@ body {
 		#gotop :hover{
 		    background:#0099CC;
 		}
-		.adsearch{
-		
-		}
-		.adsearch:hover{
-		
-		}
+
 </style>
 </head>
 <body>
@@ -223,34 +218,46 @@ body {
 	</div>
 	</div>
 	<div class="row">
-	<div class="col-sm-3">
-				<div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:15px ">
-		  <form action="InsertStoreServlet"  
-		  method="post" >
-		      <fieldset style="width: auto;margin:10px 10px 10px 10px;">
-		          <legend>進階搜尋</legend>      
-		          
-		           <label>幾星以上 
-                    <select name="ststar">
-                        <option value="5"
-                         	selected="selected"
-                        >5</option>
-                        <option value="4"
-                        >4</option>
-                        <option value="3"
-                        >3</option>
-                        <option value="2"
-                        >2</option>
-                        <option value="1"
-                        >1</option>
-                    </select>
+	<div class="col-sm-3 ">
+	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:20px; ">
+        <!-- 用container -->
+        <form action="############################" method="post" >
+            <fieldset style="width: auto;margin:1px auto;">
+                <legend>進階查詢</legend>
+				<br>
+           		  	<input type="radio" id="d1" name="dollar" >
+  					<label for="d1"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+  				<br>   
+                   	<input type="radio" id="d2" name="dollar" >
+  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+  				<br>
+                   	<input type="radio" id="d3" name="dollar" >
+  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+  				<br>
+                   	<input type="radio" id="d4" name="dollar" >
+  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+  				<br>
+                   	<input type="radio" id="d5" name="dollar" >
+  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+  				<br>
+                <hr>
+                <label>欲查詢幾顆星以上店家
                 </label>
-		      </fieldset>
-		      <div style="text-align: center;">
-		          <input type="submit" value="查詢">
-		      </div>
-		  </form>
-		</div>
+				<br>
+					<input type="radio" id="star3.5" name="star" >
+  					<label for="star3.5">3.5+</label>
+  				<br>
+  					<input type="radio" id="star4" name="star" >
+  					<label for="star4">4.0+</label>
+  				<br>
+ 
+            </fieldset>
+            <div style="text-align: center;">
+                <input type="submit" value="查詢">
+                <input type="reset" value="清除">
+            </div>
+        </form>
+    </div>
 	</div>
 	<div class="col-sm-6" >
 <!-- 

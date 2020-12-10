@@ -32,6 +32,7 @@
 	<!-- 3. 宣告程式使用的Mapping檔 ，每個永續類別都需要定義一個Mapping檔	-->
 	<mapping class="model.StoreBean"></mapping>
 	<mapping class="model.BoardBean"></mapping>
+	<mapping class="model.ProductInfoBean"></mapping>
 	
 	
 	</session-factory>

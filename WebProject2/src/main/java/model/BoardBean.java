@@ -78,23 +78,23 @@ public class BoardBean {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BoardBean [name=");
-		builder.append(name);
-		builder.append(", star=");
-		builder.append(star);
-		builder.append(", date=");
-		builder.append(date);
-		builder.append(", context=");
-		builder.append(context);
-		builder.append(", photo=");
-		builder.append(photo);
-		builder.append(", storebean=");
-		builder.append(storebean);
-		builder.append("]");
-		return builder.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder builder = new StringBuilder();
+//		builder.append("BoardBean [name=");
+//		builder.append(name);
+//		builder.append(", star=");
+//		builder.append(star);
+//		builder.append(", date=");
+//		builder.append(date);
+//		builder.append(", context=");
+//		builder.append(context);
+//		builder.append(", photo=");
+//		builder.append(photo);
+//		builder.append(", storebean=");
+//		builder.append(storebean);
+//		builder.append("]");
+//		return builder.toString();
+//	}
 	
 }

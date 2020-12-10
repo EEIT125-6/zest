@@ -16,6 +16,7 @@ public class StoreBean {
 	String stname;
 	String sclass;
 	String saddress;
+	Integer price;
 	String stitd;
 	String stitddt;
 	String tel;
@@ -39,7 +40,6 @@ public class StoreBean {
 		this.bannerurl = bannerurl;
 		this.photourl = photourl;
 	}
-	
 	
 	public StoreBean(Integer id,String stname, String sclass, String saddress, String stitd,String stitddt, String tel
 			) {

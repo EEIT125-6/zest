@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import dao.StoreDao;
+import model.BoardBean;
+import model.ProductInfoBean;
 import model.StoreBean;
 import utils.HibernateUtils;
 
@@ -28,7 +30,7 @@ public class StoreHibernateDaoImpl implements StoreDao {
 //		int count = 0;
 		int result = 0;
 			String hql = "Update StoreBean set stname = :stname , sclass = :sclass "+
-						" , saddress = :saddress , stitd = :stitd , tel = :tel " +
+						" , saddress = :saddress , stitd = :stitd , stitddt = :stitddt, tel = :tel " +
 						" WHERE id = :id";
 			Session session = factory.getCurrentSession();
 			
@@ -37,6 +39,7 @@ public class StoreHibernateDaoImpl implements StoreDao {
 					.setParameter("sclass", sb.getSclass())
 					.setParameter("saddress", sb.getSaddress())
 					.setParameter("stitd", sb.getStitd())
+					.setParameter("stitddt", sb.getStitddt())
 					.setParameter("tel", sb.getTel())
 					.setParameter("id", sb.getId())
 					.executeUpdate();
@@ -154,6 +157,24 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		String hql = "FROM StoreBean ORDER BY RAND()";
 //		int number = 6;
 		List<StoreBean> list = session.createQuery(hql).getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BoardBean> getComment(Integer stid) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM BoardBean Where Store_Id=:stid";
+		List<BoardBean> list = session.createQuery(hql).setParameter("stid", stid).getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProductInfoBean> getProductInfoBeans(Integer stid) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM ProductInfoBean Where Store_Id=:stid";
+		List<ProductInfoBean> list = session.createQuery(hql).setParameter("stid", stid).getResultList();
 		return list;
 	}
 

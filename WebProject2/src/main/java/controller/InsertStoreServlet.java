@@ -55,6 +55,12 @@ public class InsertStoreServlet extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
+		if(stitd.length()>49) {
+			errorMsg.put("stitd","簡介字數過多請修改");
+			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
+			rd.forward(request, response);
+			return;
+		}
 		HttpSession session = request.getSession(); 
 		Integer testid = null;
 		try {

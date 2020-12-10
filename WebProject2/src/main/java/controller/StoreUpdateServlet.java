@@ -42,6 +42,7 @@ public class StoreUpdateServlet extends HttpServlet {
 		String saddress = request.getParameter("saddress");
 		String stitd = request.getParameter("stitd");
 		String tel = request.getParameter("tel");
+		String stitddt = request.getParameter("stitddt");
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		if (stname == null || stname.trim().length() ==0) {
@@ -52,7 +53,12 @@ public class StoreUpdateServlet extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
-		
+		if(stitd.length()>49) {
+			errorMsg.put("stitd","簡介字數過多請修改");
+			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
+			rd.forward(request, response);
+			return;
+		}
 		StoreService ss = new StoreServiceImpl();
 		if(ss.isDup(stname) && !stname.equals((String)request.getSession(true).getAttribute("restname"))) {
 			errorMsg.put("stname","商店名稱重複請改名");
@@ -61,7 +67,7 @@ public class StoreUpdateServlet extends HttpServlet {
 			return;
 		}
 		
-		StoreBean sb = new StoreBean(id, stname, sclass, saddress, stitd, tel);
+		StoreBean sb = new StoreBean(id, stname, sclass, saddress, stitd, stitddt, tel);
 //		int result = 0;
 //		result = ss.updateStore(sb);
 		ss.updateStore(sb);
