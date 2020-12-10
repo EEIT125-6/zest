@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <div class="container-fluid  header"
 	style="height: 100px; border-bottom: 3px solid #e76f51; height: 90px; padding-top: 5px; background-color: #003049">
@@ -18,8 +17,9 @@
 			  |</a>
 			</c:if>
 			<c:if test="${userFullData.password != null}">
+			<a href="${pageContext.request.contextPath}/webUser/WebUserMain.jsp">
 			<c:out value="${userFullData.account}" />
-			  |
+			  |</a>
 			</c:if>
 			<c:if test="${userFullData.password == null}">
 			<i class="fas fa-user-plus" style="font-size: 25px;color: yellow"></i>

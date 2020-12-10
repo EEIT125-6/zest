@@ -15,24 +15,14 @@ import model.StoreBean;
 import service.StoreService;
 import service.impl.StoreServiceImpl;
 
-/**
- * Servlet implementation class StoreDeleteServlet
- */
 @WebServlet("/StoreDeleteServlet")
 public class StoreDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public StoreDeleteServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession hsession = request.getSession();
@@ -47,7 +37,5 @@ public class StoreDeleteServlet extends HttpServlet {
 		String url = request.getContextPath()+"/exDeleteStore.jsp";
 		String newurl = response.encodeRedirectURL(url);
 		response.sendRedirect(newurl);
-
 	}
-
 }

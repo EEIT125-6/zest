@@ -142,54 +142,117 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
             	<c:if test="${userFullData.password != null}">
 					<c:redirect url="WebUserMain.jsp" />
 				</c:if>
-                <form method="post">
+                <form action="/WebProject/webUser/WebUserServlet" method="post" >
                 	<fieldset>
-                		<legend>請進行填寫下列資料以便重新取回您的帳號</legend>
+                		<legend>請進行填寫下列資料以便重新取回您的帳號，如選填的欄位不確定可保持空白</legend>
                 		<hr />
                 		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur=""
+                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 							placeholder="請輸入帳號，8~20個字(選填)" />
 						<span id="accountSpan"></span>
 						<hr />
                 		<label>帳號密碼：</label>
-                		<input type="password" name="password" id="password" size="40" maxlength="20" onblur=""
+                		<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，8~20個字(選填)" />
+						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
 						<hr />
                 		<label>聯絡信箱：</label>
-                		<input type="email" name="email" id="email" size="40" maxlength="30" onblur=""
+                		<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
 							placeholder="請輸入帳號所使用的聯絡信箱(必填)" required="required" />
 						<span id="emailSpan"></span>
 						<hr />
 						<label>聯絡電話：</label>
-                		<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur=""
+                		<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
 							placeholder="請輸入帳號所使用的聯絡電話(必填)" required="required" />
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>西元生日：</label>
-                		<input type="date" name="birth" id="birth"  onblur=""
+                		<input type="date" name="birth" id="birth"  onblur="checkBirthday()"
 							placeholder="請輸入您的西元出生日期(必填)" required="required" />
-						<span id="brithSpan"></span>
+						<span id="birthSpan"></span>
 						<hr />
+						<span id="requestSpan"></span>
                 	</fieldset>
                 	<div align="center">
-						<input type="button" id="send" name="send" value="送出請求">
+						<input type="button" id="recovery" name="recovery" value="送出請求">
 						<input type="reset" name="reset" value="重設" onclick="">
 					</div>
+					<hr />
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="WebUserForgetForm.js"></script>
+                <script src="scripts/WebUserForgetForm.js"></script>
                 <script>
-	                
+	                $("#recovery").click(function () {
+	                	checkRecoveryRequest();
+				    });
+	                function checkRecoveryRequest() {
+	                	if (!checkForm()) {
+	                		alert("輸入的欄位有錯誤，請修正後再次執行!");
+	                	} else {
+	                		sendRecoveryRequest();
+	                	}
+	                }
+	                function sendRecoveryRequest() {
+	                	let account = document.getElementById("account").value.trim();
+	                	let password = document.getElementById("password").value.trim();
+	                	let email = document.getElementById("email").value.trim();
+	                	let phone = document.getElementById("phone").value.trim();
+	                	let birth = document.getElementById("birth").value.trim();
+	                	let requestSpan = document.getElementById("requestSpan");
+	                	let requestStr;
+	                	let requestIsOk = false;
+	                	
+	                	$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'recovery':'送出請求',
+				            	'account':account,
+				            	'password':password,
+				            	'email':email,
+				            	'phone':phone,
+				            	'birth':birth
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == 'true') {
+				            		requestStr = "信件已成功寄出！";
+				            		requestIsOk = true;
+				            	} else if(resultSpace[0] == 'false') {
+				            		requestStr = "信件未能寄出！";
+				            		requestIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!requestIsOk) {
+				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
+				            		requestSpan.style.color = "red";
+				            		requestSpan.style.fontStyle = "italic";
+				            	} else {
+				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + requestStr;
+				            		requestSpan.style.color = "black";
+				            		requestSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	requestStr = "發生錯誤，無法執行";
+				            	requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+				            	requestSpan.style.color = "red";
+				            	requestSpan.style.fontStyle = "italic";
+				            }
+						});
+	                }
                 </script>
             </div>     
 <!-- -------------------------------------------------------------------- -->
-            <%@include file = "../Footer-Include.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

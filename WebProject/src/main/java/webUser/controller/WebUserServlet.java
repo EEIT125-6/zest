@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -192,6 +193,18 @@ public class WebUserServlet extends HttpServlet {
 				default:
 					/* 返回主畫面 */
 					doUndo(request, response, "select");
+					break;
+			}
+		}
+		/* 救援帳號部分 */
+		if (request.getParameter("recovery") != null) {
+			switch (request.getParameter("recovery")) {
+				case "送出請求":
+					doRecovery(request, response);
+					break;
+				default:
+					/* 返回登入畫面 */
+					doUndo(request, response, "login");
 					break;
 			}
 		}
@@ -1095,26 +1108,24 @@ public class WebUserServlet extends HttpServlet {
 			}
 		} else if (quitMessage.equals("") && mode.equals("active")) {
 			switch(status) {
-			case "quit":
-				break;
-			case "active":
-			default:
-				quitMessage = "帳號狀態錯誤，無法執行本操作";
-				break;
+				case "quit":
+					break;
+				case "active":
+				default:
+					quitMessage = "帳號狀態錯誤，無法執行本操作";
+					break;
+			}
 		}
-	}
 		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
 		/* 檢查無誤才執行操作 */
-		if (quitMessage.equals("")) {
-			if (mode.equals("active") || mode.equals("quit")) {
-				try {
-					changeResult = wus.adminChangeWebUserData(userId, status);
-				} catch (SQLException sqlE) {
-					quitMessage = sqlE.getMessage();
-				}
+		if (quitMessage.equals("") && (mode.equals("active") || mode.equals("quit"))) {
+			try {
+				changeResult = wus.adminChangeWebUserData(userId, status);
+			} catch (SQLException sqlE) {
+				quitMessage = sqlE.getMessage();
 			}
 		}
 		
@@ -1143,7 +1154,6 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 從request取得該帳號的相關資訊 */
 		String userId = request.getParameter("userId");
-		String account = request.getParameter("account");
 		
 		/* 訊息 */
 		String deleteMessage = "";
@@ -1152,7 +1162,7 @@ public class WebUserServlet extends HttpServlet {
 		
 		/* 預防性後端輸入檢查 */
 		deleteMessage = doAdminInputCheck(userData, request, response);
-		
+
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
@@ -1174,18 +1184,97 @@ public class WebUserServlet extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/webUser/WebUserMain.jsp");
 		} else {
 			/* 導回帳號資料畫面 */
-			request.getRequestDispatcher(request.getContextPath() + "/webUser/ManageWebUserServlet?account=" + account)
+			request.getRequestDispatcher("/webUser/WebUserSearchForm.jsp")
 			.forward(request, response);
 		}
 	}
 	
+	/* Recovery */
+	public void doRecovery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* 網站IP+port */
+		String ipPort = "http://your-ip-address:8080";
+		
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 訊息 */
+		String recoveryMessage = "";
+		String recoveryUrl = "";
+		Boolean sendResult = false;
+		
+		/* 使用者相關訊息 */
+		WebUserData recoveryUserData = new WebUserData();
+		
+		/* 從request取出使用者輸入的參數 */
+		String account = request.getParameter("account").trim();
+		String password = request.getParameter("password").trim();
+		String email = request.getParameter("email").trim();
+		String phone = request.getParameter("phone").trim();
+		String birth = request.getParameter("birth").trim();
+		
+		/* 預防性後端輸入檢查 */
+		recoveryMessage = doRecoveryInputCheck(request, response);
+		
+		System.out.println("recoveryMessage = "+recoveryMessage);
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 驗證資料是否存在 */
+		if (recoveryMessage.equals("")) {
+			/* 日期轉型 */
+			Date inputBirth = Date.valueOf(birth);
+			
+			/* 帶入必要資訊驗證 + 選填資訊進行驗證，並從DB取得使用者的必要資訊 */
+			try {
+				recoveryUserData = wus.checkRecoveryInfo(account, password, email, phone, inputBirth);
+			} catch (SQLException sqlE) {
+				recoveryMessage = sqlE.getMessage();
+			}
+		}
+		
+		if (recoveryMessage.equals("") && recoveryUserData != null) {
+			/* 記錄當下時間 */
+			LocalDate nowDate = LocalDate.now();
+			LocalTime nowTime = LocalTime.now();
+			
+			String nowTimeStamp = nowDate.toString() + "_" + nowTime.toString();
+			String checkCode = doCreateCheckCode();
+			
+			/* 產生驗證連結 */
+			recoveryUrl = ipPort + request.getContextPath() + "/webUser/RecoveryAccountServlet?ts=" + nowTimeStamp + "&key=" + checkCode;
+			System.out.println("recoveryUrl="+recoveryUrl);
+			
+			/* 寄送到指定email */
+			try {
+				sendResult = doSendEmail(account, email, recoveryUrl, "forget");
+			} catch (Exception e) {
+				recoveryMessage = e.getMessage();
+			}
+		}
+		
+		if (sendResult) {
+			recoveryMessage = "重設連結已寄出，請至您填寫的信箱收信";
+		}
+		
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		
+		/* 將結果返回aJax */
+		out.write(String.valueOf(sendResult));
+		out.write("," + recoveryMessage);
+		out.flush();
+		out.close();
+	}
+	
 	/* Undo */
 	public void doUndo(HttpServletRequest request, HttpServletResponse response, String mode) throws ServletException, IOException {
-		/* 無效session */
-		request.getSession(true).invalidate();
 		/* 重導向畫面 */
 		switch(mode) {
 			case "register":
+				/* 無效session */
+				request.getSession(true).invalidate();
 				request.getRequestDispatcher("/webUser/WebUserRegisterForm.jsp").forward(request, response);
 				break;
 			case "select":
@@ -1193,6 +1282,8 @@ public class WebUserServlet extends HttpServlet {
 				break;
 			case "login":
 			default:
+				/* 無效session */
+				request.getSession(true).invalidate();
 				request.getRequestDispatcher("/webUser/WebUserLogoutResult.jsp").forward(request, response);
 				break;
 		}
@@ -2016,7 +2107,7 @@ public class WebUserServlet extends HttpServlet {
 		
 		if (userData == null) {
 			checkMessage = "使用者未登入，無法執行本操作";
-		} else if (userData.getLv() == -1) {
+		} else if (userData.getLv() != -1) {
 			checkMessage = "使用者權限不足，無法執行本操作";
 		}
 		
@@ -2073,6 +2164,83 @@ public class WebUserServlet extends HttpServlet {
 		return checkMessage;
 	}
 	
+	public String doRecoveryInputCheck(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String checkResult = "";
+		
+		/* 從request取出使用者輸入的參數 */
+		String account = request.getParameter("account").trim();
+		String password = request.getParameter("password").trim();
+		String email = request.getParameter("email").trim();
+		String phone = request.getParameter("phone").trim();
+		String birth = request.getParameter("birth").trim();
+		
+		if (account.equals("") || account.length() == 0) {
+			checkResult = "";
+		} else if (account.length() < 8) {
+			checkResult = "帳號長度不足";
+		} else if (account.length() > 20) {
+			checkResult = "帳號長度過長";
+		} else if (account.substring(0,1).matches("[0-9]{1}")) {
+			checkResult = "帳號不可以數字開頭";
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			checkResult = "帳號不符合格式";
+		} 
+		
+		if (checkResult.equals("")) {
+			if (password.equals("") || password.length() == 0) {
+				checkResult = "";
+			} else if (password.length() < 8) {
+				checkResult = "密碼長度不足";
+			} else if (password.length() > 20) {
+				checkResult = "密碼長度過長";
+			} else if (password.substring(0,1).matches("[0-9]{1}")) {
+				checkResult = "密碼不可以數字開頭";
+			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+				checkResult = "密碼不符合格式";
+			} 
+		}
+		
+		if (checkResult.equals("")) {
+			if (email.equals("") || email.length() == 0) {
+				checkResult = "信箱資訊不可為空白";
+			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
+				checkResult = "信箱資訊格式錯誤";
+			} 
+		}
+		
+		if (checkResult.equals("")) {
+			if (phone.equals("") || phone.length() == 0) {
+				checkResult = "連絡電話不可為空白";
+			} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
+				checkResult = "連絡電話格式錯誤";
+			} else if (!phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
+				checkResult = "連絡電話格式錯誤";
+			} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
+				checkResult = "行動電話格式錯誤";
+			} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
+				checkResult = "室內電話格式錯誤";
+			} 
+		}
+		
+		if (checkResult.equals("")) {
+			if (birth.equals("") || birth.length() == 0) {
+				checkResult = "生日不可為空白";
+			} else if (birth.length() > 10 || birth.length() < 8) {
+				checkResult = "日期長度錯誤";
+			} else {
+				Date inputBirth = Date.valueOf(birth);
+				if (inputBirth == Date.valueOf(LocalDate.now())) {
+					checkResult = "生日異常";
+				} else if (Date.valueOf(inputBirth.toString()).after(Date.valueOf(LocalDate.now()))) {
+					checkResult = "生日異常";
+				} 
+			}
+		}
+		
+		return checkResult;
+	}
+	
 	public String doCreateCheckCode() {
 		String[] leterSpace = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
@@ -2101,7 +2269,7 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "your-email-account@gmail.com";
+		final String mailUser = "your-email-address@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
 		final String mailPassword = "your-email-password";
 		/* 收件者email帳號 */
@@ -2111,11 +2279,11 @@ public class WebUserServlet extends HttpServlet {
 		if (mode.equals("submit")) {
 			mailContext = "親愛的 " + account + " ！<br />" 
 					+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
-					+ "<br /><p>" + checkCode + "</P>";
+					+ "<br />" + checkCode;
 		} else if (mode.equals("forget")) {
 			mailContext = "親愛的 " + account + " ！<br />" 
 					+ "請按下方的連結以重設您的帳號資訊"
-					+ "<br /><p><a href=" + checkCode + ">本連結將定時失效</a></P>";
+					+ "<br /><a href=" + checkCode + "></a>本連結將定時失效";
 		}
 		
 		Properties props = new Properties();
@@ -2141,7 +2309,11 @@ public class WebUserServlet extends HttpServlet {
 					, InternetAddress.parse(mailObj));
 			
 			/* 設定email主旨 */
-			message.setSubject("您的橙皮驗證碼在此");
+			if (mode.equals("submit")) {
+				message.setSubject("您的橙皮驗證碼在此");
+			} else if (mode.equals("forget")) {
+				message.setSubject("您的橙皮重設連結在此");
+			}
 			/* 設定email內容與編碼 */
 			message.setContent(mailContext, "text/html; Charset=UTF-8");
 			

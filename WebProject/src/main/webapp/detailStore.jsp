@@ -28,14 +28,11 @@
 	<c:set var = "sclass" value = "${row.sclass}"/>
 	<c:set var = "saddress" value = "${row.saddress}"/>
 	<c:set var = "stitd" value = "${row.stitd }"/>
+	<c:set var = "stitddt" value = "${row.stitddt }"/>
 	<c:set var = "tel" value = "${row.tel }"/>
 	<c:set var = "bannerurl" value = "${row.bannerurl }"/>
-<!--
-	${row.stname } 
-	${row.sclass} 
-	${row.saddress } 
- -->
 </c:forEach>
+
 
 
 <!DOCTYPE html>
@@ -166,16 +163,31 @@
         </div>
         <hr>
         <div id="div1" class="ddiv">
-            <span style="font-size: 140%">hi</span>
+<!--             <span style="font-size: 140%">hi</span> -->
+            <div>
+             <c:forEach var="row" items="${Comments}">
+             	${row.name} 
+             	${row.date}
+             	<br>
+             </c:forEach>
+            </div>
         </div>
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> hello</span>
         </div>
         <div id="div3" style="display:none;" class="ddiv">
-             <span style="font-size: 140%">ho </span>
+<!--              <span style="font-size: 140%">ho </span> -->
+			<div>
+				<c:forEach var="row1" items="${Products}">
+             		${row1.product_name} 
+             		${row1.product_price}
+             		${row1.product_quantity}
+             		<br>
+	            </c:forEach>
+			</div>
         </div>
         <div id="div4" style="display:none;" class="ddiv">
-        	 <span style="font-size: 140%"><c:out value = "${stitd }"></c:out></span>
+        	 <span style="font-size: 140%"><c:out value = "${stitddt }"></c:out></span>
         </div>
     </div>
         <script>

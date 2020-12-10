@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
@@ -230,6 +230,7 @@
 						<input type="submit" id="submit" name="select" value="執行查詢">
 						<input type="reset" name="reset" value="重設條件" onclick="clearMessage()">
 					</div>
+					<hr />
 				</form>
 				<c:if test="${selectResultMessage.length() > 0}">
 					<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
@@ -247,17 +248,27 @@
 							<hr />
 							<c:forEach var="userData" varStatus="index" items="${userDataList}">
 								<c:if test='${index.first }'>
-									<c:out value="<table border='1'>" escapeXml='false'/>
-									<c:out value=
-									"<tr>
-										<td>帳號名稱</td>
-										<td>稱呼名稱</td>
-										<td>偏好食物</td>
-										<td>居住區域</td>
-										<c:if test='${userFullData.lv == -1}'>
-										<td>帳號狀態</td>
-										</c:if>
-									</tr>" escapeXml='false'/>
+									<c:if test='${userFullData.lv == -1}'>
+										<c:out value="<table border='1'>" escapeXml='false'/>
+										<c:out value=
+										"<tr>
+											<td>帳號名稱</td>
+											<td>稱呼名稱</td>
+											<td>偏好食物</td>
+											<td>居住區域</td>
+											<td>帳號狀態</td>
+										</tr>" escapeXml='false'/>
+									</c:if>
+									<c:if test='${userFullData.lv != -1}'>
+										<c:out value="<table border='1'>" escapeXml='false'/>
+										<c:out value=
+										"<tr>
+											<td>帳號名稱</td>
+											<td>稱呼名稱</td>
+											<td>偏好食物</td>
+											<td>居住區域</td>
+										</tr>" escapeXml='false'/>
+									</c:if>
 								</c:if>
 								
 								<tr>
@@ -315,6 +326,7 @@
 				<script src="scripts/WebUserSearchForm.js"></script>
             </div> 
 <!-- -------------------------------------------------------------------- -->
-            <%@include file = "../Footer-Include.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

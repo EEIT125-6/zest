@@ -1,5 +1,6 @@
 package webUser.service;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,6 +185,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return insertResult;
 	}
 
+	/* 執行登入檢查 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException {
 		/* 變數宣告 */
@@ -235,6 +237,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return checkLoginResult;
 	}
 
+	/* 取得使用者個人資料 */
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
 		/* 變數宣告 */
@@ -260,6 +263,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return UserFullData;
 	}
 
+	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
 		/* 變數宣告 */
@@ -293,6 +297,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return quitResult;
 	}
 	
+	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
 		/* 變數宣告 */
@@ -318,6 +323,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return quitResult;
 	}
 
+	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
 		/* 變數宣告 */
@@ -343,6 +349,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return updateResult;
 	}
 
+	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
 		/* 變數宣告 */
@@ -368,6 +375,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return updateResult;
 	}
 
+	/* 取得查詢的使用者資料 */
 	@Override
 	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
 		List<WebUserData> list = new ArrayList<>();
@@ -392,6 +400,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return list;
 	}
 
+	/* 取得所有使用者資料 */
 	@Override
 	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
 		List<WebUserData> list = new ArrayList<>();
@@ -416,6 +425,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		return list;
 	}
 
+	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
 		/* 變數宣告 */
@@ -439,5 +449,40 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return deleteResult;
+	}
+
+	/* 驗證使用者資料 */
+	@Override
+	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth)
+			throws SQLException {
+		/* 變數宣告 */
+		WebUserData checkResult = new WebUserData();
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			/* 檢查輸入條件 */
+			if (!account.equals("") && !password.equals("")) {
+				checkResult = webUserDao.checkRecoveryInfo(account, password, email, phone, birth);
+			} else if (!account.equals("") && password.equals("")) {
+				checkResult = webUserDao.checkRecoveryInfo(account, email, phone, birth);
+			} else if (account.equals("") && !password.equals("")) {
+				checkResult = webUserDao.checkRecoveryInfoAnother(password, email, phone, birth);
+			} else if (account.equals("") && password.equals("")) {
+				checkResult = webUserDao.checkRecoveryInfo(email, phone, birth);
+			}
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return checkResult;
 	}
 }

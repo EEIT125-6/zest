@@ -23,7 +23,6 @@ public class StoreIndexServlet extends HttpServlet {
         super();
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		StoreService ss = new StoreServiceImpl();
@@ -31,7 +30,7 @@ public class StoreIndexServlet extends HttpServlet {
 		Collections.shuffle(list_ADP_randeom);
 		List<StoreBean> list_ADP = list_ADP_randeom.subList(0, 6);
 		request.setAttribute("APD", list_ADP);
-		
+	
 		List<StoreBean> list_AD_randeom = ss.getAdvertisementstore();
 		Collections.shuffle(list_AD_randeom);
 		List<StoreBean> list_AD = list_AD_randeom.subList(0, 4);

@@ -89,5 +89,4 @@ public class HibernateUtils {
 		
 		return clob;
 	}
-
 }

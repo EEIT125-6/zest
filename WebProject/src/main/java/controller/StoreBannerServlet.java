@@ -12,28 +12,17 @@ import model.StoreBean;
 import service.StoreService;
 import service.impl.StoreServiceImpl;
 
-/**
- * Servlet implementation class StoreBannerServlet
- */
 @WebServlet("/StoreBannerServlet")
 public class StoreBannerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public StoreBannerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		//HttpSession hsession = request.getSession();
+//		HttpSession hsession = request.getSession();
 		
 		Integer id = Integer.parseInt((String) request.getSession(true).getAttribute("id"));
 		String stname = (String) request.getSession(true).getAttribute("stname");
@@ -44,7 +33,6 @@ public class StoreBannerServlet extends HttpServlet {
 		System.out.println("id:   "+id+"  Stname:  "+stname+"   photourl:   "+bannerurl);
 		
 		StoreService ss = new StoreServiceImpl();
-		
 		
 		StoreBean sb = new StoreBean(id, stname, bannerurl, photourl);
 		

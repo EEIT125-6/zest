@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
@@ -207,6 +207,7 @@
             </div>
             
 <!-- -------------------------------------------------------------------- -->
-           <%@include file = "../Footer-Include.jsp" %>
+           <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
+           <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

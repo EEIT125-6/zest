@@ -542,9 +542,12 @@ function clearMessage() {
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
+	document.getElementById("checkNicknameUsed").style = "display:none";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
+	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
+	document.getElementById("checkPhoneUsed").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";

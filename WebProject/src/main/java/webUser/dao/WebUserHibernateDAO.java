@@ -1,5 +1,6 @@
 package webUser.dao;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 
 	SessionFactory factory = HibernateUtils.getSessionFactory();
 	
+	/* 檢查Id是否存在 -1->異常、0->不存在、1->存在 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkUserIdExist(String inputUserId) throws SQLException {
@@ -32,6 +34,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 	
+	/* 檢查帳號是否存在 -1->異常、0->不存在、1->存在 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkAccountExist(String inputAccount) throws SQLException {
@@ -50,6 +53,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 	
+	/* 檢查稱呼是否已使用 -1->異常、0->未使用、1->使用 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkNicknameExist(String inputNickname) throws SQLException {
@@ -68,6 +72,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 
+	/* 檢查信箱是否已使用 -1->異常、0->不存在、1->存在 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkEmailExist(String inputEmail) throws SQLException {
@@ -86,6 +91,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 	
+	/* 檢查電話是否已使用 -1->異常、0->不存在、1->存在 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkPhoneExist(String inputPhone) throws SQLException {
@@ -104,6 +110,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 
+	/* 產生新增使用者所需的ID */
 	@SuppressWarnings("unchecked")
 	@Override
 	public String createNewUserId(String selectedId, Integer lv) throws SQLException {
@@ -126,6 +133,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return createIdResult;
 	}
 
+	/* 新增使用者資料 1->成功、0->失敗*/
 	@Override
 	public Integer insertWebUserData(String insertId, WebUserData registerData) throws SQLException {
 		/* 變數宣告 */
@@ -139,6 +147,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return instertResult;
 	}
 
+	/* 檢查密碼 -1->異常、0->錯誤、1->正確 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkPassword(String inputAccount, String inputPassword) throws SQLException {
@@ -160,6 +169,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 
+	/* 取得使用者個人資料 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
@@ -180,6 +190,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return userFullData;
 	}
 
+	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
 		/* 變數宣告 */
@@ -192,6 +203,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return quitResult;
 	}
 	
+	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
 		/* 變數宣告 */
@@ -208,6 +220,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return quitResult;
 	}
 
+	/* 檢查帳號是否為棄用 -1->異常、0->失敗、1->成功 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkAccountQuit(String inputAccount) throws SQLException {
@@ -226,6 +239,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return checkResult;
 	}
 
+	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserData(WebUserData updateUserData) throws SQLException {
 		/* 變數宣告 */
@@ -238,6 +252,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return updateResult;
 	}
 
+	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
 		/* 變數宣告 */
@@ -250,6 +265,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return updateResult;
 	}
 
+	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
@@ -344,6 +360,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return list;
 	}
 
+	/* 取得所有使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
@@ -369,6 +386,7 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		return list;
 	}
 
+	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
 		int count = 0;
@@ -381,5 +399,85 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		/* 成功則遞增 */
 		count++;
 		return count;
+	}
+	
+	/* 驗證使用者資料 */
+	@SuppressWarnings("unchecked")
+	public WebUserData checkRecoveryInfo(String email, String phone, Date birth) throws SQLException {
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.email = :email AND wu.phone = :phone AND wu.birth = :birth";
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("email", email)
+				.setParameter("phone", phone)
+				.setParameter("birth", birth)
+				.getResultList();
+		/* 設定值 */
+		return (list.size() == 1) ? list.get(0) : new WebUserData();
+	}
+	
+	/* 驗證使用者資料 */
+	@SuppressWarnings("unchecked")
+	public WebUserData checkRecoveryInfo(String account, String email, String phone, Date birth) throws SQLException {
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.account = :account AND wu.email = :email AND wu.phone = :phone AND wu.birth = :birth";
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("account", account)
+				.setParameter("email", email)
+				.setParameter("phone", phone)
+				.setParameter("birth", birth)
+				.getResultList();
+		/* 設定值 */
+		return (list.size() == 1) ? list.get(0) : new WebUserData();
+	}
+	
+	/* 驗證使用者資料 */
+	@SuppressWarnings("unchecked")
+	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException {
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.account = :account AND wu.password = :password AND wu.email = :email AND wu.phone = :phone AND wu.birth = :birth";
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("account", account)
+				.setParameter("password", password)
+				.setParameter("email", email)
+				.setParameter("phone", phone)
+				.setParameter("birth", birth)
+				.getResultList();
+		/* 設定值 */
+		return (list.size() == 1) ? list.get(0) : new WebUserData();
+	}
+	
+	/* 驗證使用者資料 */
+	@SuppressWarnings("unchecked")
+	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException {
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.password = :password AND wu.email = :email AND wu.phone = :phone AND wu.birth = :birth";
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("password", password)
+				.setParameter("email", email)
+				.setParameter("phone", phone)
+				.setParameter("birth", birth)
+				.getResultList();
+		/* 設定值 */
+		return (list.size() == 1) ? list.get(0) : new WebUserData();
 	}
 }

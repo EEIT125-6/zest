@@ -2,12 +2,15 @@ package service.impl;
 
 import java.util.List;
 
+//import org.aspectj.weaver.tools.Trace;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import dao.StoreDao;
 import dao.impl.StoreHibernateDaoImpl;
+import model.BoardBean;
+import model.ProductInfoBean;
 import model.StoreBean;
 import service.StoreService;
 import utils.HibernateUtils;
@@ -236,6 +239,39 @@ public class StoreServiceImpl implements StoreService {
 		return list;
 	}
 
+	@Override
+	public List<BoardBean> getComment(Integer stid) {
+		Session session = factory.getCurrentSession();
+		Transaction tx =  null;
+		List<BoardBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getComment(stid);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
 
-
+	@Override
+	public List<ProductInfoBean> getProductInfoBeans(Integer stid) {
+		Session session = factory.getCurrentSession();
+		Transaction tx =  null;
+		List<ProductInfoBean> list = null;
+		try {
+			tx = session.beginTransaction();
+			list = dao.getProductInfoBeans(stid);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
 }

@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.password != null}">
@@ -302,6 +302,7 @@
 						<input type="submit" id="submit" name="register" value="送出">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
+					<hr />
 				</form>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 				<script src="scripts/WebUserRegisterForm.js"></script>
@@ -524,7 +525,7 @@
 							type:"POST",
 				            url:"/WebProject/webUser/WebUserServlet",
 				            data:{
-				            	'register':'檢查信箱',
+				            	'register':'檢查電話',
 				            	'inputPhone':phone
 				            },
 				            success:function(result) {
@@ -562,6 +563,7 @@
 				</script> 
             </div>
 <!-- -------------------------------------------------------------------- -->
-            <%@include file = "../Footer-Include.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

@@ -16,15 +16,10 @@ import model.StoreBean;
 import service.StoreService;
 import service.impl.StoreServiceImpl;
 
-/**
- * Servlet implementation class StoreUpdateServlet
- */
 @WebServlet("/StoreUpdateServlet")
 public class StoreUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
+
 	public StoreUpdateServlet() {
 		super();
 	}
@@ -35,12 +30,12 @@ public class StoreUpdateServlet extends HttpServlet {
 		Map<String, String> errorMsg = new HashMap<String, String>();
 		hsession.setAttribute("error", errorMsg);
 
-		
 		String stname = request.getParameter("stname");
 		String sclass = request.getParameter("sclass");
 		String saddress = request.getParameter("saddress");
 		String stitd = request.getParameter("stitd");
 		String tel = request.getParameter("tel");
+		String stitddt = request.getParameter("stitddt");
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		if (stname == null || stname.trim().length() ==0) {
@@ -51,7 +46,12 @@ public class StoreUpdateServlet extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
-		
+		if(stitd.length()>49) {
+			errorMsg.put("stitd","簡介字數過多請修改");
+			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
+			rd.forward(request, response);
+			return;
+		}
 		StoreService ss = new StoreServiceImpl();
 		if(ss.isDup(stname) && !stname.equals((String)request.getSession(true).getAttribute("restname"))) {
 			errorMsg.put("stname","商店名稱重複請改名");
@@ -60,17 +60,20 @@ public class StoreUpdateServlet extends HttpServlet {
 			return;
 		}
 		
-		StoreBean sb = new StoreBean(id, stname, sclass, saddress, stitd, tel);
-
+		StoreBean sb = new StoreBean(id, stname, sclass, saddress, stitd, stitddt, tel);
+//		int result = 0;
+//		result = ss.updateStore(sb);
 		ss.updateStore(sb);
-
+//		if(result==1) {
+//			hsession.setAttribute("modify", "修改成功");
+//		}else{
+//			hsession.setAttribute("modify", "修改時發生異常");
+//		}
 		String url = request.getContextPath()+"/exUpdate.jsp";
 		request.getSession().setAttribute("id", id);
 		request.getSession().setAttribute("stname1", stname);
 		
 		String newurl = response.encodeRedirectURL(url);
 		response.sendRedirect(newurl);
-
 	}
-
 }

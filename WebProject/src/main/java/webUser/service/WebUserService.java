@@ -1,5 +1,6 @@
 package webUser.service;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -50,4 +51,7 @@ public interface WebUserService {
 	
 	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
+	
+	/* 驗證使用者資料 */
+	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException;
 }

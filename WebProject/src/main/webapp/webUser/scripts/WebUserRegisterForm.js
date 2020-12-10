@@ -248,7 +248,7 @@ function checkBirthday() {
 		birthdayStr = "生日不可為空白";
 		birthdayIsOk = false;
 	} else if (birthdayObjValue.length > 10 || birthdayObjValue.length < 8) {
-		birthdayStr = "日期長度不足";
+		birthdayStr = "日期長度錯誤";
 		birthdayIsOk = false;
 	} else {
 		let inputYear = parseInt(birthdayObjValue.split("-")[0]);
@@ -562,10 +562,15 @@ function clearMessage() {
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
+	document.getElementById("checkRegisterNickname").style = "display:none";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
+	document.getElementById("checkEmailUsed").style = "display:none";
+	document.getElementById("emailCheckCodeSpan").innerHTML = "";
+	document.getElementById("sendCheckCode").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
+	document.getElementById("checkRegisterPhone").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";

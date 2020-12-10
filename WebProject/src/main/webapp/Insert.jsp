@@ -123,9 +123,12 @@
                     <input type="text" id="idtel" name="tel" value="" onblur="checktel();" >
                 </label><span id = "telspan"></span>
                 <br>
-                <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:
+
+                <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:  
                     <textarea cols="40" rows="5" id="idstitd" name="stitd" placeholder="限50字"></textarea>
                 </label>
+				<br>          
+                      				<font color='red' size='-3'>${error.stitd}</font>
                 <br>
                 <label style="width: 40px;text-align: right;padding-right: 3px;">詳介:
                     <textarea cols="40" rows="5" id="idstitddetail" name="stitddt" placeholder=""></textarea>

@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+// 	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+// 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
 <!-- taglib宣告 -->
@@ -142,12 +142,12 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
-				</c:if>
+<%--             	<c:if test="${userFullData.password != null}"> --%>
+<%-- 					<c:redirect url="${pageContext.request.contextPath}/webUser/WebUserMain.jsp" /> --%>
+<%-- 				</c:if> --%>
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
@@ -162,15 +162,17 @@
 							placeholder="請輸入密碼，8~20個字" required="required" />
 						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
 						<span id="passwordSpan"></span>
-						<br />
+						<hr />
 						<span id="loginSpan">
 							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
 								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
 								<c:out value="${loginMessage}" />
+								<hr />
 							</c:if>
 							<c:if test="${loginMessage.substring(0,2) != '歡迎' && loginMessage != null}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${loginMessage}" />
+								<hr />
 							</c:if>
 						</span>
                 	</fieldset>
@@ -179,6 +181,7 @@
 						<input type="submit" id="submit" name="login" value="登入">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
+					<hr />
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="scripts/WebUserLogin.js"></script>
@@ -271,6 +274,7 @@
                 </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
-            <%@include file = "../Footer-Include.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

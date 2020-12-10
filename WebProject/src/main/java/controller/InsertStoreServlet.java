@@ -17,24 +17,14 @@ import model.StoreBean;
 import service.StoreService;
 import service.impl.StoreServiceImpl;
 
-/**
- * Servlet implementation class InsertStoreServlet
- */
 @WebServlet("/InsertStoreServlet")
 public class InsertStoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public InsertStoreServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Map<String,String> errorMsg = new HashMap<String,String>();
@@ -51,6 +41,12 @@ public class InsertStoreServlet extends HttpServlet {
 		StoreService ss = new StoreServiceImpl();
 		if(ss.isDup(stname)) {
 			errorMsg.put("stname","商店名稱重複請改名");
+			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
+			rd.forward(request, response);
+			return;
+		}
+		if(stitd.length()>49) {
+			errorMsg.put("stitd","簡介字數過多請修改");
 			RequestDispatcher rd = request.getRequestDispatcher("Insert.jsp");
 			rd.forward(request, response);
 			return;
@@ -83,5 +79,4 @@ public class InsertStoreServlet extends HttpServlet {
 			return;
 		}
 	}
-
 }

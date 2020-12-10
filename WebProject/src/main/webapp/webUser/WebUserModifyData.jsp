@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include-prototype.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
@@ -916,14 +916,15 @@
 						<input type="submit" name="update" value="資料修改完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
+					<hr />
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="scripts/WebUserModifyData.js"></script>
                 <script>	
 	                $("#checkNicknameUsed").click(function () {
-				        checkSameNickname();
+				        checkUpdateNickname();
 				    });
-					function checkSameNickname(){
+					function checkUpdateNickname(){
 						let nickname = document.getElementById("nickname").value.trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr;
@@ -1069,6 +1070,7 @@
 				</script>
             </div>
 <!-- -------------------------------------------------------------------- -->
-            <%@include file = "../Footer-Include.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

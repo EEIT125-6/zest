@@ -2,6 +2,8 @@ package dao;
 
 import java.util.List;
 
+import model.BoardBean;
+import model.ProductInfoBean;
 import model.StoreBean;
 
 public interface StoreDao {
@@ -29,4 +31,8 @@ public interface StoreDao {
 	List<StoreBean> getAdvertisementstore();
 	
 	List<StoreBean> getAdvertisementphotostore();
+	
+	List<BoardBean> getComment(Integer stid);
+	
+	List<ProductInfoBean> getProductInfoBeans(Integer stid);
 }
