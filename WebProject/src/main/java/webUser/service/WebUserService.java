@@ -57,4 +57,8 @@ public interface WebUserService {
 	
 	/* 驗證使用者資料 */
 	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException;
+	
+	/* 執行重設 -1->異常、0->失敗、1->成功 */
+	public Integer resetWebUserPassword(String userId, String password) throws SQLException;
+	
 }

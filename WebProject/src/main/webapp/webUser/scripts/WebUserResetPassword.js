@@ -1,5 +1,5 @@
 function checkForm() {
-	let choice=confirm("是否確定要送出修改後的密碼？");
+	let choice=confirm("是否確定要送出重設後的密碼？");
 	if (choice == true) {
 		if (!checkAccountPassword()) {
 			return false;
@@ -16,8 +16,7 @@ function checkForm() {
 function checkAccountPassword() {
 	let passwordObjValue = document.getElementById("password").value.trim();
 	let passwordSpan = document.getElementById("passwordSpan");
-	let originalPasswordObjValue = document.getElementById("originalPassword").value.trim();
-
+	
 	let passwordIsOk = true;
 	let passwordStr;
 	let startCharReg = /[0-9]/;
@@ -41,13 +40,8 @@ function checkAccountPassword() {
 			passwordStr = "密碼不符合格式";
 			passwordIsOk = false;
 		} else {
-			if (passwordObjValue === originalPasswordObjValue) {
-				passwordStr = "密碼未修改";
-				passwordIsOk = false;
-			} else {
-				passwordStr = "密碼格式正確";
-				passwordIsOk = true;
-			}
+			passwordStr = "密碼格式正確";
+			passwordIsOk = true;
 		}
 	}
 	if (!passwordIsOk) {
@@ -67,7 +61,6 @@ function checkConfirmPassword() {
 	let confirmPasswordObjValue = document.getElementById("confirmPassword").value.trim();
 	let confirmPasswordSpan = document.getElementById("confirmPasswordSpan");
 	let passwordObjValue = document.getElementById("password").value.trim();
-	let originalPasswordObjValue = document.getElementById("originalPassword").value.trim();
 
 	let confirmPasswordIsOk = true;
 	let confirmPasswordStr;
@@ -93,13 +86,8 @@ function checkConfirmPassword() {
 			confirmPasswordIsOk = false;
 		} else {
 			if (passwordObjValue === confirmPasswordObjValue) {
-				if (confirmPasswordObjValue === originalPasswordObjValue) {
-					confirmPasswordStr = "密碼未修改";
-					confirmPasswordIsOk = false;
-				} else {
-					confirmPasswordStr = "密碼格式正確";
-					confirmPasswordIsOk = true;
-				}
+				confirmPasswordStr = "密碼格式正確";
+				confirmPasswordIsOk = true;
 			} else {
 				confirmPasswordStr = "密碼前後並不吻合";
 				confirmPasswordIsOk = false;

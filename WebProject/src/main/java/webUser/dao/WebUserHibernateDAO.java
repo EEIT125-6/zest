@@ -283,6 +283,23 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		updateResult++;
 		return updateResult;
 	}
+	
+	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
+	@Override
+	public Integer updateWebUserPassword(String userId, String password) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = 0;
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 產生要變更的物件 */
+		WebUserData resetUserData = session.get(WebUserData.class, userId);
+		/* 設定新密碼 */
+		resetUserData.setPassword(password);
+		/* 執行變更 */
+		session.saveOrUpdate(resetUserData);
+		updateResult++;
+		return updateResult;
+	}
 
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
@@ -498,5 +515,27 @@ public class WebUserHibernateDAO implements WebUserDAO{
 				.getResultList();
 		/* 設定值 */
 		return (list.size() == 1) ? list.get(0) : new WebUserData();
+	}
+
+	/* 檢查密碼 -1->異常、0->錯誤、1->正確 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer checkResetPassword(String inputUserId, String inputPassword) throws SQLException {
+		/* 變數宣告 */
+		int checkResult = 0;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.userId = :inputUserId AND wu.password = :inputPassword";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query
+				.setParameter("inputUserId", inputUserId)
+				.setParameter("inputPassword", inputPassword)
+				.getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
 	}
 }

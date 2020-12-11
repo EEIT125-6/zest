@@ -15,7 +15,7 @@
     <%@include file = "../Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
-    <title>修改個人密碼</title>
+    <title>重設個人密碼</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -148,35 +148,13 @@
             <div class="container"  style="margin-top: 20px;">
                 <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${userFullData.password == null}">
+				<c:if test="${userId == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                <form action="/WebProject/webUser/WebUserServlet" method="post">
                 	<fieldset>
-                		<legend>
-                		<c:if test="${updateResultMessage != null}">
-							<c:if test="${updateResultMessage != '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
-							<c:if test="${updateResultMessage == '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
-						</c:if>
-						<c:if test="${updateResultMessage == null}">
-							<c:out value="密碼相關資料" />
-						</c:if>
-						</legend>
-                		<hr />
-						<label>帳號原密碼：</label>
-						<c:if test="${userFullData.password.length() > 0}">
-							<c:forEach var="passwordChar" begin="0" end="${userFullData.password.length()-1}">
-								<c:out value = "*" />
-							</c:forEach>
-						</c:if>
-						<input type="button" name="showPassword" id="showPassword" value="顯示密碼">
-						<input type="hidden" name="originalPassword" id="originalPassword" value="${userFullData.password}">
+                		<legend>重設密碼相關資料</legend>
+                		<input type="hidden" name="userId" id="userId" value="${userId}">
                 		<hr />
 						<label>帳號新密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
@@ -189,25 +167,100 @@
 							placeholder="請輸入密碼，8~20個字" required="required" />
 						<input type="button" name="visibility_switch_confirm" id="visibility_switch_confirm" value="顯示密碼" onclick="changeConfirmVisibility()">
 						<span id="confirmPasswordSpan"></span>
+						<hr />
+						<span id="resetSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
-						<input type="submit" name="update" value="密碼修改完畢">
+                		<a href="WebUserLogin.jsp"><input type="button" name="update" value="取消"></a>
+						<input type="button" id="sendReset" name="update" value="密碼重設完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
+					<hr />
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserModifyPassword.js"></script>
+                <script src="scripts/WebUserResetPassword.js"></script>
                 <script>
-					$("#showPassword").click(function () {
-				        document.getElementById("originalPassword").type = (document.getElementById("originalPassword").type == "hidden") ? "text" : "hidden";
-				    	document.getElementById("showPassword").value = (document.getElementById("showPassword").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼";
+	                $("#sendReset").click(function () {
+	                	if (!checkForm()) {
+	                		alert("操作無效或已被取消");
+	                	} else {
+	                		sendResetRequest();
+	                	}
 				    });
+	                function sendResetRequest() {
+	                	let userId = document.getElementById("userId").value.trim();
+	                	let password = document.getElementById("password").value.trim();
+	                	
+	                	let resetSpan = document.getElementById("resetSpan");
+						let resetStr;
+						let resetIsOk = true;
+	                	
+	                	$.ajax({
+							type:"POST",
+				            url:"/WebProject/webUser/WebUserServlet",
+				            data:{
+				            	'recovery':'密碼重設',
+				            	'userId':userId,
+				            	'password':password
+				            },
+				            success:function(result) {
+				            	let resultSpace = result.split(",");
+				            	if(resultSpace[0] == '1') {
+				            		resetStr = "重設成功！請重新登入您的帳號";
+				            		resetIsOk = true;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resetStr);
+				            	} else if(resultSpace[0] == '0') {
+				            		resetStr = "密碼未變更！";
+				            		resetIsOk = false;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resetStr);
+				            	} else if(resultSpace[0] == '-1') {
+				            		resetStr = "本帳號已棄用！請重新註冊或聯絡網站管理員";
+				            		resetIsOk = false;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resetStr);
+				            	} else if(resultSpace[0] == '-2') {
+				            		resetStr = "無效的帳號驗證資訊！無法重設密碼";
+				            		resetIsOk = false;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resetStr);
+				            	} else if(resultSpace[0] == '-3') {
+				            		resetStr = "重設密碼密碼失敗";
+				            		resetIsOk = false;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resultSpace[1]);
+				            	} else if(resultSpace[0] == '-4') {
+				            		resetStr = "檢查途中遭遇錯誤！";
+				            		resetIsOk = false;
+				            		/* 顯示彈窗訊息 */
+				            		alert(resultSpace[1]);
+				            	}
+				            	if (!resetIsOk) {
+				            		resetSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + resetStr;
+				            		resetSpan.style.color = "red";
+				            		resetSpan.style.fontStyle = "italic";
+				            	} else {
+				            		resetSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + resetStr;
+				            		resetSpan.style.color = "black";
+				            		resetSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	resetStr = "發生錯誤，無法執行檢查";
+				            	resetSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + resetStr;
+				            	resetSpan.style.color = "red";
+				            	resetSpan.style.fontStyle = "italic";
+			            		/* 顯示彈窗訊息 */
+			            		alert(resetStr);
+				            }
+						});
+	                }
 				</script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->
-           <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
+           <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:250px">
            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

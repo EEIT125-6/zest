@@ -27,8 +27,7 @@ public class RecoveryAccountServlet extends HttpServlet {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 		/* 收/發資料前先設定request/response編碼 */
 		request.setCharacterEncoding(CHARSET_CODE);
 		response.setContentType(CONTENT_TYPE);
@@ -38,17 +37,18 @@ public class RecoveryAccountServlet extends HttpServlet {
 		String recoveryResult = "";
 		
 		/* 從URL取參數 */
-		String timeRecord = request.getParameter("ts");
-		String checkCode = request.getParameter("key");
-		String userId = request.getParameter("userId");
-		
+		String timeRecord = (request.getParameter("ts") == null) ? "" : request.getParameter("ts").trim();
+		String checkCode = (request.getParameter("key") == null) ? "" : request.getParameter("key").trim();
+		String userId = (request.getParameter("userId") == null) ? "" : request.getParameter("userId").trim();
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
 		/* 檢查時戳 */
 		if (timeRecord.equals("")) {
+			recoveryResult = "驗證無效";
 			infoIsOk = false;
-		} else if (timeRecord.indexOf("_") == -1) {
+		} else if (timeRecord.indexOf("_") == -1 && timeRecord.split("_").length != 2) {
+			recoveryResult = "驗證無效";
 			infoIsOk = false;
 		} else {
 			String createDate = timeRecord.split("_")[0];
@@ -100,6 +100,7 @@ public class RecoveryAccountServlet extends HttpServlet {
 			} catch (Exception e1) {
 				infoIsOk = false;
 				recoveryResult = e1.getMessage();
+				System.out.println("ts error");
 			}
 		}
 		
@@ -141,9 +142,9 @@ public class RecoveryAccountServlet extends HttpServlet {
 					recoveryResult = sqlE.getMessage();
 				}
 				
-				if (checkIdResult1 == 1 && checkIdResult2 == 0) {
+				if (checkIdResult1 == 1 && checkIdResult2 == 1) {
 					infoIsOk = true;
-				} else if (checkIdResult1 == 1 && checkIdResult2 == 1){
+				} else if (checkIdResult1 == 1 && checkIdResult2 == 0){
 					infoIsOk = false;
 					recoveryResult = "驗證失敗，該帳號已棄用";
 				} else if (checkIdResult1 == 0) {
@@ -154,6 +155,18 @@ public class RecoveryAccountServlet extends HttpServlet {
 		}
 		
 		/* 最終結果 */
-		
+		if (!recoveryResult.equals("")) {
+			/* 無效session */
+			request.getSession(true).invalidate();
+			/* 將錯誤訊息存在session中 */
+			request.getSession(true).setAttribute("loginMessage", recoveryResult);
+			/* 導向到登入畫面 */
+			response.sendRedirect(request.getContextPath() + "/webUser/WebUserLogin.jsp");
+		} else {
+			/* 將Id存在session中 */
+			request.getSession(true).setAttribute("userId", userId);
+			/* 導向設定密碼畫面 */
+			request.getRequestDispatcher("/webUser/WebUserResetPassword.jsp").forward(request, response);
+		}
 	}
 }

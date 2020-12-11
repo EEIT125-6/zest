@@ -58,6 +58,9 @@ public interface WebUserDAO {
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
 	
+	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
+	public Integer updateWebUserPassword(String userId, String password) throws SQLException;
+	
 	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
 	
@@ -72,4 +75,7 @@ public interface WebUserDAO {
 	
 	/* 驗證使用者資料 */
 	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException;
+	
+	/* 檢查密碼 -1->異常、0->錯誤、1->正確 */
+	public Integer checkResetPassword(String inputUserId, String inputPassword) throws SQLException;
 }

@@ -202,6 +202,9 @@ public class WebUserServlet extends HttpServlet {
 				case "送出請求":
 					doRecovery(request, response);
 					break;
+				case "密碼重設":
+					doResetPassword(request, response);
+					break;
 				default:
 					/* 返回登入畫面 */
 					doUndo(request, response, "login");
@@ -307,7 +310,7 @@ public class WebUserServlet extends HttpServlet {
 		out.close();
 	}
 	
-	/* Register checkEmail */
+	/* Register checkPhone */
 	public void doCheckPhone(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		/* 收/發資料前先設定request/response編碼 */
@@ -1189,12 +1192,12 @@ public class WebUserServlet extends HttpServlet {
 		}
 	}
 	
-	/* Recovery */
+	/* Recovery - check form and send email */
 	public void doRecovery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* 網站IP+port
 		 * request.getServerName()->IP
 		 * request.getServerPort()->port */
-		String ipPort = request.getServerName() + ":" + String.valueOf(request.getServerPort());
+		String ipPort = "http://" + request.getServerName() + ":" + String.valueOf(request.getServerPort());
 		
 		/* 收/發資料前先設定request/response編碼 */
 		request.setCharacterEncoding(CHARSET_CODE);
@@ -1270,6 +1273,72 @@ public class WebUserServlet extends HttpServlet {
 		/* 將結果返回aJax */
 		out.write(String.valueOf(sendResult));
 		out.write("," + recoveryMessage);
+		out.flush();
+		out.close();
+	}
+	
+	/* Recovery - reset password */
+	public void doResetPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* 收/發資料前先設定request/response編碼 */
+		request.setCharacterEncoding(CHARSET_CODE);
+		response.setContentType(CONTENT_TYPE);
+		
+		/* 宣告參數 */
+		Integer inputCheckResult = -1;
+		Integer resetResult = -3;
+		String resetMessage = "";
+		
+		/* 取得使用者輸入的參數 */
+		String inputUserId = request.getParameter("userId").trim();
+		String inputPassword = request.getParameter("password").trim();
+		
+		/* 產生服務物件 */
+		WebUserService wus = new WebUserServiceHibernate();
+		
+		/* 預防性後端檢查，正常時回傳1 */
+		inputCheckResult = doLoginInputCheck(inputUserId, inputPassword);
+		
+		if (inputCheckResult == 1) {
+			/* 調用服務裡的方法 */
+			try {
+				resetResult = wus.resetWebUserPassword(inputUserId, inputPassword);
+			} catch (SQLException sqlE) {
+				String loginMessageTmp = sqlE.getMessage();
+				resetMessage = loginMessageTmp.split(":")[1];
+			}
+		} else {
+			switch(inputCheckResult) {
+				case 0:
+				case -1:
+				case -2:
+				case -3:
+				case -4:
+					resetMessage = "無效的使用者身分";
+					break;
+				case 2:
+					resetMessage = "密碼不可為空白";
+					break;
+				case 3:
+					resetMessage = "密碼長度不足，至少需8個字元";
+					break;
+				case 4:
+					resetMessage = "密碼長度過長，最多僅20個字元";
+					break;
+				case 5:
+					resetMessage = "密碼不可以數字開頭";
+					break;
+				case 6:
+					resetMessage = "密碼不符合格式";
+					break;
+			}
+		}
+		
+		/* 宣告printer */
+		PrintWriter out = response.getWriter();
+		
+		/* 將結果返回aJax */
+		out.write(String.valueOf(resetResult));
+		out.write("," + resetMessage);
 		out.flush();
 		out.close();
 	}
@@ -2247,6 +2316,39 @@ public class WebUserServlet extends HttpServlet {
 		return checkResult;
 	}
 	
+	/* Reset input check */
+	public Integer doResetInputCheck(String userId, String password) {
+		Integer inputCheckResult = 1;
+		
+		/* 使用者Id */
+		if (userId.equals("")) {
+			inputCheckResult = 0;
+		} else if(userId.length() < 7) {
+			inputCheckResult = -1;
+		} else if(userId.length() > 7) {
+			inputCheckResult = -2;
+		} else if (userId.matches("[0-2]{1}[0]{8}")) {
+			inputCheckResult = -3;
+		} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
+			inputCheckResult = -4;
+		} 
+		
+		/* 使用者密碼 */
+		if (password.equals("")) {
+			inputCheckResult = 2;
+		} else if (password.length() < 8) {
+			inputCheckResult = 3;
+		} else if (password.length() > 20) {
+			inputCheckResult = 4;
+		} else if (password.matches("[1-9]{1}.")) {
+			inputCheckResult = 5;
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = 6;
+		} 
+		
+		return inputCheckResult;
+	}
+	
 	public String doCreateCheckCode() {
 		String[] leterSpace = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
@@ -2275,9 +2377,9 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "projectzesteeit1256@gmail.com";
+		final String mailUser = "your-email-account@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "EEIT1256PZest";
+		final String mailPassword = "your-email-password";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */

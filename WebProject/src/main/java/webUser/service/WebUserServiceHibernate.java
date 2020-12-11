@@ -227,6 +227,7 @@ public class WebUserServiceHibernate implements WebUserService {
 		try {
 			/* 交易開始 */
 			tx = session.beginTransaction();
+			
 			/* 檢查帳號 */
 			checkAccountResult = webUserDao.checkAccountExist(inputAccount);
 			/* 帳號不存在就不繼續往下執行 */
@@ -235,6 +236,7 @@ public class WebUserServiceHibernate implements WebUserService {
 			} else {
 				checkLoginResult++;
 			}
+			
 			/* 檢查帳號是否有效 */
 			checkAccountQuit = webUserDao.checkAccountQuit(inputAccount);
 			/* 帳號棄用就不繼續往下執行 */
@@ -243,6 +245,7 @@ public class WebUserServiceHibernate implements WebUserService {
 			} else {
 				checkLoginResult++;
 			}
+			
 			/* 檢查密碼 */
 			checkPasswordResult = webUserDao.checkPassword(inputAccount, inputPassword);
 			/* 密碼錯誤 */
@@ -251,6 +254,7 @@ public class WebUserServiceHibernate implements WebUserService {
 			} else {
 				checkLoginResult++;
 			}
+			
 			/* 交易確認 */
 			tx.commit();
 		} catch(SQLException sqlE) {
@@ -511,5 +515,73 @@ public class WebUserServiceHibernate implements WebUserService {
 			throw new SQLException(sqlE);
 		}
 		return checkResult;
+	}
+
+	/* 重設密碼 */
+	@Override
+	public Integer resetWebUserPassword(String userId, String password) 
+			throws SQLException {
+		/* 變數宣告 */
+		Integer resetResult = -3;
+		Integer checkUserIdResult = -1;
+		Integer checkUserIdQuit = -1;
+		Integer checkPasswordResult = -1;
+		Integer resetPasswordResult = -1;
+		
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			
+			/* 檢查id */
+			checkUserIdResult = webUserDao.checkUserIdExist(userId);
+			/* id不存在就不繼續往下執行 */
+			if (checkUserIdResult != 1) {
+				throw new SQLException("使用者身份無效，請檢查之後再次輸入");
+			} else {
+				resetResult++;
+			}
+			
+			/* 檢查id是否有效 */
+			checkUserIdQuit = webUserDao.checkUserIdQuit(userId);
+			/* id棄用就不繼續往下執行 */
+			if (checkUserIdQuit != 1) {
+				throw new SQLException("該帳號已棄用！請選擇其他帳號登入或註冊一個新帳號");
+			} else {
+				resetResult++;
+			}
+			
+			/* 檢查密碼 */
+			checkPasswordResult = webUserDao.checkResetPassword(userId, password);
+			/* 密碼錯誤 */
+			if (checkPasswordResult != 0) {
+				throw new SQLException("密碼未修改，請檢查之後再次輸入");
+			} else {
+				resetResult++;
+			}
+			
+			/* 執行密碼變更 */
+			resetPasswordResult = webUserDao.updateWebUserPassword(userId, password);
+			/* 變更失敗 */
+			if (resetPasswordResult != 1) {
+				throw new SQLException("密碼修改失敗！");
+			} else {
+				resetResult++;
+			}
+			
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+				resetResult = -4;
+			}
+			throw new SQLException(sqlE);
+		}
+		return resetResult;
 	}
 }
