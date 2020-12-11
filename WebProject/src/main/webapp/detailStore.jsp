@@ -151,12 +151,12 @@
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span style="font-size: 140%">餐廳服務</span>
+		<a href="${pageContext.request.contextPath}/booking/bookingForm.jsp?restaurant='${stname1}'"><span style="font-size: 140%">餐廳服務</span></a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
 		<div style="font-size: 140%">
-            <span id="sp1" class="divcato" style="color:orange;text-decoration:underline;">美食分享</span>
+            <a href="${pageContext.request.contextPath}/orange/Form.jsp"><span id="sp1" class="divcato" style="color:orange;text-decoration:underline;">美食分享</span></a>
             <span id="sp2" class="divcato">熱門餐點</span>
             <span id="sp3" class="divcato">店家餐點</span>    
 			<span id="sp4" class="divcato">簡介</span>

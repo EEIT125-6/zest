@@ -9,17 +9,13 @@ response.setContentType("text/html;charset=UTF-8");
 
 
 <!DOCTYPE html PUBLIC >
-<%-- <c:redirect 
-url="bookingForm.jsp"> 
-</c:redirect> --%>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<%@include file = "../Link_Meta-Include.jsp" %>
 <title>完成訂位</title>
 <script type="text/javascript">
 setTimeout(function(){
-	window.location.href="/BookingSystem/booking/bookingForm.jsp";
+	window.location.href="${pageContext.request.contextPath}/booking/bookingForm.jsp";
 },5000);
 </script>
     <style>
@@ -155,7 +151,7 @@ setTimeout(function(){
 <h2>訂位完成！</h2>
 5秒後將自動轉跳回訂位頁面
 <%-- <a href="<c:url value='bookingForm.jsp'/>"></a> --%>
-<form action="/BookingSystem/booking/bookingForm.jsp" method="post" >
+<form action="${pageContext.request.contextPath}/booking/bookingForm.jsp" method="post" >
 <input type="submit" name="back" value="返回" style="margin-top:20px;">
 </form>         
 </center> 

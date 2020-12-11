@@ -48,6 +48,12 @@ public class BoardBean {
 		
 	}
 	
+	public Integer getBoardid() {
+		return boardid;
+	}
+	public void setBoardid(Integer boardid) {
+		this.boardid = boardid;
+	}
 	public String getName() {
 		return name;
 	}

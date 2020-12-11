@@ -46,6 +46,33 @@ public class WebUserServiceHibernate implements WebUserService {
 	}
 	
 	/*
+	 *  檢查Id是否棄用 -1->異常、0->否、1->是
+	 */
+	@Override
+	public Integer checkUserIdQuit(String inputUserId) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* 取得Session */
+		Session session = factory.getCurrentSession();
+		/* 設定交易 */
+		Transaction tx = null;
+		try {
+			/* 交易開始 */
+			tx = session.beginTransaction();
+			checkResult = webUserDao.checkUserIdQuit(inputUserId);
+			/* 交易確認 */
+			tx.commit();
+		} catch(SQLException sqlE) {
+			if (tx != null) {
+				/* 撤回交易 */
+				tx.rollback();
+			}
+			throw new SQLException(sqlE);
+		}
+		return checkResult;
+	}
+	
+	/*
 	 *  檢查帳號是否存在 -1->異常、0->不存在、1->存在
 	 */
 	@Override

@@ -46,6 +46,9 @@ public interface WebUserDAO {
 	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
 	
+	/* 檢查Id是否為棄用 -1->異常、0->失敗、1->成功 */
+	public Integer checkUserIdQuit(String inputUserId) throws SQLException;
+	
 	/* 檢查帳號是否為棄用 -1->異常、0->失敗、1->成功 */
 	public Integer checkAccountQuit(String inputAccount) throws SQLException;
 	

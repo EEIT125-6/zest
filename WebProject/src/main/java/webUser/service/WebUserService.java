@@ -10,6 +10,9 @@ public interface WebUserService {
 	/* 檢查Id是否存在 -1->異常、0->不存在、1->存在 */
 	public Integer checkUserIdExist(String inputUserId) throws SQLException;
 	
+	/* 檢查Id是否為棄用 -1->異常、0->失敗、1->成功 */
+	public Integer checkUserIdQuit(String inputUserId) throws SQLException;
+	
 	/* 檢查帳號是否存在 -1->異常、0->不存在、1->存在 */
 	public Integer checkAccountExist(String inputAccount) throws SQLException;
 	

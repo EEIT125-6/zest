@@ -15,11 +15,14 @@ public class BookingBean {
 	private String bookingdate;
 	private String time;
 	private Integer number;
+	@Column(nullable = false , unique = false , columnDefinition="nvarchar(100)")
 	private String restaurant;
+	@Column(nullable = false , unique = false , columnDefinition="nvarchar(20)")
 	private String name;
 	private String phone;
 	private String mail;
 	private String purpose;
+	@Column(nullable = false , unique = false , columnDefinition="nvarchar(40)")
 	private String needs;
 	private Integer status;
 

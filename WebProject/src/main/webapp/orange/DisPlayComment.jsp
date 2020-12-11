@@ -1,18 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-<%
+  <%
 response.setContentType("text/html;charset=UTF-8");
 response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
 response.setHeader("Pragma","no-cache"); // HTTP 1.0
 response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
-%>    
+request.setCharacterEncoding("UTF-8");
+%>  
+    
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>訂位資料確認</title>
+    <%@include file = "../Link_Meta-Include.jsp" %>
+    <title>橙皮</title>
     <style>
-         .classimg{
+        .classimg{
 		 transition: 0.2s;	
         	width:80px
         }
@@ -88,6 +90,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
             width:24px;
             height: 10px;
         }
+
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -114,81 +117,95 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
             color:rgba(255,255,255,1);            
         }
         
-		#gotop {
-		    position:fixed;
-		    z-index:90;
-		    right:30px;
-		    bottom:31px;
-		    display:none;
-		    width:50px;
-		    height:50px;
-		    color:#fff;
-		    background:#ddbe56;
-		    line-height:50px;
-		    border-radius:50%;
-		    transition:all 1.5s;
-		    text-align: center;
-		    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-		}
-		#gotop :hover{
-		    background:#0099CC;
-		}
+        
+#gotop {
+    position:fixed;
+    z-index:90;
+    right:30px;
+    bottom:31px;
+    display:none;
+    width:50px;
+    height:50px;
+    color:#fff;
+    background:#ddbe56;
+    line-height:50px;
+    border-radius:50%;
+    transition:all 1.5s;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+#gotop :hover{
+    background:#0099CC;
+}
     </style>
 </head>
 <body>
-<%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
- <div class="container"  style="margin-top: 20px;">  
-<center>          
-<jsp:useBean id="reg_booking" class="model.BookingBean" scope="session" />
-<h2>訂位資料如下 ! 請確認 !</h2>
-<form action=".\BookingServlet" method="post">
-<table  cellspacing="1" cellpadding="1" border="1" width="500px">
-<tr bgcolor="#F2F4FB">
-    <td>訂單編號:</td>
-    <td><jsp:getProperty name="reg_booking" property="bookingNo" /></td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>訂位日期:</td>
-    <td><jsp:getProperty name="reg_booking" property="bookingdate" /></td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>時間:</td>
-    <td><jsp:getProperty name="reg_booking" property="time" /></td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>人數:</td>
-    <td><jsp:getProperty name="reg_booking" property="number" /></td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>姓名:</td>
-    <td><jsp:getProperty name="reg_booking" property="name" /></td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>聯絡電話:</td>
-    <td><jsp:getProperty name="reg_booking" property="phone" /></td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>E-mail:</td>
-    <td><jsp:getProperty name="reg_booking" property="mail" /></td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>用餐目的:</td>
-    <td><jsp:getProperty name="reg_booking" property="purpose" /></td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>特殊需求:</td>
-    <td><jsp:getProperty name="reg_booking" property="needs" /></td>
-</tr>
-</table>
-<div style="margin-top:10px;">
-<input type="submit" name="confirm" value="確認" >
+<jsp:useBean id="commentBean" class="model.BoardBean" scope="session" />
+ <form method=post action="./CommentServlet">
+
+   <fieldset>
+        <legend>留言</legend>
+        <input type="hidden" name="id" value="<jsp:getProperty name="commentBean" property="boardid" />">
+    <div class="st1">
+        <label class="t1" for="name">姓名:</label>
+        <input type="text" name="name" value="<jsp:getProperty name="commentBean" property="name" />">
+        <br>
+    </div>
+    <div class="st1">
+        <label for="stars" class="t1">評分:</label>
+        <input type="text" name="stars" value="<jsp:getProperty name="commentBean" property="stars" />">
+        <br>
+        
+    </div> 
+       <div class="st1">
+        <label class="t1" for="date">時間:</label>
+        <input type="text" readonly name="date" value="<jsp:getProperty name="commentBean" property="date" />">
+<br>
+    </div>
+   <div class="st1">
+        <label class="t1" for="photo">照片:</label>
+        <input type="text" name="photo" value="<jsp:getProperty name="commentBean" property="photo" />">
+        <br>
+    </div>
+<div class="st1">
+    <label class="t1" for="comment">留言:</label>
+    <textarea name="comment" id="" cols="30" rows="10" ><jsp:getProperty name="commentBean" property="context" /></textarea>
+    <br>
 </div>
+
+    <div class="sub">
+        <input type="submit" name="update" value="更新">
+        <input type="submit" name="delete" value="刪除"> 
+    </div>
+</fieldset>
+   
 </form>
-</center>  
-</div>
-  <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+
+
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
+    
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 700){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>   
+<!-- -------------------------------------------------------------------- -->
+            <%@include file = "../Footer-Include.jsp" %>
 </body>
-</html>   
+</html>

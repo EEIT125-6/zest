@@ -49,6 +49,7 @@ public class BookingServlet extends HttpServlet {
 		 String phone=request.getParameter("phone");
 		 String mail=request.getParameter("mail");
 		 String needs=request.getParameter("needs");
+		 String purpose=request.getParameter("purpose");
 
 		 System.out.println(bookingNo);
 		 System.out.println(restaurant);
@@ -62,7 +63,7 @@ public class BookingServlet extends HttpServlet {
 		  
 		  BookingService service=new BookingServiceImpl();
 		  int count=0;
-		  BookingBean bean=new BookingBean(bookingNo,bookingdate,time,number,restaurant,name,phone,mail,needs);
+		  BookingBean bean=new BookingBean(bookingNo,"", bookingdate,time,number,restaurant,name,phone,mail,purpose,needs,1);
 		  count=service.updateBooking(bean);
 		  System.out.println(count);
 		  if(count==1)
@@ -82,12 +83,12 @@ public class BookingServlet extends HttpServlet {
 			String phone=request.getParameter("phone");
 			String mail=request.getParameter("mail");
 			String needs=request.getParameter("needs");
-//			String purpose=request.getParameter("purpose");
+			String purpose=request.getParameter("purpose");
 //			Integer status=Integer.parseInt(request.getParameter("status"));
 //			String user_id=request.getParameter("user_id");
 			BookingService service=new BookingServiceImpl();
 			int count = 0;
-			BookingBean bean=new BookingBean(bookingNo,bookingdate,time,number,restaurant,name,phone,mail,needs);	
+			BookingBean bean=new BookingBean(bookingNo,"",bookingdate,time,number,restaurant,name,phone,mail,purpose,needs,0);	
 			count=service.updateBooking(bean);
 			System.out.println(count);	
 			if(count==1)
@@ -114,6 +115,9 @@ public class BookingServlet extends HttpServlet {
 	
 	//新增
 	 public void gotoSubmitProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		 request.setCharacterEncoding(CHARSET_CODE);
+		 response.setContentType(CONTENT_TYPE);
+		 
 		 String bookingNo="";
 		 String user_id;
 		 String bookingdate;
@@ -145,10 +149,9 @@ public class BookingServlet extends HttpServlet {
 		bookingdate = request.getParameter("bookingdate").trim();
 		time = request.getParameter("time");
 		number = Integer.parseInt(request.getParameter("number"));
-//		restaurant = request.getParameter("").trim();
+		restaurant = request.getParameter("restaurant").trim();
 		name = request.getParameter("name").trim();
 		phone = request.getParameter("phone").trim();
-		restaurant ="";
 		mail = request.getParameter("email").trim();
 		purpose = request.getParameter("purpose").trim();
 		needs = request.getParameter("needs").trim();
@@ -156,6 +159,7 @@ public class BookingServlet extends HttpServlet {
 		
 		System.out.println(bookingNo);
 		System.out.println(bookingdate);
+		System.out.println(restaurant);
 		System.out.println(time);
 		System.out.println(number);
 		System.out.println(name);
@@ -173,7 +177,10 @@ public class BookingServlet extends HttpServlet {
 	 //確認新增
 	  public void gotoConfirmProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	  {
-	      BookingBean bookingData = (BookingBean)request.getSession(true).getAttribute("reg_booking");
+		  request.setCharacterEncoding(CHARSET_CODE);
+		  response.setContentType(CONTENT_TYPE);
+		  
+		  BookingBean bookingData = (BookingBean)request.getSession(true).getAttribute("reg_booking");
 	      if (service.insertBooking(bookingData)>0){
 	          System.out.println("Get some SQL commands done!");
 	          request.getSession(true).invalidate();

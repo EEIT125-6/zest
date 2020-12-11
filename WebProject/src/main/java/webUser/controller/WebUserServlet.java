@@ -1191,8 +1191,10 @@ public class WebUserServlet extends HttpServlet {
 	
 	/* Recovery */
 	public void doRecovery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/* 網站IP+port */
-		String ipPort = "http://your-ip-address:8080";
+		/* 網站IP+port
+		 * request.getServerName()->IP
+		 * request.getServerPort()->port */
+		String ipPort = request.getServerName() + ":" + String.valueOf(request.getServerPort());
 		
 		/* 收/發資料前先設定request/response編碼 */
 		request.setCharacterEncoding(CHARSET_CODE);
@@ -1241,9 +1243,13 @@ public class WebUserServlet extends HttpServlet {
 			
 			String nowTimeStamp = nowDate.toString() + "_" + nowTime.toString();
 			String checkCode = doCreateCheckCode();
+			String userId = recoveryUserData.getUserId();
 			
 			/* 產生驗證連結 */
-			recoveryUrl = ipPort + request.getContextPath() + "/webUser/RecoveryAccountServlet?ts=" + nowTimeStamp + "&key=" + checkCode;
+			recoveryUrl = ipPort + request.getContextPath() 
+				+ "/webUser/RecoveryAccountServlet?ts=" + nowTimeStamp 
+				+ "&key=" + checkCode
+				+ "&userId=" + userId;
 			System.out.println("recoveryUrl="+recoveryUrl);
 			
 			/* 寄送到指定email */
@@ -2269,9 +2275,9 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "your-email-address@gmail.com";
+		final String mailUser = "projectzesteeit1256@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "your-email-password";
+		final String mailPassword = "EEIT1256PZest";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */

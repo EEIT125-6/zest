@@ -10,8 +10,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -225,6 +223,8 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <fieldset>
         <legend>填寫訂位資料</legend>
         
+        <input type="hidden" id="restaurant" name="restaurant" value=<%= request.getParameter("restaurant") %>>
+        
         <div class="st1">
             <label for="" class="st3">訂位日期:</label>
             <input id="datepicker1" type="text" name="bookingdate" > 
@@ -275,7 +275,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         </div>
         <div class="st1">
             <label for="cm"  class="st3">特殊需求:</label> 
-            <textarea name="needs" id="cm"cols="40" rows="5"></textarea>
+            <textarea name="needs" id="cm" cols="40" rows="5"></textarea>
         </div>
         <div class="st2">
             <a href="javascript:history.back()"><input type="button" name="back" value="上一步"></a>

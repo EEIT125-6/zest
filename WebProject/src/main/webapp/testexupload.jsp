@@ -12,8 +12,9 @@
    int maxFileSize = 5000 * 1024;
    int maxMemSize = 5000 * 1024;
    ServletContext context = pageContext.getServletContext();
-   String filePath = "C:\\java\\AdvancedWebWorkSpace\\WebProject2\\src\\main\\webapp\\Images\\";
-
+//    String filePath = "C:\\JavaAdvancedWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
+   String filePath = request.getSession().getServletContext().getRealPath("");
+   System.out.println(filePath);
    // Verify the content type
    String contentType = request.getContentType();
    if ((contentType.indexOf("multipart/form-data") >= 0)) {

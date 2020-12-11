@@ -219,6 +219,25 @@ public class WebUserHibernateDAO implements WebUserDAO{
 		quitResult++;
 		return quitResult;
 	}
+	
+	/* 檢查Id是否為棄用 -1->異常、0->失敗、1->成功 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer checkUserIdQuit(String inputUserId) throws SQLException {
+		/* 變數宣告 */
+		Integer checkResult = -1;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.userId = :inputUserId AND wu.status = 'active'";
+		/* 取得當前Session */
+		Session session = factory.getCurrentSession();
+		/* 執行HQL */
+		Query<WebUserData> query = session.createQuery(hql);
+		/* 取得陣列 */
+		List<WebUserData> list = query.setParameter("inputUserId", inputUserId).getResultList();
+		/* 由size()判結果 */
+		checkResult = (list.size() > 0) ? 1 : 0;
+		return checkResult;
+	}
 
 	/* 檢查帳號是否為棄用 -1->異常、0->失敗、1->成功 */
 	@SuppressWarnings("unchecked")

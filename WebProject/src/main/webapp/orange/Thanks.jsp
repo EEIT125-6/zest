@@ -1,15 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-response.setContentType("text/html;charset=UTF-8");
-%>
 <!DOCTYPE html>
-<html>
-<head>
-<%@include file = "../Link_Meta-Include.jsp" %>
-<title>訂位取消</title>
+<html lang="en">
+	<%@include file = "../Link_Meta-Include.jsp" %>
+    <title>橙皮</title>
     <style>
-         .classimg{
+        .classimg{
 		 transition: 0.2s;	
         	width:80px
         }
@@ -85,6 +81,7 @@ response.setContentType("text/html;charset=UTF-8");
             width:24px;
             height: 10px;
         }
+
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -111,45 +108,64 @@ response.setContentType("text/html;charset=UTF-8");
             color:rgba(255,255,255,1);            
         }
         
-		#gotop {
-		    position:fixed;
-		    z-index:90;
-		    right:30px;
-		    bottom:31px;
-		    display:none;
-		    width:50px;
-		    height:50px;
-		    color:#fff;
-		    background:#ddbe56;
-		    line-height:50px;
-		    border-radius:50%;
-		    transition:all 1.5s;
-		    text-align: center;
-		    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-		}
-		#gotop :hover{
-		    background:#0099CC;
-		}
+        
+#gotop {
+    position:fixed;
+    z-index:90;
+    right:30px;
+    bottom:31px;
+    display:none;
+    width:50px;
+    height:50px;
+    color:#fff;
+    background:#ddbe56;
+    line-height:50px;
+    border-radius:50%;
+    transition:all 1.5s;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+#gotop :hover{
+    background:#0099CC;
+}
     </style>
 </head>
 <body>
-<%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
- <div class="container"  style="margin-top: 20px;">  
-<center>
-<div class="h1"> 
-<h2>您的預約已取消！</h2>
-</div>  
-<a href="<c:url value='Page1.jsp'/>"></a>
-<form action="${pageContext.request.contextPath}/booking/Page1.jsp" method="post" >
-<input type="submit" name="back" value="返回" style="margin-bottom:70px">
-</form>
-  
-</center>
-</div>
-  <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+            <div class="container">
+            	<h1 style="margin:10px auto;text-align:center">操作成功</h1>
+            </div>
+<script>
+	setTimeout(function(){
+		window.location.href="ShowComment.jsp"
+	}
+	,5000);
+</script>
+
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
     
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 700){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>   
+<!-- -------------------------------------------------------------------- -->
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

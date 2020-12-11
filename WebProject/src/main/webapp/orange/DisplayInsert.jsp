@@ -2,14 +2,19 @@
     pageEncoding="UTF-8"%>
 <%
 response.setContentType("text/html;charset=UTF-8");
-%>
+response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
+response.setHeader("Pragma","no-cache"); // HTTP 1.0
+response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
+request.setCharacterEncoding("UTF-8");
+%>  
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<%@include file = "../Link_Meta-Include.jsp" %>
-<title>訂位取消</title>
+    <%@include file = "../Link_Meta-Include.jsp" %> 
+    <title>橙皮</title>
     <style>
-         .classimg{
+        .classimg{
 		 transition: 0.2s;	
         	width:80px
         }
@@ -85,6 +90,7 @@ response.setContentType("text/html;charset=UTF-8");
             width:24px;
             height: 10px;
         }
+
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -111,45 +117,87 @@ response.setContentType("text/html;charset=UTF-8");
             color:rgba(255,255,255,1);            
         }
         
-		#gotop {
-		    position:fixed;
-		    z-index:90;
-		    right:30px;
-		    bottom:31px;
-		    display:none;
-		    width:50px;
-		    height:50px;
-		    color:#fff;
-		    background:#ddbe56;
-		    line-height:50px;
-		    border-radius:50%;
-		    transition:all 1.5s;
-		    text-align: center;
-		    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-		}
-		#gotop :hover{
-		    background:#0099CC;
-		}
+        
+#gotop {
+    position:fixed;
+    z-index:90;
+    right:30px;
+    bottom:31px;
+    display:none;
+    width:50px;
+    height:50px;
+    color:#fff;
+    background:#ddbe56;
+    line-height:50px;
+    border-radius:50%;
+    transition:all 1.5s;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+#gotop :hover{
+    background:#0099CC;
+}
     </style>
 </head>
 <body>
-<%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
- <div class="container"  style="margin-top: 20px;">  
-<center>
-<div class="h1"> 
-<h2>您的預約已取消！</h2>
-</div>  
-<a href="<c:url value='Page1.jsp'/>"></a>
-<form action="${pageContext.request.contextPath}/booking/Page1.jsp" method="post" >
-<input type="submit" name="back" value="返回" style="margin-bottom:70px">
-</form>
-  
-</center>
+<jsp:useBean id="commentBean" class="model.BoardBean" scope="session" />
+ <form method=post action="./CommentServlet">
+
+   <fieldset>
+        <legend>留言</legend>
+    <div class="st1">
+        <label class="t1" for="name">姓名:</label>
+        <jsp:getProperty name="commentBean" property="name" /><br>
+    </div>
+    <div class="st1">
+        <label for="stars" class="t1">評分:</label>
+        <jsp:getProperty name="commentBean" property="stars" /><br>
+        
+    </div> 
+       <div class="st1">
+        <label class="t1" for="date">時間:</label>
+        <jsp:getProperty name="commentBean" property="date" /><br>
+    </div>
+<!--    <div class="st1"> -->
+<!--         <label class="t1" for="photo">照片:</label> -->
+<%--         <jsp:getProperty name="commentBean" property="photo" /><br> --%>
+<!--     </div> -->
+<div class="st1">
+    <label class="t1" for="context">留言:</label>
+    <jsp:getProperty name="commentBean" property="context" /></textarea><br>
 </div>
-  <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+
+    <div class="sub">
+        <input type="submit" name="comfirm" value="送">
+        <input type="reset" value="清"> 
+    </div>
+</fieldset>
+   
+</form>
+<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
+   <i class="fas fa-chevron-up"></i>
+</a>
+<script type="text/javascript">
+$(function() {
+    /* 按下GoTop按鈕時的事件 */
+    $('#gotop').click(function(){
+        $('html,body').animate({ scrollTop: 0 }, 'slow');   /* 返回到最頂上 */
+        return false;
+    });
     
+    /* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+    $(window).scroll(function() {
+        if ( $(this).scrollTop() > 700){
+            $('#gotop').fadeIn();
+        } else {
+            $('#gotop').fadeOut();
+        }
+    });
+});
+</script>   
+<!-- -------------------------------------------------------------------- -->
+                        <%@include file = "../Footer-Include.jsp" %>
 </body>
 </html>

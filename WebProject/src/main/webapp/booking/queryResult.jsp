@@ -1,12 +1,8 @@
-
-<%@page import="model.BookingBean"%>
+<%@ page import="model.BookingBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
   
-<%
-  	response.setContentType("text/html;charset=UTF-8");
-  %>
 <%
 	response.setContentType("text/html;charset=UTF-8");
 	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
@@ -16,8 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<%@include file = "../Link_Meta-Include.jsp" %>
 <title>訂位紀錄查詢</title>
     <style>
          .classimg{
@@ -163,6 +158,10 @@
 				<td>訂單編號:</td>
 				<td><a href='DisplayServlet?key=${booking.bookingNo}'>${booking.bookingNo}</a></td>
 			</tr>
+			<tr bgcolor="#F2F4FB">
+				<td>餐廳名稱:</td>
+				<td>${booking.restaurant}</td>
+			</tr>
 			<tr bgcolor="#FFFFE1">	
 				<td>訂位日期:</td>
 				<td>${booking.bookingdate}</td>
@@ -194,6 +193,15 @@
 			<tr bgcolor="#F2F4FB">
 				<td>特殊需求:</td>
 				<td>${booking.needs}</td>
+			</tr>
+			<tr bgcolor="#FFFFE1">
+				<td>訂位狀態:</td>
+				<c:if test="${booking.status == 1}">
+					<td>有效</td>
+				</c:if>
+				<c:if test="${booking.status == 0}">
+					<td>已取消</td>
+				</c:if>
 			</tr>
 		</c:forEach>
 	</c:if>
