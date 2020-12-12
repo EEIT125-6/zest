@@ -190,7 +190,7 @@ response.setCharacterEncoding("UTF-8");
 				<td>${product.product_name}</td>
 				<td>${product.product_price}</td>
 				<td><a
-					href="${pageContext.request.contextPath}/cart?action=buy&id=${product.product_id}&picture=${product.product_picture}&shop=${product.product_shop}&name=${product.product_name}&price=${product.product_price}&quantity=1"}>加入購物車</a></td>
+					href="${pageContext.request.contextPath}/controller?action=buy&id=${product.product_id}&picture=${product.product_picture}&shop=${product.product_shop}&name=${product.product_name}&price=${product.product_price}&quantity=1"}>加入購物車</a></td>
 			</tr>
 			</tr>
 		</c:forEach>

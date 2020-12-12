@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import model.Item;
 import model.ProductInfoBean;
 
-@WebServlet("/cart")
+@WebServlet("/Cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
