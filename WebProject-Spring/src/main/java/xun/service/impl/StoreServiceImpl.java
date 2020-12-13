@@ -305,6 +305,10 @@ public class StoreServiceImpl implements StoreService {
 		return list;
 	}
 
-
-
+	@Transactional
+	@Override
+	public StoreBean get(Integer id) {
+		return dao.get(id);
+	}
+	
 }

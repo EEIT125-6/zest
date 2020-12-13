@@ -185,6 +185,9 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return list;
 	}
 
-
+	@Override
+	public StoreBean get(Integer id) {
+		return factory.getCurrentSession().get(StoreBean.class, id);
+	}
 
 }

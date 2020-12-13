@@ -22,6 +22,8 @@ public interface StoreDao {
 	
 	void bannerStore(StoreBean sb);
 	
+	StoreBean get(Integer id);
+	
 	List<StoreBean> getClassstore(String sclass);
 	
 	List<StoreBean> getNamestore(String stname);

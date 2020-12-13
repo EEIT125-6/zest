@@ -6,9 +6,11 @@
 	<div class="container">
 		<a href="${pageContext.request.contextPath}/xun">
 <!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
-		 <c:set var = "logo" value = "Images/LOGO1-removebg-preview.png"/>
+<%-- 		 <c:set var = "logo" value = "/Images/LOGO1-removebg-preview.png"/> --%>
+		 <c:set var = "logo" value = "LOGO1-removebg-preview.png"/>
 		 
-		<img src="<c:url value='/photo/${logo}'/>"
+<%-- 		<img src="photo/<c:out value = "${logo }"/>" --%>
+		<img src="photo/LOGO1-removebg-preview.png"
 <%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
 			style="float: left; height: 70px;"></a>
 		<p

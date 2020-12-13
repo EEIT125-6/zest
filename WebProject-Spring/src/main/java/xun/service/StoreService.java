@@ -35,4 +35,6 @@ public interface StoreService {
 	List<BoardBean> getComment(Integer stid);
 	
 	List<ProductInfoBean> getProductInfoBeans(Integer stid);
+	
+	StoreBean get(Integer id);
 }

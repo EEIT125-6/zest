@@ -158,6 +158,8 @@
 <!--               </div> -->
 <!--             </div> -->
 <%@include file = "Header-Include.jsp" %>
+<img src="xun/picture/1" />
+<!-- <img src="photo/pic" /> -->
             <div class="container-fluid photo">
                 <!-- <img src="images/backbar2-1.jpg"> -->
                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
