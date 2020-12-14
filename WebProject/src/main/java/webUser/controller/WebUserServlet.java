@@ -728,7 +728,6 @@ public class WebUserServlet extends HttpServlet {
 		WebUserData userData = (WebUserData) request.getSession(true).getAttribute("userFullData");
 		/* 取得目前使用者帳號 */
 		String userAccount = userData.getAccount();
-		
 		/* 產生服務物件 */
 		WebUserService wus = new WebUserServiceHibernate();
 		
@@ -2377,9 +2376,9 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "your-email-address";
+		final String mailUser = "projectzesteeit1256@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "your-email-password";
+		final String mailPassword = "EEIT1256PZest";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */
