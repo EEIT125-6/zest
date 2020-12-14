@@ -2377,9 +2377,9 @@ public class WebUserServlet extends HttpServlet {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "projectzesteeit1256@gmail.com";
+		final String mailUser = "your-email-address@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "EEIT1256PZest";
+		final String mailPassword = "your-email-password";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */
