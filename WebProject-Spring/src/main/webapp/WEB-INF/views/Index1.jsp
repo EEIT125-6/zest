@@ -242,6 +242,7 @@
         	<c:forEach var="row" items="${AD}">
 	        <c:url value="StoreGetFullstore" var="GOGOURL">
 			<c:param name="id" value="${row.id}" />
+			<c:param name="stname" value="${row.stname}" />
 			</c:url>  
 	        <li><a href="${GOGOURL}"><img src="${row.bannerurl}" alt=""></a></li>
 	         </c:forEach>

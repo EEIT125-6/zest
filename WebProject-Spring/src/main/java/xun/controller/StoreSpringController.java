@@ -46,7 +46,7 @@ public class StoreSpringController {
 	}
 
 	
-	@RequestMapping(value={"/InsertStoreServlet"},method = RequestMethod.POST)
+//	@RequestMapping(value={"/InsertStoreServlet"},method = RequestMethod.POST)
 	
 	public String InsertStore(Model model,
 			@RequestParam(value = "stname") String  stname , 
@@ -139,7 +139,7 @@ public class StoreSpringController {
 	}
 	
 	
-	@GetMapping("/StoreGetClassstore")
+//	@GetMapping("/StoreGetClassstore")
 	public String ClassStore( Model model,
 //			HttpServletRequest request,
 //			HttpServletResponse response,
@@ -154,7 +154,7 @@ public class StoreSpringController {
 	}
 	
 	
-	@RequestMapping("/StoreGetFullstore")
+//	@RequestMapping("/StoreGetFullstore")
 	public String FullStore(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response
@@ -198,7 +198,7 @@ public class StoreSpringController {
 //		return "Index1";
 //	}
 	
-	@RequestMapping("/StoreGetNamestore")
+//	@RequestMapping("/StoreGetNamestore")
 	public String GetNamestore(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response,

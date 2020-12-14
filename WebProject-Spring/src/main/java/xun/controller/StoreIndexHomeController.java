@@ -39,18 +39,11 @@ public class StoreIndexHomeController {
 		model.addAttribute("AD", list_AD);
 		return "Index1";
 	}
-//	@GetMapping("/xun")
-//	public String homepage(
-//			Model model
-//			) {
-//		List<StoreBean> list_ADP = ss.getAdvertisementphotostore();
-//		List<StoreBean> list_AD = ss.getAdvertisementstore();
-//		model.addAttribute("ADP", list_ADP);
-//		model.addAttribute("AD", list_AD);
-//		return "Index1";
-//	}
 	
-	//顯示圖片用
+//	-----------------------------------------
+	
+	
+	//顯示圖片用    基本上用不到!
 	@GetMapping("/photo/{path}.{sbma}")
 	public ResponseEntity<byte[]>  getPhoto(
 			@PathVariable("path") String path,

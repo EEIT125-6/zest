@@ -70,82 +70,76 @@
 
 	    <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; ">
         <!-- 用container -->
-<%--         <form action="InsertStore"   --%>
-<%--         method="post" > --%>
+        <form action="InsertStore"  
+        method="post" >
             <fieldset style="width: 400px;margin:1px auto;">
                 <legend>新增店家</legend>
 <%--                 <input type="hidden" name="id" value="${id}"> --%>
-                <form:form action="InsertStore" method="POST" modelAttribute="storeBean">
+                
                 <label>商店名稱:
-<!--                     <input type="text" id="name" name="stname" value="" onblur="checkname();" > -->
-					<form:input path="stname"/>
-<%--                     <font color='red' size='-3'>${error.stname}</font> --%>
-					<form:errors path="stname" cssClass="error"/>
+                    <input type="text" id="name" name="stname" value="" onblur="checkname();" >
+                    <font color='red' size='-3'>${error.stname}</font>
                 </label><span id="stnamespan"></span>
                 <br>
                 <label>商店類別 
-                    <form:select path="sclass">
+                    <select name="sclass">
                     
-                        <form:option value="中式"
+                        <option value="中式"
                         
                          	selected="selected"
                     	
-                        >中式</form:option>
+                        >中式</option>
                         
-                        <form:option value="日式"
+                        <option value="日式"
 
 
 
-                        >日式</form:option>
+                        >日式</option>
                         
-                        <form:option value="下午茶"
+                        <option value="下午茶"
 
 
-                        >下午茶</form:option>
+                        >下午茶</option>
                         
-                        <form:option value="西式"
+                        <option value="西式"
 
-                        >西式</form:option>
+                        >西式</option>
                         
-                        <form:option value="快餐"
+                        <option value="快餐"
                    
-                        >快餐</form:option>
+                        >快餐</option>
                         
-                        <form:option value="燒肉" 
+                        <option value="燒肉" 
 
-                    	>燒肉</form:option>
+                    	>燒肉</option>
                     	
-                    </form:select>
+                    </select>
                 </label>
                 <br>
                 <label>地址:
-<!--                     <input type="text" id="address" name="saddress" value="" onblur="checkaddress();" > -->
-						<form:input path="saddress" onblur="checkaddress()"/>
+                    <input type="text" id="address" name="saddress" value="" onblur="checkaddress();" >
                 </label><span id = "addressspan"></span>
                 <br>
                 <label>電話:
-                    <form:input path="tel" onblur="checktel();" />
+                    <input type="text" id="idtel" name="tel" value="" onblur="checktel();" >
                 </label><span id = "telspan"></span>
                 <br>
 
-                <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:
-                	<form:textarea cols="40" rows="5" path="stitd" placeholder="限50字"/>  
-<!--                     <textarea cols="40" rows="5" id="idstitd" name="stitd" placeholder="限50字"></textarea> -->
+                <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:  
+                    <textarea cols="40" rows="5" id="idstitd" name="stitd" placeholder="限50字"></textarea>
                 </label>
 				<br>          
-<%--                       				<font color='red' size='-3'>${error.stitd}</font> --%>
-									<form:errors path="stitd" cssClass="error"/>
+                      				<font color='red' size='-3'>${error.stitd}</font>
                 <br>
                 <label style="width: 40px;text-align: right;padding-right: 3px;">詳介:
-                    <form:textarea cols="40" rows="5" path="stitddt" placeholder=""></form:textarea>
+                    <textarea cols="40" rows="5" id="idstitddetail" name="stitddt" placeholder=""></textarea>
                 </label>
+            </fieldset>
             <div style="text-align: center;">
                 <input type="submit" value="新增">
                 <input type="reset" value="清除">
             </div>
-                </form:form>
-            </fieldset>
-<%--         </form> --%>
+        </form>
     </div>
         <%@include file = "Footer-Include.jsp" %>
 

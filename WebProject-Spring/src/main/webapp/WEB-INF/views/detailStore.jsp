@@ -116,7 +116,7 @@
 		</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
-		<c:url value="Insert.jsp" var="CEATEURL">
+		<c:url value="Insert" var="CEATEURL">
 		</c:url> 
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
