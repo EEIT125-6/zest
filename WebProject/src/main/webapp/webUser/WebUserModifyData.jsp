@@ -308,583 +308,189 @@
 						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${originalData.locationCode}">
 					    <label>居住區域：</label>
 				    	<select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
-							<c:choose>
-								<c:when test="${originalData.locationCode=='t01'}">
-									<option value="t01" selected="selected">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t02'}">
-									<option value="t01">臺北市</option>
-									<option value="t02" selected="selected">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t03'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03" selected="selected">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t04'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04" selected="selected">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t05'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05" selected="selected">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t06'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06" selected="selected">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t07'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07" selected="selected">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t08'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08" selected="selected">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t09'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09" selected="selected">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t10'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10" selected="selected">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t11'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11" selected="selected">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t12'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12" selected="selected">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t13'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13" selected="selected">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t14'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14" selected="selected">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t15'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15" selected="selected">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t16'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16" selected="selected">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t17'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17" selected="selected">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t18'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18" selected="selected">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t19'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19" selected="selected">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t20'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20" selected="selected">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t21'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21" selected="selected">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t22'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22" selected="selected">連江縣</option>
-									<option value="t23">其他區</option>
-								</c:when>
-								<c:when test="${originalData.locationCode=='t23'}">
-									<option value="t01">臺北市</option>
-									<option value="t02">新北市</option>
-									<option value="t03">桃園市</option>
-									<option value="t04">臺中市</option>
-									<option value="t05">臺南市</option>
-									<option value="t06">高雄市</option>
-									<option value="t07">基隆市</option>
-									<option value="t08">新竹市</option>
-									<option value="t09">嘉義市</option>
-									<option value="t10">新竹縣</option>
-									<option value="t11">苗栗縣</option>
-									<option value="t12">彰化縣</option>
-									<option value="t13">南投縣</option>
-									<option value="t14">雲林縣</option>
-									<option value="t15">嘉義縣</option>
-									<option value="t16">屏東縣</option>
-									<option value="t17">宜蘭縣</option>
-									<option value="t18">花蓮縣</option>
-									<option value="t19">臺東縣</option>
-									<option value="t20">澎湖縣</option>
-									<option value="t21">金門縣</option>
-									<option value="t22">連江縣</option>
-									<option value="t23" selected="selected">其他區</option>
-								</c:when>
-							</c:choose>
+						    <option value="t01"
+		                        <c:if test="${originalData.locationCode=='t01'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='臺北市' />
+	                        </option>
+	                        
+	                        <option value="t02"
+		                        <c:if test="${originalData.locationCode=='t02'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='新北市' />
+	                        </option>
+	                        
+	                        <option value="t03"
+		                        <c:if test="${originalData.locationCode=='t03'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='桃園市' />
+	                        </option>
+	                        
+	                        <option value="t04"
+		                        <c:if test="${originalData.locationCode=='t04'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='臺中市' />
+	                        </option>
+							
+							<option value="t05"
+		                        <c:if test="${originalData.locationCode=='t05'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='臺南市' />
+	                        </option>
+	                        
+	                        <option value="t06"
+		                        <c:if test="${originalData.locationCode=='t06'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='高雄市' />
+	                        </option>
+	                        
+	                        <option value="t07"
+		                        <c:if test="${originalData.locationCode=='t07'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='基隆市' />
+	                        </option>
+	                        
+	                        <option value="t08"
+		                        <c:if test="${originalData.locationCode=='t08'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='新竹市' />
+	                        </option>
+	                        
+	                        <option value="t09"
+		                        <c:if test="${originalData.locationCode=='t09'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='嘉義市' />
+	                        </option>
+	                        
+	                        <option value="t10"
+		                        <c:if test="${originalData.locationCode=='t10'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='新竹縣' />
+	                        </option>
+	                        
+	                        <option value="t11"
+		                        <c:if test="${originalData.locationCode=='t11'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='苗栗縣' />
+	                        </option>
+	                        
+	                        <option value="t12"
+		                        <c:if test="${originalData.locationCode=='t12'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='彰化縣' />
+	                        </option>
+	                        
+	                        <option value="t13"
+		                        <c:if test="${originalData.locationCode=='t13'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='南投縣' />
+	                        </option>
+	                        
+	                        <option value="t14"
+		                        <c:if test="${originalData.locationCode=='t14'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='雲林縣' />
+	                        </option>
+	                        
+	                        <option value="t15"
+		                        <c:if test="${originalData.locationCode=='t15'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='嘉義縣' />
+	                        </option>
+	                        
+	                        <option value="t16"
+		                        <c:if test="${originalData.locationCode=='t16'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='屏東縣' />
+	                        </option>
+	                        
+	                        <option value="t17"
+		                        <c:if test="${originalData.locationCode=='t17'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='宜蘭縣' />
+	                        </option>
+	                        
+	                        <option value="t18"
+		                        <c:if test="${originalData.locationCode=='t18'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='花蓮縣' />
+	                        </option>
+	                        
+	                        <option value="t19"
+		                        <c:if test="${originalData.locationCode=='t19'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='臺東縣' />
+	                        </option>
+	                        
+	                        <option value="t20"
+		                        <c:if test="${originalData.locationCode=='t20'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='澎湖縣' />
+	                        </option>
+	                        
+	                        <option value="t21"
+		                        <c:if test="${originalData.locationCode=='t21'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='金門縣' />
+	                        </option>
+	                        
+	                        <option value="t22"
+		                        <c:if test="${originalData.locationCode=='t22'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='連江縣' />
+	                        </option>
+	                        
+	                        <option value="t23"
+		                        <c:if test="${originalData.locationCode=='t23'}">
+		                         	selected="selected"
+		                    	</c:if>
+	                        >
+	                        	<c:out value='其他區' />
+	                        </option>
 						</select>
 						<span id="locationCodeSpan"></span>
 					    <hr />

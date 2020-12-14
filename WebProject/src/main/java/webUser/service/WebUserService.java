@@ -60,5 +60,4 @@ public interface WebUserService {
 	
 	/* 執行重設 -1->異常、0->失敗、1->成功 */
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException;
-	
 }
