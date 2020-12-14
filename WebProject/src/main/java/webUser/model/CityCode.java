@@ -1,21 +1,16 @@
 package webUser.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /* 永續類別 */
 @Entity
 /* 定義表格名 */
-@Table(name="CityCode")
+@Table(name="CityInfo")
 public class CityCode {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
@@ -24,9 +19,6 @@ public class CityCode {
 	private Integer cityCode;
 	@Column(nullable = false , unique = true , columnDefinition="nvarchar(3)")
 	private String cityName;
-	
-	@OneToMany(mappedBy = "cityCode", fetch = FetchType.EAGER)
-	List<AreaCode> areaCodes = new ArrayList<>();
 	
 	/* 無參數建構子 */
 	public CityCode() {
@@ -55,13 +47,5 @@ public class CityCode {
 
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
-	}
-
-	public List<AreaCode> getAreaCodes() {
-		return areaCodes;
-	}
-
-	public void setAreaCodes(List<AreaCode> areaCodes) {
-		this.areaCodes = areaCodes;
 	}
 }
