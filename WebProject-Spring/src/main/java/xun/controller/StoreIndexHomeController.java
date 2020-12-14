@@ -36,19 +36,19 @@ public class StoreIndexHomeController {
 		List<StoreBean> list_ADP = ss.getAdvertisementphotostore();
 		List<StoreBean> list_AD = ss.getAdvertisementstore();
 		model.addAttribute("ADP", list_ADP);
-		model.addAttribute("Ad", list_AD);
+		model.addAttribute("AD", list_AD);
 		return "Index1";
 	}
-	@GetMapping("/xun")
-	public String homepage(
-			Model model
-			) {
-		List<StoreBean> list_ADP = ss.getAdvertisementphotostore();
-		List<StoreBean> list_AD = ss.getAdvertisementstore();
-		model.addAttribute("ADP", list_ADP);
-		model.addAttribute("Ad", list_AD);
-		return "Index1";
-	}
+//	@GetMapping("/xun")
+//	public String homepage(
+//			Model model
+//			) {
+//		List<StoreBean> list_ADP = ss.getAdvertisementphotostore();
+//		List<StoreBean> list_AD = ss.getAdvertisementstore();
+//		model.addAttribute("ADP", list_ADP);
+//		model.addAttribute("AD", list_AD);
+//		return "Index1";
+//	}
 	
 	//顯示圖片用
 	@GetMapping("/photo/{path}.{sbma}")

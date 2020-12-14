@@ -4,13 +4,13 @@
 <div class="container-fluid  header"
 	style="height: 100px; border-bottom: 3px solid #e76f51; height: 90px; padding-top: 5px; background-color: #003049">
 	<div class="container">
-		<a href="${pageContext.request.contextPath}/xun">
+		<a href="${pageContext.request.contextPath}/">
 <!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
 <%-- 		 <c:set var = "logo" value = "/Images/LOGO1-removebg-preview.png"/> --%>
 		 <c:set var = "logo" value = "LOGO1-removebg-preview.png"/>
 		 
 <%-- 		<img src="photo/<c:out value = "${logo }"/>" --%>
-		<img src="photo/LOGO1-removebg-preview.png"
+		<img src="Images/LOGO1-removebg-preview.png"
 <%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
 			style="float: left; height: 70px;"></a>
 		<p

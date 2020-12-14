@@ -34,6 +34,8 @@ public class WebAppConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/js/**")
 				.addResourceLocations("/WEB-INF/views/js/");
 		registry.addResourceHandler("/image/**")
-				.addResourceLocations("/WEB-INF/views/Images/"); //12-13 將images 改成Images
+				.addResourceLocations("/WEB-INF/views/images/"); 
+		registry.addResourceHandler("/Images/**")
+				.addResourceLocations("/Images/"); 
 	}
 }
