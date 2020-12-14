@@ -70,7 +70,7 @@
 	<h1>成功刪除</h1>
 
 	
-	<a href="Index1.jsp"><h2>點我回首頁</h2></a>
+	<a href="${pageContext.request.contextPath}/"><h2>點我回首頁</h2></a>
 </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:250px">

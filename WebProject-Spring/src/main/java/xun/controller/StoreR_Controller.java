@@ -15,7 +15,7 @@ import xun.model.StoreBean;
 import xun.service.StoreService;
 
 @Controller
-@SessionAttributes({"id","restname"})
+@SessionAttributes({"id","restname","Results"}) //Results存入Session 方便Update時把資料貼上欄位
 public class StoreR_Controller {
 	
 	@Autowired

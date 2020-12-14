@@ -110,9 +110,9 @@
             <div class="container-fluid photo" style="background-image: url('${bannerurl}');background-size:100% 100%">
             </div>
             	<%if(true){ %>
-		<c:url value="Update.jsp" var="EDITURL">
+		<c:url value="Update" var="EDITURL">
 <%-- 			<c:param name="stname" value="${stname1}" /> --%>
-<%-- 			<c:param name="id" value="${id}" />	 --%>
+			<c:param name="id" value="${id}" />	
 		</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
@@ -121,13 +121,13 @@
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
 
-			<form action="DeleteStore.jsp" method="post" style="display:inline">
+			<form action="DeleteStore" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
 			<span>|</span>
-		<c:url value="SimpleController" var="photoURL">
+		<c:url value="UpdatePhoto" var="photoURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"></c:param>
 		<c:param name="photo" value="photo"></c:param>

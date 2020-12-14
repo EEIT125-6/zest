@@ -1,7 +1,5 @@
 package xun.controller;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,7 @@ import xun.service.StoreService;
 import xun.validators.StoreInsertVaildators;
 
 @Controller
-@SessionAttributes({"id"})
+@SessionAttributes({"id","restname"})
 public class StoreCUD_Controller {
 
 	
@@ -39,13 +37,12 @@ public class StoreCUD_Controller {
 			Model model,
 			BindingResult result
 			) {
-//		Integer id = null;
 //		檢查
 		StoreInsertVaildators validator =  new StoreInsertVaildators();
 		System.out.println(storeBean.getStname());
 		validator.validate(storeBean, result);
 		if(ss.isDup(storeBean.getStname())) {
-			result.rejectValue("stname", "","商家名稱重複SPRING");
+			result.rejectValue("stname", "","商家名稱重複");
 			return "Insert";
 		}
 		if (result.hasErrors()) {
@@ -61,6 +58,67 @@ public class StoreCUD_Controller {
 		return "redirect:/StoreGetFullstore";
 		
 	}
-	
+	@GetMapping("/Update")
+	public String UpdatePage(
+			Model model,
+			@RequestParam Integer id
+			) {
+		StoreBean sb = ss.get(id);
+		model.addAttribute("storeBean", sb);
+		return "Update";
+	}
+	@PostMapping("/StoreUpdate")
+	public String Update(
+			Model model,
+			@ModelAttribute("storeBean") StoreBean storeBean,
+			BindingResult result
+			) {
+//		檢查
+		StoreInsertVaildators validator =  new StoreInsertVaildators();
+		System.out.println(storeBean.getStname());
+		validator.validate(storeBean, result);
+		if(ss.isDup(storeBean.getStname()) && !storeBean.getStname().equals((String) model.getAttribute("restname"))) {
+			result.rejectValue("stname", "","商家名稱重複");
+			return "Update";
+		}
+		if (result.hasErrors()) {
+			return "Update";
+		}
+//		修改
+		ss.updateStore(storeBean);
+		Integer NewStoreId = storeBean.getId();
+		String NewStoreName = storeBean.getStname();
+		model.addAttribute("id", NewStoreId);
+		model.addAttribute("stname", NewStoreName);
+		return "redirect:/StoreGetFullstore";
+	}
 
+	@PostMapping("/DeleteStore")
+	public String DeletePage(
+			Model model,
+			@RequestParam Integer id,
+			@RequestParam String stname
+			) {
+		StoreBean sb = ss.get(id);
+		model.addAttribute("storeBean", sb);
+		return "DeleteStore";
+	}
+	@PostMapping("/StoreDelete")
+	public String StoreDelete(
+			Model model,
+			@ModelAttribute("storeBean") StoreBean storeBean
+			) {
+		ss.deleteStore(storeBean);
+		return "exDeleteStore";
+	}
+	
+	@GetMapping("/UpdatePhoto")
+	public String UpdatePhoto(
+			Model model,
+			@RequestParam Integer id,
+			@RequestParam String stname,
+			@RequestParam String photo
+			) {
+		return "testupload";
+	}
 }

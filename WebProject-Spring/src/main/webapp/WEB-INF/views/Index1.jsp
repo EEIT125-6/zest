@@ -334,6 +334,7 @@
 	                		<c:forEach var="row" items="${ADP}">
 	        				<c:url value="StoreGetFullstore" var="GOURL">
 							<c:param name="id" value="${row.id}" />
+							<c:param name="stname" value="${row.stname}" />
 							</c:url>  
 	                		<a href="${GOURL}"><img src="${row.photourl}" style="width:170px;height: 160px;margin-left:10px;border-radius:5px"></a>
 	                  		</c:forEach>
