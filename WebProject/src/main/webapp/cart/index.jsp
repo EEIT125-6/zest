@@ -13,24 +13,20 @@ response.setCharacterEncoding("UTF-8");
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-        
+    <%@include file = "../Link_Meta-Include.jsp" %>
     <title>CartPage</title>
     <!-- 購物車選購頁面-->
     <style>
+        .classimg{
+		 transition: 0.2s;	
+        	width:80px
+        }
+        .classimg:hover{
+         transition: 0.2s;	        
+			width: 85px
+        }
         body{
          background-color: 		rgb(235, 159, 18);
-        
-        
        }
        .header{
             height: 100px;
@@ -40,7 +36,7 @@ response.setCharacterEncoding("UTF-8");
        }
        .photo{
            padding: 0%;
-           background: url("../Images/backbar2-1.jpg"); 
+           background: url("Images/backbar2-1.jpg"); 
            height: 540px;
            padding-top: 220px;
            background-size:100%
@@ -50,7 +46,7 @@ response.setCharacterEncoding("UTF-8");
             margin: 0;
             margin-left:5px ;
        }
-         .wrapper{
+        .wrapper{
             position: relative;
             width:1000px;
             height:400px;
@@ -97,6 +93,7 @@ response.setCharacterEncoding("UTF-8");
             width:24px;
             height: 10px;
         }
+
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -146,16 +143,7 @@ response.setCharacterEncoding("UTF-8");
     </style>
 </head>
 <body>
-            <div class="container-fluid  header" >
-              <div class="container" >
-              <a href="../Index1.jsp"><img src="../Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a>
-              <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">
-              <br><a href="webUser/WebUserLogin.jsp">登入</a>  |
-               <a href="webUser/WebUserRegisterForm.jsp">註冊</a>  |
-              <a href="../product/index.jsp"><img src="../Images/PLZPLZ-removebg-preview.png" class="shopcar"></a>
-            </p>
-              </div>
-            </div>
+            <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
 	<div class="container"  style="margin-top: 20px;">
 	<table cellpadding="2" cellspacing="2" border="1">
@@ -171,24 +159,24 @@ response.setCharacterEncoding("UTF-8");
 		</tr>
 		<c:set var="total" value="0"></c:set>
 		<c:set var="quant" value="0"></c:set>
-		<c:forEach var="product" items="${sessionScope.Cart}">
+		<c:forEach var="product" items="${sessionScope.cart}">
 
 
-			<c:set var="total" value="${total+product.productPrice}"></c:set>
+			<c:set var="total" value="${total+product.product_price}"></c:set>
 
 
 
 			<tr>
 				<td align="center"><a
-					href="${pageContext.request.contextPath }/cart?action=remove&id=${product.productId}"
-					onclick="return confirm('是否確定?')">Remove</a></td>
-				<td>${product.productId}</td>
-				<td>${product.productShop}</td>
-				<td>${product.productName}</td>
+					href="${pageContext.request.contextPath }/controller?action=remove&id=${product.product_id}"
+					onclick="return confirm('是否確定?')">刪除項目</a></td>
+				<td>${product.product_id}</td>
+				<td>${product.product_shop}</td>
+				<td>${product.product_name}</td>
 				<td><img
-					src="${product.productPicture}"
+					src="${pageContext.request.contextPath }/productInfo/images/${product.product_picture}.jpg"
 					width="120px"></td>
-				<td id="aa">${product.productPrice}</td>
+				<td id="aa">${product.product_price}</td>
 				<td><input list="quantities" name="quantity" class="qu" value="0">
 					<datalist id="quantities">
 						<option value="0">
@@ -213,7 +201,7 @@ response.setCharacterEncoding("UTF-8");
 	</table>
 	<br>
 	<button type="button">
-	<a href="../product/">繼續購物</a>
+	<a href="${pageContext.request.contextPath}/product/index.jsp">繼續購物</a>
 	</button>
 	<button type="button">
 	<a href="">結帳</a>
@@ -253,113 +241,6 @@ response.setCharacterEncoding("UTF-8");
 	</script>
 	</div>
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white">
-                <!-- Footer -->
-                <footer class="page-footer font-small mdb-color lighten-3 pt-4">
-                
-                  <!-- Footer Links -->
-                  <div class="container text-center text-md-left">
-                
-                    <!-- Grid row -->
-                    <div class="row">
-                
-                      <!-- Grid column -->
-                      <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
-                
-                        <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
-                        <p>商務合作</p>
-                        <p>	餐飲代理商招募<br>
-                        	商業企劃<br>
-                        	申請掃碼點餐<br>
-                        	美國收單代理商招募<br>
-                        	美國收銀代理商招募<br>
-                        	免費使用美國排隊<br></p>
-                
-                      </div>
-                      <!-- Grid column -->
-                
-                      <hr class="clearfix w-100 d-md-none">
-                
-                      <!-- Grid column -->
-                      <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
-                
-                        <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
-                
-                        <ul class="list-unstyled">
-                          <li>
-                            <p>
-                              <a href="#!">計畫</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">關於我們</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">Facebook</a>
-                            </p>
-                          </li>
-                          <li>
-                            <p>
-                              <a href="#!">AWARDS</a>
-                            </p>
-                          </li>
-                        </ul>
-                
-                      </div>
-                      <!-- Grid column -->
-                
-                      <hr class="clearfix w-100 d-md-none">
-                
-                      <!-- Grid column -->
-                      <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1">
-                
-                        <!-- Contact details -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">Address</h5>
-                
-                        <ul class="list-unstyled">
-                          <li>
-                            <p>
-                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p>
-                          </li>
-                          <li>
-                            <p>
-                              <i class="fas fa-print mr-3"></i> + 02 453 249 89</p>
-                          </li>
-                        </ul>
-                
-                      </div>
-                      <!-- Grid column -->
-                      <hr class="clearfix w-100 d-md-none">
-                      <!-- Grid column -->
-                
-                    </div>
-                    <!-- Grid row -->
-                
-                  </div>
-                  <!-- Footer Links -->
-                
-                  <!-- Copyright -->
-                  <div class="footer-copyright text-center py-3">© 2020 Copyright:
-                    <a > 橙皮美食平台</a>
-                  </div>
-                  <!-- Copyright -->
-                
-                </footer>
-                <!-- Footer -->
-                    </div>
-        
+            <%@include file = "../Footer-Include.jsp" %>
 </body>
 </html>

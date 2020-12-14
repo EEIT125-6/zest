@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import model.Item;
 import model.ProductInfoBean;
 
-@WebServlet("/Cart")
+@WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -28,12 +28,12 @@ public class CartServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	public static void remove(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		List<Item> cart = (List<Item>) session.getAttribute("Cart");
+		HttpSession session = request.getSession(true);
+		List<Item> cart = (List<Item>) session.getAttribute("cart");
 		int index = isExisting(Integer.parseInt(request.getParameter("id")), cart);
 		cart.remove(index);
-		session.setAttribute("Cart", cart);
-		response.sendRedirect("Cart");
+		session.setAttribute("cart", cart);
+		request.getRequestDispatcher("cart/index.jsp").forward(request, response);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,26 +41,26 @@ public class CartServlet extends HttpServlet {
 		ProductInfoBean product = new ProductInfoBean(Integer.parseInt(request.getParameter("id")), request.getParameter("name"),
 				request.getParameter("shop"), Integer.parseInt(request.getParameter("price")), request.getParameter("name"),
 				 Integer.parseInt(request.getParameter("quantity")));
-		HttpSession session = request.getSession();
-		if (session.getAttribute("Cart") == null) {
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute("cart") == null) {
 			List<Item> cart = new ArrayList<Item>();
 			cart.add(new Item(product, 1));
-			System.out.println(request.getSession().getAttribute("Cart"));
-			session.setAttribute("Cart", cart);
+			System.out.println(request.getSession().getAttribute("cart"));
+			session.setAttribute("cart", cart);
 
 		} else {
 
-			List<Item> cart = (List<Item>) session.getAttribute("Cart");
+			List<Item> cart = (List<Item>) session.getAttribute("cart");
 			int index = isExisting(Integer.parseInt(request.getParameter("id")), cart);
 			if (index == -1) {
 				cart.add(new Item(product, 1));
 			} else {
-				int quantity = cart.get(index).getProductQuantity() + 1;
+				int quantity = cart.get(index).getProduct_quantity() + 1;
 				cart.get(index).setQuantity(quantity);
 			}
-			session.setAttribute("Cart", cart);
+			session.setAttribute("cart", cart);
 		}
-		response.sendRedirect("Cart");
+		request.getRequestDispatcher("cart/index.jsp").forward(request, response);
 	}
 
 	private static int isExisting(Integer id, List<Item> cart) {

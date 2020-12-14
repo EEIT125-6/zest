@@ -20,24 +20,24 @@ public class Item implements Serializable { // 商城內項目資料
 		return product;
 	}
 
-	public int getProductPrice() {
+	public int getProduct_price() {
 
 		return getProduct().getProduct_price();
 	}
 
-	public int getProductId() {
+	public int getProduct_id() {
 		return getProduct().getProduct_id();
 	}
 
-	public String getProductShop() {
+	public String getProduct_shop() {
 		return getProduct().getProduct_shop();
 	}
 
-	public String getProductName() {
+	public String getProduct_name() {
 		return getProduct().getProduct_name();
 	}
 
-	public String getProductPicture() {
+	public String getProduct_picture() {
 
 		return getProduct().getProduct_picture();
 	}
@@ -46,7 +46,7 @@ public class Item implements Serializable { // 商城內項目資料
 		this.product = product;
 	}
 
-	public Integer getProductQuantity() {
+	public Integer getProduct_quantity() {
 
 		return getProduct().getProduct_quantity();
 	}

@@ -36,8 +36,9 @@
 <!-- 			<img src="Images/PLZPLZ-removebg-preview.png" -->
 <!-- 				class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> -->
 			<i class="fas fa-shopping-cart" style="font-size: 25px;color: yellow"></i>
+			<a href="${pageContext.request.contextPath}/product/index.jsp">
 			 前往購物
-			  |
+			  |</a>
 			<i class="fa fa-mobile-phone" style="font-size: 25px;color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/booking/Page1.jsp">
 			 查詢訂位

@@ -17,10 +17,9 @@ public class Controller extends HttpServlet{
 	public Controller() {
 		super();
 	}
-
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		System.out.println("in servlet");
+	
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {		
 		String action = request.getParameter("action");
 		if (action == null) {
 			CartServlet.DisplayCart(request, response);
@@ -32,10 +31,5 @@ public class Controller extends HttpServlet{
 				CartServlet.remove(request, response);
 			}
 		}
-	}
-	
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doPost(request, response);
 	}
 }

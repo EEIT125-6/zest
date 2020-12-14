@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,8 +11,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ProductInfo")
-public class ProductInfoBean {
-
+public class ProductInfoBean implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	Integer product_id;
 	String product_name;
