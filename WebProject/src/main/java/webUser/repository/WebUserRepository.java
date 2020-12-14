@@ -67,18 +67,18 @@ public interface WebUserRepository {
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
 	
-	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
-	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
-	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
 	
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
 	
-	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
-	public Integer updateWebUserPassword(String userId, String password) throws SQLException;
-	
 	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
+	
+	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
+	
+	/* 重設使用者密碼 -1->異常、0->失敗、1->成功 */
+	public Integer resetWebUserPassword(String userId, String password) throws SQLException;
 }

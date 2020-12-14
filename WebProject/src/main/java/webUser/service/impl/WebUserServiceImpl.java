@@ -127,56 +127,46 @@ public class WebUserServiceImpl implements WebUserService {
 
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.getWebUserData(inputAccount);
 	}
 
 	@Override
 	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.getOtherWebUserData(selectedParameters);
 	}
 
 	@Override
 	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.getAllWebUserData(lv, status);
 	}
 
 	@Override
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.quitWebUserData(quitUserData);
 	}
 
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.updateWebUserData(updatedUserData);
 	}
 
 	@Override
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.updateWebUserPassword(updatedUserData);
 	}
 
 	@Override
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.deleteWebUserData(deletedUserId);
 	}
 
 	@Override
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return webUserDAO.resetWebUserPassword(userId, password);
 	}
 
+	@Override
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
+		return webUserDAO.adminChangeWebUserData(userId, status);
+	}
 }
