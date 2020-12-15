@@ -112,13 +112,34 @@ public class StoreCUD_Controller {
 		return "exDeleteStore";
 	}
 	
+	
+	
 	@GetMapping("/UpdatePhoto")
 	public String UpdatePhoto(
 			Model model,
 			@RequestParam Integer id,
-			@RequestParam String stname,
-			@RequestParam String photo
+			@RequestParam String stname
 			) {
+		StoreBean sb = ss.get(id);
+		model.addAttribute("storeBean", sb);
+		model.addAttribute("stname", stname);
 		return "testupload";
+	}
+	
+//	@PM
+	public String exUpdatePhoto(
+			) {
+				return null;
+		
+	}
+	
+	
+	
+	@GetMapping("/UpdateBanner")
+	public String UpdateBanner(
+			Model model
+			) {
+		
+		return "testexuploadbanner";
 	}
 }

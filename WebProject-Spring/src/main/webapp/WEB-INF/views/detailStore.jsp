@@ -134,7 +134,7 @@
 		</c:url>
 			<a href="${photoURL}">修改店家photo</a>
 			<span>|</span>
-		<c:url value="SimpleController" var="bannerURL">
+		<c:url value="UpdateBanner" var="bannerURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"/>
 		<c:param name="banner" value="banner"></c:param>
