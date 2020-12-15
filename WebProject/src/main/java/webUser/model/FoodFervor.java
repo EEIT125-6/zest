@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="FoodFervor")
-public class Fervor {
+public class FoodFervor {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
 	@Id
@@ -21,12 +21,12 @@ public class Fervor {
 	private String fervorItem;
 	
 	/* 無參數建構子 */
-	public Fervor() {
+	public FoodFervor() {
 		super();
 	}
 
 	/* 帶參數建構子 */
-	public Fervor(Integer fervorCode, String fervorItem) {
+	public FoodFervor(Integer fervorCode, String fervorItem) {
 		super();
 		this.fervorCode = fervorCode;
 		this.fervorItem = fervorItem;

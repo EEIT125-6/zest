@@ -279,25 +279,25 @@
 						<input type="button" name="update" id="checkPhoneUsed" value="檢查電話">
 						<span id="phoneSpan"></span>
 					    <hr />
-					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${originalData.getEmail}">
+					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${originalData.getEmail.willingCode}">
 					    <label>接收促銷/優惠意願：</label>
 					    <c:choose>
-					    	<c:when test="${originalData.getEmail=='Y'}">
+					    	<c:when test="${originalData.getEmail.willingCode=='Y'}">
 								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
 								onblur="checkGetEmail()" checked="checked">
 							</c:when>
-							<c:when test="${originalData.getEmail!='Y'}">
+							<c:when test="${originalData.getEmail.willingCode!='Y'}">
 								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
 									onblur="checkGetEmail()" >
 							</c:when>
 						</c:choose>
 					    <label for="Y">願意</label>
 					    <c:choose>
-					    	<c:when test="${originalData.getEmail!='N'}">
+					    	<c:when test="${originalData.getEmail.willingCode!='N'}">
 							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
 							    	onblur="checkGetEmail()" >
 						    </c:when>
-						    <c:when test="${originalData.getEmail=='N'}">
+						    <c:when test="${originalData.getEmail.willingCode=='N'}">
 							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
 							    	onblur="checkGetEmail()" checked="checked">
 						    </c:when>
@@ -305,11 +305,11 @@
 					    <label for="N">不願意</label>
 					    <span id="getEmailSpan"></span>
 						<hr />
-						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${originalData.locationCode}">
+						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${originalData.locationInfo.cityCode}">
 					    <label>居住區域：</label>
 				    	<select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
 						    <option value="t01"
-		                        <c:if test="${originalData.locationCode=='t01'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t01'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -317,7 +317,7 @@
 	                        </option>
 	                        
 	                        <option value="t02"
-		                        <c:if test="${originalData.locationCode=='t02'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t02'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -325,7 +325,7 @@
 	                        </option>
 	                        
 	                        <option value="t03"
-		                        <c:if test="${originalData.locationCode=='t03'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t03'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -333,7 +333,7 @@
 	                        </option>
 	                        
 	                        <option value="t04"
-		                        <c:if test="${originalData.locationCode=='t04'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t04'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -341,7 +341,7 @@
 	                        </option>
 							
 							<option value="t05"
-		                        <c:if test="${originalData.locationCode=='t05'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t05'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -349,7 +349,7 @@
 	                        </option>
 	                        
 	                        <option value="t06"
-		                        <c:if test="${originalData.locationCode=='t06'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t06'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -357,7 +357,7 @@
 	                        </option>
 	                        
 	                        <option value="t07"
-		                        <c:if test="${originalData.locationCode=='t07'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t07'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -365,7 +365,7 @@
 	                        </option>
 	                        
 	                        <option value="t08"
-		                        <c:if test="${originalData.locationCode=='t08'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t08'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -373,7 +373,7 @@
 	                        </option>
 	                        
 	                        <option value="t09"
-		                        <c:if test="${originalData.locationCode=='t09'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t09'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -381,7 +381,7 @@
 	                        </option>
 	                        
 	                        <option value="t10"
-		                        <c:if test="${originalData.locationCode=='t10'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t10'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -389,7 +389,7 @@
 	                        </option>
 	                        
 	                        <option value="t11"
-		                        <c:if test="${originalData.locationCode=='t11'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t11'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -397,7 +397,7 @@
 	                        </option>
 	                        
 	                        <option value="t12"
-		                        <c:if test="${originalData.locationCode=='t12'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t12'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -405,7 +405,7 @@
 	                        </option>
 	                        
 	                        <option value="t13"
-		                        <c:if test="${originalData.locationCode=='t13'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t13'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -413,7 +413,7 @@
 	                        </option>
 	                        
 	                        <option value="t14"
-		                        <c:if test="${originalData.locationCode=='t14'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t14'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -421,7 +421,7 @@
 	                        </option>
 	                        
 	                        <option value="t15"
-		                        <c:if test="${originalData.locationCode=='t15'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t15'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -429,7 +429,7 @@
 	                        </option>
 	                        
 	                        <option value="t16"
-		                        <c:if test="${originalData.locationCode=='t16'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t16'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -437,7 +437,7 @@
 	                        </option>
 	                        
 	                        <option value="t17"
-		                        <c:if test="${originalData.locationCode=='t17'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t17'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -445,7 +445,7 @@
 	                        </option>
 	                        
 	                        <option value="t18"
-		                        <c:if test="${originalData.locationCode=='t18'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t18'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -453,7 +453,7 @@
 	                        </option>
 	                        
 	                        <option value="t19"
-		                        <c:if test="${originalData.locationCode=='t19'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t19'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -461,7 +461,7 @@
 	                        </option>
 	                        
 	                        <option value="t20"
-		                        <c:if test="${originalData.locationCode=='t20'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t20'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -469,7 +469,7 @@
 	                        </option>
 	                        
 	                        <option value="t21"
-		                        <c:if test="${originalData.locationCode=='t21'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t21'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -477,7 +477,7 @@
 	                        </option>
 	                        
 	                        <option value="t22"
-		                        <c:if test="${originalData.locationCode=='t22'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t22'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >
@@ -485,7 +485,7 @@
 	                        </option>
 	                        
 	                        <option value="t23"
-		                        <c:if test="${originalData.locationCode=='t23'}">
+		                        <c:if test="${originalData.locationInfo.cityCode=='t23'}">
 		                         	selected="selected"
 		                    	</c:if>
 	                        >

@@ -59,11 +59,11 @@ public class WebUserData implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "lv")
-	private Identity accountLv;
+	private UserIdentity accountLv;	
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ferovrCode")
-	private Fervor fervorOption;
+	private FoodFervor fervorOption;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "genderCode")
@@ -75,7 +75,7 @@ public class WebUserData implements Serializable {
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cityCode")
-	private CityCode locationInfo;
+	private CityInfo locationInfo;
 	
 	/* 無參數建構子 */
 	public WebUserData() {
@@ -244,11 +244,11 @@ public class WebUserData implements Serializable {
 		this.status = status;
 	}
 
-	public Identity getAccountLv() {
+	public UserIdentity getAccountLv() {
 		return accountLv;
 	}
 
-	public void setAccountLv(Identity accountLv) {
+	public void setAccountLv(UserIdentity accountLv) {
 		this.accountLv = accountLv;
 	}
 	
@@ -292,11 +292,11 @@ public class WebUserData implements Serializable {
 		this.getEmail.setWillingText(willingText);
 	}
 
-	public Fervor getFervorOption() {
+	public FoodFervor getFervorOption() {
 		return fervorOption;
 	}
 
-	public void setFervorOption(Fervor fervorOption) {
+	public void setFervorOption(FoodFervor fervorOption) {
 		this.fervorOption = fervorOption;
 	}
 	
@@ -340,11 +340,11 @@ public class WebUserData implements Serializable {
 		this.gender.setGenderText(genderText);
 	}
 
-	public CityCode getLocationInfo() {
+	public CityInfo getLocationInfo() {
 		return locationInfo;
 	}
 
-	public void setLocationInfo(CityCode locationInfo) {
+	public void setLocationInfo(CityInfo locationInfo) {
 		this.locationInfo = locationInfo;
 	}
 	

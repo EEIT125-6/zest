@@ -15,7 +15,6 @@ import webUser.service.WebUserService;
 @Transactional
 @Service
 public class WebUserServiceImpl implements WebUserService {
-
 	/* 產生實作物件 */
 	@Autowired
 	WebUserRepository webUserDAO;

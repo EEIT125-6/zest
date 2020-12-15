@@ -192,11 +192,7 @@
 							<input type="hidden" name="nickname" id="nickname" value="${managedUserData.nickname}">
 							<hr />
 							<label>生理性別：</label>
-							<c:choose>
-								<c:when test="${managedUserData.gender == 'M'}">男性</c:when>
-								<c:when test="${managedUserData.gender == 'F'}">女性</c:when>
-								<c:when test="${managedUserData.gender == 'N'}">不方便提供</c:when>
-							</c:choose>
+							<c:out value="${managedUserData.gender.genderText}" />
 							<hr />
 							<label>西元生日：</label>
 							<c:out value="${managedUserData.birth}" />
@@ -214,39 +210,12 @@
 							<input type="hidden" name="phone" id="phone" value="${managedUserData.phone}">
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
-							<c:choose>
-								<c:when test="${managedUserData.getEmail=='Y'}">願意</c:when>
-								<c:when test="${managedUserData.getEmail=='N'}">不願意</c:when>
-							</c:choose>
-							<input type="hidden" name="getEmail" id="getEmail" value="${managedUserData.getEmail}">
+							<c:out value="${managedUserData.getEmail.willingText}" />
+							<input type="hidden" name="getEmail" id="getEmail" value="${managedUserData.getEmail.willingCode}">
 							<hr />
 							<label>居住區域：</label>
-							<c:choose>
-								<c:when test="${managedUserData.locationCode=='t01'}">臺北市</c:when>
-								<c:when test="${managedUserData.locationCode=='t02'}">新北市</c:when>
-								<c:when test="${managedUserData.locationCode=='t03'}">桃園市</c:when>
-								<c:when test="${managedUserData.locationCode=='t04'}">臺中市</c:when>
-								<c:when test="${managedUserData.locationCode=='t05'}">臺南市</c:when>
-								<c:when test="${managedUserData.locationCode=='t06'}">高雄市</c:when>
-								<c:when test="${managedUserData.locationCode=='t07'}">基隆市</c:when>
-								<c:when test="${managedUserData.locationCode=='t08'}">新竹市</c:when>
-								<c:when test="${managedUserData.locationCode=='t09'}">嘉義市</c:when>
-								<c:when test="${managedUserData.locationCode=='t10'}">新竹縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t11'}">苗栗縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t12'}">彰化縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t13'}">南投縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t14'}">雲林縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t15'}">嘉義縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t16'}">屏東縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t17'}">宜蘭縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t18'}">花蓮縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t19'}">臺東縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t20'}">澎湖縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t21'}">金門縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t22'}">連江縣</c:when>
-								<c:when test="${managedUserData.locationCode=='t23'}">其他區</c:when>
-							</c:choose>
-							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationCode}">
+							<c:out value="${managedUserData.locationInfo.cityName}" />
+							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationInfo.cityCode}">
 							<hr />
 							<label>生活地點一：</label>
 							<c:out value="${managedUserData.addr0}" />

@@ -4,8 +4,11 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import webUser.model.WebUserData;
 
+@Repository
 public interface WebUserService {
 	/* 檢查Id是否存在 -1->異常、0->不存在、1->存在 */
 	public Integer checkUserIdExist(String inputUserId) throws SQLException;

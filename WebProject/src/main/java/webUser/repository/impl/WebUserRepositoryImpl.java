@@ -14,14 +14,9 @@ import webUser.repository.WebUserRepository;
 
 @Repository
 public class WebUserRepositoryImpl implements WebUserRepository {
-
 	/* 產生SessionFactory */
 	@Autowired
 	SessionFactory factory;
-
-	/* 產生StringBuilder */
-	@Autowired
-	StringBuilder sb;
 
 	/* 重複出現factory.getCurrentSession()，所以整理成一個方法，直接呼叫結果 */
 	public Session getSession() {
@@ -240,10 +235,11 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
-		/* 如果StringBuilder物件有內容，則先清空 */
-		if (sb.toString() != null) {
-			sb.setLength(0);
-		}
+//		/* 如果StringBuilder物件有內容，則先清空 */
+//		if (sb.toString() != null) {
+//			sb.setLength(0);
+//		}
+		StringBuilder sb = new StringBuilder();
 		sb.append("FROM WebUserData AS wu WHERE ");
 
 		String account = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];

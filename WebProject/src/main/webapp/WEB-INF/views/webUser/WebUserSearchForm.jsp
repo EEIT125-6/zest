@@ -212,7 +212,7 @@
 							<option value="t23">其他區</option>
 						</select>
 						<span id="locationCodeSpan"></span>
-						<c:if test='${userFullData.lv == -1}'>
+						<c:if test='${userFullData.accountLv.lv == -1}'>
 							<hr />
 					    	<label>帳號狀態：</label>
 					    	<select name="selectedStatus" id="status" onblur="checkStatus()">
@@ -248,7 +248,7 @@
 							<hr />
 							<c:forEach var="userData" varStatus="index" items="${userDataList}">
 								<c:if test='${index.first }'>
-									<c:if test='${userFullData.lv == -1}'>
+									<c:if test='${userFullData.accountLv.lv == -1}'>
 										<c:out value="<table border='1'>" escapeXml='false'/>
 										<c:out value=
 										"<tr>
@@ -259,7 +259,7 @@
 											<td>帳號狀態</td>
 										</tr>" escapeXml='false'/>
 									</c:if>
-									<c:if test='${userFullData.lv != -1}'>
+									<c:if test='${userFullData.accountLv.lv != -1}'>
 										<c:out value="<table border='1'>" escapeXml='false'/>
 										<c:out value=
 										"<tr>
@@ -272,10 +272,10 @@
 								</c:if>
 								
 								<tr>
-									<c:if test='${userFullData.lv == -1}'>
+									<c:if test='${userFullData.accountLv.lv == -1}'>
 										<td><a href='${pageContext.request.contextPath}/webUser/ManageWebUserServlet?account=${userData.account}'>${userData.account}</a></td>
 									</c:if>
-									<c:if test='${userFullData.lv != -1}'>
+									<c:if test='${userFullData.accountLv.lv != -1}'>
 										<td>${userData.account}</td>
 									</c:if>
 									<td>${userData.nickname}</td>
@@ -307,7 +307,7 @@
 											<c:when test="${userData.locationCode=='t23'}">其他區</c:when>
 										</c:choose>
 									</td>
-									<c:if test='${userFullData.lv == -1}'>
+									<c:if test='${userFullData.accountLv.lv == -1}'>
 										<c:choose>
 											<c:when test="${userData.status=='active'}"><td>已啟用</td></c:when>
 											<c:when test="${userData.status=='quit'}"><td>已棄用</td></c:when>

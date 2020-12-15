@@ -148,7 +148,7 @@
 		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
 				<jsp:useBean id="reg_webUser" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${param.password == null}">
+				<c:if test="${reg_webUser.password == null}">
 					<c:redirect url="WebUserRegisterForm.jsp" />
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
@@ -156,23 +156,19 @@
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
 						<hr />
 						<label>帳號身分：</label>
-						<c:choose>
-							<c:when test="${param.lv==0}">消費者</c:when>
-							<c:when test="${param.lv==1}">店家</c:when>
-							<c:when test="${param.lv==-1}">管理員</c:when>
-						</c:choose>
+						<c:out value="${reg_webUser.accountLv.levelName}" />
 						<hr />
 						<label>帳號名稱：</label>
 						<jsp:getProperty name="reg_webUser" property="account" />
 						<hr />
 						<label>帳號密碼：</label>
-						<c:if test="${param.password.length() > 0}">
-							<c:forEach var="passwordChar" begin="0" end="${param.password.length()-1}">
+						<c:if test="${reg_webUser.password.length() > 0}">
+							<c:forEach var="passwordChar" begin="0" end="${reg_webUser.password.length()-1}">
 								<c:out value = "*" />
 							</c:forEach>
 						</c:if>
 						<input type="button" name="showPassword" id="showPassword" value="顯示密碼">
-						<input type="hidden" name="password" id="password" value="${param.password}">
+						<input type="hidden" name="password" id="password" value="${reg_webUser.password}">
 						<hr />
 						<label>中文姓氏：</label>
 						<jsp:getProperty name="reg_webUser" property="firstName" />
@@ -184,11 +180,7 @@
 						<jsp:getProperty name="reg_webUser" property="nickname" />
 						<hr />
 						<label>生理性別：</label>
-						<c:choose>
-							<c:when test="${param.gender=='M'}">男性</c:when>
-							<c:when test="${param.gender=='F'}">女性</c:when>
-							<c:when test="${param.gender=='N'}">不方便提供</c:when>
-						</c:choose>
+						<c:out value="${reg_webUser.gender.genderText}" />
 						<hr />
 						<label>西元生日：</label>
 						<jsp:getProperty name="reg_webUser" property="birth" />
@@ -203,37 +195,10 @@
 						<jsp:getProperty name="reg_webUser" property="phone" />
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
-						<c:choose>
-							<c:when test="${param.getEmail=='Y'}">願意</c:when>
-							<c:when test="${param.getEmail=='N'}">不願意</c:when>
-						</c:choose>
+						<c:out value="${reg_webUser.getEmail.willingText}" />
 						<hr />
 						<label>居住區域：</label>
-						<c:choose>
-							<c:when test="${param.locationCode=='t01'}">臺北市</c:when>
-							<c:when test="${param.locationCode=='t02'}">新北市</c:when>
-							<c:when test="${param.locationCode=='t03'}">桃園市</c:when>
-							<c:when test="${param.locationCode=='t04'}">臺中市</c:when>
-							<c:when test="${param.locationCode=='t05'}">臺南市</c:when>
-							<c:when test="${param.locationCode=='t06'}">高雄市</c:when>
-							<c:when test="${param.locationCode=='t07'}">基隆市</c:when>
-							<c:when test="${param.locationCode=='t08'}">新竹市</c:when>
-							<c:when test="${param.locationCode=='t09'}">嘉義市</c:when>
-							<c:when test="${param.locationCode=='t10'}">新竹縣</c:when>
-							<c:when test="${param.locationCode=='t11'}">苗栗縣</c:when>
-							<c:when test="${param.locationCode=='t12'}">彰化縣</c:when>
-							<c:when test="${param.locationCode=='t13'}">南投縣</c:when>
-							<c:when test="${param.locationCode=='t14'}">雲林縣</c:when>
-							<c:when test="${param.locationCode=='t15'}">嘉義縣</c:when>
-							<c:when test="${param.locationCode=='t16'}">屏東縣</c:when>
-							<c:when test="${param.locationCode=='t17'}">宜蘭縣</c:when>
-							<c:when test="${param.locationCode=='t18'}">花蓮縣</c:when>
-							<c:when test="${param.locationCode=='t19'}">臺東縣</c:when>
-							<c:when test="${param.locationCode=='t20'}">澎湖縣</c:when>
-							<c:when test="${param.locationCode=='t21'}">金門縣</c:when>
-							<c:when test="${param.locationCode=='t22'}">連江縣</c:when>
-							<c:when test="${param.locationCode=='t23'}">其他區</c:when>
-						</c:choose>
+						<c:out value="${reg_webUser.locationInfo.cityName}" />
 						<hr />
 						<label>生活地點一：</label>
 						<jsp:getProperty name="reg_webUser" property="addr0" />

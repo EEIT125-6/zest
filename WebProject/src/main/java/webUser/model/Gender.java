@@ -2,18 +2,20 @@ package webUser.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /* 永續類別 */
 @Entity
 /* 定義表格名 */
-@Table(name="Gender")
+@Table(name="UserGender")
 public class Gender {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
+	@Id
 	@Column(nullable = false , unique = true , columnDefinition="char(1)")
 	private String genderCode;
-	@Column(nullable = false , unique = true , columnDefinition="varchar(5)")
+	@Column(nullable = false , unique = true , columnDefinition="nvarchar(5)")
 	private String genderText;
 	
 	/* 無參數建構子 */

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="webUser.model.UserIdentity"%>
+<%@ page import="webUser.model.Gender"%>
+<%@ page import="webUser.model.FoodFervor"%>
+<%@ page import="webUser.model.UserWilling"%>
+<%@ page import="webUser.model.CityInfo"%>
 <% 
 	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
 	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
@@ -8,6 +13,7 @@
 %>
 <!-- taglib宣告 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -149,161 +155,135 @@
                <c:if test="${userFullData.password != null}">
 					<c:redirect url="WebUserMain.jsp" />
 				</c:if>
-               <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
-					<fieldset>
-						<legend>註冊相關資料</legend>
-						<span id="submitSpan">
-							<c:if test="${submitMessage != null}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${submitMessage}" />
-							</c:if>
-						</span>
-						<hr />
-						<label>帳號身分：</label>
-						<input type="radio" id="customer" name="lv" value=0 checked="checked" >
-					    <label for="customer">消費者</label>
-					    <input type="radio" id="shop_owner" name="lv" value=1>
-					    <label for="shop_owner">店家</label>
-					    <input type="radio" id="admin" name="lv" value=-1>
-					    <label for="admin">管理員</label>
-					    <hr />
-						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字" required="required" />
-						<input type="button" name="register" id="checkAccount" value="檢查帳號">
-						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
-						<span id="passwordSpan"></span>
-						<hr />
-						<label>中文姓氏：</label>
-						<input type="text" name="firstName" id="firstName" size="40" maxlength="3" onblur="checkFirst_name()"
-						    placeholder="請輸入姓氏，1~3個中文字" required="required" />
-						<span id="firstNameSpan"></span>
-						<hr />
-						<label>中文名字：</label>
-						<input type="text" name="lastName" id="lastName" size="40" maxlength="3" onblur="checkLast_name()"
-						    placeholder="請輸入名字，1~3個中文字" required="required" />
-						<span id="lastNameSpan"></span>
-						<hr />
-						<label>稱呼方式：</label>
-						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
-						<input type="button" name="register" id="checkRegisterNickname" value="檢查稱呼">
-						<span id="nicknameSpan"></span>
-						<hr />
-						<label>生理性別：</label>
-						<input type="radio" id="M" name="gender" value="M">
-					    <label for="male">男性</label>
-					    <input type="radio" id="F" name="gender" value="F">
-					    <label for="female">女性</label>
-					    <input type="radio" id="N" name="gender" value="N" checked="checked" >
-					    <label for="other">不方便提供</label>
-					    <hr />
-					    <label>西元生日：</label>
-						<input type="date" name="birth" id="birth" onblur="checkBirthday()" required="required" />
-						<span id="birthdaySpan"></span>
-						<hr />
-						<label>偏好食物：</label>
-						<input type="checkbox" name="fervor" value="中式" onblur="checkFervor()" />
-						<label>中式</label>
-						<input type="checkbox" name="fervor" value="快餐" onblur="checkFervor()" />
-						<label>快餐</label>
-						<input type="checkbox" name="fervor" value="燒肉" onblur="checkFervor()" />
-						<label>燒肉</label>
-						<input type="checkbox" name="fervor" value="西式" onblur="checkFervor()" />
-						<label>西式</label>
-						<input type="checkbox" name="fervor" value="下午茶" onblur="checkFervor()" />
-						<label>下午茶</label>
-						<input type="checkbox" name="fervor" value="日式" onblur="checkFervor()" />
-						<label>日式</label>
-						<input type="checkbox" name="fervor" value="皆可" checked="checked" onblur="checkFervor()" />
-						<label>皆可</label>
-						<span id="fervorSpan"></span>
-						<hr />
-						<label>聯絡信箱：</label>
-						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
-						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱">
-						<span id="emailSpan"></span>
-						<hr />
-						<label>信箱驗證：</label>
-						<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
-						    placeholder="請輸入E-Mail中所收到的驗證碼" required="required" />
-						<input type="button" name="register" id="sendCheckCode" value="傳送驗證碼">
-						<span id="emailCheckCodeSpan"></span>
-						<br />
-						<input type="hidden" name="checkCode" id="checkCode" value="" />
-						<hr />
-						<label>聯絡電話：</label>
-						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
-						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
-						<input type="button" name="register" id="checkRegisterPhone" value="檢查電話">
-						<span id="phoneSpan"></span>
-						<hr />
-						<label>是否願意接收促銷/優惠訊息：</label>
-						<input type="radio" id="getEmail1" name="getEmail" value="Y" checked="checked">
-					    <label for="Y">願意</label>
-					    <input type="radio" id="getEmail2" name="getEmail" value="N">
-					    <label for="N">不願意</label>
-					    <hr />
-					    <label>居住區域：</label>
-				    	<select name="locationCode" id="locationCode" onblur="checkLocation_code()">
-							<option value="">請選擇目前您居住/生活的區域</option>
-							<option value="t01">臺北市</option>
-							<option value="t02">新北市</option>
-							<option value="t03">桃園市</option>
-							<option value="t04">臺中市</option>
-							<option value="t05">臺南市</option>
-							<option value="t06">高雄市</option>
-							<option value="t07">基隆市</option>
-							<option value="t08">新竹市</option>
-							<option value="t09">嘉義市</option>
-							<option value="t10">新竹縣</option>
-							<option value="t11">苗栗縣</option>
-							<option value="t12">彰化縣</option>
-							<option value="t13">南投縣</option>
-							<option value="t14">雲林縣</option>
-							<option value="t15">嘉義縣</option>
-							<option value="t16">屏東縣</option>
-							<option value="t17">宜蘭縣</option>
-							<option value="t18">花蓮縣</option>
-							<option value="t19">臺東縣</option>
-							<option value="t20">澎湖縣</option>
-							<option value="t21">金門縣</option>
-							<option value="t22">連江縣</option>
-							<option value="t23">其他區</option>
-						</select>
-						<span id="locationCodeSpan"></span>
-					    <hr />
-					    <label>生活地點一：</label>
-					    <input type="text" name="addr0" id="addr0" size="65" maxlength="65" onblur="checkAddr0()"
-						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" required="required" />
-						<br />
-						<span id="addr0Span"></span>
-					    <hr />
-					    <label>生活地點二：</label>
-					    <input type="text" name="addr1" id="addr1" size="65" maxlength="65"  onblur="checkAddr1()"
-						    placeholder="此項為選填">
-						<br />
-						<span id="addr1Span"></span>
-					    <hr />
-					    <label>生活地點三：</label>
-					    <input type="text" name="addr2" id="addr2" size="65" maxlength="65"  onblur="checkAddr2()"
-						    placeholder="此項為選填">
-						<br />
-						<span id="addr2Span"></span>
-					    <hr />
-					</fieldset>
+				<form:form method="POST" modelAttribute="userRegisterData">
+					<legend>註冊相關資料</legend>
+					<span id="submitSpan">
+						<c:if test="${submitMessage != null}">
+							<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+							<c:out value="${submitMessage}" />
+						</c:if>
+					</span>
+					<hr />
+					<label>帳號身分：</label>
+					<c:forEach items="${identityList}" var="level" >
+						<c:if test="${level.lv==0}" >
+							<form:radiobutton path="accountLv" value="${level.lv}" checked="true" />
+						</c:if>
+						<c:if test="${level.lv!=0}" >
+							<form:radiobutton path="accountLv" value="${level.lv}" />
+						</c:if>
+						<label><c:out value="${level.levelName}" /></label>
+					</c:forEach>
+					<hr />
+					<label>帳號名稱：</label>
+					<form:input path="account" id="account" size="40" maxlength="20" onblur="checkAccountName()" 
+						placeholder="請輸入帳號，8~20個字" required="required" />
+					<input type="button" name="register" id="checkAccount" value="檢查帳號">
+					<span id="accountSpan"></span>
+					<hr />
+					<label>帳號密碼：</label>
+					<form:password path="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()" 
+						placeholder="請輸入密碼，8~20個字" required="required" />
+					<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+					<span id="passwordSpan"></span>
+					<hr />
+					<label>中文姓氏：</label>
+					<form:input path="firstName" id="firstName" size="40" maxlength="3" onblur="checkFirst_name()" 
+						placeholder="請輸入姓氏，1~3個字" required="required" />
+					<span id="firstNameSpan"></span>
+					<hr />
+					<label>中文名字：</label>
+					<form:input path="lastName" id="lastName" size="40" maxlength="3" onblur="checkLast_name()" 
+						placeholder="請輸入名字，1~3個字" required="required" />
+					<span id="lastNameSpan"></span>
+					<hr />
+					<label>稱呼方式：</label>
+					<form:input path="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()" 
+						placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
+					<input type="button" name="register" id="checkRegisterNickname" value="檢查稱呼">
+					<span id="nicknameSpan"></span>
+					<hr />
+					<label>生理性別：</label>
+					<c:forEach items="${genderList}" var="userGender" >
+						<c:if test="${userGender.genderCode=='N'}" >
+							<form:radiobutton path="gender" value="${userGender.genderCode}" checked="true" />
+						</c:if>
+						<c:if test="${userGender.genderCode!='N'}" >
+							<form:radiobutton path="gender" value="${userGender.genderCode}" />
+						</c:if>
+						<label><c:out value="${userGender.genderText}" /></label>
+					</c:forEach>
+					<hr />
+					<label>西元生日：</label>
+					<form:input type="date" path="birth" id="birth" onblur="checkBirthday()" required="required" />
+					<span id="birthdaySpan"></span>
+					<hr />
+					<label>偏好食物：</label>
+					<form:checkboxes items="${fervorList}" path="fervorOption" 
+						itemLabel="fervorItem" itemValue="fervorCode" />
+					<hr />
+					<label>聯絡信箱：</label>
+					<form:input type="email" path="email" id="email" size="40" maxlength="30" onblur="checkEmail()" 
+						placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
+					<input type="button" name="register" id="checkEmailUsed" value="檢查信箱">
+					<span id="emailSpan"></span>
+					<hr />
+					<label>信箱驗證：</label>
+					<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()" 
+						placeholder="請輸入E-Mail中所收到的驗證碼" required="required" />
+					<input type="button" name="register" id="sendCheckCode" value="傳送驗證碼">
+					<span id="emailCheckCodeSpan"></span>
+					<br />
+					<input type="hidden" name="checkCode" id="checkCode" value="" />
+					<hr />
+					<label>聯絡電話：</label>
+					<form:input type="phone" path="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
+						placeholder="請輸入行動電話或市內電話號碼" required="required" />
+					<input type="button" name="register" id="checkRegisterPhone" value="檢查電話">
+					<span id="phoneSpan"></span>
+					<hr />
+					<label>是否願意接收促銷/優惠訊息：</label>
+					<c:forEach items="${willingList}" var="userWilling" >
+						<c:if test="${userWilling.willingCode=='Y'}" >
+							<form:radiobutton path="getEmail" value="${userWilling.willingCode}" checked="true" />
+						</c:if>
+						<c:if test="${userWilling.willingCode=='N'}" >
+							<form:radiobutton path="getEmail" value="${userWilling.willingCode}" />
+						</c:if>
+						<label><c:out value="${userWilling.willingText}" /></label>
+					</c:forEach>
+					<hr />
+					<label>居住區域：</label>
+					<form:select path="locationInfo" id="locationCode" onblur="checkLocation_code()" >
+						<form:option value="" label="請選擇目前您居住/生活的區域" />
+						<form:options items="${cityInfoList}" itemValue="cityCode" itemLabel="cityName" />
+					</form:select>
+					<span id="locationCodeSpan"></span>
+					<hr />
+				    <label>生活地點一：</label>
+				    <form:input path="addr0" id="addr0" size="65" maxlength="65" onblur="checkAddr0()" 
+						placeholder="此項為必填，請輸入完整地址方面後續服務之利用" required="required" />
+					<br />
+					<span id="addr0Span"></span>
+					<hr />
+				    <label>生活地點二：</label>
+				    <form:input path="addr1" id="addr1" size="65" maxlength="65" onblur="checkAddr1()" 
+						placeholder="此項為選填" />
+					<br />
+					<span id="addr1Span"></span>
+					<hr />		
+					<label>生活地點三：</label>
+				    <form:input path="addr2" id="addr2" size="65" maxlength="65" onblur="checkAddr2()" 
+						placeholder="此項為選填" />
+					<br />
+					<span id="addr2Span"></span>
+					<hr />
 					<div align="center">
 						<input type="submit" id="submit" name="register" value="送出">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
-					<hr />
-				</form>
+					<hr />		
+				</form:form>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 				<script src="${pageContext.request.contextPath}/js/webUser/WebUserRegisterForm.js"></script>
 				<script>	

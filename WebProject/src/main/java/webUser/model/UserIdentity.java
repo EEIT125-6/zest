@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="UserLevel")
-public class Identity {
+public class UserIdentity {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
 	@Id
@@ -19,12 +19,12 @@ public class Identity {
 	private String levelName;
 	
 	/* 無參數建構子 */
-	public Identity() {
+	public UserIdentity() {
 		super();
 	}
 
 	/* 帶參數建構子 */
-	public Identity(Integer lv, String levelName) {
+	public UserIdentity(Integer lv, String levelName) {
 		super();
 		this.lv = lv;
 		this.levelName = levelName;

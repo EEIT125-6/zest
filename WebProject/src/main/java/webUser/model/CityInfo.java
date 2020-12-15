@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="CityInfo")
-public class CityCode {
+public class CityInfo {
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
 	@Id
@@ -21,12 +21,12 @@ public class CityCode {
 	private String cityName;
 	
 	/* 無參數建構子 */
-	public CityCode() {
+	public CityInfo() {
 		super();
 	}
 
 	/* 帶參數建構子 */
-	public CityCode(Integer cityCode, String cityName) {
+	public CityInfo(Integer cityCode, String cityName) {
 		super();
 		this.cityCode = cityCode;
 		this.cityName = cityName;

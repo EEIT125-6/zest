@@ -183,11 +183,7 @@
 							<input type="hidden" name="nickname" id="nickname" value="${selfData.nickname}">
 							<hr />
 							<label>生理性別：</label>
-							<c:choose>
-								<c:when test="${selfData.gender == 'M'}">男性</c:when>
-								<c:when test="${selfData.gender == 'F'}">女性</c:when>
-								<c:when test="${selfData.gender == 'N'}">不方便提供</c:when>
-							</c:choose>
+							<c:out value="${selfData.gender.genderText}" />
 							<hr />
 							<label>西元生日：</label>
 							<c:out value="${selfData.birth}" />
@@ -205,39 +201,12 @@
 							<input type="hidden" name="phone" id="phone" value="${selfData.phone}">
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
-							<c:choose>
-								<c:when test="${selfData.getEmail=='Y'}">願意</c:when>
-								<c:when test="${selfData.getEmail=='N'}">不願意</c:when>
-							</c:choose>
-							<input type="hidden" name="getEmail" id="getEmail" value="${selfData.getEmail}">
+							<c:out value="${selfData.getEmail.willingText}" />
+							<input type="hidden" name="getEmail" id="getEmail" value="${selfData.getEmail.willingCode}">
 							<hr />
 							<label>居住區域：</label>
-							<c:choose>
-								<c:when test="${selfData.locationCode=='t01'}">臺北市</c:when>
-								<c:when test="${selfData.locationCode=='t02'}">新北市</c:when>
-								<c:when test="${selfData.locationCode=='t03'}">桃園市</c:when>
-								<c:when test="${selfData.locationCode=='t04'}">臺中市</c:when>
-								<c:when test="${selfData.locationCode=='t05'}">臺南市</c:when>
-								<c:when test="${selfData.locationCode=='t06'}">高雄市</c:when>
-								<c:when test="${selfData.locationCode=='t07'}">基隆市</c:when>
-								<c:when test="${selfData.locationCode=='t08'}">新竹市</c:when>
-								<c:when test="${selfData.locationCode=='t09'}">嘉義市</c:when>
-								<c:when test="${selfData.locationCode=='t10'}">新竹縣</c:when>
-								<c:when test="${selfData.locationCode=='t11'}">苗栗縣</c:when>
-								<c:when test="${selfData.locationCode=='t12'}">彰化縣</c:when>
-								<c:when test="${selfData.locationCode=='t13'}">南投縣</c:when>
-								<c:when test="${selfData.locationCode=='t14'}">雲林縣</c:when>
-								<c:when test="${selfData.locationCode=='t15'}">嘉義縣</c:when>
-								<c:when test="${selfData.locationCode=='t16'}">屏東縣</c:when>
-								<c:when test="${selfData.locationCode=='t17'}">宜蘭縣</c:when>
-								<c:when test="${selfData.locationCode=='t18'}">花蓮縣</c:when>
-								<c:when test="${selfData.locationCode=='t19'}">臺東縣</c:when>
-								<c:when test="${selfData.locationCode=='t20'}">澎湖縣</c:when>
-								<c:when test="${selfData.locationCode=='t21'}">金門縣</c:when>
-								<c:when test="${selfData.locationCode=='t22'}">連江縣</c:when>
-								<c:when test="${selfData.locationCode=='t23'}">其他區</c:when>
-							</c:choose>
-							<input type="hidden" name="locationCode" id="locationCode" value="${selfData.locationCode}">
+							<c:out value="${selfData.locationInfo.cityName}" />
+							<input type="hidden" name="locationCode" id="locationCode" value="${selfData.locationInfo.cityCode}">
 							<hr />
 							<label>生活地點一：</label>
 							<c:out value="${selfData.addr0}" />
