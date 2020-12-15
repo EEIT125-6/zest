@@ -1,6 +1,12 @@
 package xun.controller;
 
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import xun.model.StoreBean;
 import xun.service.StoreService;
@@ -117,29 +124,97 @@ public class StoreCUD_Controller {
 	@GetMapping("/UpdatePhoto")
 	public String UpdatePhoto(
 			Model model,
-			@RequestParam Integer id,
-			@RequestParam String stname
+			@RequestParam Integer id
 			) {
 		StoreBean sb = ss.get(id);
 		model.addAttribute("storeBean", sb);
-		model.addAttribute("stname", stname);
+//		System.out.println(sb.getStname());
 		return "testupload";
 	}
 	
-//	@PM
+	
+	@PostMapping("/testexupload")
 	public String exUpdatePhoto(
+			Model model,
+			@ModelAttribute("storeBean") StoreBean storeBean,
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request
 			) {
-				return null;
+		MultipartFile file2 = file;
+		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+//		String fakePath = "C:\\ProjectGithub\\";
 		
+		String filePath = request.getSession().getServletContext().getRealPath("");
+		String FileName = file.getOriginalFilename();
+		String fakeFilePath =fakePath+FileName;
+		
+		File writeFile = new File(filePath+"Images\\"+FileName);
+		File fkf = new File(fakePath+""+FileName);
+		try {
+//			file2.transferTo(writeFile);
+			file.transferTo(fkf);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		將檔案路徑和名稱寫進資料庫
+		Integer id = storeBean.getId();
+		String stname = storeBean.getStname();
+		String photourl = "Images/"+FileName;
+		String bannerurl = "";
+		StoreBean sb1 = new StoreBean(id, stname, bannerurl, photourl);
+		ss.photoStore(sb1);
+		model.addAttribute("id", id);
+		model.addAttribute("stname", stname);
+		return "redirect:/StoreGetFullstore";
 	}
 	
 	
 	
 	@GetMapping("/UpdateBanner")
 	public String UpdateBanner(
-			Model model
+			Model model,
+			@RequestParam Integer id
 			) {
+		StoreBean sb = ss.get(id);
+		model.addAttribute("storeBean", sb);
+		return "testuploadbanner";
+	}
+	
+	@PostMapping("/testexuploadbanner")
+	public String exUpdateBanner(
+			Model model,
+			@ModelAttribute("storeBean") StoreBean storeBean,
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request
+			) {
+		MultipartFile file2 = file;
+		String filePath = request.getSession().getServletContext().getRealPath("");
+		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
 		
-		return "testexuploadbanner";
+		String FileName = file.getOriginalFilename();
+		
+		String fakeFilePath =fakePath+FileName;
+		
+		File writeFile = new File(filePath+"Images\\"+FileName);
+		File fkf = new File(fakePath+""+FileName);
+		try {
+			file.transferTo(fkf);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		將檔案路徑和名稱寫進資料庫
+		Integer id = storeBean.getId();
+		String stname = storeBean.getStname();
+		String photourl = "";
+		String bannerurl = "Images/"+FileName;
+		StoreBean sb1 = new StoreBean(id, stname, bannerurl, photourl);
+		ss.bannerStore(sb1);
+		model.addAttribute("id", id);
+		model.addAttribute("stname", stname);
+		return "redirect:/StoreGetFullstore";
 	}
 }

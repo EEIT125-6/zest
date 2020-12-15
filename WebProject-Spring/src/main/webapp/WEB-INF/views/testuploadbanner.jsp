@@ -4,6 +4,7 @@
 <%request.setCharacterEncoding("UTF-8");%>
 <%response.setContentType("text/html;charset=UTF-8"); %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 
 
@@ -53,14 +54,16 @@
 <!--               </div> -->
 <!--             </div> -->
 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; ">
+	<form:form action="testexuploadbanner" modelAttribute="storeBean" method="post" enctype="multipart/form-data">
 	<h3>Banner 上傳</h3>
-	選擇一張圖片設置成<%=request.getSession().getAttribute("stname") %>的Banner: <br />
-	<form action="testexuploadbanner.jsp" method="post"
-	                        enctype="multipart/form-data">
-	<input type="file" name="file1" size="50" style="margin-top:30px"/>
+	選擇一張圖片設置成${storeBean.stname }的Banner: 
+			<form:hidden path="stname"/>
+			<form:hidden path="id"/>
 	<br />
-	<input type="submit" style="margin-top:30px" value="上傳Banner!" />
-	</form>
+		<input type="file" name="file" size="50" style="margin-top:30px"/>
+	<br>
+		<input type="submit" style="margin-top:30px" value="上傳Banner!" />
+	</form:form>
 
 	
 </div>

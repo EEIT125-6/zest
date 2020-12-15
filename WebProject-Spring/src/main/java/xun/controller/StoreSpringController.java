@@ -90,7 +90,7 @@ public class StoreSpringController {
 //		return "detailStore";
 	}
 	
-	@RequestMapping("/StoreBannerServlet")
+//	@RequestMapping("/StoreBannerServlet")
 	public String StoreBanner(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response,
@@ -116,9 +116,9 @@ public class StoreSpringController {
 				return null;
 	}
 	
-	@RequestMapping(value = "/StoreDeleteServlet"
+//	@RequestMapping(value = "/StoreDeleteServlet"
 //			,method = Responses.ALL
-			)
+//			)
 	public String DeleteStore(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response,
@@ -213,7 +213,7 @@ public class StoreSpringController {
 	}
 	
 	
-	@RequestMapping("/StorePhotoServlet")
+//	@RequestMapping("/StorePhotoServlet")
 	public String StorePhoto(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response,
@@ -234,7 +234,7 @@ public class StoreSpringController {
 				return "detailStore";
 	}
 	
-	@RequestMapping("/StoreUpdateServlet")
+//	@RequestMapping("/StoreUpdateServlet")
 	public String UpdateStore(Model model,
 			HttpServletRequest request,
 			HttpServletResponse response,

@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "Store")
@@ -22,7 +25,25 @@ public class StoreBean {
 	String tel;
 	String bannerurl;
 	String photourl;
+	@Transient	
+	MultipartFile stfile;
 	
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public MultipartFile getStfile() {
+		return stfile;
+	}
+
+	public void setStfile(MultipartFile stfile) {
+		this.stfile = stfile;
+	}
+
 	public StoreBean() {
 		super();
 	}

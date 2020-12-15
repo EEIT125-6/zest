@@ -46,15 +46,17 @@
 <body>
 <%@include file = "Header-Include.jsp" %>
 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; ">
-	<form action="testexupload"  method="post" enctype="multipart/form-data">
-	<h3>上傳至 ${stname}  圖片:</h3>
-	請選擇一張圖片上傳: 
-	<br />
-	<input type="file" name="file1" size="50" style="margin-top:30px" />
-	<br>
-	
-	<input type="submit" style="margin-top:30px" value="上傳圖片!" />
-	</form>
+	<form:form action="testexupload" modelAttribute="storeBean" method="POST" enctype='multipart/form-data'>
+		<h3>上傳至 ${storeBean.stname}  圖片:</h3>
+			請選擇一張圖片上傳: 
+			<form:hidden path="stname"/>
+			<form:hidden path="id"/>
+		<br>
+			<input name="file"  type='file'/>
+		<br>
+<!-- 		<input type="submit" style="margin-top:30px" value="上傳圖片!" /> -->
+		<input type="submit" style="margin-top:30px" value="上傳Photo!" />
+	</form:form>
 	
 </div>	
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:230px">
