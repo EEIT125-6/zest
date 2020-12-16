@@ -178,7 +178,7 @@
                 	</fieldset>
                 	<div align="center">
                 		<input type="button" id="forget" name="forget" value="忘記帳號或密碼">
-						<input type="submit" id="submit" name="login" value="登入">
+						<input type="button" id="submit" name="login" value="登入">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 					<hr />
@@ -215,7 +215,6 @@
 	                	$.ajax({
 							type:"POST",
 				            url:"/WebProject/webUser/WebUserServlet",
-				            async  : false,
 				            data:{
 				            	'login':'登入',
 				            	'account':account,

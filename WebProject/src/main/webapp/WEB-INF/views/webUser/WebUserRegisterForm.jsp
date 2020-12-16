@@ -219,8 +219,16 @@
 					<span id="birthdaySpan"></span>
 					<hr />
 					<label>偏好食物：</label>
-					<form:checkboxes items="${fervorList}" path="fervorOption" 
-						itemLabel="fervorItem" itemValue="fervorCode" />
+					<c:forEach items="${fervorList}" var="fervorObject" >
+						<c:if test="${fervorObject.fervorCode==7}" >
+							<form:checkbox path="fervorOption" value="${fervorObject.fervorCode}" checked="checked" onblur="checkFervor()" />
+						</c:if>
+						<c:if test="${fervorObject.fervorCode!=7}" >
+							<form:checkbox path="fervorOption" value="${fervorObject.fervorCode}" onblur="checkFervor()" />
+						</c:if>
+						<label><c:out value="${fervorObject.fervorItem}" ></c:out></label>
+					</c:forEach>
+					<span id="fervorSpan"></span>
 					<hr />
 					<label>聯絡信箱：</label>
 					<form:input type="email" path="email" id="email" size="40" maxlength="30" onblur="checkEmail()" 
@@ -286,9 +294,76 @@
 				</form:form>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 				<script src="${pageContext.request.contextPath}/js/webUser/WebUserRegisterForm.js"></script>
+				<script>
+					window.onload = function() {
+						let checkAccountBtn = document.getElementById("checkAccount");
+						
+						checkAccountBtn.onclick = function() {
+							checkSameAccount();
+						};
+						
+						function checkSameAccount() {
+							let account = document.getElementById("account").value.trim();
+							let accountSpan = document.getElementById("accountSpan");
+							let accountStr;
+							let accountIsOk = true;
+							let mode = "checkAccount";
+							
+							let xhrObject = new XMLHttpRequest();
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputAccount=" + account + "&register=" + mode);
+							
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4) {
+									if (xhrObject.status === 200) {
+										let typeObject = xhrObject.getResponseHeader("Content-Type");
+										if (typeObject.indexOf("application/json") === 0) {
+											let resultObj = JSON.parse(xhrObject.responseText);
+											if (resultObj.resultCode == 1) {
+												accountStr = "此帳號已有人使用！";
+							            		accountIsOk = false;
+											} else if (resultObj.resultCode == 0) {
+												accountStr = "可建立此帳號！";
+							            		accountIsOk = true;
+											} else {
+												accountStr = "檢查途中遭遇錯誤！";
+							            		accountIsOk = false;
+							            		/* 顯示彈窗異常訊息 */
+							            		alert(resultObj.message);
+											}
+										}
+										if (!accountIsOk) {
+						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+						            		accountSpan.style.color = "red";
+						            		accountSpan.style.fontStyle = "italic";
+						            		document.getElementById("sendCheckCode").style = "display:none";
+						            	} else {
+						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
+						            		accountSpan.style.color = "black";
+						            		accountSpan.style.fontStyle = "normal";
+						            		document.getElementById("sendCheckCode").style = "display:inline";
+						            	}
+									} else {
+										accountStr = "發生錯誤，無法執行檢查";
+						            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+					            		accountSpan.style.color = "red";
+					            		accountSpan.style.fontStyle = "italic";
+							            alert("發生錯誤: " + xhrObject.status+ ", " + xhrObject.responseText);
+							        }
+								} else {
+									accountStr = "發生錯誤，無法執行檢查";
+					            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+					        		accountSpan.style.color = "red";
+					        		accountSpan.style.fontStyle = "italic";
+								}
+							};
+						}						
+					};
+				</script>
 				<script>	
 					$("#checkAccount").click(function () {
-				        checkSameAccount();
+				        
 				    });
 					function checkSameAccount(){
 						let account = document.getElementById("account").value.trim();
