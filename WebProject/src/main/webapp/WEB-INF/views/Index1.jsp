@@ -158,11 +158,8 @@
 <!--               </div> -->
 <!--             </div> -->
 <%@include file = "Header-Include.jsp" %>
-<<<<<<< HEAD:WebProject/src/main/webapp/WEB-INF/views/Index1.jsp
 <img src="xun/picture/1" />
 <!-- <img src="photo/pic" /> -->
-=======
->>>>>>> SpringSample:WebProject-Spring/src/main/webapp/WEB-INF/views/Index1.jsp
             <div class="container-fluid photo">
                 <!-- <img src="images/backbar2-1.jpg"> -->
                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
@@ -247,10 +244,6 @@
         	<c:forEach var="row" items="${AD}">
 	        <c:url value="StoreGetFullstore" var="GOGOURL">
 			<c:param name="id" value="${row.id}" />
-<<<<<<< HEAD:WebProject/src/main/webapp/WEB-INF/views/Index1.jsp
-=======
-			<c:param name="stname" value="${row.stname}" />
->>>>>>> SpringSample:WebProject-Spring/src/main/webapp/WEB-INF/views/Index1.jsp
 			</c:url>  
 	        <li><a href="${GOGOURL}"><img src="${row.bannerurl}" alt=""></a></li>
 	         </c:forEach>
@@ -342,10 +335,6 @@
 	                		<c:forEach var="row" items="${ADP}">
 	        				<c:url value="StoreGetFullstore" var="GOURL">
 							<c:param name="id" value="${row.id}" />
-<<<<<<< HEAD:WebProject/src/main/webapp/WEB-INF/views/Index1.jsp
-=======
-							<c:param name="stname" value="${row.stname}" />
->>>>>>> SpringSample:WebProject-Spring/src/main/webapp/WEB-INF/views/Index1.jsp
 							</c:url>  
 	                		<a href="${GOURL}"><img src="${row.photourl}" style="width:170px;height: 160px;margin-left:10px;border-radius:5px"></a>
 	                  		</c:forEach>

@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-=======
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
->>>>>>> SpringSample
   <modelVersion>4.0.0</modelVersion>
   <groupId>eeit125-6.zest</groupId>
   <artifactId>WebProject</artifactId>
@@ -15,15 +11,10 @@
   <properties>
   	<maven.compiler.source>1.8</maven.compiler.source>
 	<maven.compiler.target>1.8</maven.compiler.target>
-<<<<<<< HEAD
-=======
-	<failOnMissingWebXml>false</failOnMissingWebXml>
->>>>>>> SpringSample
   	<spring.version>5.2.11.RELEASE</spring.version>
   	<hibernate.version>5.4.24.Final</hibernate.version>
   </properties>
   
-<<<<<<< HEAD
   <build>
 	<plugins>
 		<plugin>
@@ -37,8 +28,6 @@
 	</plugins>
   </build>
   
-=======
->>>>>>> SpringSample
   <dependencies>
   
 	<dependency>
