@@ -104,7 +104,7 @@ public class UserInfoController {
 			String checkCode = (String) model.getAttribute("checkCode");
 			String registerEmail = (String) model.getAttribute("registerEmail");
 			
-//			if (checkCode == null && registerEmail == null) {
+			if (checkCode == null && registerEmail == null) {
 				checkCode = doCreateCheckCode();
 				try {
 					sendResult = doSendEmail(account, email, checkCode, "submit");
@@ -121,10 +121,10 @@ public class UserInfoController {
 				} else if (checkCode == null){
 					sendResult = false;
 				}
-//			} else {
-//				message = "已產生過驗證碼，如需重新產生，請完整關閉瀏覽器後再次連接至本站！";
-//				sendResult = false;
-//			}
+			} else {
+				message = "已產生過驗證碼，如需重新產生，請完整關閉瀏覽器後再次連接至本站！";
+				sendResult = false;
+			}
 			
 			map.put("resultCode", sendResult.toString());
 			map.put("resultMessage", message);

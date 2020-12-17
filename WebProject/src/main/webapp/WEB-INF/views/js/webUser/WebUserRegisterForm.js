@@ -267,7 +267,15 @@ function checkBirthday() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		}  else {
+		} else if (todayYear - 18 < inputYear && todayMonth <= inputMonth && todayDate <= inputDate) {
+			birthdayStr = "未滿18歲，無法申辦本服務";
+			birthdayIsOk = false;
+		} else if (todayYear - 17 < inputYear 
+		&& ((todayMonth >= inputMonth && todayDate > inputDate) 
+		|| (todayMonth > inputMonth && todayDate >= inputDate))) {
+			birthdayStr = "未滿18歲，無法申辦本服務";
+			birthdayIsOk = false;
+		} else {
 			birthdayStr = "有效的出生時間";
 			birthdayIsOk = true;
 		}
