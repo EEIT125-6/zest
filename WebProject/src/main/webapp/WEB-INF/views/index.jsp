@@ -7,6 +7,6 @@
 <title>Home Page</title>
 </head>
 <body>
-	<a href='registerForm'>註冊</a><br><br>
+	<a href='webUser/registerForm'>註冊</a><br><br>
 </body>
 </html>

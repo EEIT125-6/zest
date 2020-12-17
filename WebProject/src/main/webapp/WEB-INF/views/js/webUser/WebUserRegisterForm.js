@@ -287,9 +287,12 @@ function checkBirthday() {
 }
 
 function checkFervor() {
-	let fervorObj = document.getElementsByName("fervor");
+	let fervorObj = document.getElementsByClassName("fervor");
 	let fervorObjValue = "";
 	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+		if (fervorObjValue != "" && fervorObj[fervorIndex].checked) {
+			fervorObjValue += ",";
+		}
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let fervorSpan = document.getElementById("fervorSpan");
@@ -308,12 +311,14 @@ function checkFervor() {
 		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
 		fervorSpan.style.color = "red";
 		fervorSpan.style.fontStyle = "italic";
+		document.getElementById("fervorValue").value = "";
 		return false;
 	}
 	else {
 		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
 		fervorSpan.style.color = "black";
 		fervorSpan.style.fontStyle = "normal";
+		document.getElementById("fervorValue").value = fervorObjValue;
 		return true;
 	} 
 }

@@ -75,12 +75,12 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public Integer insertWebUserData(WebUserData registerData) throws SQLException {
+	public Integer insertWebUserData(WebUserData registerData, Integer lv) throws SQLException {
 		Integer insertResult = 0;
 		/* 第一碼 = lv + 1 */
-		String selectedId = String.valueOf(registerData.getLv() + 1) + "%";
+		String selectedId = String.valueOf(lv + 1) + "%";
 		/* 取得userId */
-		String insertId = webUserDAO.createNewUserId(selectedId, registerData.getLv() + 1);
+		String insertId = webUserDAO.createNewUserId(selectedId, lv + 1);
 		webUserDAO.insertWebUserData(insertId, registerData);
 		insertResult++;
 		return insertResult;

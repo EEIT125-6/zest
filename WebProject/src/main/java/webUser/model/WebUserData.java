@@ -1,6 +1,5 @@
 package webUser.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
@@ -16,9 +15,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="WebUserInfo")
-public class WebUserData implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class WebUserData {	
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
 	@Id
@@ -56,6 +53,8 @@ public class WebUserData implements Serializable {
 	private Integer version;
 	@Column(nullable = true , unique = false , columnDefinition="varchar(8) default 'inactive' ")
 	private String status;
+	@Column(nullable = false , unique = true , columnDefinition="varchar(255) ")
+	private String iconUrl;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "lv")
@@ -84,9 +83,10 @@ public class WebUserData implements Serializable {
 
 	/* 帶參數建構子 */
 	public WebUserData(String userId, String account, String password, String firstName, String lastName,
-			String nickname, Date birth, String fervor, String email, String phone,
-			Date joinDate, String addr0, String addr1, String addr2, BigDecimal zest, Integer version,
-			String status) {
+			String nickname, Date birth, String fervor, String email, String phone, Date joinDate, String addr0,
+			String addr1, String addr2, BigDecimal zest, Integer version, String status, String iconUrl,
+			UserIdentity accountLv, FoodFervor fervorOption, Gender gender, UserWilling getEmail,
+			CityInfo locationInfo) {
 		super();
 		this.userId = userId;
 		this.account = account;
@@ -105,6 +105,12 @@ public class WebUserData implements Serializable {
 		this.zest = zest;
 		this.version = version;
 		this.status = status;
+		this.iconUrl = iconUrl;
+		this.accountLv = accountLv;
+		this.fervorOption = fervorOption;
+		this.gender = gender;
+		this.getEmail = getEmail;
+		this.locationInfo = locationInfo;
 	}
 
 	/* setter & getter */
@@ -244,28 +250,20 @@ public class WebUserData implements Serializable {
 		this.status = status;
 	}
 
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
 	public UserIdentity getAccountLv() {
 		return accountLv;
 	}
 
 	public void setAccountLv(UserIdentity accountLv) {
 		this.accountLv = accountLv;
-	}
-	
-	public Integer getLv() {
-		return accountLv.getLv();
-	}
-	
-	public void setLv(Integer lv) {
-		this.accountLv.setLv(lv);
-	}
-	
-	public String getLevelName() {
-		return accountLv.getLevelName();
-	}
-	
-	public void setLevelName(String levelName) {
-		this.accountLv.setLevelName(levelName);
 	}
 
 	public UserWilling getGetEmail() {
@@ -274,22 +272,6 @@ public class WebUserData implements Serializable {
 
 	public void setGetEmail(UserWilling getEmail) {
 		this.getEmail = getEmail;
-	}
-	
-	public String getWillingCode() {
-		return getEmail.getWillingCode();
-	}
-	
-	public void setWillingCode(String willingCode) {
-		this.getEmail.setWillingCode(willingCode);
-	}
-	
-	public String getWillingText() {
-		return getEmail.getWillingText();
-	}
-	
-	public void setWillingText(String willingText) {
-		this.getEmail.setWillingText(willingText);
 	}
 
 	public FoodFervor getFervorOption() {
@@ -300,44 +282,12 @@ public class WebUserData implements Serializable {
 		this.fervorOption = fervorOption;
 	}
 	
-	public Integer getFervorCode() {
-		return fervorOption.getFervorCode();
-	}
-	
-	public void setFervorCode(Integer fervorCode) {
-		this.fervorOption.setFervorCode(fervorCode);
-	}
-	
-	public String getFervorItem() {
-		return fervorOption.getFervorItem();
-	}
-	
-	public void setFervorItem(String fervorItem) {
-		this.fervorOption.setFervorItem(fervorItem);
-	}
-	
 	public Gender getGender() {
 		return gender;
 	}
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
-	}
-	
-	public String getGenderCode() {
-		return gender.getGenderCode();
-	}
-	
-	public void setGenderCode(String genderCode) {
-		this.gender.setGenderCode(genderCode);
-	}
-	
-	public String getGenderText() {
-		return gender.getGenderText();
-	}
-	
-	public void setGenderText(String genderText) {
-		this.gender.setGenderText(genderText);
 	}
 
 	public CityInfo getLocationInfo() {
@@ -346,21 +296,5 @@ public class WebUserData implements Serializable {
 
 	public void setLocationInfo(CityInfo locationInfo) {
 		this.locationInfo = locationInfo;
-	}
-	
-	public Integer getCityCode() {
-		return locationInfo.getCityCode();
-	}
-	
-	public void setCityCode(Integer cityCode) {
-		this.locationInfo.setCityCode(cityCode);
-	}
-	
-	public String getCityName() {
-		return locationInfo.getCityName();
-	}
-	
-	public void setCityName(String cityname) {
-		this.locationInfo.setCityName(cityname);
 	}
 }
