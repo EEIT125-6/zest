@@ -181,6 +181,13 @@ public class StoreBean {
 	public void setPhotourl(String photourl) {
 		this.photourl = photourl;
 	}
+
+	@Override
+	public String toString() {
+		return "StoreBean [id=" + id + ", stname=" + stname + ", sclass=" + sclass + ", saddress=" + saddress
+				+ ", price=" + price + ", stitd=" + stitd + ", stitddt=" + stitddt + ", tel=" + tel + ", bannerurl="
+				+ bannerurl + ", photourl=" + photourl + ", stfile=" + stfile + "]";
+	}
 	
 	
 	

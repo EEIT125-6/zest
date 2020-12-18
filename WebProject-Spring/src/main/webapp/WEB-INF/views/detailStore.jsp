@@ -140,7 +140,30 @@
 		<c:param name="banner" value="banner"></c:param>
 		</c:url>
 			<a href="${bannerURL}">修改店家banner</a>
+			
+			<span>|</span>
+			<form action="InsertProduct" method="GET" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="stname" value="${stname1}">
+				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+			</form>
+			
+			<span>|</span>
+			<form action="#" method="post" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="stname" value="${stname1}">
+				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+			</form>
+			
+			<span>|</span>
+			<form action="#" method="post" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="stname" value="${stname1}">
+				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+			</form>
 	<%} %>
+	<br>
+	
     <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
     ;padding-top : 30px ">
         

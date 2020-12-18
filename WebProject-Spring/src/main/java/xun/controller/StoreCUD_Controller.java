@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +32,8 @@ public class StoreCUD_Controller {
 	
 	@Autowired
 	StoreService ss;
+	
+	
 	@GetMapping("/Insert")
 	public String InsertPage(
 			Model model
@@ -44,6 +49,14 @@ public class StoreCUD_Controller {
 			Model model,
 			BindingResult result
 			) {
+//		進行白名單檢查
+		
+//		String[] suppressedFields = result.getSuppressedFields();
+//		if(suppressedFields.length>0) {
+//			throw new RuntimeException("有輸入不允許存入的欄位"+
+//		StringUtils.arrayToCommaDelimitedString(suppressedFields));
+//		}
+		
 //		檢查
 		StoreInsertVaildators validator =  new StoreInsertVaildators();
 		System.out.println(storeBean.getStname());
@@ -65,6 +78,8 @@ public class StoreCUD_Controller {
 		return "redirect:/StoreGetFullstore";
 		
 	}
+	
+
 	@GetMapping("/Update")
 	public String UpdatePage(
 			Model model,
@@ -72,6 +87,7 @@ public class StoreCUD_Controller {
 			) {
 		StoreBean sb = ss.get(id);
 		model.addAttribute("storeBean", sb);
+		System.out.println(sb);
 		return "Update";
 	}
 	@PostMapping("/StoreUpdate")
@@ -82,7 +98,8 @@ public class StoreCUD_Controller {
 			) {
 //		檢查
 		StoreInsertVaildators validator =  new StoreInsertVaildators();
-		System.out.println(storeBean.getStname());
+
+		System.out.println("back    "+storeBean);
 		validator.validate(storeBean, result);
 		if(ss.isDup(storeBean.getStname()) && !storeBean.getStname().equals((String) model.getAttribute("restname"))) {
 			result.rejectValue("stname", "","商家名稱重複");
@@ -92,9 +109,15 @@ public class StoreCUD_Controller {
 			return "Update";
 		}
 //		修改
+
 		ss.updateStore(storeBean);
+
+
+
+		
 		Integer NewStoreId = storeBean.getId();
 		String NewStoreName = storeBean.getStname();
+		System.out.println("MODEL.getId():"+NewStoreId+"storeBean.getStname():"+NewStoreName);
 		model.addAttribute("id", NewStoreId);
 		model.addAttribute("stname", NewStoreName);
 		return "redirect:/StoreGetFullstore";
@@ -110,6 +133,7 @@ public class StoreCUD_Controller {
 		model.addAttribute("storeBean", sb);
 		return "DeleteStore";
 	}
+	
 	@PostMapping("/StoreDelete")
 	public String StoreDelete(
 			Model model,

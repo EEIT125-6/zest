@@ -31,7 +31,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <link rel='stylesheet' href='${pageContext.request.contextPath}/css/zestCss.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
     <title>橙皮</title>
     <style>
@@ -73,10 +73,11 @@
             
 	    <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; ">
         <!-- 用container -->
-        <form:form action="StoreUpdate"  method="post" modelAttribute="storeBean">
+        <form:form action="StoreUpdate"  method="POST" modelAttribute="storeBean">
             <fieldset style="width: 400px;margin:1px auto;">
                 <legend>修改資料</legend>
-                <input type="hidden" name="id" value="${id}">
+<%--                 <input type="hidden" name="id" value="${id}"> --%>
+                	<form:hidden path="id"/>
                 <label>商店名稱:
                     <form:input path="stname"  />
                     <form:errors path="stname" cssClass="error"/>
