@@ -53,7 +53,7 @@ public interface WebUserRepository {
 	public String createNewUserId(String selectedId, Integer lv) throws SQLException;
 	
 	/* 新增使用者資料 1->成功、0->失敗*/
-	public Integer insertWebUserData(String insertId, WebUserData registerData) throws SQLException;
+	public Integer insertWebUserData(WebUserData registerData) throws SQLException;
 	
 	/* 取得使用者個人資料 */
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;

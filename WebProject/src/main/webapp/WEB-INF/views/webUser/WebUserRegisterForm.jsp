@@ -14,7 +14,7 @@
 <head>
 	<%@include file = "../Link_Meta-Include.jsp" %>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="styles/WebUserRegisterForm.css">       
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
     <title>進行註冊</title>
     <style>
         .classimg{
@@ -228,7 +228,7 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱">
+						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱" />
 						<span id="emailSpan"></span>
 						<hr />
 						<label>信箱驗證：</label>
@@ -321,7 +321,12 @@
 							let email = document.getElementById("email").value.trim();
 							let choice=confirm("是否要寄往 " + email + " ?");
 							if (choice) {
+								sendEmailCheckCodeBtn.disabled = true;
+								setTimeout(enableBtn, 60000);
 								sendEmailCheckCode();
+								function enableBtn() {
+									sendEmailCheckCodeBtn.disabled = false;
+								}
 							} 
 						}
 						

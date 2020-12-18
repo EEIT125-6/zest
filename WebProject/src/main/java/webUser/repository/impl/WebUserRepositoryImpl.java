@@ -207,11 +207,9 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 
 	/* 新增使用者資料 1->成功、0->失敗 */
 	@Override
-	public Integer insertWebUserData(String insertId, WebUserData registerData) throws SQLException {
+	public Integer insertWebUserData(WebUserData registerData) throws SQLException {
 		/* 變數宣告 */
 		int instertResult = 0;
-		/* 設定userId */
-		registerData.setUserId(insertId);
 		/* 取得當前Session並執行新增 */
 		getSession().save(registerData);
 		instertResult++;

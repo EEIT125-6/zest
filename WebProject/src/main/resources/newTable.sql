@@ -46,8 +46,10 @@ INSERT [dbo].[UserLevel] ([lv], [levelName]) VALUES (1, N'店家')
 GO
 INSERT [dbo].[Willing] ([willingCode], [willingText]) VALUES ('Y', N'願意')
 INSERT [dbo].[Willing] ([willingCode], [willingText]) VALUES ('N', N'不願意')
+GO 
+INSERT [dbo].[WebUserInfo] ([userId], [account], [addr0], [addr1], [addr2], [birth], [email], [fervor], [firstName], [joinDate], [lastName], [nickname], [password], [phone], [status], [version], [zest], [lv], [genderCode], [willingCode], [cityCode], [iconUrl]) VALUES ('0000000', N'WebAdmin', N'桃園市中壢區中大路300號', N'', N'', CAST(N'1990-01-01' AS Date), N'notARealEmail@gmail.com', N'皆可', N'管', CAST(N'2020-11-04' AS Date), N'李元', N'管理員', N'WebAdmin2020', N'0955779933', N'active', 0, CAST(0.00 AS Decimal(19, 2)), -1, N'N', N'N', 3, N'')
+INSERT [dbo].[WebUserInfo] ([userId], [account], [addr0], [addr1], [addr2], [birth], [email], [fervor], [firstname], [joinDate], [lastName], [nickname], [password], [phone], [status], [version], [zest], [lv], [genderCode], [willingCode], [cityCode], [iconUrl]) VALUES ('1000000', N'TestUser', N'桃園市中壢區中大路300號', N'', N'', CAST(N'2000-10-10' AS Date), N'notARealEmail@yahoo.com', N'中式,快餐,燒肉,西式,下午茶,日式,皆可', N'吳', CAST(N'2020-11-04' AS Date), N'此仁', N'無此人', N'TestUser1256', N'0911223344', N'active', 0, CAST(0.00 AS Decimal(19, 2)), 0, N'M', N'N', 3, N'')
+INSERT [dbo].[WebUserInfo] ([userId], [account], [addr0], [addr1], [addr2], [birth], [email], [fervor], [firstName], [joinDate], [lastName], [nickname], [password], [phone], [status], [version], [zest], [lv], [genderCode], [willingCode], [cityCode], [iconUrl]) VALUES ('2000000', N'TestBoss', N'桃園市中壢區中大路300號', N'', N'', CAST(N'1980-12-31' AS Date), N'notARealEmail@outlook.com', N'中式,快餐,燒肉', N'郝', CAST(N'2020-11-04' AS Date), N'頭家', N'好頭家', N'TestBossZest1104', N'0933441122', N'active', 0, CAST(0.00 AS Decimal(19, 2)), 1, N'W', N'N', 3, N'')
 GO
-
-
 
 

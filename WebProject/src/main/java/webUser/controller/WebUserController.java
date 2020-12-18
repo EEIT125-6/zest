@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
@@ -32,7 +33,6 @@ import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import webUser.service.WillingService;
 
-@Controller
 @SessionAttributes(
 		{"registerEmail", 
 		"checkCode", 
@@ -41,8 +41,8 @@ import webUser.service.WillingService;
 		"fervorList", 
 		"genderList", 
 		"cityInfoList",
-		"reg_webUser",
-		"submitMessage"})
+		"reg_webUser"})
+@Controller
 @RequestMapping("/webUser")
 public class WebUserController {
 	/* WebUserData Service */
@@ -96,6 +96,7 @@ public class WebUserController {
 		return "webUser/WebUserRegisterForm";
 	}
 
+	/* 執行註冊資料檢查 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(Model model,
@@ -123,9 +124,29 @@ public class WebUserController {
 		String fervorTemp = "";
 		
 		/* 建立物件 */
-		WebUserData reg_webUser = new WebUserData("", account, password, firstName, lastName, nickname, birth, "",
-				email, phone, Date.valueOf(today), addr0, addr1, addr2, BigDecimal.ZERO, 0, "inactive", "",
-				new UserIdentity(), new Gender(), new UserWilling(), new CityInfo());
+		WebUserData reg_webUser = new WebUserData(
+				"", 
+				account, 
+				password, 
+				firstName, 
+				lastName, 
+				nickname, 
+				birth, 
+				"",
+				email, 
+				phone, 
+				Date.valueOf(today), 
+				addr0, 
+				addr1, 
+				addr2, 
+				BigDecimal.ZERO, 
+				0, 
+				"inactive", 
+				"",
+				new UserIdentity(), 
+				new Gender(), 
+				new UserWilling(), 
+				new CityInfo());
 		
 		/* 從session取出陣列來繼續完成設定 */
 		List<UserIdentity> identityList = (List<UserIdentity>) model.getAttribute("identityList");
@@ -187,8 +208,10 @@ public class WebUserController {
 			}
 		}
 		
-		/* 執行檢查 */
-		submitMessage = doRegisterInputCheck(reg_webUser, model, lv, genderCode, inputCheckCode, willingCode, cityCode);
+		/* 預防性後端輸入檢查，正常時回傳空字串 */
+		submitMessage = doRegisterInputCheck(
+				reg_webUser, 
+				model);
 		
 		/* 追加檢查checkCode */
 		if (submitMessage.equals("")) {
@@ -212,7 +235,7 @@ public class WebUserController {
 			/* 移動到顯示使用者輸入資料的畫面 */
 			return "redirect:/webUser/DisplayWebUserInfo";
 		} else {
-			/* 將物件submitMessage以"submitMessage"的名稱放入Session中 */
+			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
 			/* 返回註冊畫面 */
 			return "redirect:/webUser/WebUserRegisterForm";			
@@ -220,29 +243,115 @@ public class WebUserController {
 
 	}
 	
-	/* 傳送表單所必需的資料 */
+	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
 	public String doCreateDisplayInfo(Model model) {
-		/* 取得下拉選單、單選、多選所需的固定資料 */
-		List<UserWilling> willingList = wis.getUserWillingList();
-		List<UserIdentity> identityList = ids.getIdentityList();
-		List<FoodFervor> fervorList = fvs.getFoodFervorList();
-		List<Gender> genderList = gds.getGenderList();
-		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
-		/* 設定入Model中 */
-		model.addAttribute("willingList", willingList);
-		model.addAttribute("identityList", identityList);
-		model.addAttribute("fervorList", fervorList);
-		model.addAttribute("genderList", genderList);
-		model.addAttribute("cityInfoList", cityInfoList);
-
-		/* 前往註冊畫面 */
 		return "webUser/DisplayWebUserInfo";
 	}
+	
+	/* 執行使用者資料送出 */
+	@PostMapping(value = "/controller/DisplayWebUserInfo")
+	public String doRegisterConfirm(
+				SessionStatus sessionStatus,
+				RedirectAttributes redirectAttributes,
+				Model model,
+				@RequestParam(value="register", required=false, defaultValue="取消") String mode
+			) 
+	{
+		System.out.println("Test");
+		String destinationUrl = "";
+		switch(mode) {
+			case "確認":
+				/* 取出物件 */
+				WebUserData reg_webUser = (WebUserData) model.getAttribute("reg_webUser");
+				String registerEmail = (String) model.getAttribute("registerEmail");
+				
+				/* 設定要顯示的訊息 */
+				String insertResultMessage = "";
+				/* 宣告欲回傳的參數 */
+				Integer insertResult = -1;
+				String insertResultPage = "webUser/WebUserRegisterForm";
+				
+				/* 預防性後端輸入檢查，正常時回傳空字串 */
+				insertResultMessage = doRegisterInputCheck(
+						reg_webUser, 
+						model);
+				
+				/* 追加檢查項目 */
+				if (!reg_webUser.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
+					insertResultMessage = "加入時間異常";
+				}
+				if (!reg_webUser.getStatus().equals("active") && reg_webUser.getAccountLv().getLv() == 0) {
+					insertResultMessage = "帳號狀態異常";
+				} else if (!reg_webUser.getStatus().equals("inactive") 
+						&& (reg_webUser.getAccountLv().getLv() == -1 
+						|| reg_webUser.getAccountLv().getLv() == 1)) {
+					insertResultMessage = "帳號狀態異常";
+				}
+				if (reg_webUser.getVersion() != 0) {
+					insertResultMessage = "帳號資料狀態異常";
+				}
+				if (!reg_webUser.getEmail().equals(registerEmail)) {
+					insertResultMessage = "信箱比對不一致";
+				}
+				
+				if (insertResultMessage.equals("")) {
+					/* 調用服務裡的方法 */
+					try {
+						insertResult = wus.insertWebUserData(reg_webUser);
+					} catch (SQLException sqlE) {
+						insertResultMessage = "發生錯誤！" + sqlE.getMessage();
+					}
+					
+					if (insertResult > 0) {
+						insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
+						/* 清空SessionAttribute */
+						sessionStatus.setComplete();
+						insertResultPage = "webUser/WebUserLogin";
+					} 
+					
+					/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
+					redirectAttributes.addFlashAttribute("insertResultMessage", insertResultMessage);
+					/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
+					redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
+					/* 前往註冊結束畫面 */
+					destinationUrl = "redirect:/webUser/WebUserRegisterResult";
+				} else {
+					/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
+					redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
+					/* 返回註冊畫面 */
+					destinationUrl = "redirect:/webUser/WebUserRegisterForm";
+				}
+				
+				break;
+			case "取消":
+			default:
+				/* 清空SessionAttribute */
+				sessionStatus.setComplete();
+				/* 返回註冊畫面 */
+				destinationUrl = "redirect:/webUser/WebUserRegisterForm";
+				break;
+		}
+		return destinationUrl;
+	}
+	
+	@GetMapping(value = "/WebUserRegisterResult")
+	/* 前往註冊結束畫面 */
+	public String doGoRegisterResult() {
+		return "webUser/WebUserRegisterResult";
+	}
+	
+	@GetMapping(value = "/WebUserLogin")
+	/* 前往登入畫面 */
+	public String doGoLogin() {
+		return "webUser/WebUserLogin";
+	}
 
-	/* Submit input check */
-	public String doRegisterInputCheck(WebUserData reg_webUser, Model model, Integer lv, String genderCode,
-			String inputCheckCode, String willingCode, Integer cityCode) {
+	/* 使用者註冊資料檢查 */
+	public String doRegisterInputCheck(
+			WebUserData reg_webUser, 
+			Model model) 
+	{
 		/* 傳回參數宣告 */
 		String submitMessage = "";
 		/* 是否符合條件 */
@@ -261,6 +370,11 @@ public class WebUserController {
 		String addr0 = reg_webUser.getAddr0();
 		String addr1 = reg_webUser.getAddr1();
 		String addr2 = reg_webUser.getAddr2();
+		
+		Integer lv = reg_webUser.getAccountLv().getLv();
+		String genderCode = reg_webUser.getGender().getGenderCode();
+		String willingCode = reg_webUser.getGetEmail().getWillingCode();
+		Integer cityCode = reg_webUser.getLocationInfo().getCityCode();
 		
 		/* 檢查身分 */
 		switch (lv) {
@@ -498,6 +612,20 @@ public class WebUserController {
 					submitMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
 					inputIsOk = false;
 				}
+			}
+		}
+		
+		/* getEmail */
+		if (inputIsOk) {
+			switch(willingCode) {
+				case "Y":
+				case "N":
+					inputIsOk = true;
+					break;
+				default:
+					submitMessage = "接收促銷/優惠訊息設定異常";
+					inputIsOk = false;
+					break;
 			}
 		}
 		

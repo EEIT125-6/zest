@@ -44,7 +44,7 @@ public interface WebUserService {
 	public Integer checkResetPassword(String inputUserId, String inputPassword) throws SQLException;
 	
 	/* 執行資料新增 1->成功、0->失敗 */
-	public Integer insertWebUserData(WebUserData registerData, Integer lv) throws SQLException;
+	public Integer insertWebUserData(WebUserData registerData) throws SQLException;
 	
 	/* 執行登入檢查 -1->異常、0->失敗、1->成功 */
 	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException;
