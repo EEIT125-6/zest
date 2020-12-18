@@ -104,7 +104,7 @@ public class UserInfoController {
 			String checkCode = (String) model.getAttribute("checkCode");
 			String registerEmail = (String) model.getAttribute("registerEmail");
 			
-			if (checkCode == null && registerEmail == null) {
+//			if (checkCode == null && registerEmail == null) {
 				checkCode = doCreateCheckCode();
 				try {
 					sendResult = doSendEmail(account, email, checkCode, "submit");
@@ -114,6 +114,8 @@ public class UserInfoController {
 				if (sendResult) {		
 					message = "驗證碼已寄出，請至您填寫的信箱收信，並將驗證碼複製貼上至指定欄位";
 					sendResult = true;
+					/* 將變數賦值 */
+					registerEmail = email;
 					/* 將產生的checkCode放入session中 */
 					model.addAttribute("checkCode", checkCode);
 					/* 將獲得驗證碼的email放入session中 */
@@ -121,10 +123,10 @@ public class UserInfoController {
 				} else if (checkCode == null){
 					sendResult = false;
 				}
-			} else {
-				message = "已產生過驗證碼，如需重新產生，請完整關閉瀏覽器後再次連接至本站！";
-				sendResult = false;
-			}
+//			} else {
+//				message = "已產生過驗證碼，如需重新產生，請完整關閉瀏覽器後再次連接至本站！";
+//				sendResult = false;
+//			}
 			
 			map.put("resultCode", sendResult.toString());
 			map.put("resultMessage", message);
@@ -162,9 +164,9 @@ public class UserInfoController {
 		/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
 		final Integer mailPort = 587;
 		/* 寄件者email帳號 */
-		final String mailUser = "projectzesteeit1256@gmail.com";
+		final String mailUser = "@gmail.com";
 		/* 寄件者密碼或應用程式密碼 */
-		final String mailPassword = "EEIT1256PZest";
+		final String mailPassword = "";
 		/* 收件者email帳號 */
 		String mailObj = email;
 		/* email內文 */

@@ -254,9 +254,11 @@ function checkBirthday() {
 		let inputYear = parseInt(birthdayObjValue.split("-")[0]);
 		let inputMonth = parseInt(birthdayObjValue.split("-")[1]);
 		let inputDate = parseInt(birthdayObjValue.split("-")[2]);
-		let todayYear = new Date().getFullYear();
-		let todayMonth = new Date().getMonth() + 1;
-		let todayDate = new Date().getDate();
+		let today = new Date();
+		let todayYear = today.getFullYear();
+		let todayMonth = today.getMonth() + 1;
+		let todayDate = today.getDate();
+		let today18 = today.setFullYear(todayYear - 18);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -267,12 +269,7 @@ function checkBirthday() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (todayYear - 18 < inputYear && todayMonth <= inputMonth && todayDate <= inputDate) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
-			birthdayIsOk = false;
-		} else if (todayYear - 17 < inputYear 
-		&& ((todayMonth >= inputMonth && todayDate > inputDate) 
-		|| (todayMonth > inputMonth && todayDate >= inputDate))) {
+		} else if (today18 < new Date(birthdayObjValue).getTime()) {
 			birthdayStr = "未滿18歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
@@ -319,14 +316,12 @@ function checkFervor() {
 		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + fervorStr;
 		fervorSpan.style.color = "red";
 		fervorSpan.style.fontStyle = "italic";
-		document.getElementById("fervorValue").value = "";
 		return false;
 	}
 	else {
 		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
 		fervorSpan.style.color = "black";
 		fervorSpan.style.fontStyle = "normal";
-		document.getElementById("fervorValue").value = fervorObjValue;
 		return true;
 	} 
 }
@@ -381,10 +376,13 @@ function checkEmailCheckCode() {
 	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
 		emailCheckCodeStr = "驗證碼不可為空值";
 		emailCheckCodeIsOk = false;
+	} else if (checkCode != emailCheckCodeObjValue) {
+		emailCheckCodeStr = "聯絡信箱驗證碼錯誤";
+		emailCheckCodeIsOk = false;
 	} else if (checkCode == emailCheckCodeObjValue) {
 		emailCheckCodeStr = "聯絡信箱驗證成功";
 		emailCheckCodeIsOk = true;
-	}
+	} 
 	if (!emailCheckCodeIsOk) {
 		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
 		emailCheckCodeSpan.style.color = "red";

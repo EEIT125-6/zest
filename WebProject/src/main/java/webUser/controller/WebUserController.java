@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
 import webUser.model.FoodFervor;
@@ -32,7 +33,16 @@ import webUser.service.WebUserService;
 import webUser.service.WillingService;
 
 @Controller
-@SessionAttributes({ "registerEmail", "checkCode" })
+@SessionAttributes(
+		{"registerEmail", 
+		"checkCode", 
+		"willingList", 
+		"identityList", 
+		"fervorList", 
+		"genderList", 
+		"cityInfoList",
+		"reg_webUser",
+		"submitMessage"})
 @RequestMapping("/webUser")
 public class WebUserController {
 	/* WebUserData Service */
@@ -67,7 +77,7 @@ public class WebUserController {
 	final LocalDate today = LocalDate.now();
 
 	/* 傳送表單所必需的資料 */
-	@GetMapping(value = "/registerForm")
+	@GetMapping(value = "/WebUserRegisterForm")
 	public String doCreateRegisterForm(Model model) {
 		/* 取得下拉選單、單選、多選所需的固定資料 */
 		List<UserWilling> willingList = wis.getUserWillingList();
@@ -87,7 +97,7 @@ public class WebUserController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/checkRegisterInfo")
+	@PostMapping(value = "/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(Model model,
 			@RequestParam(value = "userLv", required = false, defaultValue = "0") Integer lv,
 			@RequestParam(value = "account", required = false, defaultValue = "") String account,
@@ -97,37 +107,49 @@ public class WebUserController {
 			@RequestParam(value = "nickname", required = false, defaultValue = "") String nickname,
 			@RequestParam(value = "gender", required = false, defaultValue = "N") String genderCode,
 			@RequestParam(value = "birth", required = false, defaultValue = "1800-01-01") Date birth,
-			@RequestParam(value = "fervorValue", required = false, defaultValue = "") String fervor,
+			@RequestParam(value = "fervorOption", required = false, defaultValue="{7}") List<String> fervorValue,
 			@RequestParam(value = "email", required = false, defaultValue = "") String email,
 			@RequestParam(value = "inputCheckCode", required = false, defaultValue = "") String inputCheckCode,
 			@RequestParam(value = "phone", required = false, defaultValue = "") String phone,
 			@RequestParam(value = "getEmail", required = false, defaultValue = "Y") String willingCode,
-			@RequestParam(value = "locationCode", required = false, defaultValue = "") String cityCode,
+			@RequestParam(value = "locationCode", required = false, defaultValue = "0") Integer cityCode,
 			@RequestParam(value = "addr0", required = false, defaultValue = "") String addr0,
 			@RequestParam(value = "addr1", required = false, defaultValue = "") String addr1,
-			@RequestParam(value = "addr2", required = false, defaultValue = "") String addr2) {
-		/* 傳回參數宣告 */
+			@RequestParam(value = "addr2", required = false, defaultValue = "") String addr2,
+			RedirectAttributes redirectAttributes) 
+	{
+		/* 參數宣告 */
 		String submitMessage = "";
-
+		String fervorTemp = "";
+		
 		/* 建立物件 */
-		WebUserData reg_webUser = new WebUserData("", account, password, firstName, lastName, nickname, birth, fervor,
+		WebUserData reg_webUser = new WebUserData("", account, password, firstName, lastName, nickname, birth, "",
 				email, phone, Date.valueOf(today), addr0, addr1, addr2, BigDecimal.ZERO, 0, "inactive", "",
-				new UserIdentity(), new FoodFervor(), new Gender(), new UserWilling(), new CityInfo());
+				new UserIdentity(), new Gender(), new UserWilling(), new CityInfo());
+		
 		/* 從session取出陣列來繼續完成設定 */
 		List<UserIdentity> identityList = (List<UserIdentity>) model.getAttribute("identityList");
 		List<Gender> genderList = (List<Gender>) model.getAttribute("genderList");
+		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
+		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
+		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
+		
+		String checkCode = (String) model.getAttribute("checkCode");
+		String registerEmail = (String) model.getAttribute("registerEmail");
+		
 		/* 設定物件 */
 		switch (lv) {
-		case -1:
-			reg_webUser.setStatus("inactive");
-			break;
-		case 0:
-			reg_webUser.setStatus("active");
-			break;
-		case 1:
-			reg_webUser.setStatus("inactive");
-			break;
+			case -1:
+				reg_webUser.setStatus("inactive");
+				break;
+			case 0:
+				reg_webUser.setStatus("active");
+				break;
+			case 1:
+				reg_webUser.setStatus("inactive");
+				break;
 		}
+		
 		/* 用forEach直到取出符合條件的值來 */
 		for (UserIdentity identity : identityList) {
 			if (identity.getLv() == lv) {
@@ -141,19 +163,86 @@ public class WebUserController {
 				reg_webUser.setGender(gender);
 			}
 		}
+		for (FoodFervor fervorItem: fervorList) {
+			for (String fervor: fervorValue) {
+				if (fervor.equals(fervorItem.getFervorCode().toString())) {
+					if (!fervorTemp.equals("")) {
+						fervorTemp += ",";
+					}
+					fervorTemp += fervorItem.getFervorItem();
+				}
+			}
+		}
+		reg_webUser.setFervor(fervorTemp);
+		for (UserWilling getEmail: willingList) {
+			if (getEmail.getWillingCode().equals(willingCode)) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setGetEmail(getEmail);
+			}
+		}
+		for (CityInfo locationInfo: cityInfoList) {
+			if (locationInfo.getCityCode().equals(cityCode)) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setLocationInfo(locationInfo);
+			}
+		}
+		
 		/* 執行檢查 */
 		submitMessage = doRegisterInputCheck(reg_webUser, model, lv, genderCode, inputCheckCode, willingCode, cityCode);
-
+		
+		/* 追加檢查checkCode */
 		if (submitMessage.equals("")) {
-
+			if (inputCheckCode.equals("")) {
+				submitMessage = "驗證碼不可為空白";
+			} else if (checkCode == null || registerEmail == null) {
+				submitMessage = "未產生驗證碼";
+			} else if (!inputCheckCode.equals(checkCode)) {
+				submitMessage = "驗證碼檢查失敗";
+			} else if (!registerEmail.equals(email)) {
+				submitMessage = "email資訊不吻合";
+			} else if (!checkCode.matches("[0-9a-zA-Z]{8}")) {
+				submitMessage = "驗證碼錯誤";
+			}
+		}
+		
+		/* 成功 */
+		if (submitMessage.equals("")) {
+			/* 將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
+			model.addAttribute("reg_webUser", reg_webUser);
+			/* 移動到顯示使用者輸入資料的畫面 */
+			return "redirect:/webUser/DisplayWebUserInfo";
+		} else {
+			/* 將物件submitMessage以"submitMessage"的名稱放入Session中 */
+			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
+			/* 返回註冊畫面 */
+			return "redirect:/webUser/WebUserRegisterForm";			
 		}
 
-		return null;
+	}
+	
+	/* 傳送表單所必需的資料 */
+	@GetMapping(value = "/DisplayWebUserInfo")
+	public String doCreateDisplayInfo(Model model) {
+		/* 取得下拉選單、單選、多選所需的固定資料 */
+		List<UserWilling> willingList = wis.getUserWillingList();
+		List<UserIdentity> identityList = ids.getIdentityList();
+		List<FoodFervor> fervorList = fvs.getFoodFervorList();
+		List<Gender> genderList = gds.getGenderList();
+		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
+		/* 設定入Model中 */
+		model.addAttribute("willingList", willingList);
+		model.addAttribute("identityList", identityList);
+		model.addAttribute("fervorList", fervorList);
+		model.addAttribute("genderList", genderList);
+		model.addAttribute("cityInfoList", cityInfoList);
+
+		/* 前往註冊畫面 */
+		return "webUser/DisplayWebUserInfo";
 	}
 
 	/* Submit input check */
 	public String doRegisterInputCheck(WebUserData reg_webUser, Model model, Integer lv, String genderCode,
-			String inputCheckCode, String willingCode, String cityCode) {
+			String inputCheckCode, String willingCode, Integer cityCode) {
 		/* 傳回參數宣告 */
 		String submitMessage = "";
 		/* 是否符合條件 */
@@ -167,16 +256,22 @@ public class WebUserController {
 		String nickname = reg_webUser.getNickname();
 		Date birth = reg_webUser.getBirth();
 		String fervor = reg_webUser.getFervor();
+		String email = reg_webUser.getEmail();
+		String phone = reg_webUser.getPhone();
+		String addr0 = reg_webUser.getAddr0();
+		String addr1 = reg_webUser.getAddr1();
+		String addr2 = reg_webUser.getAddr2();
 		
 		/* 檢查身分 */
 		switch (lv) {
-		case -1:
-		case 0:
-		case 1:
-			break;
-		default:
-			inputIsOk = false;
-			break;
+			case -1:
+			case 0:
+			case 1:
+				inputIsOk = true;
+				break;
+			default:
+				inputIsOk = false;
+				break;
 		}
 		submitMessage = (inputIsOk) ? "" : "帳號身分錯誤";
 
@@ -372,6 +467,148 @@ public class WebUserController {
 				inputIsOk = false;
 			} else if (fervor.length() > 50){
 				submitMessage = "偏好食物長度過長";
+				inputIsOk = false;
+			} else {
+				inputIsOk = true;
+			}
+		}
+		
+		/* email */
+		if (inputIsOk) {
+			if (email.equals("")) {
+				submitMessage = "信箱資訊不可為空白";
+				inputIsOk = false;
+			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
+				submitMessage = "信箱資訊格式錯誤";
+				inputIsOk = false;
+			} else {
+				Integer emailCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					emailCheckResult = wus.checkEmailExist(email);
+				} catch (SQLException sqlE) {
+					submitMessage = sqlE.getMessage();
+					inputIsOk = false;
+				}
+				
+				if (emailCheckResult == 0) {
+					inputIsOk = true;
+				} else if (emailCheckResult == 1){
+					submitMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
+					inputIsOk = false;
+				}
+			}
+		}
+		
+		/* phone */
+		if (inputIsOk) {
+			if (phone.equals("")) {
+				submitMessage = "連絡電話不可為空白";
+				inputIsOk = false;
+			} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
+				submitMessage = "連絡電話格式錯誤";
+				inputIsOk = false;
+			} else if (!phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
+				submitMessage = "連絡電話格式錯誤";
+				inputIsOk = false;
+			} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
+				submitMessage = "行動電話格式錯誤";
+				inputIsOk = false;
+			} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
+				submitMessage = "室內電話格式錯誤";
+				inputIsOk = false;
+			} else {
+				Integer phoneCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					phoneCheckResult = wus.checkPhoneExist(phone);
+				} catch (SQLException sqlE) {
+					submitMessage = sqlE.getMessage();
+					inputIsOk = false;
+				}
+				
+				if (phoneCheckResult == 0) {
+					inputIsOk = true;
+				} else if (phoneCheckResult == 1){
+					submitMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+					inputIsOk = false;
+				}
+			}
+		}
+		
+		/* 居住區域 */
+		if (inputIsOk) {
+			switch(cityCode) {
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+				case 18:
+				case 19:
+				case 20:
+				case 21:
+				case 22:
+				case 23:
+					inputIsOk = true;
+					break;
+				default:
+					submitMessage = "居住區域設定異常";
+					inputIsOk = false;
+					break;
+			}
+		}
+		
+		/* 生活地點一 */
+		if (inputIsOk) {
+			if (addr0.equals("")) {
+				submitMessage = "生活地點一不可為空白";
+				inputIsOk = false;
+			} else if (addr0.length() > 65) {
+				submitMessage = "生活地點一超過長度限制";
+				inputIsOk = false;
+			} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
+				submitMessage = "生活地點重複填寫";
+				inputIsOk = false;
+			} else {
+				inputIsOk = true;
+			}
+		}
+		
+		/* 生活地點二 */
+		if (inputIsOk) {
+			if (addr1.length() > 65) {
+				submitMessage = "生活地點二超過長度限制";
+				inputIsOk = false;
+			} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
+				submitMessage = "生活地點重複填寫";
+				inputIsOk = false;
+			} else {
+				inputIsOk = true;
+			}
+		}
+		
+		/* 生活地點三 */
+		if (inputIsOk) {
+			if (addr2.length() > 65) {
+				submitMessage = "生活地點三超過長度限制";
+				inputIsOk = false;
+			} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
+				submitMessage = "生活地點重複填寫";
 				inputIsOk = false;
 			} else {
 				inputIsOk = true;

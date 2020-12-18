@@ -1,5 +1,6 @@
 package webUser.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
@@ -15,7 +16,9 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="WebUserInfo")
-public class WebUserData {	
+public class WebUserData implements Serializable{	
+	private static final long serialVersionUID = 1L;
+	
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
 	/* ID */
 	@Id
@@ -61,10 +64,6 @@ public class WebUserData {
 	private UserIdentity accountLv;	
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ferovrCode")
-	private FoodFervor fervorOption;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "genderCode")
 	private Gender gender;
 	
@@ -85,7 +84,7 @@ public class WebUserData {
 	public WebUserData(String userId, String account, String password, String firstName, String lastName,
 			String nickname, Date birth, String fervor, String email, String phone, Date joinDate, String addr0,
 			String addr1, String addr2, BigDecimal zest, Integer version, String status, String iconUrl,
-			UserIdentity accountLv, FoodFervor fervorOption, Gender gender, UserWilling getEmail,
+			UserIdentity accountLv, Gender gender, UserWilling getEmail,
 			CityInfo locationInfo) {
 		super();
 		this.userId = userId;
@@ -107,7 +106,6 @@ public class WebUserData {
 		this.status = status;
 		this.iconUrl = iconUrl;
 		this.accountLv = accountLv;
-		this.fervorOption = fervorOption;
 		this.gender = gender;
 		this.getEmail = getEmail;
 		this.locationInfo = locationInfo;
@@ -272,14 +270,6 @@ public class WebUserData {
 
 	public void setGetEmail(UserWilling getEmail) {
 		this.getEmail = getEmail;
-	}
-
-	public FoodFervor getFervorOption() {
-		return fervorOption;
-	}
-
-	public void setFervorOption(FoodFervor fervorOption) {
-		this.fervorOption = fervorOption;
 	}
 	
 	public Gender getGender() {

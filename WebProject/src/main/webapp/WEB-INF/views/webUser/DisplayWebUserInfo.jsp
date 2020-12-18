@@ -149,7 +149,7 @@
 				<jsp:useBean id="reg_webUser" class="webUser.model.WebUserData"
 					scope="session" />
 				<c:if test="${reg_webUser.password == null}">
-					<c:redirect url="WebUserRegisterForm.jsp" />
+					<c:redirect url="webUser/WebUserRegisterForm" />
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
 					<fieldset>
@@ -159,7 +159,7 @@
 						<c:out value="${reg_webUser.accountLv.levelName}" />
 						<hr />
 						<label>帳號名稱：</label>
-						<jsp:getProperty name="reg_webUser" property="account" />
+						<c:out value="${reg_webUser.account}" />
 						<hr />
 						<label>帳號密碼：</label>
 						<c:if test="${reg_webUser.password.length() > 0}">
@@ -171,28 +171,28 @@
 						<input type="hidden" name="password" id="password" value="${reg_webUser.password}">
 						<hr />
 						<label>中文姓氏：</label>
-						<jsp:getProperty name="reg_webUser" property="firstName" />
+						<c:out value="${reg_webUser.firstName}" />
 						<hr />
 						<label>中文名字：</label>
-						<jsp:getProperty name="reg_webUser" property="lastName" />
+						<c:out value="${reg_webUser.lastName}" />
 						<hr />
 						<label>稱呼方式：</label>
-						<jsp:getProperty name="reg_webUser" property="nickname" />
+						<c:out value="${reg_webUser.nickname}" />
 						<hr />
 						<label>生理性別：</label>
 						<c:out value="${reg_webUser.gender.genderText}" />
 						<hr />
 						<label>西元生日：</label>
-						<jsp:getProperty name="reg_webUser" property="birth" />
+						<c:out value="${reg_webUser.birth}" />
 						<hr />
 						<label>偏好食物：</label>
-						<jsp:getProperty name="reg_webUser" property="fervor" />
+						<c:out value="${reg_webUser.fervor}" />
 						<hr />
 						<label>聯絡信箱：</label>
-						<jsp:getProperty name="reg_webUser" property="email" />
+						<c:out value="${reg_webUser.email}" />
 						<hr />
 						<label>聯絡電話：</label>
-						<jsp:getProperty name="reg_webUser" property="phone" />
+						<c:out value="${reg_webUser.phone}" />
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
 						<c:out value="${reg_webUser.getEmail.willingText}" />
@@ -201,13 +201,24 @@
 						<c:out value="${reg_webUser.locationInfo.cityName}" />
 						<hr />
 						<label>生活地點一：</label>
-						<jsp:getProperty name="reg_webUser" property="addr0" />
+						<c:out value="${reg_webUser.addr0}" />
 						<hr />
 						<label>生活地點二：</label>
-						<jsp:getProperty name="reg_webUser" property="addr1" />
+						<c:out value="${reg_webUser.addr1}" />
 						<hr />
 						<label>生活地點三：</label>
-						<jsp:getProperty name="reg_webUser" property="addr2" />
+						<c:out value="${reg_webUser.addr2}" />
+						<hr />
+						<label>註冊狀態：</label>
+						<c:if test="${reg_webUser.accountLv.lv == -1}" >
+							<c:out value="本帳號尚未啟用，請等待網站管理員為您啟用帳號" />
+						</c:if>
+						<c:if test="${reg_webUser.accountLv.lv == 0}" >
+							<c:out value="本帳號即將完成啟用" />
+						</c:if>
+						<c:if test="${reg_webUser.accountLv.lv == 1}" >
+							<c:out value="本帳號尚未啟用，請等待網站管理員為您啟用帳號" />
+						</c:if>
 						<hr />
 					</fieldset>
 					<div align="center">

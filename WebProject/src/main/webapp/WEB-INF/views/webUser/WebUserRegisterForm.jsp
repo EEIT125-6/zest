@@ -149,7 +149,7 @@
                <c:if test="${userFullData.password != null}">
 					<c:redirect url="WebUserMain.jsp" />
 				</c:if>
-               <form action="/webUser/checkRegisterInfo" method="post" onSubmit="return checkForm();">
+               <form action="<c:url value='/webUser/controller/WebUserRegisterForm' />" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>註冊相關資料</legend>
 						<span id="submitSpan">
@@ -223,7 +223,6 @@
 							</c:if>
 							<label><c:out value="${fervorObject.fervorItem}" ></c:out></label>
 						</c:forEach>
-						<input type="hidden" id="fervorValue" name="fervorValue" >
 						<span id="fervorSpan"></span>
 						<hr />
 						<label>聯絡信箱：</label>
