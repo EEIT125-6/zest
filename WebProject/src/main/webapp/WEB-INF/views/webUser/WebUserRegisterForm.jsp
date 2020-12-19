@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.password != null}">
-					<c:redirect url="WebUserMain.jsp" />
+					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
                <form action="<c:url value='/webUser/controller/WebUserRegisterForm' />" method="post" onSubmit="return checkForm();">
 					<fieldset>

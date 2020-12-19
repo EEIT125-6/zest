@@ -36,7 +36,7 @@ public class UserInfoController {
 	
 	/* 執行註冊流程的相關檢查，並交由Ajax回傳 */
 	@PostMapping(value="/webUser/controller/UserInfoController", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, String> ajaxRegisterCheck(
+	public @ResponseBody Map<String, String> doRegisterCheck(
 			@RequestParam(value="inputAccount", required=false, defaultValue="") String account, 
 			@RequestParam(value="inputNickname", required=false, defaultValue="") String nickname,
 			@RequestParam(value="inputEmail", required=false, defaultValue="") String email,

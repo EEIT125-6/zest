@@ -146,7 +146,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
             	<c:if test="${userFullData.password != null}">
-					<c:redirect url="/webUser/WebUserMain.jsp" />
+					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
                 <form method="post">
                 	<fieldset>
@@ -268,7 +268,7 @@
 					            		/* 顯示彈窗訊息 */
 					            		alert(loginStr);
 									}
-								}
+								} 
 							};
 	            		} else {
 							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");

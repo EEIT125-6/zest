@@ -365,9 +365,79 @@ public class WebUserController {
 			@RequestParam(value = "password", required=false, defaultValue="") String password
 			) 
 	{
-		Map<String, String> map = new HashMap<>();
+		/* 宣告欲回傳的參數 */
+		Integer inputCheckResult = -1;
+		Integer accountCheckResult = -3;
+		String loginMessage = "";
+		WebUserData userFullData = new WebUserData();
 		
+		/* 預防性後端檢查，正常時回傳1 */
+		inputCheckResult = doLoginInputCheck(account, password);
+		
+		if (inputCheckResult == 1) {
+			/* 調用服務裡的方法 */
+			try {
+				/* 檢查登入 */
+				accountCheckResult = wus.checkWebUserLogin(account, password);
+				
+				System.out.println("error code = "+accountCheckResult);
+				/* 存取使用者個人資料 */
+				userFullData = wus.getWebUserData(account);
+			} catch (SQLException sqlE) {
+				String loginMessageTmp = sqlE.getMessage();
+				loginMessage = loginMessageTmp.split(":")[1];
+			}
+		} else {
+			switch(inputCheckResult) {
+				case 0:
+					loginMessage = "帳號不可為空白";
+					break;
+				case -1:
+					loginMessage = "帳號長度不足";
+					break;
+				case -2:
+					loginMessage = "帳號長度過長";
+					break;
+				case -3:
+					loginMessage = "帳號不可以數字開頭";
+					break;
+				case -4:
+					loginMessage = "帳號不符合格式";
+					break;
+				case 2:
+					loginMessage = "密碼不可為空白";
+					break;
+				case 3:
+					loginMessage = "密碼長度不足，至少需8個字元";
+					break;
+				case 4:
+					loginMessage = "密碼長度過長，最多僅20個字元";
+					break;
+				case 5:
+					loginMessage = "密碼不可以數字開頭";
+					break;
+				case 6:
+					loginMessage = "密碼不符合格式";
+					break;
+			}
+		}
+		
+		if (accountCheckResult == 1) {
+			loginMessage = "歡迎 " + userFullData.getNickname() + " ！";
+			/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
+			model.addAttribute("userFullData", userFullData);
+		} 
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("resultCode", accountCheckResult.toString());
+		map.put("resultMessage", loginMessage);
 		return map;
+	}
+	
+	/* 前往登入主畫面 */
+	@GetMapping(value = "/WebUserMain")
+	public String doGoWebUserMain() {
+		return "webUser/WebUserMain";
 	}
 
 	/* 使用者註冊資料檢查 */
@@ -770,5 +840,37 @@ public class WebUserController {
 		}
 		
 		return submitMessage;
+	}
+	
+	/* 使用者登入資料檢查 */
+	public Integer doLoginInputCheck(String account, String password) {
+		/* 傳回參數宣告 */
+		Integer inputCheckResult = 1;
+		
+		/* 使用者帳號 */
+		if (account.equals("")) {
+			inputCheckResult = 0;
+		} else if(account.length() < 8 || account.length() > 20) {
+			inputCheckResult = -1;
+		} else if (account.matches("[1-9]{1}.")) {
+			inputCheckResult = -2;
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = -3;
+		} 
+		
+		/* 使用者密碼 */
+		if (password.equals("")) {
+			inputCheckResult = 2;
+		} else if (password.length() < 8) {
+			inputCheckResult = 3;
+		} else if (password.length() > 20) {
+			inputCheckResult = 4;
+		} else if (password.matches("[1-9]{1}.")) {
+			inputCheckResult = 5;
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = 6;
+		} 
+		
+		return inputCheckResult;
 	}
 }
