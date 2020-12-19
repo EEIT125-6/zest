@@ -148,19 +148,19 @@
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
 			
-			<span>|</span>
-			<form action="#" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
+<!-- 			<span>|</span> -->
+<!-- 			<form action="#" method="post" style="display:inline"> -->
+<%-- 				<input type="hidden" name="id" value="${id}"> --%>
+<%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
+<!-- 				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
+<!-- 			</form> -->
 			
-			<span>|</span>
-			<form action="#" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
+<!-- 			<span>|</span> -->
+<!-- 			<form action="#" method="post" style="display:inline"> -->
+<%-- 				<input type="hidden" name="id" value="${id}"> --%>
+<%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
+<!-- 				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
+<!-- 			</form> -->
 	<%} %>
 	<br>
 	
@@ -205,6 +205,21 @@
              		${row1.product_name} 
              		${row1.product_price}
              		${row1.product_quantity}
+             		<c:if test="${row1.product_picture != null}">
+             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	
+             		</c:if>
+			<form action="updateProductpage" method="post" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="productid" value="${row1.product_id}">
+				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+			</form>
+			
+			<span>|</span>
+			<form action="deleteProductpage" method="post" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="productid" value="${row1.product_id}">
+				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+			</form>
              		<br>
 	            </c:forEach>
 			</div>

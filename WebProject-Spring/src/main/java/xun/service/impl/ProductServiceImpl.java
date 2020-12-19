@@ -2,6 +2,8 @@ package xun.service.impl;
 
 
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import xun.dao.ProductDao;
 import xun.model.ProductInfoBean;
+import xun.model.StoreBean;
 import xun.service.ProductService;
 
 @Service
@@ -39,6 +42,26 @@ public class ProductServiceImpl implements ProductService {
 		Integer count = 0;
 		count = pDao.deleteProduct(pi);
 		return count;
+	}
+
+	@Transactional
+	@Override
+	public ProductInfoBean get(Integer productid) {
+		
+		return pDao.get(productid);
+	}
+
+	@Transactional
+	@Override
+	public Integer deleteALLProduct(StoreBean sb) {
+
+		return pDao.deleteALLProduct(sb);
+	}
+
+	@Transactional
+	@Override
+	public List<ProductInfoBean> getStoreProduct(StoreBean sb) {
+		return pDao.getStoreProduct(sb);
 	}
 	
 	

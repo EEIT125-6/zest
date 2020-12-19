@@ -97,26 +97,13 @@ public class ProductInfoBean {
 		this.storebean = storebean;
 	}
 
-//	@Override
-//	public String toString() {
-//		StringBuilder builder = new StringBuilder();
-//		builder.append("ProductInfoBean [product_id=");
-//		builder.append(product_id);
-//		builder.append(", product_name=");
-//		builder.append(product_name);
-//		builder.append(", product_shop=");
-//		builder.append(product_shop);
-//		builder.append(", product_price=");
-//		builder.append(product_price);
-//		builder.append(", product_picture=");
-//		builder.append(product_picture);
-//		builder.append(", product_quantity=");
-//		builder.append(product_quantity);
-//		builder.append(", storebean=");
-//		builder.append(storebean);
-//		builder.append("]");
-//		return builder.toString();
-//	}
+	@Override
+	public String toString() {
+		return "ProductInfoBean [product_id=" + product_id + ", product_name=" + product_name + ", product_shop="
+				+ product_shop + ", product_price=" + product_price + ", product_picture=" + product_picture
+				+ ", product_quantity=" + product_quantity + ", storebean=" + storebean + "]";
+	}
+
 	
 	
 	

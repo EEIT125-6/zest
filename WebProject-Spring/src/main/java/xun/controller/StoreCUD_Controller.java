@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import xun.model.StoreBean;
+import xun.service.ProductService;
 import xun.service.StoreService;
 import xun.validators.StoreInsertVaildators;
 
@@ -33,6 +34,8 @@ public class StoreCUD_Controller {
 	@Autowired
 	StoreService ss;
 	
+	@Autowired
+	ProductService ps;
 	
 	@GetMapping("/Insert")
 	public String InsertPage(
@@ -139,6 +142,7 @@ public class StoreCUD_Controller {
 			Model model,
 			@ModelAttribute("storeBean") StoreBean storeBean
 			) {
+		ps.deleteALLProduct(storeBean);
 		ss.deleteStore(storeBean);
 		return "exDeleteStore";
 	}
