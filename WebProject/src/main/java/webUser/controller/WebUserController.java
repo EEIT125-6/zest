@@ -250,89 +250,90 @@ public class WebUserController {
 	}
 	
 	/* 執行使用者資料送出 */
-	@PostMapping(value = "/controller/DisplayWebUserInfo")
+	@PostMapping(value = "/controller/DisplayWebUserInfo/confirm")
 	public String doRegisterConfirm(
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
-				Model model,
-				@RequestParam(value="register", required=false, defaultValue="取消") String mode
+				Model model
 			) 
 	{
 		System.out.println("Test");
 		String destinationUrl = "";
-		switch(mode) {
-			case "確認":
-				/* 取出物件 */
-				WebUserData reg_webUser = (WebUserData) model.getAttribute("reg_webUser");
-				String registerEmail = (String) model.getAttribute("registerEmail");
-				
-				/* 設定要顯示的訊息 */
-				String insertResultMessage = "";
-				/* 宣告欲回傳的參數 */
-				Integer insertResult = -1;
-				String insertResultPage = "webUser/WebUserRegisterForm";
-				
-				/* 預防性後端輸入檢查，正常時回傳空字串 */
-				insertResultMessage = doRegisterInputCheck(
-						reg_webUser, 
-						model);
-				
-				/* 追加檢查項目 */
-				if (!reg_webUser.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
-					insertResultMessage = "加入時間異常";
-				}
-				if (!reg_webUser.getStatus().equals("active") && reg_webUser.getAccountLv().getLv() == 0) {
-					insertResultMessage = "帳號狀態異常";
-				} else if (!reg_webUser.getStatus().equals("inactive") 
-						&& (reg_webUser.getAccountLv().getLv() == -1 
-						|| reg_webUser.getAccountLv().getLv() == 1)) {
-					insertResultMessage = "帳號狀態異常";
-				}
-				if (reg_webUser.getVersion() != 0) {
-					insertResultMessage = "帳號資料狀態異常";
-				}
-				if (!reg_webUser.getEmail().equals(registerEmail)) {
-					insertResultMessage = "信箱比對不一致";
-				}
-				
-				if (insertResultMessage.equals("")) {
-					/* 調用服務裡的方法 */
-					try {
-						insertResult = wus.insertWebUserData(reg_webUser);
-					} catch (SQLException sqlE) {
-						insertResultMessage = "發生錯誤！" + sqlE.getMessage();
-					}
-					
-					if (insertResult > 0) {
-						insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
-						/* 清空SessionAttribute */
-						sessionStatus.setComplete();
-						insertResultPage = "webUser/WebUserLogin";
-					} 
-					
-					/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
-					redirectAttributes.addFlashAttribute("insertResultMessage", insertResultMessage);
-					/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
-					redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
-					/* 前往註冊結束畫面 */
-					destinationUrl = "redirect:/webUser/WebUserRegisterResult";
-				} else {
-					/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
-					redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
-					/* 返回註冊畫面 */
-					destinationUrl = "redirect:/webUser/WebUserRegisterForm";
-				}
-				
-				break;
-			case "取消":
-			default:
+
+		/* 取出物件 */
+		WebUserData reg_webUser = (WebUserData) model.getAttribute("reg_webUser");
+		String registerEmail = (String) model.getAttribute("registerEmail");
+		
+		/* 設定要顯示的訊息 */
+		String insertResultMessage = "";
+		/* 宣告欲回傳的參數 */
+		Integer insertResult = -1;
+		String insertResultPage = "webUser/WebUserRegisterForm";
+		
+		/* 預防性後端輸入檢查，正常時回傳空字串 */
+		insertResultMessage = doRegisterInputCheck(
+				reg_webUser, 
+				model);
+		
+		/* 追加檢查項目 */
+		if (!reg_webUser.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
+			insertResultMessage = "加入時間異常";
+		}
+		if (!reg_webUser.getStatus().equals("active") && reg_webUser.getAccountLv().getLv() == 0) {
+			insertResultMessage = "帳號狀態異常";
+		} else if (!reg_webUser.getStatus().equals("inactive") 
+				&& (reg_webUser.getAccountLv().getLv() == -1 
+				|| reg_webUser.getAccountLv().getLv() == 1)) {
+			insertResultMessage = "帳號狀態異常";
+		}
+		if (reg_webUser.getVersion() != 0) {
+			insertResultMessage = "帳號資料狀態異常";
+		}
+		if (!reg_webUser.getEmail().equals(registerEmail)) {
+			insertResultMessage = "信箱比對不一致";
+		}
+		
+		if (insertResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				insertResult = wus.insertWebUserData(reg_webUser);
+			} catch (SQLException sqlE) {
+				insertResultMessage = "發生錯誤！" + sqlE.getMessage();
+			}
+			
+			if (insertResult > 0) {
+				insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
-				/* 返回註冊畫面 */
-				destinationUrl = "redirect:/webUser/WebUserRegisterForm";
-				break;
+				insertResultPage = "webUser/WebUserLogin";
+			} 
+			
+			/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
+			redirectAttributes.addFlashAttribute("insertResultMessage", insertResultMessage);
+			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
+			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
+			/* 前往註冊結束畫面 */
+			destinationUrl = "redirect:/webUser/WebUserRegisterResult";
+		} else {
+			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
+			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
+			/* 返回註冊畫面 */
+			destinationUrl = "redirect:/webUser/WebUserRegisterForm";
 		}
+				
 		return destinationUrl;
+	}
+	
+	/* 取消註冊 */
+	@GetMapping(value = "/controller/DisplayWebUserInfo/undo")
+	public String doRegisterUndo(
+			SessionStatus sessionStatus
+			) 
+	{
+		/* 清空SessionAttribute */
+		sessionStatus.setComplete();
+		/* 返回註冊畫面 */
+		return "redirect:/webUser/WebUserRegisterForm";
 	}
 	
 	@GetMapping(value = "/WebUserRegisterResult")
@@ -561,6 +562,9 @@ public class WebUserController {
 		/* 西元生日 */
 		if (inputIsOk) {
 			if (birth == Date.valueOf(LocalDate.now())) {
+				submitMessage = "生日異常";
+				inputIsOk = false;
+			} else if (birth == Date.valueOf("1800-01-01")) {
 				submitMessage = "生日異常";
 				inputIsOk = false;
 			} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {

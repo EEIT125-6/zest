@@ -211,7 +211,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 變數宣告 */
 		int instertResult = 0;
 		/* 取得當前Session並執行新增 */
-		getSession().save(registerData);
+		getSession().merge(registerData);
 		instertResult++;
 		return instertResult;
 	}

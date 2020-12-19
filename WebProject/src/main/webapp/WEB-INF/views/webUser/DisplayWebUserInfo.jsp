@@ -151,7 +151,7 @@
 				<c:if test="${reg_webUser.password == null}">
 					<c:redirect url="webUser/WebUserRegisterForm" />
 				</c:if>
-				<form action="/webUser/controller/DisplayWebUserInfo" method="post" onSubmit="return checkForm();">
+				<form action="<c:url value='/webUser/controller/DisplayWebUserInfo/confirm' />" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
 						<hr />
@@ -223,7 +223,7 @@
 					</fieldset>
 					<div align="center">
 						<input type="submit" name="register" id="registerConfirm" value="確認">
-						<input type="submit" name="register" id="registerCancel" value="取消">
+						<a href="<c:url value='/webUser/controller/DisplayWebUserInfo/undo' />"><input type="button" name="register" id="registerCancel" value="取消"></a>
 					</div>
 					<hr />
 				</form>
@@ -231,6 +231,7 @@
 				<script>
 					window.onload = function() {
 						let showPasswordBtn = document.getElementById("showPassword");
+						
 						showPasswordBtn.onclick = function() {
 							document.getElementById("password").type = (document.getElementById("password").type == "hidden") ? "text" : "hidden";
 					    	document.getElementById("showPassword").value = (document.getElementById("showPassword").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼";

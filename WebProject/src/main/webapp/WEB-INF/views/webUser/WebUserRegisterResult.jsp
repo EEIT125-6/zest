@@ -145,12 +145,12 @@
                 <p>5秒後將移至</p>
                 <p id = "pPage">${insertResultPage}</p>
                 <script>
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserRegisterForm.jsp") {
+                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "webUser/WebUserRegisterForm") {
                 		document.getElementById("pPage").innerHTML = "註冊";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
+                	} else if (document.getElementById("pPage").innerHTML == "webUser/WebUserLogin") {
                 		document.getElementById("pPage").innerHTML = "登入";
                 	}
-                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserRegisterForm.jsp";
+                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin" : "WebUserRegisterForm";
                 	setTimeout(function () {
 	                	   window.location.href = redirectPage;
                	  	}
