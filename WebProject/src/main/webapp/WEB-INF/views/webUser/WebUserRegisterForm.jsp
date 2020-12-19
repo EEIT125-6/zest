@@ -290,7 +290,7 @@
 					</div>
 					<hr />
 				</form>
-				<script src="${pageContext.request.contextPath}/js/webUser/WebUserRegisterForm.js"></script>
+				<script src="<c:url value='/js/webUser/WebUserRegisterForm.js' />"></script>
 				<script>
 					window.onload = function() {
 						let checkAccountBtn = document.getElementById("checkAccount");
@@ -332,295 +332,295 @@
 						
 						checkPhoneBtn.onclick = function() {
 							checkSamePhone();
-						}
+						} 
+					};
+					
+					function checkSameAccount() {
+						let account = document.getElementById("account").value.trim();
+						let accountSpan = document.getElementById("accountSpan");
+						let accountStr = "...處理中，請稍後";
+						let accountIsOk = true;
+						let mode = "checkAccount";
 						
-						function checkSameAccount() {
-							let account = document.getElementById("account").value.trim();
-							let accountSpan = document.getElementById("accountSpan");
-							let accountStr = "...處理中，請稍後";
-							let accountIsOk = true;
-							let mode = "checkAccount";
+						accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + accountStr;
+	            		accountSpan.style.color = "black";
+	            		accountSpan.style.fontStyle = "normal";
+						
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputAccount=" + account + "&register=" + mode);
 							
-							accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + accountStr;
-		            		accountSpan.style.color = "black";
-		            		accountSpan.style.fontStyle = "normal";
-							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								xhrObject.send("inputAccount=" + account + "&register=" + mode);
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											let resultObj = JSON.parse(xhrObject.responseText);
-											if (resultObj.resultCode == 1) {
-												accountStr = "此帳號已有人使用！";
-							            		accountIsOk = false;
-											} else if (resultObj.resultCode == 0) {
-												accountStr = "可建立此帳號！";
-							            		accountIsOk = true;
-											} else if (resultObj.resultCode == -1) {
-												accountStr = "檢查途中遭遇錯誤！";
-							            		accountIsOk = false;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											}
-											if (!accountIsOk) {
-							            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-							            		accountSpan.style.color = "red";
-							            		accountSpan.style.fontStyle = "italic";
-							            		document.getElementById("sendCheckCode").style = "display:none";
-							            	} else {
-							            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-							            		accountSpan.style.color = "black";
-							            		accountSpan.style.fontStyle = "normal";
-							            		document.getElementById("sendCheckCode").style = "display:inline";
-							            	}
-										} else {
-											accountStr = "發生錯誤，無法執行檢查";
-							            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											accountStr = "此帳號已有人使用！";
+						            		accountIsOk = false;
+										} else if (resultObj.resultCode == 0) {
+											accountStr = "可建立此帳號！";
+						            		accountIsOk = true;
+										} else if (resultObj.resultCode == -1) {
+											accountStr = "檢查途中遭遇錯誤！";
+						            		accountIsOk = false;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
+										}
+										if (!accountIsOk) {
+						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 						            		accountSpan.style.color = "red";
 						            		accountSpan.style.fontStyle = "italic";
-										}
-									} 
-								};
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
+						            		document.getElementById("sendCheckCode").style = "display:none";
+						            	} else {
+						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
+						            		accountSpan.style.color = "black";
+						            		accountSpan.style.fontStyle = "normal";
+						            		document.getElementById("sendCheckCode").style = "display:inline";
+						            	}
+									} else {
+										accountStr = "發生錯誤，無法執行檢查";
+						            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+					            		accountSpan.style.color = "red";
+					            		accountSpan.style.fontStyle = "italic";
+									}
+								} 
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
 						}
+					}
+					
+					function checkSameNickname() {
+						let nickname = document.getElementById("nickname").value.trim();
+						let nicknameSpan = document.getElementById("nicknameSpan");
+						let nicknameStr = "...處理中，請稍後";
+						let nicknameIsOk = true;
+						let mode = "checkNickname";
 						
-						function checkSameNickname() {
-							let nickname = document.getElementById("nickname").value.trim();
-							let nicknameSpan = document.getElementById("nicknameSpan");
-							let nicknameStr = "...處理中，請稍後";
-							let nicknameIsOk = true;
-							let mode = "checkNickname";
+						nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + nicknameStr;
+	            		nicknameSpan.style.color = "black";
+	            		nicknameSpan.style.fontStyle = "normal";
+						
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputNickname=" + nickname + "&register=" + mode);
 							
-							nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + nicknameStr;
-		            		nicknameSpan.style.color = "black";
-		            		nicknameSpan.style.fontStyle = "normal";
-							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								xhrObject.send("inputNickname=" + nickname + "&register=" + mode);
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											let resultObj = JSON.parse(xhrObject.responseText);
-											if (resultObj.resultCode == 1) {
-												nicknameStr = "此稱呼已有人使用！";
-												nicknameIsOk = false;
-											} else if (resultObj.resultCode == 0) {
-												nicknameStr = "可使用此稱呼！";
-												nicknameIsOk = true;
-											} else if (resultObj.resultCode == -1) {
-												nicknameStr = "檢查途中遭遇錯誤！";
-												nicknameIsOk = false;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											}
-											if (!nicknameIsOk) {
-												nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-												nicknameSpan.style.color = "red";
-												nicknameSpan.style.fontStyle = "italic";
-							            	} else {
-							            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
-							            		nicknameSpan.style.color = "black";
-							            		nicknameSpan.style.fontStyle = "normal";
-							            	}
-										} else {
-											nicknameStr = "發生錯誤，無法執行檢查";
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											nicknameStr = "此稱呼已有人使用！";
+											nicknameIsOk = false;
+										} else if (resultObj.resultCode == 0) {
+											nicknameStr = "可使用此稱呼！";
+											nicknameIsOk = true;
+										} else if (resultObj.resultCode == -1) {
+											nicknameStr = "檢查途中遭遇錯誤！";
+											nicknameIsOk = false;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
+										}
+										if (!nicknameIsOk) {
 											nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 											nicknameSpan.style.color = "red";
 											nicknameSpan.style.fontStyle = "italic";
-								        }
+						            	} else {
+						            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+						            		nicknameSpan.style.color = "black";
+						            		nicknameSpan.style.fontStyle = "normal";
+						            	}
+									} else {
+										nicknameStr = "發生錯誤，無法執行檢查";
+										nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+										nicknameSpan.style.color = "red";
+										nicknameSpan.style.fontStyle = "italic";
+							        }
+								}
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+						}
+					}
+					
+					function checkSameEmail() {
+						let email = document.getElementById("email").value.trim();
+						let emailSpan = document.getElementById("emailSpan");
+						let emailStr = "...處理中，請稍後";
+						let emailIsOk = true;
+						let mode = "checkEmail";
+						
+						emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailStr;
+	            		emailSpan.style.color = "black";
+	            		emailSpan.style.fontStyle = "normal";
+						
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputEmail=" + email + "&register=" + mode);
+							
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											emailStr = "此電子信箱已有人使用！";
+						            		emailIsOk = false;
+										} else if (resultObj.resultCode == 0) {
+											emailStr = "可使用此電子信箱！";
+						            		emailIsOk = true;
+										} else if (resultObj.resultCode == -1) {
+											emailStr = "檢查途中遭遇錯誤！";
+						            		emailIsOk = false;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
+										}
+										if (!emailIsOk) {
+						            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+						            		emailSpan.style.color = "red";
+						            		emailSpan.style.fontStyle = "italic";
+						            	} else {
+						            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
+						            		emailSpan.style.color = "black";
+						            		emailSpan.style.fontStyle = "normal";
+						            	}
+									} else {
+										emailStr = "發生錯誤，無法執行檢查";
+						            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+						            	emailSpan.style.color = "red";
+						            	emailSpan.style.fontStyle = "italic";
 									}
-								};
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
+								} 
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
 						}
+					}
+					
+					function sendEmailCheckCode() {
+						let email = document.getElementById("email").value.trim();
+						let account = document.getElementById("account").value.trim();
+						let checkCode = document.getElementById("checkCode");
+						let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+						let checkCodeStr;
+						let emailCheckCodeStr = "...處理中，請稍後";
+						let emailCheckCodeIsOk = true;
+						let mode = "sendCheckCode";
 						
-						function checkSameEmail() {
-							let email = document.getElementById("email").value.trim();
-							let emailSpan = document.getElementById("emailSpan");
-							let emailStr = "...處理中，請稍後";
-							let emailIsOk = true;
-							let mode = "checkEmail";
+						emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailCheckCodeStr;
+	            		emailCheckCodeSpan.style.color = "black";
+	            		emailCheckCodeSpan.style.fontStyle = "normal";
+						
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputAccount=" + account + "&inputEmail=" + email + "&register=" + mode);	
 							
-							emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailStr;
-		            		emailSpan.style.color = "black";
-		            		emailSpan.style.fontStyle = "normal";
-							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								xhrObject.send("inputEmail=" + email + "&register=" + mode);
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											let resultObj = JSON.parse(xhrObject.responseText);
-											if (resultObj.resultCode == 1) {
-												emailStr = "此電子信箱已有人使用！";
-							            		emailIsOk = false;
-											} else if (resultObj.resultCode == 0) {
-												emailStr = "可使用此電子信箱！";
-							            		emailIsOk = true;
-											} else if (resultObj.resultCode == -1) {
-												emailStr = "檢查途中遭遇錯誤！";
-							            		emailIsOk = false;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											}
-											if (!emailIsOk) {
-							            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
-							            		emailSpan.style.color = "red";
-							            		emailSpan.style.fontStyle = "italic";
-							            	} else {
-							            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
-							            		emailSpan.style.color = "black";
-							            		emailSpan.style.fontStyle = "normal";
-							            	}
-										} else {
-											emailStr = "發生錯誤，無法執行檢查";
-							            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
-							            	emailSpan.style.color = "red";
-							            	emailSpan.style.fontStyle = "italic";
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == "true") {
+											emailCheckCodeStr = "驗證碼已成功寄出！";
+						            		emailCheckCodeIsOk = true;
+						            		checkCodeStr = resultObj.resultText;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
+										} else if (resultObj.resultCode == "false") {
+											emailCheckCodeStr = "遭遇錯誤！請稍後再試！";
+						            		emailCheckCodeIsOk = false;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
 										}
-									} 
-								};
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
+										if (!emailCheckCodeIsOk) {
+						            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+						            		emailCheckCodeSpan.style.color = "red";
+						            		emailCheckCodeSpan.style.fontStyle = "italic";
+						            		checkCode.innerHTML = "";
+						            	} else {
+						            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+						            		emailCheckCodeSpan.style.color = "black";
+						            		emailCheckCodeSpan.style.fontStyle = "normal";
+						            		document.getElementById("checkCode").value = checkCodeStr;
+						            	}
+									} else {
+										emailCheckCodeStr = "發生錯誤，無法送出驗證碼";
+						            	emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+						            	emailCheckCodeSpan.style.color = "red";
+						            	emailCheckCodeSpan.style.fontStyle = "italic";
+									}
+								} 
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
 						}
+					} 
+					
+					function checkSamePhone() {
+						let phone = document.getElementById("phone").value.trim();
+						let phoneSpan = document.getElementById("phoneSpan");
+						let phoneStr = "...處理中，請稍後";
+						let phoneIsOk = true;
+						let mode = "checkPhone";
 						
-						function sendEmailCheckCode() {
-							let email = document.getElementById("email").value.trim();
-							let account = document.getElementById("account").value.trim();
-							let checkCode = document.getElementById("checkCode");
-							let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
-							let checkCodeStr;
-							let emailCheckCodeStr = "...處理中，請稍後";
-							let emailCheckCodeIsOk = true;
-							let mode = "sendCheckCode";
-							
-							emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailCheckCodeStr;
-		            		emailCheckCodeSpan.style.color = "black";
-		            		emailCheckCodeSpan.style.fontStyle = "normal";
-							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								xhrObject.send("inputAccount=" + account + "&inputEmail=" + email + "&register=" + mode);	
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											let resultObj = JSON.parse(xhrObject.responseText);
-											if (resultObj.resultCode == "true") {
-												emailCheckCodeStr = "驗證碼已成功寄出！";
-							            		emailCheckCodeIsOk = true;
-							            		checkCodeStr = resultObj.resultText;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											} else if (resultObj.resultCode == "false") {
-												emailCheckCodeStr = "遭遇錯誤！請稍後再試！";
-							            		emailCheckCodeIsOk = false;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											}
-											if (!emailCheckCodeIsOk) {
-							            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
-							            		emailCheckCodeSpan.style.color = "red";
-							            		emailCheckCodeSpan.style.fontStyle = "italic";
-							            		checkCode.innerHTML = "";
-							            	} else {
-							            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
-							            		emailCheckCodeSpan.style.color = "black";
-							            		emailCheckCodeSpan.style.fontStyle = "normal";
-							            		document.getElementById("checkCode").value = checkCodeStr;
-							            	}
-										} else {
-											emailCheckCodeStr = "發生錯誤，無法送出驗證碼";
-							            	emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
-							            	emailCheckCodeSpan.style.color = "red";
-							            	emailCheckCodeSpan.style.fontStyle = "italic";
-										}
-									} 
-								};
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
-						} 
+						phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + phoneStr;
+	            		phoneSpan.style.color = "black";
+	            		phoneSpan.style.fontStyle = "normal";
 						
-						function checkSamePhone() {
-							let phone = document.getElementById("phone").value.trim();
-							let phoneSpan = document.getElementById("phoneSpan");
-							let phoneStr = "...處理中，請稍後";
-							let phoneIsOk = true;
-							let mode = "checkPhone";
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("inputPhone=" + phone + "&register=" + mode);
 							
-							phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + phoneStr;
-		            		phoneSpan.style.color = "black";
-		            		phoneSpan.style.fontStyle = "normal";
-							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								xhrObject.send("inputPhone=" + phone + "&register=" + mode);
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											let resultObj = JSON.parse(xhrObject.responseText);
-											if (resultObj.resultCode == 1) {
-												phoneStr = "此聯絡電話已有人使用！";
-							            		phoneIsOk = false;
-											} else if (resultObj.resultCode == 0) {
-												phoneStr = "可使用此聯絡電話！";
-							            		phoneIsOk = true;
-											} else if (resultObj.resultCode == -1) {
-												phoneStr = "檢查途中遭遇錯誤！";
-							            		phoneIsOk = false;
-							            		/* 顯示彈窗異常訊息 */
-							            		alert(resultObj.resultMessage);
-											}
-											if (!phoneIsOk) {
-							            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
-							            		phoneSpan.style.color = "red";
-							            		phoneSpan.style.fontStyle = "italic";
-							            	} else {
-							            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
-							            		phoneSpan.style.color = "black";
-							            		phoneSpan.style.fontStyle = "normal";
-							            	}
-										} else {
-											phoneStr = "發生錯誤，無法執行檢查";
-							            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
-							            	phoneSpan.style.color = "red";
-							            	phoneSpan.style.fontStyle = "italic";
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											phoneStr = "此聯絡電話已有人使用！";
+						            		phoneIsOk = false;
+										} else if (resultObj.resultCode == 0) {
+											phoneStr = "可使用此聯絡電話！";
+						            		phoneIsOk = true;
+										} else if (resultObj.resultCode == -1) {
+											phoneStr = "檢查途中遭遇錯誤！";
+						            		phoneIsOk = false;
+						            		/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
 										}
-									} 
-								};
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
-						} 
-					};
+										if (!phoneIsOk) {
+						            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+						            		phoneSpan.style.color = "red";
+						            		phoneSpan.style.fontStyle = "italic";
+						            	} else {
+						            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
+						            		phoneSpan.style.color = "black";
+						            		phoneSpan.style.fontStyle = "normal";
+						            	}
+									} else {
+										phoneStr = "發生錯誤，無法執行檢查";
+						            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+						            	phoneSpan.style.color = "red";
+						            	phoneSpan.style.fontStyle = "italic";
+									}
+								} 
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+						}
+					}
 				</script> 
             </div>
 <!-- -------------------------------------------------------------------- -->

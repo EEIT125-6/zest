@@ -5,7 +5,9 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -41,7 +44,8 @@ import webUser.service.WillingService;
 		"fervorList", 
 		"genderList", 
 		"cityInfoList",
-		"reg_webUser"})
+		"reg_webUser",
+		"userFullData"})
 @Controller
 @RequestMapping("/webUser")
 public class WebUserController {
@@ -257,7 +261,6 @@ public class WebUserController {
 				Model model
 			) 
 	{
-		System.out.println("Test");
 		String destinationUrl = "";
 
 		/* 取出物件 */
@@ -336,16 +339,35 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserRegisterForm";
 	}
 	
-	@GetMapping(value = "/WebUserRegisterResult")
 	/* 前往註冊結束畫面 */
+	@GetMapping(value = "/WebUserRegisterResult")
 	public String doGoRegisterResult() {
 		return "webUser/WebUserRegisterResult";
 	}
 	
-	@GetMapping(value = "/WebUserLogin")
 	/* 前往登入畫面 */
+	@GetMapping(value = "/WebUserLogin")
 	public String doGoLogin() {
 		return "webUser/WebUserLogin";
+	}
+	
+	/* 前往忘記密碼畫面 */
+	@GetMapping(value = "/WebUserForgetForm")
+	public String doGoForget() {
+		return "webUser/WebUserForgetForm";
+	}
+	
+	/* 執行登入檢查 */
+	@PostMapping(value = "/controller/WebUserLogin", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doLoginCheck(
+			Model model,
+			@RequestParam(value = "account", required=false, defaultValue="") String account,
+			@RequestParam(value = "password", required=false, defaultValue="") String password
+			) 
+	{
+		Map<String, String> map = new HashMap<>();
+		
+		return map;
 	}
 
 	/* 使用者註冊資料檢查 */

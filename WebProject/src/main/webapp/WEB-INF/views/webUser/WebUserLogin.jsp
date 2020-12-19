@@ -177,99 +177,103 @@
 						</span>
                 	</fieldset>
                 	<div align="center">
-                		<input type="button" id="forget" name="forget" value="忘記帳號或密碼">
+                		<a href="<c:url value='/webUser/WebUserForgetForm' /> "><input type="button" id="forget" name="forget" value="忘記帳號或密碼"></a>
 						<input type="button" id="submit" name="login" value="登入">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 					<hr />
                 </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="${pageContext.request.contextPath}/js/webUser//WebUserLogin.js"></script>
+                <script src="<c:url value='/js/webUser//WebUserLogin.js' />"></script>
                 <script>
-                	$("#forget").click(function () {
-                		let redirectPage = "WebUserForgetForm.jsp";
-                		setTimeout(function () {
- 	                	   window.location.href = redirectPage;
-                	  	}
- 	                , 0);
-                	})	
-                
-	                $("#submit").click(function () {
-	                	inputCheck();
-				    });
-	                function inputCheck() {
+                	window.onload = function() {
+                		let submitBtn = document.getElementById("submit");
+                		
+                		submitBtn.onclick = function() {
+                			inputCheck();
+                		};
+                	};
+                	
+                	function inputCheck() {
 	                	if(!checkForm()) {
 	                		alert("帳號或密碼不符規範，請再檢查一次！");
 	                	} else {
 	                		loginCheck();	
 	                	}
 	                }
-	                function loginCheck() {
-	                	let account = document.getElementById("account").value.trim();
+                	
+                	function loginCheck() {
+                		let account = document.getElementById("account").value.trim();
 	                	let password = document.getElementById("password").value.trim();
-	                	
 	                	let loginSpan = document.getElementById("loginSpan");
-						let loginStr;
+						let loginStr = "...處理中，請稍後";
 						let loginIsOk = true;
 						
-	                	$.ajax({
-							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
-				            data:{
-				            	'login':'登入',
-				            	'account':account,
-				            	'password':password
-				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
-				            		loginStr = "登入成功！";
-				            		loginIsOk = true;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '0') {
-				            		loginStr = "密碼錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-1') {
-				            		loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-2') {
-				            		loginStr = "帳號錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(loginStr);
-				            	} else if(resultSpace[0] == '-3') {
-				            		loginStr = "檢查途中遭遇錯誤！";
-				            		loginIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		alert(resultSpace[1]);
-				            	}
-				            	if (!loginIsOk) {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            		loginSpan.style.color = "red";
-				            		loginSpan.style.fontStyle = "italic";
-				            	} else {
-				            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
-				            		loginSpan.style.color = "black";
-				            		loginSpan.style.fontStyle = "normal";
-				            		/* 刷新 */
-				            		location.reload(true);
-				            	}
-				            },
-				            error:function(err) {
-				            	loginStr = "發生錯誤，無法執行檢查";
-				            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-				            	loginSpan.style.color = "red";
-			            		loginSpan.style.fontStyle = "italic";
-			            		/* 顯示彈窗訊息 */
-			            		alert(loginStr);
-				            }
-						});
-	                }
+						loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
+	            		loginSpan.style.color = "black";
+	            		loginSpan.style.fontStyle = "normal";
+	            		
+	            		let xhrObject = new XMLHttpRequest();
+	            		if (xhrObject != null) {
+	            			xhrObject.open("POST", "<c:url value='/webUser/controller/WebUserLogin' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("account=" + account + "&password=" + password);
+							
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											loginStr = "登入成功！";
+						            		loginIsOk = true;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 0) {
+											loginStr = "帳號或密碼錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if(resultObj.resultCode == -1) {
+						            		loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+						            	} else if(resultObj.resultCode == -2) {
+						            		loginStr = "帳號錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+						            	} else if(resultObj.resultCode == -3) {
+						            		loginStr = "檢查途中遭遇錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(resultSpace[1]);
+						            	}
+										if (!loginIsOk) {
+						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
+						            		loginSpan.style.color = "red";
+						            		loginSpan.style.fontStyle = "italic";
+						            	} else {
+						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
+						            		loginSpan.style.color = "black";
+						            		loginSpan.style.fontStyle = "normal";
+						            		/* 刷新 */
+						            		location.reload(true);
+						            	}
+									} else {
+										loginStr = "發生錯誤，無法執行檢查";
+						            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
+						            	loginSpan.style.color = "red";
+					            		loginSpan.style.fontStyle = "italic";
+					            		/* 顯示彈窗訊息 */
+					            		alert(loginStr);
+									}
+								}
+							};
+	            		} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+						}
+                	}
                 </script>
             </div>
 <!-- -------------------------------------------------------------------- -->

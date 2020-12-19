@@ -18,17 +18,25 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 @EnableTransactionManagement
 public class RootAppConfig {
+	public static final String dbAccount = "scott";
+	public static final String dbPassword = "tiger";
+	public static final String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+	public static final String sqlType = "sqlserver";
+	public static final String sqlUrl = "127.0.0.1";
+	public static final String sqlPort = "1433";
+	public static final String dbName = "WebProject";
+	
 	@Bean
 	public DataSource msSQLDataSource() {
 		ComboPooledDataSource ds = new ComboPooledDataSource();
-		ds.setUser("scott");
-		ds.setPassword("tiger");
+		ds.setUser(dbAccount);
+		ds.setPassword(dbPassword);
 		try {
-			ds.setDriverClass("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			ds.setDriverClass(dbDriver);
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}
-		ds.setJdbcUrl("jdbc:sqlserver://127.0.0.1:1433;DatabaseName=WebProject");
+		ds.setJdbcUrl("jdbc:"+sqlType+"://"+sqlUrl+":"+sqlPort+";DatabaseName="+dbName);
 		ds.setInitialPoolSize(4);
 		ds.setMaxPoolSize(8);
 		return ds;

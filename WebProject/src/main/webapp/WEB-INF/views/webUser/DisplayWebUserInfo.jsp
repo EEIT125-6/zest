@@ -227,7 +227,7 @@
 					</div>
 					<hr />
 				</form>
-				<script src="${pageContext.request.contextPath}/js/webUser/DisplayWebUserInfo.js"></script>
+				<script src="<c:url value='/js/webUser/DisplayWebUserInfo.js' />"></script>
 				<script>
 					window.onload = function() {
 						let showPasswordBtn = document.getElementById("showPassword");

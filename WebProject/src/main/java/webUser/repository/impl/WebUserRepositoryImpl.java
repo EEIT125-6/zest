@@ -210,7 +210,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	public Integer insertWebUserData(WebUserData registerData) throws SQLException {
 		/* 變數宣告 */
 		int instertResult = 0;
-		/* 取得當前Session並執行新增 */
+		/* 取得當前Session並執行新增，在此改用merge */
 		getSession().merge(registerData);
 		instertResult++;
 		return instertResult;
