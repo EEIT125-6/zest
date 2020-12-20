@@ -149,7 +149,7 @@
 				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
 				<c:if test="${empty selfData}">
-					<c:redirect url="WebUserLogin.jsp" />
+					<c:redirect url="/webUser/WebUserLogin.jsp" />
 				</c:if>
 				<form action="/WebProject/webUser/WebUserServlet" method="post">
 					<fieldset>

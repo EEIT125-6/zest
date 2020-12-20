@@ -213,7 +213,7 @@ public class WebUserController {
 		}
 		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
-		submitMessage = doRegisterInputCheck(
+		submitMessage = doCheckRegisterInput(
 				reg_webUser, 
 				model);
 		
@@ -247,12 +247,6 @@ public class WebUserController {
 
 	}
 	
-	/* 前往顯示註冊資料畫面 */
-	@GetMapping(value = "/DisplayWebUserInfo")
-	public String doCreateDisplayInfo(Model model) {
-		return "webUser/DisplayWebUserInfo";
-	}
-	
 	/* 執行使用者資料送出 */
 	@PostMapping(value = "/controller/DisplayWebUserInfo/confirm")
 	public String doRegisterConfirm(
@@ -274,7 +268,7 @@ public class WebUserController {
 		String insertResultPage = "webUser/WebUserRegisterForm";
 		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
-		insertResultMessage = doRegisterInputCheck(
+		insertResultMessage = doCheckRegisterInput(
 				reg_webUser, 
 				model);
 		
@@ -339,24 +333,6 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserRegisterForm";
 	}
 	
-	/* 前往註冊結束畫面 */
-	@GetMapping(value = "/WebUserRegisterResult")
-	public String doGoRegisterResult() {
-		return "webUser/WebUserRegisterResult";
-	}
-	
-	/* 前往登入畫面 */
-	@GetMapping(value = "/WebUserLogin")
-	public String doGoLogin() {
-		return "webUser/WebUserLogin";
-	}
-	
-	/* 前往忘記密碼畫面 */
-	@GetMapping(value = "/WebUserForgetForm")
-	public String doGoForget() {
-		return "webUser/WebUserForgetForm";
-	}
-	
 	/* 執行登入檢查 */
 	@PostMapping(value = "/controller/WebUserLogin", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
@@ -372,7 +348,7 @@ public class WebUserController {
 		WebUserData userFullData = new WebUserData();
 		
 		/* 預防性後端檢查，正常時回傳1 */
-		inputCheckResult = doLoginInputCheck(account, password);
+		inputCheckResult = doCheckLoginInput(account, password);
 		
 		if (inputCheckResult == 1) {
 			/* 調用服務裡的方法 */
@@ -434,12 +410,6 @@ public class WebUserController {
 		return map;
 	}
 	
-	/* 前往登入主畫面 */
-	@GetMapping(value = "/WebUserMain")
-	public String doGoWebUserMain() {
-		return "webUser/WebUserMain";
-	}
-	
 	/* 執行登出 */
 	@GetMapping(value = "/controller/WebUserMain/Logout")
 	public String doLogOut(
@@ -458,12 +428,6 @@ public class WebUserController {
 		
 		/* 前往登出畫面 */
 		return "redirect:/webUser/WebUserLogoutResult";
-	}
-	
-	/* 前往登出畫面 */
-	@GetMapping(value = "WebUserLogoutResult")
-	public String doGoLogOut() {
-		return "webUser/WebUserLogoutResult";
 	}
 	
 	/* 執行帳號棄用 */
@@ -504,14 +468,62 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserQuitResult";
 	}
 	
+	/* 準備顯示個人資料畫面 */
+	@GetMapping(value="/controller/WebUserMain/Modify")
+	public String doDisplayOwnUserData() {
+		return "redirect:/webUser/DisplayWebUserData";
+	}
+	
+	/* 前往顯示註冊資料畫面 */
+	@GetMapping(value = "/DisplayWebUserInfo")
+	public String doGoDisplayInfo(Model model) {
+		return "webUser/DisplayWebUserInfo";
+	}
+	
+	/* 前往註冊結束畫面 */
+	@GetMapping(value = "/WebUserRegisterResult")
+	public String doGoRegisterResult() {
+		return "webUser/WebUserRegisterResult";
+	}
+	
+	/* 前往登入畫面 */
+	@GetMapping(value = "/WebUserLogin")
+	public String doGoLogin() {
+		return "webUser/WebUserLogin";
+	}
+	
+	/* 前往忘記密碼畫面 */
+	@GetMapping(value = "/WebUserForgetForm")
+	public String doGoForget() {
+		return "webUser/WebUserForgetForm";
+	}
+	
+	/* 前往登入主畫面 */
+	@GetMapping(value = "/WebUserMain")
+	public String doGoWebUserMain() {
+		return "webUser/WebUserMain";
+	}
+	
+	/* 前往登出畫面 */
+	@GetMapping(value = "WebUserLogoutResult")
+	public String doGoLogOut() {
+		return "webUser/WebUserLogoutResult";
+	}
+	
 	/* 前往棄用結束畫面 */
 	@GetMapping(value = "WebUserQuitResult")
 	public String doGoQuitResult() {
 		return "/webUser/WebUserQuitResult";
 	}
 	
+	/* 前往顯示個人資料畫面 */
+	@GetMapping(value="DisplayWebUserData")
+	public String doDisplayWebUserData() {
+		return "/webUser/DisplayWebUserData";
+	}
+	
 	/* 使用者註冊資料檢查 */
-	public String doRegisterInputCheck(
+	public String doCheckRegisterInput(
 			WebUserData reg_webUser, 
 			Model model) 
 	{
@@ -913,7 +925,7 @@ public class WebUserController {
 	}
 	
 	/* 使用者登入資料檢查 */
-	public Integer doLoginInputCheck(String account, String password) {
+	public Integer doCheckLoginInput(String account, String password) {
 		/* 傳回參數宣告 */
 		Integer inputCheckResult = 1;
 		

@@ -147,7 +147,7 @@
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="/webUser/WebUserLogin" />
 				</c:if>
-                <form action="<c:url value='/webUser/controller/WebUserMain/Modify' />" method="post" onSubmit="return checkForm();">
+                <form action="<c:url value='/webUser/controller/WebUserMain/Modify' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>${userFullData.account}</legend>
                 		<div align="center">
@@ -157,7 +157,7 @@
 						</div>
                 	</fieldset>
                 </form>
-                <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="post" onSubmit="return checkForm();">
+                <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
                 			<input type="submit" id="select" name="select" value="進行搜索">

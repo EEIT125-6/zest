@@ -9,8 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%@include file = "../Link_Meta-Include.jsp" %> 
-    <meta http-equiv="refresh" content="5;url=/WebProject/webUser/WebUserLogin" />    
+    <%@include file = "../Link_Meta-Include.jsp" %>    
     <title>登出成功</title>
     <style>
         .classimg{
@@ -144,6 +143,13 @@
             <div class="container"  style="margin-top: 20px;">
                 <p>${logoutMessage}</p>
                 <p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
+                <script>
+                	let redirectPage = "WebUserLogin";
+	                setTimeout(function () {
+	             	   window.location.href = redirectPage;
+	        	  	}
+	             , 5000);
+                </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">

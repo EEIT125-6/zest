@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>棄用階段結束</title>
+    <title>棄用流程結束</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -148,16 +148,16 @@
                 <p>5秒後將移至</p>
                 <p id = "pPage">${redirectPage}</p>
                 <script>
-                	let directPage = "/WebProject/webUser/WebUserLogin";
+                	let directPage = "WebUserLogin";
                 	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "webUser/WebUserLogin") {
                 		document.getElementById("pPage").innerHTML = "登入";
-                		directPage = "/WebProject/webUser/WebUserLogin";
+                		directPage = "WebUserLogin";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserRegisterForm") {
                 		document.getElementById("pPage").innerHTML = "註冊";
-                		directPage = "/WebProject/webUser/WebUserRegisterForm";
+                		directPage = "WebUserRegisterForm";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
-                		directPage = "/WebProject/webUser/WebUserMain";
+                		directPage = "WebUserMain";
                 	}
         
                 	setTimeout(function () {
