@@ -144,9 +144,6 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="/webUser/WebUserLogin" />
 				</c:if>
@@ -184,12 +181,16 @@
 						</div>
                 	</fieldset>
                 </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserMain.js"></script>
                 <script>
-	                $("#quit").click(function () {
-			        	quitAlert();
-				    });
+                	window.onload = function () {
+                		let quitBtn = document.getElementById("quit");
+                		
+                		quitBtn.onclick = function () {
+                			quitAlert();
+                		}
+                	}
+	                
                 	function quitAlert() {
                 		alert("請注意，本操作不可逆，您將無法再次以相同的帳號名稱、電子信箱來註冊本服務；如有其他疑問，請洽本站管理員");
                 	}

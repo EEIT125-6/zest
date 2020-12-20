@@ -148,16 +148,16 @@
                 <p>5秒後將移至</p>
                 <p id = "pPage">${redirectPage}</p>
                 <script>
-                	let directPage = "WebUserLogin.jsp";
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
+                	let directPage = "/WebProject/webUser/WebUserLogin";
+                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "webUser/WebUserLogin") {
                 		document.getElementById("pPage").innerHTML = "登入";
-                		directPage = "WebUserLogin.jsp";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserRegisterForm.jsp") {
+                		directPage = "/WebProject/webUser/WebUserLogin";
+                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserRegisterForm") {
                 		document.getElementById("pPage").innerHTML = "註冊";
-                		directPage = "WebUserRegisterForm.jsp";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
+                		directPage = "/WebProject/webUser/WebUserRegisterForm";
+                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
-                		directPage = "WebUserMain.jsp";
+                		directPage = "/WebProject/webUser/WebUserMain";
                 	}
         
                 	setTimeout(function () {

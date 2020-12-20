@@ -453,7 +453,7 @@ public class WebUserController {
 		String logoutMessage = "謝謝您的使用，" + account + "!";
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
-		/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
+		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
 		
 		/* 前往登出畫面 */
@@ -465,7 +465,51 @@ public class WebUserController {
 	public String doGoLogOut() {
 		return "webUser/WebUserLogoutResult";
 	}
-
+	
+	/* 執行帳號棄用 */
+	@PostMapping(value = "/controller/WebUserMain/Quit")
+	public String doPersonalQuit(
+			Model model,
+			RedirectAttributes redirectAttributes,
+			SessionStatus sessionStatus
+			)
+	{
+		/* 宣告要傳回的參數 */
+		Integer deleteResult = -1;
+		String quitMessage = "";
+		String redirectPage = "/webUser/WebUserMain";
+		
+		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
+		
+		/* 調用服務裡的方法 */
+		try {
+			deleteResult = wus.quitWebUserData(quitUserData);
+		} catch (SQLException sqlE) {
+			String quitMessageTmp = sqlE.getMessage();
+			quitMessage = quitMessageTmp.split(":")[1];
+		}
+		
+		/* 成功變更 */
+		if (deleteResult == 1) {
+			quitMessage = "感謝您的使用，" + quitUserData.getAccount() + "！我們有緣再見...";
+			/* 清空SessionAttribute */
+			sessionStatus.setComplete();
+			redirectPage = "/webUser/WebUserRegisterForm";
+		} 
+		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
+		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
+		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
+		redirectAttributes.addFlashAttribute("redirectPag", redirectPage);
+		/* 導向棄用結束畫面 */
+		return "redirect:/webUser/WebUserQuitResult";
+	}
+	
+	/* 前往棄用結束畫面 */
+	@GetMapping(value = "WebUserQuitResult")
+	public String doGoQuitResult() {
+		return "/webUser/WebUserQuitResult";
+	}
+	
 	/* 使用者註冊資料檢查 */
 	public String doRegisterInputCheck(
 			WebUserData reg_webUser, 
