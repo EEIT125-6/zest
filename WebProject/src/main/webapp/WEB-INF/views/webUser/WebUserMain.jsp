@@ -150,17 +150,35 @@
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="/webUser/WebUserLogin" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                <form action="<c:url value='/webUser/controller/WebUserMain/Modify' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>${userFullData.account}</legend>
                 		<div align="center">
                 			<hr />
                 			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
-                			<hr />
+							<hr />
+						</div>
+                	</fieldset>
+                </form>
+                <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<div align="center">
                 			<input type="submit" id="select" name="select" value="進行搜索">
-                			<hr />
+							<hr />
+						</div>
+                	</fieldset>
+                </form>
+                <form action="<c:url value='/webUser/controller/WebUserMain/Quit' />" method="post" onSubmit="return checkForm();">
+                	<fieldset>
+                		<div align="center">
                 			<input type="submit" id="quit" name="update" value="放棄使用帳戶">
                 			<hr />
+						</div>
+                	</fieldset>
+                </form>
+                <form action="<c:url value='/webUser/controller/WebUserMain/Logout' />" method="get" onSubmit="return checkForm();">
+                	<fieldset>
+                		<div align="center">
 							<input type="submit" id="logout" name="login" value="登出帳戶">
 							<hr />
 						</div>

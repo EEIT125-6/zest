@@ -10,8 +10,8 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
-    <meta http-equiv="refresh" content="5;url=WebUserLogin.jsp" />    
-    <title>即將導向至新畫面</title>
+    <meta http-equiv="refresh" content="5;url=/WebProject/webUser/WebUserLogin" />    
+    <title>登出成功</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -143,7 +143,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <p>${logoutMessage}</p>
-                <p>5秒後將移至登入</p>
+                <p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">

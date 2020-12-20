@@ -439,6 +439,32 @@ public class WebUserController {
 	public String doGoWebUserMain() {
 		return "webUser/WebUserMain";
 	}
+	
+	/* 執行登出 */
+	@GetMapping(value = "/controller/WebUserMain/Logout")
+	public String doLogOut(
+			Model model,
+			RedirectAttributes redirectAttributes,
+			SessionStatus sessionStatus
+			) 
+	{
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		String account = userData.getAccount();
+		String logoutMessage = "謝謝您的使用，" + account + "!";
+		/* 清空SessionAttribute */
+		sessionStatus.setComplete();
+		/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
+		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
+		
+		/* 前往登出畫面 */
+		return "redirect:/webUser/WebUserLogoutResult";
+	}
+	
+	/* 前往登出畫面 */
+	@GetMapping(value = "WebUserLogoutResult")
+	public String doGoLogOut() {
+		return "webUser/WebUserLogoutResult";
+	}
 
 	/* 使用者註冊資料檢查 */
 	public String doRegisterInputCheck(

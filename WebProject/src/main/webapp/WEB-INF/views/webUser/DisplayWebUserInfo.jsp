@@ -145,9 +145,6 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="reg_webUser" class="webUser.model.WebUserData"
-					scope="session" />
 				<c:if test="${reg_webUser.password == null}">
 					<c:redirect url="webUser/WebUserRegisterForm" />
 				</c:if>
