@@ -13,6 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <title>查詢結果</title>
     <style>
@@ -145,98 +146,126 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
-				<c:if test="${empty selfData}">
-					<c:redirect url="/webUser/WebUserLogin.jsp" />
+				<c:if test="${empty userFullData}">
+					<c:redirect url="WebUserLogin" />
 				</c:if>
-				<form action="/WebProject/webUser/WebUserServlet" method="post">
+				<form action="" method="post">
 					<fieldset>
-						<c:if test="${updateResultMessage != null}">
-							<legend><c:out value="${updateResultMessage}" /></legend>
-						</c:if>
-						<c:if test="${updateResultMessage == null}">
-							<legend><c:out value="${getResultMessage}" /></legend>
-						</c:if>
-						<hr />
-							<label>帳號名稱：</label>
-							<c:out value="${selfData.account}" />
-							<hr />
-							<label>帳號密碼：</label>
-							<c:if test="${selfData.password.length() > 0}">
-								<c:forEach var="passwordChar" begin="0" end="${selfData.password.length()-1}">
-									<c:out value = "*" />
-								</c:forEach>
-							</c:if>
-							<hr />
-							<label>中文姓氏：</label>
-							<c:out value="${selfData.firstName}" />
-							<input type="hidden" name="firstName" id="firstName" value="${selfData.firstName}">
-							<hr />
-							<label>中文名字：</label>
-							<c:out value="${selfData.lastName}" />
-							<input type="hidden" name="lastName" id="lastName" value="${selfData.lastName}">
-							<hr />
-							<label>稱呼方式：</label>
-							<c:out value="${selfData.nickname}" />
-							<input type="hidden" name="nickname" id="nickname" value="${selfData.nickname}">
-							<hr />
-							<label>生理性別：</label>
-							<c:out value="${selfData.gender.genderText}" />
-							<hr />
-							<label>西元生日：</label>
-							<c:out value="${selfData.birth}" />
-							<hr />
-							<label>偏好食物：</label>
-							<c:out value="${selfData.fervor}" />
-							<input type="hidden" name="fervor" id="fervor" value="${selfData.fervor}">
-							<hr />
-							<label>聯絡信箱：</label>
-							<c:out value="${selfData.email}" />
-							<input type="hidden" name="email" id="email" value="${selfData.email}">
-							<hr />
-							<label>聯絡電話：</label>
-							<c:out value="${selfData.phone}" />
-							<input type="hidden" name="phone" id="phone" value="${selfData.phone}">
-							<hr />
-							<label>是否願意接收促銷/優惠訊息：</label>
-							<c:out value="${selfData.getEmail.willingText}" />
-							<input type="hidden" name="getEmail" id="getEmail" value="${selfData.getEmail.willingCode}">
-							<hr />
-							<label>居住區域：</label>
-							<c:out value="${selfData.locationInfo.cityName}" />
-							<input type="hidden" name="locationCode" id="locationCode" value="${selfData.locationInfo.cityCode}">
-							<hr />
-							<label>生活地點一：</label>
-							<c:out value="${selfData.addr0}" />
-							<input type="hidden" name="addr0" id="addr0" value="${selfData.addr0}">
-							<hr />
-							<label>生活地點二：</label>
-							<c:out value="${selfData.addr1}" />
-							<input type="hidden" name="addr1" id="addr1" value="${selfData.addr1}">
-							<hr />
-							<label>生活地點三：</label>
-							<c:out value="${selfData.addr2}" />
-							<input type="hidden" name="addr2" id="addr2" value="${selfData.addr2}">
-							<hr />
-							<label>所擁有的橙幣：</label>
-							<c:out value="${selfData.zest}" />
-							<hr />
-							<label>帳號狀態：</label>
-							<c:choose>
-								<c:when test="${selfData.status=='active'}">已啟用</c:when>
-								<c:when test="${selfData.status=='quit'}">已棄用</c:when>
-							</c:choose>
-							<hr />
+						<legend id="getDataSpan"></legend>
+						<div id="dataContainer"></div>
 					</fieldset>
 					<div align="center">
 						<input type="submit" name="update" value="修改其他資料">
-						<input type="submit" name="update" value="修改密碼">
-						<a href="WebUserMain.jsp"><input type="button" name="select" value="返回主畫面"></a>
+						<a href=""><input type="button" name="update" value="修改密碼"></a>
+						<a href="WebUserMain"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 					<hr />
 				</form>
+				<script>
+					window.onload = function() {
+						getSelfData();
+					};
+					
+					function getSelfData() {
+						let getDataSpan = document.getElementById("getDataSpan");
+						let getDataStr = "...處理中，請稍後";
+						let getDataIsOk = true;
+						let dataContainer = document.getElementById("dataContainer");
+						
+						getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + getDataStr;
+						getDataSpan.style.color = "black";
+						getDataSpan.style.fontStyle = "normal";
+						
+						let xhrObject = new XMLHttpRequest();
+						if (xhrObject != null) {
+							xhrObject.open("POST", "<c:url value='/webUser/controller/DisplaySelfData' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send();
+							
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 1) {
+											getDataStr = resultObj.resultMessage;
+										} else {
+											getDataStr = "取得資料途中遭遇錯誤！";
+											/* 顯示彈窗異常訊息 */
+						            		alert(resultObj.resultMessage);
+										}
+										if (!getDataIsOk) {
+											getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
+											getDataSpan.style.color = "red";
+											getDataSpan.style.fontStyle = "italic";
+						            	} else {
+						            		getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + getDataStr;
+						            		getDataSpan.style.color = "black";
+						            		getDataSpan.style.fontStyle = "normal";
+						            		
+						            		let passwordLength = resultObj.password.length;
+						            		let coveredPassword = "";
+						            		for (let lengthIndex = 0; lengthIndex < passwordLength; lengthIndex++) {
+												coveredPassword += "*";						            			
+						            		}
+						            		let accountStatus = resultObj.status;
+						            		switch(accountStatus) {
+						            			case "inactive":
+						            				accountStatus = "尚未啟用";
+						            				break;
+						            			case "active":
+						            				accountStatus = "已啟用";
+						            				break;
+						            			case "quit":
+						            				accountStatus = "已停用";
+						            				break;
+						            		}
+						            		
+						            		let content = "<hr /><label>帳號名稱：" + resultObj.account + "</label>"
+						            						+ "<hr /><label>帳號密碼：" + coveredPassword + "</label>"
+						            						+ "<hr /><label>中文姓氏：" + resultObj.firstName + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "firstName" + " id=" + "firstName" + " value=" + resultObj.firstName + ">"
+						            						+ "<hr /><label>中文姓名：" + resultObj.lastName + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "lastName" + " id=" + "lastName" + " value=" + resultObj.lastName + ">"
+						            						+ "<hr /><label>稱呼方式：" + resultObj.nickname + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "nickname" + " id=" + "nickname" + " value=" + resultObj.nickname + ">"
+						            						+ "<hr /><label>生理性別：" + resultObj.gender + "</label>"
+						            						+ "<hr /><label>西元生日：" + resultObj.birth + "</label>"
+						            						+ "<hr /><label>偏好食物：" + resultObj.fervor + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "fervor" + " id=" + "fervor" + " value=" + resultObj.fervor + ">"
+						            						+ "<hr /><label>聯絡信箱：" + resultObj.email + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "email" + " id=" + "email" + " value=" + resultObj.email + ">"
+						            						+ "<hr /><label>聯絡電話：" + resultObj.phone + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "phone" + " id=" + "phone" + " value=" + resultObj.phone + ">"
+						            						+ "<hr /><label>是否願意接收促銷/優惠訊息：" + resultObj.getEmail + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "getEmail" + " id=" + "getEmail" + " value=" + resultObj.getEmailCode + ">"
+						            						+ "<hr /><label>居住區域：" + resultObj.location + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "locationCode" + " id=" + "locationCode" + " value=" + resultObj.locationCode + ">"
+						            						+ "<hr /><label>生活地點一：" + resultObj.addr0 + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "addr0" + " id=" + "addr0" + " value=" + resultObj.addr0 + ">"
+						            						+ "<hr /><label>生活地點二：" + resultObj.addr1 + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "addr1" + " id=" + "addr1" + " value=" + resultObj.addr1 + ">"
+						            						+ "<hr /><label>生活地點三：" + resultObj.addr2 + "</label>"
+						            						+ "<input type=" + "hidden" + " name=" + "addr2" + " id=" + "addr2" + " value=" + resultObj.addr2 + ">"
+						            						+ "<hr /><label>所擁有的橙幣：" + resultObj.zest + "</label>"
+						            						+ "<hr /><label>帳號狀態：" + accountStatus + "</label>"
+						            						+ "<hr />";
+						            						
+						            		dataContainer.innerHTML = content;
+						            	}
+									} else {
+										getDataStr = "發生錯誤，無法取得使用者個人資料";
+										getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
+										getDataSpan.style.color = "red";
+										getDataSpan.style.fontStyle = "italic";
+							        }
+								}
+							};
+						} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+						}
+					}
+				</script>
             </div>   
 <!-- -------------------------------------------------------------------- -->
       		<div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">

@@ -104,23 +104,23 @@ public class WebUserController {
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(Model model,
-			@RequestParam(value = "userLv", required = false, defaultValue = "0") Integer lv,
-			@RequestParam(value = "account", required = false, defaultValue = "") String account,
-			@RequestParam(value = "password", required = false, defaultValue = "") String password,
-			@RequestParam(value = "firstName", required = false, defaultValue = "") String firstName,
-			@RequestParam(value = "lastName", required = false, defaultValue = "") String lastName,
-			@RequestParam(value = "nickname", required = false, defaultValue = "") String nickname,
-			@RequestParam(value = "gender", required = false, defaultValue = "N") String genderCode,
-			@RequestParam(value = "birth", required = false, defaultValue = "1800-01-01") Date birth,
-			@RequestParam(value = "fervorOption", required = false, defaultValue="{7}") List<String> fervorValue,
-			@RequestParam(value = "email", required = false, defaultValue = "") String email,
-			@RequestParam(value = "inputCheckCode", required = false, defaultValue = "") String inputCheckCode,
-			@RequestParam(value = "phone", required = false, defaultValue = "") String phone,
-			@RequestParam(value = "getEmail", required = false, defaultValue = "Y") String willingCode,
-			@RequestParam(value = "locationCode", required = false, defaultValue = "0") Integer cityCode,
-			@RequestParam(value = "addr0", required = false, defaultValue = "") String addr0,
-			@RequestParam(value = "addr1", required = false, defaultValue = "") String addr1,
-			@RequestParam(value = "addr2", required = false, defaultValue = "") String addr2,
+			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
+			@RequestParam(value = "account", defaultValue = "") String account,
+			@RequestParam(value = "password", defaultValue = "") String password,
+			@RequestParam(value = "firstName", defaultValue = "") String firstName,
+			@RequestParam(value = "lastName", defaultValue = "") String lastName,
+			@RequestParam(value = "nickname", defaultValue = "") String nickname,
+			@RequestParam(value = "gender", defaultValue = "N") String genderCode,
+			@RequestParam(value = "birth", defaultValue = "1800-01-01") Date birth,
+			@RequestParam(value = "fervorOption", defaultValue="{7}") List<String> fervorValue,
+			@RequestParam(value = "email", defaultValue = "") String email,
+			@RequestParam(value = "inputCheckCode", defaultValue = "") String inputCheckCode,
+			@RequestParam(value = "phone", defaultValue = "") String phone,
+			@RequestParam(value = "getEmail", defaultValue = "Y") String willingCode,
+			@RequestParam(value = "locationCode", defaultValue = "0") Integer cityCode,
+			@RequestParam(value = "addr0", defaultValue = "") String addr0,
+			@RequestParam(value = "addr1", defaultValue = "") String addr1,
+			@RequestParam(value = "addr2", defaultValue = "") String addr2,
 			RedirectAttributes redirectAttributes) 
 	{
 		/* 參數宣告 */
@@ -159,7 +159,7 @@ public class WebUserController {
 		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
 		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
 		
-		String checkCode = (String) model.getAttribute("checkCode");
+		String checkCode = ((String) model.getAttribute("checkCode")).toUpperCase();
 		String registerEmail = (String) model.getAttribute("registerEmail");
 		
 		/* 設定物件 */
@@ -227,7 +227,7 @@ public class WebUserController {
 				submitMessage = "驗證碼檢查失敗";
 			} else if (!registerEmail.equals(email)) {
 				submitMessage = "email資訊不吻合";
-			} else if (!checkCode.matches("[0-9a-zA-Z]{8}")) {
+			} else if (!checkCode.matches("[0-9A-Z]{8}")) {
 				submitMessage = "驗證碼錯誤";
 			}
 		}
@@ -337,11 +337,12 @@ public class WebUserController {
 	@PostMapping(value = "/controller/WebUserLogin", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
-			@RequestParam(value = "account", required=false, defaultValue="") String account,
-			@RequestParam(value = "password", required=false, defaultValue="") String password
+			@RequestParam(value = "account", defaultValue="") String account,
+			@RequestParam(value = "password", defaultValue="") String password
 			) 
 	{
 		/* 宣告欲回傳的參數 */
+		Map<String, String> map = new HashMap<>();
 		Integer inputCheckResult = -1;
 		Integer accountCheckResult = -3;
 		String loginMessage = "";
@@ -404,7 +405,6 @@ public class WebUserController {
 			model.addAttribute("userFullData", userFullData);
 		} 
 		
-		Map<String, String> map = new HashMap<>();
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
 		return map;
@@ -468,11 +468,64 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserQuitResult";
 	}
 	
+	/* 以Ajax取回使用者個人資料 */
+	@PostMapping(value = "/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doDisplaySelfData(
+			Model model
+			) 
+	{
+		/* 傳回的參數 */
+		Integer getResultCode = -1;
+		String getResultMessage = "";
+		WebUserData selfData = new WebUserData();
+		Map<String, String> map = new HashMap<>();
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 取出帳號 */
+		String account = userData.getAccount();
+		/* 調用服務裡的方法 */
+		try {
+			selfData = wus.getWebUserData(account);
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			getResultMessage = getDataMessageTmp.split(":")[1];
+		}
+		
+		getResultCode = (getResultMessage.equals("")) ? 1 : 0;
+		getResultMessage = (getResultMessage.equals("")) ? "以下是您的個人資料：" : getResultMessage;
+		
+		map.put("resultCode", getResultCode.toString());
+		map.put("resultMessage", getResultMessage);
+		map.put("account", selfData.getAccount());
+		map.put("password", selfData.getPassword());
+		map.put("firstName", selfData.getFirstName());
+		map.put("lastName", selfData.getLastName());
+		map.put("nickname", selfData.getNickname());
+		map.put("gender", selfData.getGender().getGenderText());
+		map.put("birth", selfData.getBirth().toString());
+		map.put("fervor", selfData.getFervor());
+		map.put("email", selfData.getEmail());
+		map.put("phone", selfData.getPhone());
+		map.put("getEmail", selfData.getGetEmail().getWillingText());
+		map.put("getEmailCode", selfData.getGetEmail().getWillingCode());
+		map.put("location", selfData.getLocationInfo().getCityName());
+		map.put("locationCode", selfData.getLocationInfo().getCityCode().toString());
+		map.put("addr0", selfData.getAddr0());
+		map.put("addr1", selfData.getAddr1());
+		map.put("addr2", selfData.getAddr2());
+		map.put("zest", selfData.getZest().toString());
+		map.put("status", selfData.getStatus());
+		
+		return map;
+	}
+	
 	/* 準備顯示個人資料畫面 */
-	@GetMapping(value="/controller/WebUserMain/Modify")
+	@GetMapping(value = "/controller/WebUserMain/Modify")
 	public String doDisplayOwnUserData() {
 		return "redirect:/webUser/DisplayWebUserData";
 	}
+	
+	
 	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
@@ -513,13 +566,13 @@ public class WebUserController {
 	/* 前往棄用結束畫面 */
 	@GetMapping(value = "WebUserQuitResult")
 	public String doGoQuitResult() {
-		return "/webUser/WebUserQuitResult";
+		return "webUser/WebUserQuitResult";
 	}
 	
 	/* 前往顯示個人資料畫面 */
 	@GetMapping(value="DisplayWebUserData")
 	public String doDisplayWebUserData() {
-		return "/webUser/DisplayWebUserData";
+		return "webUser/DisplayWebUserData";
 	}
 	
 	/* 使用者註冊資料檢查 */
