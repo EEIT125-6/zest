@@ -475,7 +475,7 @@ public class WebUserController {
 	
 	/* 以Ajax取回使用者個人資料 */
 	@PostMapping(value = "/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, String> doDisplaySelfData(
+	public @ResponseBody Map<String, Object> doDisplaySelfData(
 			Model model
 			) 
 	{
@@ -483,7 +483,7 @@ public class WebUserController {
 		Integer getResultCode = -1;
 		String getResultMessage = "";
 		WebUserData selfData = new WebUserData();
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		/* 取出帳號 */
@@ -501,25 +501,7 @@ public class WebUserController {
 		
 		map.put("resultCode", getResultCode.toString());
 		map.put("resultMessage", getResultMessage);
-		map.put("account", selfData.getAccount());
-		map.put("password", selfData.getPassword());
-		map.put("firstName", selfData.getFirstName());
-		map.put("lastName", selfData.getLastName());
-		map.put("nickname", selfData.getNickname());
-		map.put("gender", selfData.getGender().getGenderText());
-		map.put("birth", selfData.getBirth().toString());
-		map.put("fervor", selfData.getFervor());
-		map.put("email", selfData.getEmail());
-		map.put("phone", selfData.getPhone());
-		map.put("getEmail", selfData.getGetEmail().getWillingText());
-		map.put("getEmailCode", selfData.getGetEmail().getWillingCode());
-		map.put("location", selfData.getLocationInfo().getCityName());
-		map.put("locationCode", selfData.getLocationInfo().getCityCode().toString());
-		map.put("addr0", selfData.getAddr0());
-		map.put("addr1", selfData.getAddr1());
-		map.put("addr2", selfData.getAddr2());
-		map.put("zest", selfData.getZest().toString());
-		map.put("status", selfData.getStatus());
+		map.put("selfData", selfData);
 		
 		return map;
 	}
@@ -600,6 +582,13 @@ public class WebUserController {
 		
 		return destinationUrl;
 	}
+	
+	/* 準備前往修改其他資料畫面 */
+	@PostMapping(value = "/controller/DisplayWebUserData")
+	public String doGoWebUserModifyData() {
+		return null;
+	}
+	
 	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
