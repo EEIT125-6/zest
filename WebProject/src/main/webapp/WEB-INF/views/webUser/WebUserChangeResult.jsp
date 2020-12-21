@@ -144,14 +144,14 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${updateResultMessage}</p>
-                <p>5秒後將移至</p>
-                <p id = "pPage">${updateResultPage}</p>
+                <c:if test="${updateResultMessage == null}">
+                	<p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
+                </c:if>
+                <c:if test="${updateResultMessage != null}">
+                	<p>${updateResultMessage}</p>
+                </c:if>
                 <script>
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserLogin.jsp") {
-                		document.getElementById("pPage").innerHTML = "登入";
-                	} 
-                	let redirectPage = "WebUserLogin.jsp";
+                	let redirectPage = "WebUserLogin";
                 	setTimeout(function () {
 	                	   window.location.href = redirectPage;
                	  	}

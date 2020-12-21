@@ -156,7 +156,7 @@
 					</fieldset>
 					<div align="center">
 						<input type="submit" name="update" value="修改其他資料">
-						<a href=""><input type="button" name="update" value="修改密碼"></a>
+						<a href="controller/WebUserModifyPassword"><input type="button" name="update" value="修改密碼"></a>
 						<a href="WebUserMain"><input type="button" name="select" value="返回主畫面"></a>
 					</div>
 					<hr />

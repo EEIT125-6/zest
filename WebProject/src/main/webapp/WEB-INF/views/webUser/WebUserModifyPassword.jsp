@@ -14,7 +14,7 @@
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <title>修改個人密碼</title>
     <style>
         .classimg{
@@ -151,23 +151,9 @@
 				<c:if test="${userFullData.password == null}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                <form action="<c:url value='/webUser/controller/WebUserModifyPassword' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
-                		<legend>
-                		<c:if test="${updateResultMessage != null}">
-							<c:if test="${updateResultMessage != '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
-							<c:if test="${updateResultMessage == '更新操作順利完成，目前請重新登入以獲得最新的資料'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
-						</c:if>
-						<c:if test="${updateResultMessage == null}">
-							<c:out value="密碼相關資料" />
-						</c:if>
-						</legend>
+                		<legend>密碼相關資料</legend>
                 		<hr />
 						<label>帳號原密碼：</label>
 						<c:if test="${userFullData.password.length() > 0}">
@@ -191,13 +177,13 @@
 						<span id="confirmPasswordSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
+                		<a href="WebUserMain"><input type="button" name="update" value="取消"></a>
 						<input type="submit" name="update" value="密碼修改完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
                 </form>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserModifyPassword.js"></script>
+                <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyPassword.js"></script>
                 <script>
 					$("#showPassword").click(function () {
 				        document.getElementById("originalPassword").type = (document.getElementById("originalPassword").type == "hidden") ? "text" : "hidden";

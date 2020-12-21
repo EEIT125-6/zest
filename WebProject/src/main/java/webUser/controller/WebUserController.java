@@ -249,7 +249,7 @@ public class WebUserController {
 	
 	/* 執行使用者資料送出 */
 	@PostMapping(value = "/controller/DisplayWebUserInfo/confirm")
-	public String doRegisterConfirm(
+	public String doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
 				Model model
@@ -430,7 +430,7 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserLogoutResult";
 	}
 	
-	/* 執行帳號棄用 */
+	/* 執行帳號停用 */
 	@PostMapping(value = "/controller/WebUserMain/Quit")
 	public String doPersonalQuit(
 			Model model,
@@ -445,12 +445,17 @@ public class WebUserController {
 		
 		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
 		
-		/* 調用服務裡的方法 */
-		try {
-			deleteResult = wus.quitWebUserData(quitUserData);
-		} catch (SQLException sqlE) {
-			String quitMessageTmp = sqlE.getMessage();
-			quitMessage = quitMessageTmp.split(":")[1];
+		/* 預防性後端檢查 */
+		quitMessage = doCheckQuitInput(quitUserData);
+		
+		if (quitMessage.equals("")) {			
+			/* 調用服務裡的方法 */
+			try {
+				deleteResult = wus.quitWebUserData(quitUserData);
+			} catch (SQLException sqlE) {
+				String quitMessageTmp = sqlE.getMessage();
+				quitMessage = quitMessageTmp.split(":")[1];
+			}
 		}
 		
 		/* 成功變更 */
@@ -525,11 +530,80 @@ public class WebUserController {
 		return "redirect:/webUser/DisplayWebUserData";
 	}
 	
+	/* 準備顯示修改密碼畫面 */
+	@GetMapping(value = "controller/WebUserModifyPassword")
+	public String doWebUserModifyPassword() {
+		return "redirect:/webUser/WebUserModifyPassword";
+	}
 	
+	/* 執行修改密碼 */
+	@PostMapping(value = "controller/WebUserModifyPassword")
+	public String doUpdateWebUserPassword(
+			Model model,
+			SessionStatus sessionStatus,
+			RedirectAttributes redirectAttributes,
+			@RequestParam(value = "password") String password,
+			@RequestParam(value = "confirmPassword") String confirmPassword 
+			) 
+	{	
+		/* 宣告參數 */
+		String updateResultMessage = "";
+		Integer updateResult = -1;
+		String destinationUrl = "";
+		
+		/* 從sessionAttribute中取出物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		String oldPassword = userData.getPassword();
+		
+		/* 預防性後端檢查 */
+		updateResultMessage = doCheckUpdatePasswordInput(userData, password, confirmPassword);
+		
+		/* 成功才執行 */
+		if (updateResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				userData.setVersion(userData.getVersion() + 1);
+				userData.setPassword(password);
+				updateResult = wus.updateWebUserPassword(userData);
+			} catch (SQLException sqlE) {
+				updateResultMessage = sqlE.getMessage();
+				/* 復原操作 */
+				userData.setVersion(userData.getVersion() - 1);
+				userData.setPassword(oldPassword);
+			}
+			
+			/* 成功 */
+			if (updateResult == 1) {
+				/* 清空SessionAttribute */
+				sessionStatus.setComplete();
+			}
+		}
+		
+		if (!updateResultMessage.equals("")) {
+			if (updateResultMessage.indexOf(":") != -1) {	
+				updateResultMessage = updateResultMessage.split(":")[1];
+			}
+		} else {
+			updateResultMessage = userData.getAccount() + "的密碼變更成功！5秒後將返回登入畫面";
+		}
+		
+		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
+		redirectAttributes.addFlashAttribute("updateResultMessage", updateResultMessage);
+		
+		if (updateResult == 1) {
+			/* 導向密碼修改結果畫面 */
+			destinationUrl = "redirect:/webUser/WebUserChangeResult";
+		} else {
+			/* 導向修改個人密碼畫面 */
+			destinationUrl = "redirect:/webUser/WebUserModifyPassword";
+		}
+		
+		return destinationUrl;
+	}
 	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
-	public String doGoDisplayInfo(Model model) {
+	public String doGoDisplayInfo() {
 		return "webUser/DisplayWebUserInfo";
 	}
 	
@@ -570,9 +644,21 @@ public class WebUserController {
 	}
 	
 	/* 前往顯示個人資料畫面 */
-	@GetMapping(value="DisplayWebUserData")
-	public String doDisplayWebUserData() {
+	@GetMapping(value = "DisplayWebUserData")
+	public String doGoDisplayWebUserData() {
 		return "webUser/DisplayWebUserData";
+	}
+	
+	/* 前往修改個人密碼畫面 */
+	@GetMapping(value = "WebUserModifyPassword")
+	public String doGoWebUserModifyPassword() {
+		return "webUser/WebUserModifyPassword";
+	}
+	
+	/* 前往個人修改結束畫面 */
+	@GetMapping(value = "WebUserChangeResult")
+	public String doGoWebUserChangeResult() {
+		return "webUser/WebUserChangeResult";
 	}
 	
 	/* 使用者註冊資料檢查 */
@@ -1007,5 +1093,86 @@ public class WebUserController {
 		} 
 		
 		return inputCheckResult;
+	}
+	
+	public String doCheckQuitInput(WebUserData userData) {
+		String checkInputResult = "";
+		
+		if (userData == null) {
+			checkInputResult = "您似乎沒有登入本系統！請登入後再試一次";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			checkInputResult = "本帳號無法使用此功能";
+		} else {
+			Integer checkResult = -1;
+			Integer checkResult2 = -1;
+			
+			/* 調用服務裡的方法 */
+			try {
+				checkResult = wus.checkAccountExist(userData.getAccount());
+			} catch (SQLException sqlE) {
+				String quitMessageTmp = sqlE.getMessage();
+				checkInputResult = quitMessageTmp.split(":")[1];
+			}
+			
+			
+			/* 調用服務裡的方法 */
+			try {
+				checkResult2 = wus.checkUserIdQuit(userData.getUserId());
+			} catch (SQLException sqlE) {
+				String quitMessageTmp = sqlE.getMessage();
+				checkInputResult = quitMessageTmp.split(":")[1];
+			}
+			
+			if (checkResult != 1) {
+				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
+			} else if (checkResult2 == 1) {
+				checkInputResult = "異常的使用者資訊，本帳號已被停用！";
+			} else if (checkResult2 == -1) {
+				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
+			}
+		}
+			
+		return checkInputResult;
+	}
+	
+	public String doCheckUpdatePasswordInput(WebUserData userData, String password, String confirmPassword) {
+		String updateResultMessage = "";
+		
+		if (userData == null) {
+			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			updateResultMessage = "本帳號無法使用此功能";
+		} else {
+			String oldPassword = userData.getPassword();
+			if (!password.equals(confirmPassword)) {
+				updateResultMessage = "密碼與確認密碼不一致！";
+			} else if (password.equals(oldPassword)){
+				updateResultMessage = "密碼未修改！";
+			} else if (password.equals("")) {
+				updateResultMessage = "密碼不可為空白";
+			} else if (password.length() < 8 || password.length() > 20) {
+				updateResultMessage = "密碼長度不符格式，僅接受8~20個字元";
+			} else if (password.matches("[1-9]{1}.")) {
+				updateResultMessage = "密碼不可以數字開頭";
+			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+				updateResultMessage = "密碼不符合格式";
+			} else {
+				String userId = userData.getUserId();
+				Integer checkIdResult = -1;
+				
+				try {
+					checkIdResult = wus.checkUserIdExist(userId);
+				} catch(SQLException sqlE) {
+					String quitMessageTmp = sqlE.getMessage();
+					updateResultMessage = quitMessageTmp.split(":")[1];
+				}
+				
+				if (checkIdResult != 1) {
+					updateResultMessage = "使用者身分異常!請確定您已經登入本系統";
+				}
+			}
+		}
+		
+		return updateResultMessage;
 	}
 }
