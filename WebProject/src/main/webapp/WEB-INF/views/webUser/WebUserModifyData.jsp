@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
-    <link rel="stylesheet" href="styles/WebUserRegisterForm.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
     <title>修改個人資料</title>
     <style>
@@ -148,414 +148,256 @@
             <div class="container"  style="margin-top: 20px;">
                 <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
-				<c:if test="${userFullData.password == null}">
+				<c:if test="${empty userFullData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return checkForm();">
+                <form method="post">
                 	<fieldset>
-                		<legend>可修改的個人相關資料</legend>
-                		<span id="updateResultMessageSpan">
-                		<c:if test="${updateResultMessage != null}">
-							<c:if test="${updateResultMessage != '更新操作順利完成'}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${updateResultMessage}" />
-							</c:if>
-						</c:if>
-						<c:if test="${updateResultMessage == null}">
-						</c:if>
-						</span>
-                		<hr />
-                		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${originalData.firstName}">
+                		<legend>以下為您可變更的資料：</legend>
+                		<span id="updatedResultSpan"></span>
+						<hr />
+                		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
-							placeholder="請輸入姓氏，1~3個中文字" value="${originalData.firstName}" />
+							placeholder="請輸入姓氏，1~3個中文字" value="${selfData.firstName}" />
 						<span id="firstNameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalLastName" id="originalLastName" value="${originalData.lastName}">
+						<input type="hidden" name="originalLastName" id="originalLastName" value="${selfData.lastName}">
 						<label>中文名字：</label>
 						<input type="text" name="updatedLastName" id="updatedLastName" size="40" maxlength="3" onblur="checkLastName()"
-							placeholder="請輸入名字，1~3個中文字" value="${originalData.lastName}" />
+							placeholder="請輸入名字，1~3個中文字" value="${selfData.lastName}" />
 						<span id="lastNameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalNickname" id="originalNickname" value="${originalData.nickname}">
+						<input type="hidden" name="originalNickname" id="originalNickname" value="${selfData.nickname}">
 						<label>稱呼方式：</label>
 						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
-							placeholder="請輸入想要的稱呼" value="${originalData.nickname}" />
+							placeholder="請輸入想要的稱呼" value="${selfData.nickname}" />
 						<input type="button" name="update" id="checkNicknameUsed" value="檢查稱呼">
 						<span id="nicknameSpan"></span>
 						<hr />
-						<input type="hidden" name="originalFervor" id="originalFervor" value="${originalData.fervor}">
+						<input type="hidden" name="originalFervor" id="originalFervor" value="${selfData.fervor}">
 						<label>偏好食物：</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('中式')!=-1}">
-								<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="中式" 
+						<c:forEach items="${fervorList}" var="fervorObject" >
+							<c:if test="${selfData.fervor.indexOf(fervorObject.fervorItem)!=-1}">
+								<input type="checkbox" id="updatedFervor" name="updatedFervor" value="${fervorObject.fervorCode}" 
 									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('中式')==-1}">
-								<input type="checkbox" id="updatedFervor1" name="updatedFervor" value="中式" 
+							</c:if>
+							<c:if test="${selfData.fervor.indexOf(fervorObject.fervorItem)==-1}">
+								<input type="checkbox" id="updatedFervor" name="updatedFervor" value="${fervorObject.fervorCode}" 
 									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>中式</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('快餐')!=-1}">
-								<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('快餐')==-1}">
-								<input type="checkbox" id="updatedFervor2" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>快餐</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('燒肉')!=-1}">
-								<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('燒肉')==-1}">
-								<input type="checkbox" id="updatedFervor3" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>燒肉</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('西式')!=-1}">
-								<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('西式')==-1}">
-								<input type="checkbox" id="updatedFervor4" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>西式</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('下午茶')!=-1}">
-								<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('下午茶')==-1}">
-								<input type="checkbox" id="updatedFervor5" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>下午茶</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('日式')!=-1}">
-								<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('日式')==-1}">
-								<input type="checkbox" id="updatedFervor6" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>日式</label>
-						<c:choose>
-							<c:when test="${originalData.fervor.indexOf('皆可')!=-1}">
-								<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" checked="checked" />
-							</c:when>
-							<c:when test="${originalData.fervor.indexOf('皆可')==-1}">
-								<input type="checkbox" id="updatedFervor0" name="updatedFervor" value="快餐" 
-									onblur="checkFervor()" />
-							</c:when>
-						</c:choose>
-						<label>皆可</label>
+							</c:if>
+							<label>${fervorObject.fervorItem}</label>
+						</c:forEach>
 						<span id="fervorSpan"></span>
 						<hr />
-						<input type="hidden" name="originalEmail" id="originalEmail" value="${originalData.email}">
+						<input type="hidden" name="originalEmail" id="originalEmail" value="${selfData.email}">
 						<label>聯絡信箱：</label>
 						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
-						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${originalData.email}" />
+						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${selfData.email}" />
 						<input type="button" name="update" id="checkEmailUsed" value="檢查信箱">
 						<span id="emailSpan"></span>
 						<hr />
-						<input type="hidden" name="originalPhone" id="originalPhone" value="${originalData.phone}">
+						<input type="hidden" name="originalPhone" id="originalPhone" value="${selfData.phone}">
 						<label>聯絡電話：</label>
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
-						    placeholder="請輸入行動電話或市內電話號碼" value="${originalData.phone}" />
+						    placeholder="請輸入行動電話或市內電話號碼" value="${selfData.phone}" />
 						<input type="button" name="update" id="checkPhoneUsed" value="檢查電話">
 						<span id="phoneSpan"></span>
 					    <hr />
-					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${originalData.getEmail.willingCode}">
+					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${selfData.getEmail.willingCode}">
 					    <label>接收促銷/優惠意願：</label>
-					    <c:choose>
-					    	<c:when test="${originalData.getEmail.willingCode=='Y'}">
-								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
-								onblur="checkGetEmail()" checked="checked">
-							</c:when>
-							<c:when test="${originalData.getEmail.willingCode!='Y'}">
-								<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="Y" 
+					    <c:forEach items="${willingList}" var="userWilling" >
+					    	<c:if test="${userWilling.willingCode.equals(selfData.getEmail.willingCode)}" >
+					    		<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="${userWilling.willingText}" 
+									onblur="checkGetEmail()" checked="checked" >
+					    	</c:if>
+					    	<c:if test="${!userWilling.willingCode.equals(selfData.getEmail.willingCode)}" >
+					    		<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="${userWilling.willingText}" 
 									onblur="checkGetEmail()" >
-							</c:when>
-						</c:choose>
-					    <label for="Y">願意</label>
-					    <c:choose>
-					    	<c:when test="${originalData.getEmail.willingCode!='N'}">
-							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
-							    	onblur="checkGetEmail()" >
-						    </c:when>
-						    <c:when test="${originalData.getEmail.willingCode=='N'}">
-							    <input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="N" 
-							    	onblur="checkGetEmail()" checked="checked">
-						    </c:when>
-					    </c:choose>
-					    <label for="N">不願意</label>
+					    	</c:if>
+					    	<label><c:out value="${userWilling.willingText}"></c:out></label>
+					    </c:forEach>
 					    <span id="getEmailSpan"></span>
 						<hr />
-						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${originalData.locationInfo.cityCode}">
+						<input type="hidden" name="originalLocationCode" id="originalLocationCode" value="${selfData.locationInfo.cityCode}">
 					    <label>居住區域：</label>
-				    	<select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
-						    <option value="t01"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t01'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='臺北市' />
-	                        </option>
-	                        
-	                        <option value="t02"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t02'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='新北市' />
-	                        </option>
-	                        
-	                        <option value="t03"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t03'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='桃園市' />
-	                        </option>
-	                        
-	                        <option value="t04"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t04'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='臺中市' />
-	                        </option>
-							
-							<option value="t05"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t05'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='臺南市' />
-	                        </option>
-	                        
-	                        <option value="t06"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t06'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='高雄市' />
-	                        </option>
-	                        
-	                        <option value="t07"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t07'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='基隆市' />
-	                        </option>
-	                        
-	                        <option value="t08"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t08'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='新竹市' />
-	                        </option>
-	                        
-	                        <option value="t09"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t09'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='嘉義市' />
-	                        </option>
-	                        
-	                        <option value="t10"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t10'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='新竹縣' />
-	                        </option>
-	                        
-	                        <option value="t11"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t11'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='苗栗縣' />
-	                        </option>
-	                        
-	                        <option value="t12"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t12'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='彰化縣' />
-	                        </option>
-	                        
-	                        <option value="t13"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t13'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='南投縣' />
-	                        </option>
-	                        
-	                        <option value="t14"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t14'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='雲林縣' />
-	                        </option>
-	                        
-	                        <option value="t15"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t15'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='嘉義縣' />
-	                        </option>
-	                        
-	                        <option value="t16"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t16'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='屏東縣' />
-	                        </option>
-	                        
-	                        <option value="t17"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t17'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='宜蘭縣' />
-	                        </option>
-	                        
-	                        <option value="t18"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t18'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='花蓮縣' />
-	                        </option>
-	                        
-	                        <option value="t19"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t19'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='臺東縣' />
-	                        </option>
-	                        
-	                        <option value="t20"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t20'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='澎湖縣' />
-	                        </option>
-	                        
-	                        <option value="t21"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t21'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='金門縣' />
-	                        </option>
-	                        
-	                        <option value="t22"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t22'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='連江縣' />
-	                        </option>
-	                        
-	                        <option value="t23"
-		                        <c:if test="${originalData.locationInfo.cityCode=='t23'}">
-		                         	selected="selected"
-		                    	</c:if>
-	                        >
-	                        	<c:out value='其他區' />
-	                        </option>
-						</select>
+					    <select name="updatedLocationCode" id="updatedLocationCode" onblur="checkLocationCode()">
+					    	<c:forEach items="${cityInfoList}" var="cityInfo">
+				    			<option value="${cityInfo.cityCode}"
+				    				<c:if test="${cityInfo.cityCode == selfData.locationInfo.cityCode}">
+		                         		selected="selected"
+		                         	</c:if> 
+				    			>
+				    				<c:out value="${cityInfo.cityName}" /> 	
+				    		 	</option>
+				    		</c:forEach>
+					    </select>
 						<span id="locationCodeSpan"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr0" id="originalAddr0" value="${originalData.addr0}">
+					    <input type="hidden" name="originalAddr0" id="originalAddr0" value="${selfData.addr0}">
 					    <label>生活地點一：</label>
 					    <input type="text" name="updatedAddr0" id="updatedAddr0" size="65" maxlength="65" onblur="checkAddr0()"
-						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" value="${originalData.addr0}" />
+						    placeholder="此項為必填，請輸入完整地址方面後續服務之利用" value="${selfData.addr0}" />
 						<br />
 						<span id="addr0Span"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr1" id="originalAddr1" value="${originalData.addr1}">
+					    <input type="hidden" name="originalAddr1" id="originalAddr1" value="${selfData.addr1}">
 					    <label>生活地點二：</label>
 					    <input type="text" name="updatedAddr1" id="updatedAddr1" size="65" maxlength="65" onblur="checkAddr1()"
-						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${originalData.addr1}" />
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${selfData.addr1}" />
 						<br />
 						<span id="addr1Span"></span>
 					    <hr />
-					    <input type="hidden" name="originalAddr2" id="originalAddr2" value="${originalData.addr2}">
+					    <input type="hidden" name="originalAddr2" id="originalAddr2" value="${selfData.addr2}">
 					    <label>生活地點三：</label>
 					    <input type="text" name="updatedAddr2" id="updatedAddr2" size="65" maxlength="65" onblur="checkAddr2()"
-						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${originalData.addr2}" />
+						    placeholder="此項為選填，請輸入完整地址方面後續服務之利用" value="${selfData.addr2}" />
 						<br />
 						<span id="addr2Span"></span>
 					    <hr />
 					    <span id="updatedSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain.jsp"><input type="button" name="update" value="取消"></a>
-						<input type="submit" name="update" value="資料修改完畢">
+                		<a href="WebUserMain"><input type="button" name="update" value="取消/返回"></a>
+						<input type="button" name="update" id="updateConfirm" value="資料修改完畢">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 					<hr />
                 </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                <script src="scripts/WebUserModifyData.js"></script>
-                <script>	
-	                $("#checkNicknameUsed").click(function () {
-				        checkUpdateNickname();
-				    });
-					function checkUpdateNickname(){
-						let nickname = document.getElementById("nickname").value.trim();
-						let nicknameSpan = document.getElementById("nicknameSpan");
-						let nicknameStr;
-						let nicknameIsOk = true;
+                <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+                <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
+                <script>
+                	$("#updateConfirm").click(function() {
+                		checkUpdate();
+                	});
+                	function checkUpdate() {
+                		if (checkForm()) {
+                			doUpdate();
+                		}	
+                	}
+                	function doUpdate() {
+                		let oldFirstName = document.getElementById("originalFirstName").value.trim();
+                		let newFirstName = document.getElementById("updatedFirstName").value.trim();
+                		let oldLastName = document.getElementById("originalLastName").value.trim();
+                		let newLastName = document.getElementById("updatedLastName").value.trim();
+                		let oldNickname = document.getElementById("originalNickname").value.trim();
+                		let newNickname = document.getElementById("updatedNickname").value.trim();
+                		let oldFervor = document.getElementById("originalFervor").value.trim();
+                		let fervorObj = document.getElementsByClassName("updatedFervor");
+                		let newFervor = "";
+                		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+                			if (newFervor != "" && fervorObj[fervorIndex].checked) {
+                				newFervor += ",";
+                			}
+                			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+                		}
+                		let oldEmail = document.getElementById("originalEmail").value.trim();
+                		let newEmail = document.getElementById("updatedEmail").value.trim();
+                		let oldPhone = document.getElementById("originalPhone").value.trim();
+                		let newPhone = document.getElementById("updatedPhone").value.trim();
+                		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
+                		let getEmailObj = document.getElementsByClassName("updatedGetEmail");
+                		let newGetEmail;
+                		for (let getEmailIndex = 0; getEmailIndex < getEmailObj.length; getEmailIndex++) {
+                			newGetEmail += (getEmailObj[getEmailIndex].checked) ? getEmailObj[getEmailIndex].value : "";
+                		}
+                		let oldLocationCode = document.getElementById("originalLocationCode").value.trim();
+                		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
+                		let oldAddr0 = document.getElementById("originalAddr0").value.trim();
+                		let newAddr0 = document.getElementById("updatedAddr0").value.trim();
+                		let oldAddr1 = document.getElementById("originalAddr1").value.trim();
+                		let newAddr1 = document.getElementById("updatedAddr1").value.trim();
+                		let oldAddr2 = document.getElementById("originalAddr2").value.trim();
+                		let newAddr2 = document.getElementById("updatedAddr2").value.trim();
+                		
+                		let updateSpan = document.getElementById("updatedSpan");
+                		let updateResultSpan = document.getElementById("updatedResultSpan");
+                		let updateStr = "...處理中，請稍後";
+						let updateIsOk = true;
+						
+						updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
+						updateSpan.style.color = "black";
+						updateSpan.style.fontStyle = "normal";
+						updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
+						updateResultSpan.style.color = "black";
+						updateResultSpan.style.fontStyle = "normal";
 						
 						$.ajax({
 							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
+							url:"<c:url value='/webUser/controller/WebUserModifyData' />",
+							data:{
+				            	'oldFirstName':oldFirstName,
+				            	'newFirstName':newFirstName,
+				            	'oldLastName':oldLastName,
+								'newLastName':newLastName,
+								'oldNickname':oldNickname,
+								'newNickname':newNickname,
+								'oldFervor':oldFervor,
+								'newFervor':newFervor,
+								'oldEmail':oldEmail,
+								'newEmail':newEmail,
+								'oldPhone':oldPhone,
+								'oldGetEmail':oldGetEmail,
+								'newGetEmail':newGetEmail,
+								'oldLocationCode':oldLocationCode,
+								'newLocationCode':newLocationCode,
+								'oldAddr0':oldAddr0,
+								'newAddr0':newAddr0,
+								'oldAddr1':oldAddr1,
+								'newAddr1':newAddr1,
+								'oldAddr2':oldAddr2,
+								'newAddr2':newAddr2
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	
+				            },
+				            error:function(err) {
+				            	updateStr = "發生錯誤，無法執行檢查";
+				            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+				            	updateSpan.style.color = "red";
+				            	updateSpan.style.fontStyle = "italic";
+				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+				            	updateResultSpan.style.color = "red";
+				            	updateResultSpan.style.fontStyle = "italic";
+				            }
+						});
+                	}
+                
+	                $("#checkNicknameUsed").click(function() {
+				        checkUpdateNickname();
+				    });
+					function checkUpdateNickname() {
+						let nickname = document.getElementById("updatedNickname").value.trim();
+						let nicknameSpan = document.getElementById("nicknameSpan");
+						let nicknameStr = "處理中...，請稍後";
+						let nicknameIsOk = true;
+						let mode = "checkNickname";
+						
+						nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + nicknameStr;
+	            		nicknameSpan.style.color = "black";
+	            		nicknameSpan.style.fontStyle = "normal";
+						
+						$.ajax({
+							type:"POST",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
 				            data:{
-				            	'update':'檢查稱呼',
+				            	'register':mode,
 				            	'inputNickname':nickname
 				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if(resultObj.resultCode == 1) {
 				            		nicknameStr = "此稱呼已有人使用！";
 				            		nicknameIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
+				            	} else if(resultObj.resultCode == 0) {
 				            		nicknameStr = "可使用此稱呼！";
 				            		nicknameIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
+				            	} else if(resultObj.resultCode == -1) {
 				            		nicknameStr = "檢查途中遭遇錯誤！";
 				            		nicknameIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
+				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!nicknameIsOk) {
 				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
@@ -576,35 +418,39 @@
 						});
 					}	
                 
-					$("#checkEmailUsed").click(function () {
+					$("#checkEmailUsed").click(function() {
 				        checkUpdateEmail();
 				    });
-					function checkUpdateEmail(){
+					function checkUpdateEmail() {
 						let email = document.getElementById("updatedEmail").value.trim();
 						let emailSpan = document.getElementById("emailSpan");
-						let emailStr;
+						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;
+						let mode = "checkEmail";
+						
+						emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailStr;
+	            		emailSpan.style.color = "black";
+	            		emailSpan.style.fontStyle = "normal";
 						
 						$.ajax({
 							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
 				            data:{
-				            	'update':'檢查信箱',
+				            	'register':mode,
 				            	'inputEmail':email
 				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
+				            success:function(resultObj) {
+				            	if(resultObj.resultCode == 1) {
 				            		emailStr = "此電子信箱已有人使用！";
 				            		emailIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
+				            	} else if(resultObj.resultCode == 0) {
 				            		emailStr = "可使用此電子信箱！";
 				            		emailIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
+				            	} else if(resultObj.resultCode == -1) {
 				            		emailStr = "檢查途中遭遇錯誤！";
 				            		emailIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
+				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!emailIsOk) {
 				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
@@ -625,35 +471,39 @@
 						});
 					}
 					
-					$("#checkPhoneUsed").click(function () {
+					$("#checkPhoneUsed").click(function() {
 				        checkUpdatePhone();
 				    });
-					function checkUpdatePhone(){
+					function checkUpdatePhone() {
 						let phone = document.getElementById("updatedPhone").value.trim();
 						let phoneSpan = document.getElementById("phoneSpan");
-						let phoneStr;
+						let phoneStr= "...處理中，請稍後";
 						let phoneIsOk = true;
+						let mode = "checkPhone";
+						
+						phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + phoneStr;
+	            		phoneSpan.style.color = "black";
+	            		phoneSpan.style.fontStyle = "normal";
 						
 						$.ajax({
 							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
 				            data:{
-				            	'update':'檢查電話',
+				            	'register':mode,
 				            	'inputPhone':phone
 				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == '1') {
+				            success:function(resultObj) {
+				            	if(resultObj.resultCode == 1) {
 				            		phoneStr = "此聯絡電話已有人使用！";
 				            		phoneIsOk = false;
-				            	} else if(resultSpace[0] == '0') {
+				            	} else if(resultObj.resultCode == 0) {
 				            		phoneStr = "可使用此聯絡電話！";
 				            		phoneIsOk = true;
-				            	} else if(resultSpace[0] == '-1') {
+				            	} else if(resultObj.resultCode == -1) {
 				            		phoneStr = "檢查途中遭遇錯誤！";
 				            		phoneIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
+				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!phoneIsOk) {
 				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;

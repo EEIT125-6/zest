@@ -502,6 +502,7 @@ public class WebUserController {
 		map.put("resultCode", getResultCode.toString());
 		map.put("resultMessage", getResultMessage);
 		map.put("selfData", selfData);
+		map.put("birthday", String.valueOf(selfData.getBirth()));
 		
 		return map;
 	}
@@ -584,11 +585,130 @@ public class WebUserController {
 	}
 	
 	/* 準備前往修改其他資料畫面 */
-	@PostMapping(value = "/controller/DisplayWebUserData")
-	public String doGoWebUserModifyData() {
-		return null;
+	@PostMapping(value = "/WebUserModifyData")
+	public String doCreateWebUserModifyData(
+			Model model) 
+	{			
+		/* 設定傳入表單的原資料 */
+		WebUserData selfData = new WebUserData();
+		String getResultMessage = "";
+		
+		/* 取得下拉選單、單選、多選所需的固定資料 */
+		List<UserWilling> willingList = wis.getUserWillingList();
+		List<FoodFervor> fervorList = fvs.getFoodFervorList();
+		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
+		
+		/* 設定入Model中 */
+		model.addAttribute("willingList", willingList);
+		model.addAttribute("fervorList", fervorList);
+		model.addAttribute("cityInfoList", cityInfoList);
+		
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 取得帳號 */
+		String account = userData.getAccount();
+		
+		/* 調用服務裡的方法 */
+		try {
+			selfData = wus.getWebUserData(account);
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			getResultMessage = getDataMessageTmp.split(":")[1];
+		}
+		
+		if (!getResultMessage.equals("")) {
+			return "redirect:/webUser/WebUserLogin";
+		}
+		
+		/* 設定入Model中 */
+		model.addAttribute("selfData", selfData);
+		
+		return "webUser/WebUserModifyData";
 	}
 	
+	/* 執行密碼以外的資料修改 */
+	@SuppressWarnings("unchecked")
+	@PostMapping(value = "controller/WebUserModifyData")
+	public @ResponseBody Map<String, Object> doUpdateWebUserData(
+			Model model,
+			@RequestParam(value = "oldFirstName", required = false, defaultValue="") String oldFirstName,
+			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
+			@RequestParam(value = "oldLastName", required = false, defaultValue="") String oldLastName,
+			@RequestParam(value = "newLastName", required = false, defaultValue="") String newLastName,
+			@RequestParam(value = "oldNickname", required = false, defaultValue="") String oldNickname,
+			@RequestParam(value = "newNickname", required = false, defaultValue="") String newNickname,
+			@RequestParam(value = "oldFervor", required = false, defaultValue="") String oldFervor,
+			@RequestParam(value = "newFervor", required = false, defaultValue="") String newFervor,
+			@RequestParam(value = "oldEmail", required = false, defaultValue="") String oldEmail,
+			@RequestParam(value = "newEmail", required = false, defaultValue="") String newEmail,
+			@RequestParam(value = "oldPhone", required = false, defaultValue="") String oldPhone,
+			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
+			@RequestParam(value = "oldGetEmail", required = false, defaultValue="") String oldGetEmail,
+			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
+			@RequestParam(value = "oldLocationCode", required = false, defaultValue="") Integer oldLocationCode,
+			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
+			@RequestParam(value = "oldAddr0", required = false, defaultValue="") String oldAddr0,
+			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
+			@RequestParam(value = "oldAddr1", required = false, defaultValue="") String oldAddr1,
+			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
+			@RequestParam(value = "oldAddr2", required = false, defaultValue="") String oldAddr2,
+			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2
+			) 
+	{
+		/* 宣告參數 */
+		String updateResultMessage = "";
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		/* 從session取出陣列來繼續完成設定 */
+		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
+		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
+		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
+		
+		String fervorTemp = "";
+		for (FoodFervor fervorItem: fervorList) {
+			for (String fervor: newFervor.split(",")) {
+				if (fervor.equals(fervorItem.getFervorCode().toString())) {
+					if (!fervorTemp.equals("")) {
+						fervorTemp += ",";
+					}
+					fervorTemp += fervorItem.getFervorItem();
+				}
+			}
+		}
+		String fervor = fervorTemp;
+		
+		String getEmail = "";
+		for (UserWilling willingValue: willingList) {
+			if (willingValue.getWillingCode().equals(newGetEmail)) {
+				if (!oldGetEmail.equals(newGetEmail)) {
+					getEmail = newGetEmail;
+				}
+			}
+		}
+		if (getEmail.equals("")) {
+			updateResultMessage = "無效的意願設定";
+		}
+		
+		Integer locationCode = 0;
+		for (CityInfo locationInfo: cityInfoList) {
+			if (locationInfo.getCityCode() == newLocationCode) {
+				if (newLocationCode != oldLocationCode) {
+					locationCode = newLocationCode;
+				}
+			}
+		}
+		if (locationCode == 0) {
+			updateResultMessage = "無效的區住區域";
+		}
+		
+		/* 預防性後端檢查 */
+		if (updateResultMessage.equals("")) {
+			
+		}
+		
+		return null;
+	}
 	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
@@ -1084,6 +1204,7 @@ public class WebUserController {
 		return inputCheckResult;
 	}
 	
+	/* 使用者棄用帳戶時的輸入檢查 */
 	public String doCheckQuitInput(WebUserData userData) {
 		String checkInputResult = "";
 		
@@ -1124,6 +1245,7 @@ public class WebUserController {
 		return checkInputResult;
 	}
 	
+	/* 使用者修改密碼時的輸入檢查 */
 	public String doCheckUpdatePasswordInput(WebUserData userData, String password, String confirmPassword) {
 		String updateResultMessage = "";
 		
@@ -1160,6 +1282,241 @@ public class WebUserController {
 					updateResultMessage = "使用者身分異常!請確定您已經登入本系統";
 				}
 			}
+		}
+		
+		return updateResultMessage;
+	}
+	
+	/* 使用者修改資料時的輸入檢查 */
+	public String doCheckUpdateDataInput(
+			WebUserData userData,
+			String oldFirstName,
+			String newFirstName,
+			String oldLastName,
+			String newLastName,
+			String oldNickname,
+			String newNickname,
+			String oldFervor,
+			String fervor,
+			String oldEmail,
+			String newEmail,
+			String oldPhone,
+			String newPhone,
+			String oldGetEmail,
+			String getEmail,
+			Integer oldLocationCode,
+			Integer locationCode,
+			String oldAddr0,
+			String newAddr0,
+			String oldAddr1,
+			String newAddr1,
+			String oldAddr2,
+			String newAddr2
+			) 
+	{
+		String updateResultMessage = "";
+		Integer count = 0;
+		
+		if (userData == null) {
+			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			updateResultMessage = "本帳號無法使用此功能";
+		} 
+		
+		if (updateResultMessage.equals("")) {
+			if (newFirstName.equals("")) {
+				updateResultMessage = "姓氏不可為空白";
+			} else if (newFirstName.length() > 3) {
+				updateResultMessage = "姓氏長度過長，最多僅3個字元";
+			} else {
+				Integer charCountBegin = 0;
+				Boolean firstNameIsOk = true;
+				/* 16進位表示 */
+				Integer charChineseWordCountBegin = 0x4e00;
+				Integer charChineseWordCountEnd = 0x9fff;
+				
+				for (Integer charIndex = charCountBegin; charIndex < newFirstName.length(); charIndex++) {
+					int firstNameChar = newFirstName.charAt(charIndex);
+					
+					if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
+						firstNameIsOk = false;
+					}
+					if (!firstNameIsOk) {
+						break;
+					}
+				}
+				
+				if (!firstNameIsOk) {
+					updateResultMessage = "姓氏中含有非中文";
+				} else if (newFirstName.equals(oldFirstName)){
+					count++;
+				}
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (newLastName.equals("")) {
+				updateResultMessage = "名字不可為空白";
+			} else if (newLastName.length() > 3) {
+				updateResultMessage = "名字長度過長，最多僅3個字元";
+			} else {
+				Integer charCountBegin = 0;
+				Boolean lastNameIsOk = true;
+				/* 16進位表示 */
+				Integer charChineseWordCountBegin = 0x4e00;
+				Integer charChineseWordCountEnd = 0x9fff;
+				
+				for (Integer charIndex = charCountBegin; charIndex < newLastName.length(); charIndex++) {
+					int lastNameChar = newLastName.charAt(charIndex);
+					
+					if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
+						lastNameIsOk = false;
+					}
+					if (!lastNameIsOk) {
+						break;
+					}
+				}
+				
+				if (!lastNameIsOk) {
+					updateResultMessage = "名字中含有非中文";
+				} else if (newLastName.equals(oldLastName)){
+					count++;
+				}
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (newNickname.equals("") && newLastName.equals("")) {
+				updateResultMessage = "稱呼不可為空白";
+			} else if (newNickname.equals("") && !newLastName.equals("")) {
+				newNickname = newLastName;
+			} else if (newNickname.length() > 20){
+				updateResultMessage = "稱呼長度過長";
+			} else if (newNickname.equals(oldNickname)){
+				count++;
+			} else {
+				Integer nicknameCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					nicknameCheckResult = wus.checkNicknameExist(newNickname);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (nicknameCheckResult == 1){
+					updateResultMessage = "稱呼已存在，請挑選別的名稱作為稱呼";
+				}
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (fervor.equals("")) {
+				updateResultMessage = "偏好食物不可為空白";
+			} else if (fervor.length() > 50){
+				updateResultMessage = "偏好食物長度過長";
+			} else if (fervor.equals(oldFervor)) {
+				count++;
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (newEmail.equals("")) {
+				updateResultMessage = "信箱資訊不可為空白";
+			} else if(newEmail.indexOf("@") == -1 || newEmail.split("@").length > 2 || newEmail.indexOf(" ") != -1) {
+				updateResultMessage = "信箱資訊格式錯誤";
+			} else if (newEmail.equals(oldEmail)) {
+				count++;
+			} else {
+				Integer emailCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					emailCheckResult = wus.checkEmailExist(newEmail);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (emailCheckResult == 1){
+					updateResultMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
+				} 
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (newPhone.equals("")) {
+				updateResultMessage = "連絡電話不可為空白";
+			} else if(newPhone.length() < 9 || newPhone.indexOf(" ") != -1) {
+				updateResultMessage = "連絡電話格式錯誤";
+			} else if (!newPhone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
+				updateResultMessage = "連絡電話格式錯誤";
+			} else if (newPhone.substring(0, 2).equals("09") && newPhone.length() != 10) {
+				updateResultMessage = "行動電話格式錯誤";
+			} else if (!newPhone.substring(0, 2).equals("09") && newPhone.length() == 10) {
+				updateResultMessage = "室內電話格式錯誤";
+			} else if (newPhone.equals(oldPhone)) {
+				count++;
+			} else {
+				Integer phoneCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					phoneCheckResult = wus.checkPhoneExist(newPhone);
+				} catch (SQLException sqlE) {
+					updateResultMessage = sqlE.getMessage();
+				}
+				
+				if (phoneCheckResult == 1){
+					updateResultMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+				}
+			}
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (getEmail.equals(oldGetEmail)) {
+				count++;
+			} 
+		}
+		
+		if (updateResultMessage.equals("")) {
+			if (locationCode == oldLocationCode) {
+				count++;
+			} else {	
+				switch(locationCode) {
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
+					case 8:
+					case 9:
+					case 10:
+					case 11:
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+					case 16:
+					case 17:
+					case 18:
+					case 19:
+					case 20:
+					case 21:
+					case 22:
+					case 23:
+						break;
+					default:
+						updateResultMessage = "居住區域設定異常";
+						break;
+				}
+			}
+		}
+		
+		/* 結算有效變動項目 */
+		if (count == 11) {
+			updateResultMessage = "沒有輸入任何有效的修改內容，請重新操作";
 		}
 		
 		return updateResultMessage;

@@ -149,7 +149,7 @@
 				<c:if test="${empty userFullData}">
 					<c:redirect url="WebUserLogin" />
 				</c:if>
-				<form action="<c:url value='/webUser/controller/DisplayWebUserData' />" method="post">
+				<form action="<c:url value='/webUser/WebUserModifyData' />" method="post">
 					<fieldset>
 						<legend id="getDataSpan"></legend>
 						<div id="dataContainer"></div>
@@ -224,29 +224,18 @@
 						            		let content = "<hr /><label>帳號名稱：" + resultObj.selfData.account + "</label>"
 						            						+ "<hr /><label>帳號密碼：" + coveredPassword + "</label>"
 						            						+ "<hr /><label>中文姓氏：" + resultObj.selfData.firstName + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "firstName" + " id=" + "firstName" + " value=" + resultObj.selfData.firstName + ">"
 						            						+ "<hr /><label>中文姓名：" + resultObj.selfData.lastName + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "lastName" + " id=" + "lastName" + " value=" + resultObj.selfData.lastName + ">"
 						            						+ "<hr /><label>稱呼方式：" + resultObj.selfData.nickname + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "nickname" + " id=" + "nickname" + " value=" + resultObj.selfData.nickname + ">"
 						            						+ "<hr /><label>生理性別：" + resultObj.selfData.gender.genderText + "</label>"
-						            						+ "<hr /><label>西元生日：" + resultObj.selfData.birth + "</label>"
+						            						+ "<hr /><label>西元生日：" + resultObj.birthday + "</label>"
 						            						+ "<hr /><label>偏好食物：" + resultObj.selfData.fervor + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "fervor" + " id=" + "fervor" + " value=" + resultObj.selfData.fervor + ">"
 						            						+ "<hr /><label>聯絡信箱：" + resultObj.selfData.email + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "email" + " id=" + "email" + " value=" + resultObj.selfData.email + ">"
 						            						+ "<hr /><label>聯絡電話：" + resultObj.selfData.phone + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "phone" + " id=" + "phone" + " value=" + resultObj.selfData.phone + ">"
 						            						+ "<hr /><label>是否願意接收促銷/優惠訊息：" + resultObj.selfData.getEmail.willingText + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "getEmail" + " id=" + "getEmail" + " value=" + resultObj.selfData.getEmail.willingCode + ">"
 						            						+ "<hr /><label>居住區域：" + resultObj.selfData.locationInfo.cityName + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "locationCode" + " id=" + "locationCode" + " value=" + resultObj.selfData.locationInfo.cityCode + ">"
 						            						+ "<hr /><label>生活地點一：" + resultObj.selfData.addr0 + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "addr0" + " id=" + "addr0" + " value=" + resultObj.selfData.addr0 + ">"
 						            						+ "<hr /><label>生活地點二：" + resultObj.selfData.addr1 + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "addr1" + " id=" + "addr1" + " value=" + resultObj.selfData.addr1 + ">"
 						            						+ "<hr /><label>生活地點三：" + resultObj.selfData.addr2 + "</label>"
-						            						+ "<input type=" + "hidden" + " name=" + "addr2" + " id=" + "addr2" + " value=" + resultObj.selfData.addr2 + ">"
 						            						+ "<hr /><label>所擁有的橙幣：" + resultObj.selfData.zest + "</label>"
 						            						+ "<hr /><label>帳號狀態：" + accountStatus + "</label>"
 						            						+ "<hr />";

@@ -224,7 +224,7 @@ public class UserInfoController {
 		} catch (MessagingException me) {
 			System.out.println("信件無法寄出！錯誤資訊為："+me.getMessage());
 			throw new Exception("信件無法寄出！錯誤資訊為："+me.getMessage());
-		}
+		} 
 		
 		return sendResult;
 	}
