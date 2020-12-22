@@ -629,8 +629,9 @@ public class WebUserController {
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "controller/WebUserModifyData")
-	public @ResponseBody Map<String, Object> doUpdateWebUserData(
+	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
+			RedirectAttributes redirectAttributes,
 			@RequestParam(value = "oldFirstName", required = false, defaultValue="") String oldFirstName,
 			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
 			@RequestParam(value = "oldLastName", required = false, defaultValue="") String oldLastName,
@@ -657,6 +658,8 @@ public class WebUserController {
 	{
 		/* 宣告參數 */
 		String updateResultMessage = "";
+		Integer updateResult = -1;
+		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
@@ -679,10 +682,12 @@ public class WebUserController {
 		String fervor = fervorTemp;
 		
 		String getEmail = "";
+		UserWilling willingOption = new UserWilling();
 		for (UserWilling willingValue: willingList) {
 			if (willingValue.getWillingCode().equals(newGetEmail)) {
 				if (!oldGetEmail.equals(newGetEmail)) {
 					getEmail = newGetEmail;
+					willingOption = willingValue;
 				}
 			}
 		}
@@ -691,10 +696,12 @@ public class WebUserController {
 		}
 		
 		Integer locationCode = 0;
-		for (CityInfo locationInfo: cityInfoList) {
-			if (locationInfo.getCityCode() == newLocationCode) {
+		CityInfo locationInfo = new CityInfo();
+		for (CityInfo locationValue: cityInfoList) {
+			if (locationValue.getCityCode() == newLocationCode) {
 				if (newLocationCode != oldLocationCode) {
 					locationCode = newLocationCode;
+					locationInfo = locationValue;
 				}
 			}
 		}
@@ -702,12 +709,75 @@ public class WebUserController {
 			updateResultMessage = "無效的區住區域";
 		}
 		
+		/* 更新用的同型物件 */
+		WebUserData updatedUserData = new WebUserData(
+				userData.getUserId(), 
+				userData.getAccount(), 
+				userData.getPassword(), 
+				newFirstName, 
+				newLastName, 
+				newNickname,
+				userData.getBirth(),
+				fervor,
+				newEmail,
+				newPhone,
+				userData.getJoinDate(),
+				newAddr0,
+				newAddr1,
+				newAddr2,
+				userData.getZest(),
+				userData.getVersion() + 1,
+				userData.getStatus(),
+				userData.getIconUrl(),
+				userData.getAccountLv(),
+				userData.getGender(),
+				willingOption,
+				locationInfo);
+		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			
+			updateResultMessage = doCheckUpdateDataInput(
+					updatedUserData,
+					oldFirstName,
+					oldLastName,
+					oldNickname,
+					oldFervor,
+					oldEmail,
+					oldPhone,
+					oldGetEmail,
+					oldLocationCode,
+					oldAddr0,
+					oldAddr1,
+					oldAddr2
+					);
 		}
 		
-		return null;
+		/* 檢查完畢 */
+		if (updateResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				updateResult = wus.updateWebUserData(updatedUserData);
+			} catch (SQLException sqlE) {
+				updateResultMessage = sqlE.getMessage();
+			}
+		}
+		
+		if (!updateResultMessage.equals("")) {
+			if (updateResultMessage.indexOf(":") != -1) {	
+				updateResultMessage = updateResultMessage.split(":")[1];
+			}
+		} 
+		
+		/* 修改成功 */
+		if (updateResult == 1) {
+			updateResultMessage = "修改成功";
+		} 
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("resultCode", updateResult.toString());
+		map.put("resultMessage", updateResultMessage);
+		
+		return map;
 	}
 	
 	/* 前往顯示註冊資料畫面 */
@@ -1208,6 +1278,7 @@ public class WebUserController {
 	public String doCheckQuitInput(WebUserData userData) {
 		String checkInputResult = "";
 		
+		/* 檢查JavaBean物件 */
 		if (userData == null) {
 			checkInputResult = "您似乎沒有登入本系統！請登入後再試一次";
 		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
@@ -1249,11 +1320,13 @@ public class WebUserController {
 	public String doCheckUpdatePasswordInput(WebUserData userData, String password, String confirmPassword) {
 		String updateResultMessage = "";
 		
+		/* 檢查JavaBean物件 */
 		if (userData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
 		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
 			updateResultMessage = "本帳號無法使用此功能";
 		} else {
+			/* 檢查密碼 */
 			String oldPassword = userData.getPassword();
 			if (!password.equals(confirmPassword)) {
 				updateResultMessage = "密碼與確認密碼不一致！";
@@ -1289,40 +1362,43 @@ public class WebUserController {
 	
 	/* 使用者修改資料時的輸入檢查 */
 	public String doCheckUpdateDataInput(
-			WebUserData userData,
+			WebUserData updatedUserData,
 			String oldFirstName,
-			String newFirstName,
 			String oldLastName,
-			String newLastName,
 			String oldNickname,
-			String newNickname,
 			String oldFervor,
-			String fervor,
 			String oldEmail,
-			String newEmail,
 			String oldPhone,
-			String newPhone,
 			String oldGetEmail,
-			String getEmail,
 			Integer oldLocationCode,
-			Integer locationCode,
 			String oldAddr0,
-			String newAddr0,
 			String oldAddr1,
-			String newAddr1,
-			String oldAddr2,
-			String newAddr2
+			String oldAddr2
 			) 
 	{
 		String updateResultMessage = "";
 		Integer count = 0;
 		
-		if (userData == null) {
+		/* 檢查JavaBean物件 */
+		if (updatedUserData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
-		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+		} else if (updatedUserData.getStatus().equals("quit") || updatedUserData.getStatus().equals("inactive")) {
 			updateResultMessage = "本帳號無法使用此功能";
 		} 
 		
+		String newFirstName = (updatedUserData == null) ? "" : updatedUserData.getFirstName();
+		String newLastName = (updatedUserData == null) ? "" : updatedUserData.getLastName();
+		String newNickname = (updatedUserData == null) ? "" : updatedUserData.getNickname();
+		String fervor = (updatedUserData == null) ? "" : updatedUserData.getFervor();
+		String newEmail = (updatedUserData == null) ? "" : updatedUserData.getEmail();
+		String newPhone = (updatedUserData == null) ? "" : updatedUserData.getPhone();
+		String getEmail = (updatedUserData == null) ? "" : updatedUserData.getGetEmail().getWillingCode();
+		Integer locationCode = (updatedUserData == null) ? 0 : updatedUserData.getLocationInfo().getCityCode();
+		String newAddr0 = (updatedUserData == null) ? "" : updatedUserData.getAddr0();
+		String newAddr1 = (updatedUserData == null) ? "" : updatedUserData.getAddr1();
+		String newAddr2 = (updatedUserData == null) ? "" : updatedUserData.getAddr2();
+		
+		/* 檢查姓氏 */
 		if (updateResultMessage.equals("")) {
 			if (newFirstName.equals("")) {
 				updateResultMessage = "姓氏不可為空白";
@@ -1354,6 +1430,7 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查名字 */
 		if (updateResultMessage.equals("")) {
 			if (newLastName.equals("")) {
 				updateResultMessage = "名字不可為空白";
@@ -1385,6 +1462,7 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查稱呼 */
 		if (updateResultMessage.equals("")) {
 			if (newNickname.equals("") && newLastName.equals("")) {
 				updateResultMessage = "稱呼不可為空白";
@@ -1410,6 +1488,7 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查偏好食物 */
 		if (updateResultMessage.equals("")) {
 			if (fervor.equals("")) {
 				updateResultMessage = "偏好食物不可為空白";
@@ -1420,6 +1499,7 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查email */
 		if (updateResultMessage.equals("")) {
 			if (newEmail.equals("")) {
 				updateResultMessage = "信箱資訊不可為空白";
@@ -1443,6 +1523,7 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查聯絡電話 */
 		if (updateResultMessage.equals("")) {
 			if (newPhone.equals("")) {
 				updateResultMessage = "連絡電話不可為空白";
@@ -1472,12 +1553,16 @@ public class WebUserController {
 			}
 		}
 		
+		/* 檢查接收促銷/優惠訊息 */
 		if (updateResultMessage.equals("")) {
 			if (getEmail.equals(oldGetEmail)) {
 				count++;
-			} 
+			} else if (!getEmail.equals("Y") && !getEmail.equals("N")){ 
+				updateResultMessage = "接收促銷/優惠訊息輸入異常";
+			}
 		}
 		
+		/* 檢查區住區域 */
 		if (updateResultMessage.equals("")) {
 			if (locationCode == oldLocationCode) {
 				count++;
@@ -1511,6 +1596,41 @@ public class WebUserController {
 						updateResultMessage = "居住區域設定異常";
 						break;
 				}
+			}
+		}
+		
+		/* 檢查地點一 */
+		if (updateResultMessage.equals("")) {
+			if (newAddr0.equals("")) {
+				updateResultMessage = "生活地點一不可為空白";
+			} else if (newAddr0.length() > 65) {
+				updateResultMessage = "生活地點一超過長度限制";
+			} else if (newAddr0.equals(newAddr1) || newAddr0.equals(newAddr2)) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (newAddr0.equals(oldAddr0)) {
+				count++;
+			}
+		}
+		
+		/* 檢查地點二 */
+		if (updateResultMessage.equals("")) {
+			if (newAddr1.length() > 65) {
+				updateResultMessage = "生活地點二超過長度限制";
+			} else if (newAddr1.equals(newAddr0) || (newAddr1.equals(newAddr2) && !newAddr2.equals(""))) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (newAddr1.equals(oldAddr1)) {
+				count++;
+			}
+		}
+		
+		/* 檢查地點三 */
+		if (updateResultMessage.equals("")) {
+			if (newAddr2.length() > 65) {
+				updateResultMessage = "生活地點三超過長度限制";
+			} else if (newAddr2.equals(newAddr0) || (newAddr2.equals(newAddr1) && !newAddr1.equals(""))) {
+				updateResultMessage = "生活地點重複填寫";
+			} else if (newAddr2.equals(oldAddr2)) {
+				count++;
 			}
 		}
 		

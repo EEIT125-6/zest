@@ -146,8 +146,6 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
 				<c:if test="${empty userFullData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
@@ -350,7 +348,25 @@
 				            },
 				            dataType:"json",
 				            success:function(resultObj) {
-				            	
+				            	if (resultObj.resultCode == 1) {
+				            		updateStr = resultObj.resultMessage;
+				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+				            		updateSpan.style.color = "black";
+				            		updateSpan.style.fontStyle = "normal";
+				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+				            		updateResultSpan.style.color = "black";
+				            		updateResultSpan.style.fontStyle = "normal";
+				            	} else {
+				            		updateStr = resultObj.resultMessage;
+					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+					            	updateSpan.style.color = "red";
+					            	updateSpan.style.fontStyle = "italic";
+					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+					            	updateResultSpan.style.color = "red";
+					            	updateResultSpan.style.fontStyle = "italic";
+					            	/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	}
 				            },
 				            error:function(err) {
 				            	updateStr = "發生錯誤，無法執行檢查";
@@ -387,13 +403,13 @@
 				            },
 				            dataType:"json",
 				            success:function(resultObj) {
-				            	if(resultObj.resultCode == 1) {
+				            	if (resultObj.resultCode == 1) {
 				            		nicknameStr = "此稱呼已有人使用！";
 				            		nicknameIsOk = false;
-				            	} else if(resultObj.resultCode == 0) {
+				            	} else if (resultObj.resultCode == 0) {
 				            		nicknameStr = "可使用此稱呼！";
 				            		nicknameIsOk = true;
-				            	} else if(resultObj.resultCode == -1) {
+				            	} else if (resultObj.resultCode == -1) {
 				            		nicknameStr = "檢查途中遭遇錯誤！";
 				            		nicknameIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
@@ -440,13 +456,13 @@
 				            	'inputEmail':email
 				            },
 				            success:function(resultObj) {
-				            	if(resultObj.resultCode == 1) {
+				            	if (resultObj.resultCode == 1) {
 				            		emailStr = "此電子信箱已有人使用！";
 				            		emailIsOk = false;
-				            	} else if(resultObj.resultCode == 0) {
+				            	} else if (resultObj.resultCode == 0) {
 				            		emailStr = "可使用此電子信箱！";
 				            		emailIsOk = true;
-				            	} else if(resultObj.resultCode == -1) {
+				            	} else if (resultObj.resultCode == -1) {
 				            		emailStr = "檢查途中遭遇錯誤！";
 				            		emailIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
@@ -493,13 +509,13 @@
 				            	'inputPhone':phone
 				            },
 				            success:function(resultObj) {
-				            	if(resultObj.resultCode == 1) {
+				            	if (resultObj.resultCode == 1) {
 				            		phoneStr = "此聯絡電話已有人使用！";
 				            		phoneIsOk = false;
-				            	} else if(resultObj.resultCode == 0) {
+				            	} else if (resultObj.resultCode == 0) {
 				            		phoneStr = "可使用此聯絡電話！";
 				            		phoneIsOk = true;
-				            	} else if(resultObj.resultCode == -1) {
+				            	} else if (resultObj.resultCode == -1) {
 				            		phoneStr = "檢查途中遭遇錯誤！";
 				            		phoneIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
