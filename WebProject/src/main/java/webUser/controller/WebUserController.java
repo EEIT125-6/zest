@@ -356,8 +356,6 @@ public class WebUserController {
 			try {
 				/* 檢查登入 */
 				accountCheckResult = wus.checkWebUserLogin(account, password);
-				
-				System.out.println("error code = "+accountCheckResult);
 				/* 存取使用者個人資料 */
 				userFullData = wus.getWebUserData(account);
 			} catch (SQLException sqlE) {
@@ -514,13 +512,13 @@ public class WebUserController {
 	}
 	
 	/* 準備顯示修改密碼畫面 */
-	@GetMapping(value = "controller/WebUserModifyPassword")
+	@GetMapping(value = "/controller/WebUserModifyPassword")
 	public String doWebUserModifyPassword() {
 		return "redirect:/webUser/WebUserModifyPassword";
 	}
 	
 	/* 執行修改密碼 */
-	@PostMapping(value = "controller/WebUserModifyPassword")
+	@PostMapping(value = "/controller/WebUserModifyPassword")
 	public String doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
@@ -628,7 +626,7 @@ public class WebUserController {
 	
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "controller/WebUserModifyData")
+	@PostMapping(value = "/controller/WebUserModifyData")
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -657,6 +655,7 @@ public class WebUserController {
 			) 
 	{
 		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
 		String updateResultMessage = "";
 		Integer updateResult = -1;
 		
@@ -681,32 +680,18 @@ public class WebUserController {
 		}
 		String fervor = fervorTemp;
 		
-		String getEmail = "";
 		UserWilling willingOption = new UserWilling();
 		for (UserWilling willingValue: willingList) {
 			if (willingValue.getWillingCode().equals(newGetEmail)) {
-				if (!oldGetEmail.equals(newGetEmail)) {
-					getEmail = newGetEmail;
-					willingOption = willingValue;
-				}
+				willingOption = willingValue;
 			}
 		}
-		if (getEmail.equals("")) {
-			updateResultMessage = "無效的意願設定";
-		}
 		
-		Integer locationCode = 0;
 		CityInfo locationInfo = new CityInfo();
 		for (CityInfo locationValue: cityInfoList) {
 			if (locationValue.getCityCode() == newLocationCode) {
-				if (newLocationCode != oldLocationCode) {
-					locationCode = newLocationCode;
-					locationInfo = locationValue;
-				}
+				locationInfo = locationValue;
 			}
-		}
-		if (locationCode == 0) {
-			updateResultMessage = "無效的區住區域";
 		}
 		
 		/* 更新用的同型物件 */
@@ -771,9 +756,10 @@ public class WebUserController {
 		/* 修改成功 */
 		if (updateResult == 1) {
 			updateResultMessage = "修改成功";
-		} 
+		} else if (updateResult != 1 && updateResultMessage.equals("")) {
+			updateResultMessage = "修改失敗";
+		}
 		
-		Map<String, String> map = new HashMap<>();
 		map.put("resultCode", updateResult.toString());
 		map.put("resultMessage", updateResultMessage);
 		
@@ -1499,6 +1485,7 @@ public class WebUserController {
 			}
 		}
 		
+		System.out.println("newEmail is "+newEmail);
 		/* 檢查email */
 		if (updateResultMessage.equals("")) {
 			if (newEmail.equals("")) {

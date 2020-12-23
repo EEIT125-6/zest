@@ -177,12 +177,12 @@
 						<label>偏好食物：</label>
 						<c:forEach items="${fervorList}" var="fervorObject" >
 							<c:if test="${selfData.fervor.indexOf(fervorObject.fervorItem)!=-1}">
-								<input type="checkbox" id="updatedFervor" name="updatedFervor" value="${fervorObject.fervorCode}" 
-									onblur="checkFervor()" checked="checked" />
+								<input type="checkbox" id="updatedFervor" name="updatedFervor"  
+									class="updatedFervor" value="${fervorObject.fervorCode}" onblur="checkFervor()" checked="checked" />
 							</c:if>
 							<c:if test="${selfData.fervor.indexOf(fervorObject.fervorItem)==-1}">
-								<input type="checkbox" id="updatedFervor" name="updatedFervor" value="${fervorObject.fervorCode}" 
-									onblur="checkFervor()" />
+								<input type="checkbox" id="updatedFervor" name="updatedFervor" class="updatedFervor" 
+									value="${fervorObject.fervorCode}" onblur="checkFervor()" />
 							</c:if>
 							<label>${fervorObject.fervorItem}</label>
 						</c:forEach>
@@ -206,11 +206,11 @@
 					    <label>接收促銷/優惠意願：</label>
 					    <c:forEach items="${willingList}" var="userWilling" >
 					    	<c:if test="${userWilling.willingCode.equals(selfData.getEmail.willingCode)}" >
-					    		<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="${userWilling.willingText}" 
+					    		<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="${userWilling.willingCode}" 
 									onblur="checkGetEmail()" checked="checked" >
 					    	</c:if>
 					    	<c:if test="${!userWilling.willingCode.equals(selfData.getEmail.willingCode)}" >
-					    		<input type="radio" id="updatedGetEmail1" name="updatedGetEmail" value="${userWilling.willingText}" 
+					    		<input type="radio" id="updatedGetEmail2" name="updatedGetEmail" value="${userWilling.willingCode}" 
 									onblur="checkGetEmail()" >
 					    	</c:if>
 					    	<label><c:out value="${userWilling.willingText}"></c:out></label>
@@ -287,7 +287,7 @@
                 			if (newFervor != "" && fervorObj[fervorIndex].checked) {
                 				newFervor += ",";
                 			}
-                			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+                			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
                 		let oldEmail = document.getElementById("originalEmail").value.trim();
                 		let newEmail = document.getElementById("updatedEmail").value.trim();
@@ -295,10 +295,8 @@
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
                 		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
                 		let getEmailObj = document.getElementsByClassName("updatedGetEmail");
-                		let newGetEmail;
-                		for (let getEmailIndex = 0; getEmailIndex < getEmailObj.length; getEmailIndex++) {
-                			newGetEmail += (getEmailObj[getEmailIndex].checked) ? getEmailObj[getEmailIndex].value : "";
-                		}
+                		let newGetEmail =(document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
+                		newGetEmail = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
                 		let oldLocationCode = document.getElementById("originalLocationCode").value.trim();
                 		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
                 		let oldAddr0 = document.getElementById("originalAddr0").value.trim();
@@ -335,6 +333,7 @@
 								'oldEmail':oldEmail,
 								'newEmail':newEmail,
 								'oldPhone':oldPhone,
+								'newPhone':newPhone,
 								'oldGetEmail':oldGetEmail,
 								'newGetEmail':newGetEmail,
 								'oldLocationCode':oldLocationCode,

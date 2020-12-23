@@ -370,8 +370,8 @@ function checkPhone() {
 
 function checkGetEmail() {
 	let getEmailObjValue;
-	getEmailObjValue = (document.getElementById("updatedgetEmail1") == null) ? "" : document.getElementById("updatedgetEmail1").value;
-	getEmailObjValue = (document.getElementById("updatedgetEmail2") == null) ? "" : document.getElementById("updatedgetEmail2").value;
+	getEmailObjValue = (document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
+	getEmailObjValue = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
 	let getEmailSpan = document.getElementById("getEmailSpan");
 	let oldGetEmailObjValue = document.getElementById("originalGetEmail").value;
 	
