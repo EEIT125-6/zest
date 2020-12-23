@@ -216,7 +216,7 @@
 				            		/* 顯示彈窗訊息 */
 				            		alert(resetStr);
 				            	} else if(resultSpace[0] == '-1') {
-				            		resetStr = "本帳號已棄用！請重新註冊或聯絡網站管理員";
+				            		resetStr = "本帳號已停用！請重新註冊或聯絡網站管理員";
 				            		resetIsOk = false;
 				            		/* 顯示彈窗訊息 */
 				            		alert(resetStr);

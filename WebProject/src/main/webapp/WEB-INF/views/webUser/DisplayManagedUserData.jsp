@@ -235,7 +235,8 @@
 							<label>帳號狀態：</label>
 							<c:choose>
 								<c:when test="${managedUserData.status=='active'}">已啟用</c:when>
-								<c:when test="${managedUserData.status=='quit'}">已棄用</c:when>
+								<c:when test="${managedUserData.status=='inactive'}">未啟用</c:when>
+								<c:when test="${managedUserData.status=='quit'}">已停用</c:when>
 							</c:choose>
 							<input type="hidden" name="status" id="status" value="${managedUserData.status}">
 							<hr />
@@ -243,7 +244,7 @@
 					<div align="center">
 						<c:choose>
 							<c:when test="${managedUserData.status=='active'}">
-								<input type="submit" id="quitAccount" name="update" value="棄用帳號">
+								<input type="submit" id="quitAccount" name="update" value="停用帳號">
 							</c:when>
 							<c:when test="${managedUserData.status=='quit'}">
 								<input type="submit" id="activeAccount" name="update" value="啟用帳號">

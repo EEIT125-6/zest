@@ -210,5 +210,7 @@ function clearMessage() {
 	document.getElementById("nicknameSpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("locationCodeSpan").innerHTML = "";
-	document.getElementById("statusSpan").innerHTML = "";
+	if (document.getElementById("userLv").value == -1) {
+		document.getElementById("statusSpan").innerHTML = "";
+	}
 }

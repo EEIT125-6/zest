@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>棄用流程結束</title>
+    <title>停用流程結束</title>
     <style>
         .classimg{
 		 transition: 0.2s;	

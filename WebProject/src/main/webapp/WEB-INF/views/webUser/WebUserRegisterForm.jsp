@@ -287,6 +287,7 @@
 					<div align="center">
 						<input type="submit" id="submit" name="register" value="送出">
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
+						<a href="<c:url value='/webUser/WebUserLogin' /> "><input type="button" name="login" value="前往登入" onclick="clearMessage()"></a>
 					</div>
 					<hr />
 				</form>

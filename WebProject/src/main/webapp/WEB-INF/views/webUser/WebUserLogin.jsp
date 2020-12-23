@@ -179,6 +179,7 @@
                 	<div align="center">
                 		<a href="<c:url value='/webUser/WebUserForgetForm' /> "><input type="button" id="forget" name="forget" value="忘記帳號或密碼"></a>
 						<input type="button" id="submit" name="login" value="登入">
+						<a href="<c:url value='/webUser/WebUserRegisterForm' /> "><input type="button" id="register" name="register" value="前往註冊"></a>
 						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
 					</div>
 					<hr />
@@ -234,7 +235,7 @@
 						            		/* 顯示彈窗訊息 */
 						            		alert(loginStr);
 										} else if(resultObj.resultCode == -1) {
-						            		loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
+						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
 						            		loginIsOk = false;
 						            		/* 顯示彈窗訊息 */
 						            		alert(loginStr);

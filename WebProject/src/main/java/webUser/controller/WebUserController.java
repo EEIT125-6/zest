@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -467,7 +468,7 @@ public class WebUserController {
 		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
 		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("redirectPag", redirectPage);
-		/* 導向棄用結束畫面 */
+		/* 導向停用結束畫面 */
 		return "redirect:/webUser/WebUserQuitResult";
 	}
 	
@@ -766,6 +767,70 @@ public class WebUserController {
 		return map;
 	}
 	
+	/* 前往搜尋畫面 */
+	@GetMapping(value = "/WebUserSearchForm")
+	public String doCreateWebUserSearchForm(Model model) {
+		/* 取得下拉選單、單選、多選所需的固定資料 */
+		List<UserWilling> willingList = wis.getUserWillingList();
+		List<FoodFervor> fervorList = fvs.getFoodFervorList();
+		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
+		
+		/* 設定入Model中 */
+		model.addAttribute("willingList", willingList);
+		model.addAttribute("fervorList", fervorList);
+		model.addAttribute("cityInfoList", cityInfoList);
+		
+		return "webUser/WebUserSearchForm";
+	}
+	
+	/* 準備顯示搜尋畫面 */
+	@GetMapping(value = "/controller/WebUserMain/Search")
+	public String doDisplaySearchPage() {
+		return "redirect:/webUser/WebUserSearchForm";
+	}
+	
+	/* 回傳所有有效使用者的資料 */
+	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
+		/* 參數宣告 */
+		Map<String, Object> map = new HashMap<>();
+		Integer getResult = -1;
+		String getResultMessage = "";
+		
+		/* 產生資料陣列 */
+		List<WebUserData> userDataList = new ArrayList<>();
+		
+		/* 檢查身分 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		if (userData == null) {
+			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
+		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
+			getResultMessage = "本帳號無法使用此功能！";
+		}
+		
+		/* 調用服務裡的方法 */
+		try {
+			userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			getResultMessage = getDataMessageTmp.split(":")[1];
+		}
+		
+		if (userDataList != null) {
+			getResult = 1;
+			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
+		} else if (getResultMessage.equals("")) {
+			getResult = 0;
+			getResultMessage = "無法查詢到任何有效的使用者資料";
+		}
+		
+		map.put("resultCode", getResult.toString());
+		map.put("resultMessage", getResultMessage);
+		map.put("userDataList", userDataList);
+		
+		return map;
+	}
+	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {
@@ -786,7 +851,7 @@ public class WebUserController {
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
-	public String doGoForget() {
+	public String doGoForget() {		
 		return "webUser/WebUserForgetForm";
 	}
 	
@@ -802,7 +867,7 @@ public class WebUserController {
 		return "webUser/WebUserLogoutResult";
 	}
 	
-	/* 前往棄用結束畫面 */
+	/* 前往停用結束畫面 */
 	@GetMapping(value = "WebUserQuitResult")
 	public String doGoQuitResult() {
 		return "webUser/WebUserQuitResult";
@@ -1260,7 +1325,7 @@ public class WebUserController {
 		return inputCheckResult;
 	}
 	
-	/* 使用者棄用帳戶時的輸入檢查 */
+	/* 使用者停用帳戶時的輸入檢查 */
 	public String doCheckQuitInput(WebUserData userData) {
 		String checkInputResult = "";
 		
@@ -1485,7 +1550,6 @@ public class WebUserController {
 			}
 		}
 		
-		System.out.println("newEmail is "+newEmail);
 		/* 檢查email */
 		if (updateResultMessage.equals("")) {
 			if (newEmail.equals("")) {

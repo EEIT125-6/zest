@@ -312,19 +312,20 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		String hql = ""; 
 		switch(lv) {
 			case -1:
-				hql = "FROM WebUserData AS wu WHERE wu.lv >= :lv";
+				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv >= :lv";
 				break;
 			case 0:
-				hql = "FROM WebUserData AS wu WHERE wu.lv = :lv AND wu.status = " + "'" + status + "'";
+				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = :lv AND wu.status = " + "'" + status + "'";
 				break;
 			case 1:
-				hql = "FROM WebUserData AS wu WHERE wu.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ "'" + status + "'";
+				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ "'" + status + "'";
 				break;
 		}
+		int testLv = lv;
 		/* 取得當前Session，執行HQL以取得陣列 */
 		return getSession()
 				.createQuery(hql)
-				.setParameter("lv", lv)
+				.setParameter("lv", testLv)
 				.getResultList();
 	}
 
