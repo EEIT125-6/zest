@@ -831,6 +831,46 @@ public class WebUserController {
 		return map;
 	}
 	
+	/* 回傳所有有效使用者的資料 */
+	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> doSelectWebUserData(
+			Model model) 
+	{
+		/* 參數宣告 */
+		Map<String, Object> map = new HashMap<>();
+		Integer getResult = -1;
+		String getResultMessage = "";
+		
+		/* 產生資料陣列 */
+		List<WebUserData> userDataList = new ArrayList<>();
+		/* 取出使用者身分相關資訊 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		String selectedParameters = "";
+		
+		/* 調用服務裡的方法 */
+		try {
+			userDataList = wus.getOtherWebUserData(selectedParameters);
+		} catch (SQLException sqlE) {
+			String getDataMessageTmp = sqlE.getMessage();
+			getResultMessage = getDataMessageTmp.split(":")[1];
+		}
+		
+		if (userDataList != null) {
+			getResult = 1;
+			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
+		} else if (getResultMessage.equals("")) {
+			getResult = 0;
+			getResultMessage = "無法查詢到任何有效的使用者資料";
+		}
+		
+		map.put("resultCode", getResult.toString());
+		map.put("resultMessage", getResultMessage);
+		map.put("userDataList", userDataList);
+		
+		return map;
+	} 
+	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {

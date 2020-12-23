@@ -254,18 +254,18 @@ ul.slides li img {
 					}
 					if (userLv != -1) {
 						if (counter == 4){
-							
+							selectAllUser();
 						} else {
-							
+							selectUser();
 						}
 					} else {
 						if (statusObjValue == "" || statusObjValue.length == 0) {
 							counter++;
 						}
 						if (counter == 5){
-							
+							selectAllUser();
 						} else {
-							
+							selectUser();
 						} 
 					}
 				}
@@ -274,6 +274,147 @@ ul.slides li img {
 			window.onload = function() {
 				selectAllUser();
 			};
+			
+			function selectUser() {
+				let searchSpan = document.getElementById("searchSpan");
+				let searchStr = "...處理中，請稍後";
+				let searchIsOk = true;
+				let dataContainer = document.getElementById("dataContainer");
+				
+				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+					+ searchStr;
+				searchSpan.style.color = "black";
+				searchSpan.style.fontStyle = "normal";
+				
+				$.ajax({
+					type : "POST",
+					url : "<c:url value='/webUser/controller/WebUserSearchForm' />",
+					data:{
+						
+					},
+					dataType : "json",
+					success : function(resultObj) {
+						if (resultObj.resultCode == 1) {
+							searchStr = resultObj.resultMessage;
+							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+									+ searchStr;
+							searchSpan.style.color = "black";
+							searchSpan.style.fontStyle = "normal";
+
+							let content = "";
+							if (resultObj.userDataList != null) {
+								content = "<form method='post'>"
+										+ "<fieldset>"
+										+ "<legend>以下為使用者列表：</legend>"
+										+ "<hr />"
+										+ "<table border='1'>";
+										
+								if (document.getElementById("userLv").value == -1) {
+									content += "<tr>"
+											+ "<th>帳號名稱</th>"
+											+ "<th>稱呼名稱</th>"
+											+ "<th>偏好食物</th>"
+											+ "<th>居住區域</th>"
+											+ "<th>帳號身分</th>"
+											+ "<th>帳號狀態</th>"
+											+ "</tr>";
+								} else if (document.getElementById("userLv").value == 1) {
+									content += "<tr>"
+											+ "<th>帳號名稱</th>"
+											+ "<th>稱呼名稱</th>"
+											+ "<th>偏好食物</th>"
+											+ "<th>居住區域</th>"
+											+ "<th>帳號身分</th>"
+											+ "</tr>";
+								} else {
+									content += "<tr>"
+											+ "<th>帳號名稱</th>"
+											+ "<th>稱呼名稱</th>"
+											+ "<th>偏好食物</th>"
+											+ "<th>居住區域</th>"
+											+ "</tr>";
+								}
+
+								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+									let userData = resultObj.userDataList[dataIndex];
+									
+									content += "<tr>";
+									
+									if (document.getElementById("userLv").value == -1) {
+										content += "<td>"
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser?account=" + userData.account + "'>" 
+												+ userData.account 
+												+ "</a>"
+												+ "</td>";
+									} else {
+										content += "<td>" + userData.account + "</td>";
+									}
+									
+									content += "<td>" + userData.nickname + "</td>"
+											+ "<td>" + userData.fervor + "</td>"
+											+ "<td>" + userData.locationInfo.cityName + "</td>";
+									
+									if (document.getElementById("userLv").value == -1) {
+										content += "<td>" + userData.accountLv.levelName + "</td>";
+										
+										switch(userData.status) {
+											case "active":
+												content += "<td>已啟用</td>"
+														+ "</tr>";
+												break;
+											case "inactive":
+												content += "<td>未啟用</td>"
+														+ "</tr>";
+												break;
+											case "quit":
+												content += "<td>已停用</td>"
+														+ "</tr>";
+												break;
+										}
+									} else if (document.getElementById("userLv").value == 1) {
+										content += "<td>" + userData.accountLv.levelName + "</td>"
+												+ "</tr>";
+									} else {
+										content += "</tr>";
+									}
+								}
+								
+								content += "</table>"
+										+ "<hr />"
+										+ "</fieldset>" 
+										+ "</form>";
+							}
+
+							dataContainer.innerHTML = content;
+						} else if (resultObj.resultCode == 0) {
+							searchStr = resultObj.resultMessage;
+							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+									+ searchStr;
+							searchSpan.style.color = "black";
+							searchSpan.style.fontStyle = "normal";
+						} else if (resultObj.resultCode == -1) {
+							searchStr = resultObj.resultMessage;
+							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+									+ searchStr;
+							searchSpan.style.color = "red";
+							searchSpan.style.fontStyle = "italic";
+							dataContainer.innerHTML = "";
+							/* 顯示彈窗異常訊息 */
+							alert(resultObj.resultMessage);
+						}
+					},
+					error : function(err) {
+						searchStr = "發生錯誤，無法載入使用者資料";
+						searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+								+ searchStr;
+						searchSpan.style.color = "red";
+						searchSpan.style.fontStyle = "italic";
+						dataContainer.innerHTML = "";
+						/* 顯示彈窗異常訊息 */
+						alert(searchStr);
+					}
+				});
+			}
 
 			function selectAllUser() {
 				let searchSpan = document.getElementById("searchSpan");
@@ -392,7 +533,7 @@ ul.slides li img {
 							dataContainer.innerHTML = "";
 							/* 顯示彈窗異常訊息 */
 							alert(resultObj.resultMessage);
-						} else {
+						} else if (resultObj.resultCode == -1) {
 							searchStr = resultObj.resultMessage;
 							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
 									+ searchStr;
