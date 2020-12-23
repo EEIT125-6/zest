@@ -318,7 +318,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = :lv AND wu.status = " + "'" + status + "'";
 				break;
 			case 1:
-				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv <= :lv AND wu.lv >= 0 AND wu.status = "+ "'" + status + "'";
+				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = "+ "'" + status + "'";
 				break;
 		}
 		int testLv = lv;

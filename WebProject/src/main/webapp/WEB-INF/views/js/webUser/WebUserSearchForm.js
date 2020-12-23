@@ -10,7 +10,6 @@ function checkForm() {
 	let locationCodeObjValue = document.getElementById("locationCode").value;
 	let searchSpan = document.getElementById("searchSpan");
 	let statusObjValue = document.getElementById("status").value;
-	console.log(statusObjValue);
 	let userLv = document.getElementById("userLv").value.trim();
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");

@@ -168,7 +168,7 @@ ul.slides li img {
 		<c:if test="${userFullData.password == null}">
 			<c:redirect url="WebUserLogin" />
 		</c:if>
-		<form action="" method="post" onSubmit="return checkForm();">
+		<form method="post" >
 			<fieldset>
 				<legend>搜尋選項</legend>
 				<input type="hidden" name="userLv" id="userLv"
@@ -211,9 +211,11 @@ ul.slides li img {
 				<hr />
 			</fieldset>
 			<div align="center">
-				<a href="WebUserMain"><input type="button" id="back" name="back"
-					value="返回"></a> <input type="submit" id="submit" name="select"
-					value="執行查詢"> <input type="reset" name="reset" value="重設條件"
+				<a href="WebUserMain">
+				<input type="button" id="back" name="back" value="返回">
+				</a> 
+				<input type="button" id="search" name="select" value="執行查詢"> 
+				<input type="reset" name="reset" value="重設條件"
 					onclick="clearMessage()">
 			</div>
 			<hr />
@@ -227,6 +229,48 @@ ul.slides li img {
 		<script
 			src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
+			$("#search").click(function() {
+				let userLv = document.getElementById("userLv").value.trim();
+				let accountObjValue = document.getElementById("account").value.trim();
+				let nicknameObjValue = document.getElementById("nickname").value.trim();
+				let fervorObjValue = "";
+				for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+					fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+				}
+				let locationCodeObjValue = document.getElementById("locationCode").value;
+				
+				if (checkForm()) {
+					if (accountObjValue == "" && accountObjValue.length == 0) {
+						counter++;
+					}
+					if (nicknameObjValue == "" || nicknameObjValue.length == 0) {
+						counter++;
+					}
+					if (fervorObjValue == "" || fervorObjValue.length == 0) {
+						counter++;
+					}
+					if (locationCodeObjValue == "" || locationCodeObjValue.length == 0) {
+						counter++;
+					}
+					if (userLv != -1) {
+						if (counter == 4){
+							
+						} else {
+							
+						}
+					} else {
+						if (statusObjValue == "" || statusObjValue.length == 0) {
+							counter++;
+						}
+						if (counter == 5){
+							
+						} else {
+							
+						} 
+					}
+				}
+	    	});
+			
 			window.onload = function() {
 				selectAllUser();
 			};
@@ -278,7 +322,6 @@ ul.slides li img {
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
-											+ "<th>帳號狀態</th>"
 											+ "</tr>";
 								} else {
 									content += "<tr>"
