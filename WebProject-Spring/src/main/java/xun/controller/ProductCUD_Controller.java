@@ -90,23 +90,23 @@ public class ProductCUD_Controller {
 		}
 //		建置商家price
 
-		List<Integer> productsprice = new ArrayList<Integer>() ;
-		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
-			Integer ss =  pi.getProduct_price();
-			productsprice.add(ss);
-		}
-		
-		Collections.sort(productsprice);
-		if(productsprice.size()%2 !=0) {
-			Integer storeprice=productsprice.get((productsprice.size()+1)/2);
-			System.out.println(storeprice);
-			System.out.println("+++++++++++"+productsprice);
-		}else {
-			Integer storeprice=productsprice.get((productsprice.size()/2)+1);
-			System.out.println(storeprice);
-			System.out.println("-----------"+productsprice);
-		}
-		
+//		List<Integer> productsprice = new ArrayList<Integer>() ;
+//		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
+//			Integer ss =  pi.getProduct_price();
+//			productsprice.add(ss);
+//		}
+//		
+//		Collections.sort(productsprice);
+//		if(productsprice.size()%2 !=0) {
+//			Integer storeprice=productsprice.get((productsprice.size()+1)/2);
+//			System.out.println(storeprice);
+//			System.out.println("+++++++++++"+productsprice);
+//		}else {
+//			Integer storeprice=productsprice.get((productsprice.size()/2)+1);
+//			System.out.println(storeprice);
+//			System.out.println("-----------"+productsprice);
+//		}
+		CalculateStoreValue(sb.getId());
 		
 		
 //		轉跳
@@ -142,7 +142,7 @@ public class ProductCUD_Controller {
 		
 //		確認圖片有無更改
 
-		if(file.isEmpty()) {
+		if(file.isEmpty() && productInfoBean.getProduct_picture().isEmpty()) {
 //		執行更新
 //			if(productInfoBean.getProduct_picture().isEmpty())
 			productInfoBean.setProduct_picture(null);
@@ -151,7 +151,10 @@ public class ProductCUD_Controller {
 //			else {
 //				
 //			}
-		}else {
+		}else if (file.isEmpty() && !productInfoBean.getProduct_picture().isEmpty()) {
+			ps.updateProduct(productInfoBean);
+			
+			}else {
 			String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
 			String FileName = file.getOriginalFilename();
 
@@ -173,7 +176,8 @@ public class ProductCUD_Controller {
 			ps.updateProduct(productInfoBean);
 //			System.out.println(productInfoBean);
 		}
-		
+//		設置商店價值
+		CalculateStoreValue(stid);
 //		轉跳
 		StoreBean sb = ss.get(stid);
 		Integer NewStoreId = sb.getId();
@@ -202,7 +206,9 @@ public class ProductCUD_Controller {
 			,@RequestParam(value="stid") Integer stid
 			) {
 		ps.deleteProduct(productInfoBean);
-		
+
+//		設置商店價值
+		CalculateStoreValue(stid);
 //		轉跳
 		StoreBean sb = ss.get(stid);
 		Integer NewStoreId = sb.getId();
@@ -212,7 +218,44 @@ public class ProductCUD_Controller {
 		return "redirect:/StoreGetFullstore";
 	}
 	
-	
-	
+//	設置商家價值
+	public void CalculateStoreValue(Integer stid) {
+		
+		StoreBean sb = ss.get(stid);
+		
+		
+		List<Integer> productsprice = new ArrayList<Integer>() ;
+		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
+			Integer ss =  pi.getProduct_price();
+			productsprice.add(ss);
+		}
+		
+		Collections.sort(productsprice);
+		Integer storeprice=null;
+		if(productsprice.size()%2 !=0) {
+			storeprice=productsprice.get((productsprice.size()+1)/2);
+			System.out.println(storeprice);
+			System.out.println("+++++++++++"+productsprice);
+		}else {
+			storeprice=productsprice.get((productsprice.size()/2)+1);
+			System.out.println(storeprice);
+			System.out.println("-----------"+productsprice);
+		}
+		if (storeprice < 150) {
+			storeprice = 1;
+		}else if(storeprice < 300) {
+			storeprice = 2;
+		}else if(storeprice < 450) {
+			storeprice = 3;
+		}else if(storeprice < 600) {
+			storeprice = 4;
+		}else {
+			storeprice = 5;
+		}
+		
+		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
+		System.out.println("成功修改STORE_PRICE是1:"+Result);
+	}
+
 	
 }

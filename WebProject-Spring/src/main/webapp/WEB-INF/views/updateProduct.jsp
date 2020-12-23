@@ -52,7 +52,8 @@ body {
                 <input type="hidden" name="stid" value="${stid}">
 <%-- 				<form:input path="product_shop"/> --%>
 <%--                 <form:hidden path="product_id"/> --%>
-                <form:input path="product_id"/>
+                <form:hidden path="product_id"/>
+                
 	            <label>商店名稱:
 	            	<form:hidden path="product_shop"/>
 	            	${productInfoBean.product_shop}          

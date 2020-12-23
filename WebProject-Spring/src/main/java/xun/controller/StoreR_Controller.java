@@ -57,6 +57,15 @@ public class StoreR_Controller {
 		return "SimpleStore";
 	}
 	
+	@GetMapping("/StoreGetClassStoreAjax")
+	public String ClassStoreAjax(
+			
+			) {
+		
+		return null;
+	}
+	
+	
 	@GetMapping("/StoreGetNamestore")
 	public String GetNameStore(
 			Model model,

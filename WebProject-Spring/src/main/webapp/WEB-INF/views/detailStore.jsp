@@ -42,7 +42,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
+<!--     <link rel="stylesheet" -->
     <title>橙皮  </title>
     <style>
         body{
@@ -200,28 +202,49 @@
         </div>
         <div id="div3" style="display:none;" class="ddiv">
 <!--              <span style="font-size: 140%">ho </span> -->
-			<div>
-				<c:forEach var="row1" items="${Products}">
-             		${row1.product_name} 
-             		${row1.product_price}
-             		${row1.product_quantity}
-             		<c:if test="${row1.product_picture != null}">
-             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	
-             		</c:if>
-			<form action="updateProductpage" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="productid" value="${row1.product_id}">
-				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
-			
-			<span>|</span>
-			<form action="deleteProductpage" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="productid" value="${row1.product_id}">
-				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
-             		<br>
-	            </c:forEach>
+			<div class="row"  style="padding:10px">
+					<c:forEach var="row1" items="${Products}">
+						<div class="col-sm-4">
+<!-- 					       style="background: url('Images/LOGO1-removebg-preview.png')" -->
+								    <div class="card" style="background:#f28633;">
+								    <c:if test="${row1.product_picture != null}">
+								    	<div class="imgBx">
+				             				<img src="${row1.product_picture}" style="border-radius: 7 px;"/>
+				             			</div>	
+				             		</c:if>
+				             		<c:if test="${row1.product_picture == null }">
+								        <div class="imgBx" >
+				    	         			<img src="Images/LOGO1-removebg-preview.png" style="border-radius: 7 px;"/>
+								        </div>
+				             		</c:if>
+								        <div class="contentBx">
+								            <h3>${row1.product_name} </h3>
+								            <h2 class="price">$${row1.product_price}</h2>
+								            <a href="#" class="buy">Buy Now</a>
+								        </div>
+								    </div>
+<%-- 				             		${row1.product_name}  --%>
+<%-- 				             		${row1.product_price} --%>
+<%-- 				             		${row1.product_quantity} --%>
+<%-- 				             		<c:if test="${row1.product_picture != null}"> --%>
+<%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
+<%-- 				             		</c:if> --%>
+				             		
+							<form action="updateProductpage" method="post" style="display:inline">
+								<input type="hidden" name="id" value="${id}">
+								<input type="hidden" name="productid" value="${row1.product_id}">
+								<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+							</form>
+							
+							<span>|</span>
+							<form action="deleteProductpage" method="post" style="display:inline">
+								<input type="hidden" name="id" value="${id}">
+								<input type="hidden" name="productid" value="${row1.product_id}">
+								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+							</form>
+				             		<br>
+			             </div>
+		            </c:forEach>
 			</div>
         </div>
         <div id="div4" style="display:none;" class="ddiv">

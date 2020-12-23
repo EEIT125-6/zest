@@ -190,4 +190,16 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return factory.getCurrentSession().get(StoreBean.class, id);
 	}
 
+	@Override
+	public Integer setStorePrice(Integer price, Integer id) {
+		Integer count=null;
+		Session session = factory.getCurrentSession();
+		String hql = "Update StoreBean sb set price = :price WHERE id = :id";
+		count=session.createQuery(hql).setParameter("price", price)
+		.setParameter("id", id)
+		.executeUpdate();
+		return count;
+	}
+
+	
 }
