@@ -158,11 +158,6 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
-		return webUserDAO.deleteWebUserData(deletedUserId);
-	}
-
-	@Override
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException {
 		return webUserDAO.resetWebUserPassword(userId, password);
 	}

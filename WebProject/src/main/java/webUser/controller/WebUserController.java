@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +47,8 @@ import webUser.service.WillingService;
 		"genderList", 
 		"cityInfoList",
 		"reg_webUser",
-		"userFullData"})
+		"userFullData",
+		"managedUserData"})
 @Controller
 @RequestMapping("/webUser")
 public class WebUserController {
@@ -769,7 +771,8 @@ public class WebUserController {
 	
 	/* 前往搜尋畫面 */
 	@GetMapping(value = "/WebUserSearchForm")
-	public String doCreateWebUserSearchForm(Model model) {
+	public String doCreateWebUserSearchForm(Model model) 
+	{
 		/* 取得下拉選單、單選、多選所需的固定資料 */
 		List<UserWilling> willingList = wis.getUserWillingList();
 		List<FoodFervor> fervorList = fvs.getFoodFervorList();
@@ -931,6 +934,100 @@ public class WebUserController {
 		return map;
 	} 
 	
+	/* 根據帳號顯示對應資料 */
+	@GetMapping("/ManageWebUser/{account}")
+	public String doCreateDisplayManagedUserData(
+			Model model,
+			@PathVariable(value = "account") String account
+			) 
+	{
+		System.out.println("accont is "+account);
+		/* 訊息 */
+		String operateMessage = "";
+		/* 連結網址 */
+		String destinationUrl = "";
+		
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		/* 指定的使用者資料 */
+		WebUserData managedUserData = new WebUserData();
+		
+		/* 檢查使用者身分 */
+		if (userData == null) {
+			operateMessage = "無法使用本功能，請確定您已經登入本系統！";;
+		} else if (userData.getAccountLv().getLv() != -1) {
+			operateMessage = "本帳號無法使用此功能！";
+		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
+			operateMessage = "本帳號無法使用此功能！";
+		}
+		
+		if (operateMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				managedUserData = wus.getWebUserData(account);
+			} catch (SQLException sqlE) {
+				operateMessage = sqlE.getMessage();
+			} 
+		}
+		
+		/* 成功 */
+		if (operateMessage.equals("") && managedUserData != null) {
+			/* 將物件managedUserData以"managedUserData"的名稱放入Attribute中 */
+			model.addAttribute("managedUserData", managedUserData);
+			/* 前往個人資料畫面 */
+			destinationUrl = "redirect:/webUser/DisplayManagedUserData";
+		} else {
+			/* 導回查詢畫面 */
+			destinationUrl = "forward:/webUser/WebUserSearchForm";
+		}
+		
+		return destinationUrl;
+	}
+	
+	/* 無輸入任何帳號則返回登入 */
+	@GetMapping("/ManageWebUser")
+	public String doGoBackToLogin() 
+	{
+		return "webUser/WebUserLogin";
+	}
+	
+	/* 根據輸入模式執行對應功能 */
+	@PostMapping("/ManageWebUser/{mode}")
+	public @ResponseBody Map<String, String> doAdminOperate(
+			Model model,
+			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
+			@RequestParam(value = "account", required = false, defaultValue = "") String account,
+			@RequestParam(value = "status", required = false, defaultValue = "") String status,
+			@PathVariable(value = "mode", required = false) String mode
+			) 
+	{
+		/* 宣告參數 */
+		String operateMessage = "";
+		
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		/* 預防性後端輸入檢查 */
+		operateMessage = doAdminInputCheck(userData, userId, account, status, mode);
+		
+		/* 通過檢查 */
+		if(operateMessage.equals("")) {
+			switch(mode) {
+			case "inactive":
+				break;
+			case "active":
+			case "reactive":
+				break;
+			default:
+				operateMessage = "未提供此功能！";
+				break;
+			}
+		}
+		
+		return null;
+	}
+	
 	/* 前往顯示註冊資料畫面 */
 	@GetMapping(value = "/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {
@@ -989,6 +1086,12 @@ public class WebUserController {
 	@GetMapping(value = "WebUserChangeResult")
 	public String doGoWebUserChangeResult() {
 		return "webUser/WebUserChangeResult";
+	}
+	
+	/* 前往管理員用顯示個人資料畫面 */
+	@GetMapping(value = "DisplayManagedUserData")
+	public String doGoDisplayManagedWebUserData() {
+		return "webUser/DisplayManagedUserData";
 	}
 	
 	/* 使用者註冊資料檢查 */
@@ -1864,5 +1967,78 @@ public class WebUserController {
 		}
 		
 		return checkResult;
+	}
+	
+	public String doAdminInputCheck(WebUserData userData, String userId, String account, String status, String mode) {
+		String checkMessage = "";
+		
+		/* 檢查使用者身分 */
+		if (userData == null) {
+			checkMessage = "無法使用本功能，請確定您已經登入本系統！";;
+		} else if (userData.getAccountLv().getLv() != -1) {
+			checkMessage = "本帳號無法使用此功能！";
+		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
+			checkMessage = "本帳號無法使用此功能！";
+		}
+		
+		/* 檢查id */
+		if (checkMessage.equals("")) {
+			if (userId.equals("")) {
+				checkMessage = "Id不可為空白";
+			} else if (userId.length() != 7) {
+				checkMessage = "Id長度錯誤";
+			} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
+				checkMessage = "Id格式錯誤";
+			} else {
+				Integer userIdCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					userIdCheckResult = wus.checkUserIdExist(userId);
+				} catch (SQLException sqlE) {
+					checkMessage = sqlE.getMessage();
+				}
+				
+				if (userIdCheckResult == 0){
+					checkMessage = "Id不存在";
+				}
+			}
+		}
+		
+		/* 檢查帳號 */
+		if (checkMessage.equals("")) {
+			if (account.equals("")) {
+				checkMessage = "帳號不可為空白";
+			} else if(account.length() < 8) {
+				checkMessage = "帳號長度不足";
+			} else if(account.length() > 20) {
+				checkMessage = "帳號長度過長";
+			} else if (account.matches("[1-9]{1}.")) {
+				checkMessage = "帳號不可以數字開頭";
+			} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+				checkMessage = "帳號不符合格式";
+			} else {
+				Integer accountCheckResult = -1;
+				
+				/* 調用服務裡的方法 */
+				try {
+					accountCheckResult = wus.checkAccountExist(account);
+				} catch (SQLException sqlE) {
+					checkMessage = sqlE.getMessage();
+				}
+				
+				if (accountCheckResult == 0){
+					checkMessage = "帳號不存在";
+				}
+			}
+		}
+		
+		/* 檢查狀態 */
+		
+		
+		/* 檢查模式與狀態的匹配 */
+		
+		
+		return checkMessage;
 	}
 }

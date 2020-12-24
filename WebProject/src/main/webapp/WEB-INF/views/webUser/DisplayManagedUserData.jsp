@@ -145,13 +145,10 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-		        <!-- 將放於Session中的JavaBean取出，class寫包含package的全名，scope設為session -->
-				<jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
-				<c:if test="${empty managedUserData}">
-					<c:redirect url="WebUserLogin.jsp" />
+				<c:if test="${managedUserData.account == null}">
+					<c:redirect url="WebUserLogin" />
 				</c:if>
-				<form action="/WebProject/webUser/WebUserServlet" method="post" onSubmit="return lastCheck();">
+				<form method="post">
 					<fieldset>
 						<c:if test="${deleteMessage == null}">
 							<c:if test="${updateResultMessage != null}">
@@ -243,29 +240,52 @@
 					</fieldset>
 					<div align="center">
 						<c:choose>
+							<c:when test="${managedUserData.status=='inactive'}">
+								<input type="submit" id="activeAccount" name="update" value="啟用帳號">
+							</c:when>
 							<c:when test="${managedUserData.status=='active'}">
 								<input type="submit" id="quitAccount" name="update" value="停用帳號">
 							</c:when>
 							<c:when test="${managedUserData.status=='quit'}">
-								<input type="submit" id="activeAccount" name="update" value="啟用帳號">
+								<input type="submit" id="reactiveAccount" name="update" value="恢復帳號">
 							</c:when>
 						</c:choose>
-						<input type="submit" id="deleteAccount" name="delete" value="刪除帳號">
-						<a href="WebUserSearchForm.jsp"><input type="button" name="select" value="返回上一頁"></a>
+						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
 					</div>
 					<hr />
 				</form>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 				<script>
-					$("#deleteAccount").click(function () {
-				        alert("您即將刪除此帳號，本操作不可逆");
+					$("#activeAccount").click(function () {
+						var mode = "active";
+						lastCheck(mode);
 				    });
-					function lastCheck() {
+					$("#quitAccount").click(function () {
+						var mode = "quit";
+						lastCheck(mode);
+				    });
+					$("#reactiveAccount").click(function () {
+						var mode = "reactive";
+						lastCheck(mode);
+				    });
+					function lastCheck(mode) {
 						let choice=confirm("是否要執行特定的操作？");
 						if (choice) {
-							return true;
-						} else {
-							return false;
+							
+							$.ajax({
+								type : "POST",
+								url : "<c:url value='/webUser/ManageWebUser/" + mode + "' />",
+								data : {
+									
+								},
+								dataType : "json",
+								success : function(resultObj) {
+									
+								},
+								error : function(err) {
+									
+								}
+							});
 						}
 					}
 				</script>

@@ -73,9 +73,6 @@ public interface WebUserRepository {
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
 	
-	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
-	
 	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
 	

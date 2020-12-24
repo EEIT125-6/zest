@@ -173,6 +173,9 @@ ul.slides li img {
 				<legend>搜尋選項</legend>
 				<input type="hidden" name="userLv" id="userLv"
 					value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
+				<c:if test="${operateMessage != null}">
+					<p><c:out value="${operateMessage}" /></p>
+				</c:if>
 				<hr />
 				<label>帳號名稱：</label> <input type="text" name="selectedAccount"
 					id="account" size="40" maxlength="20" onblur="checkAccountName()"
@@ -243,10 +246,12 @@ ul.slides li img {
 				var nicknameObjValue = document.getElementById("nickname").value.trim();
 				var fervorObj = document.getElementsByClassName("fervor");
 				var fervorObjValue = "";
+				
 				for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
 					fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
 					fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 				}
+				
 				var locationCodeObjValue = document.getElementById("locationCode").value;
 				var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
 				
@@ -357,7 +362,7 @@ ul.slides li img {
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser?account=" + userData.account + "'>" 
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
 												+ userData.account 
 												+ "</a>"
 												+ "</td>";
@@ -495,7 +500,7 @@ ul.slides li img {
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser?account=" + userData.account + "'>" 
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
 												+ userData.account 
 												+ "</a>"
 												+ "</td>";
