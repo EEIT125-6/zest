@@ -176,27 +176,34 @@ ul.slides li img {
 				<hr />
 				<label>帳號名稱：</label> <input type="text" name="selectedAccount"
 					id="account" size="40" maxlength="20" onblur="checkAccountName()"
-					placeholder="請輸入要查詢的帳號，8~20個字" /> <span id="accountSpan"></span>
+					placeholder="請輸入要查詢的帳號，8~20個字" /> 
+				<span id="accountSpan"></span>
 				<hr />
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
 					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
-					placeholder="請輸入要查詢的暱稱" /> <span id="nicknameSpan"></span>
+					placeholder="請輸入要查詢的暱稱" /> 
+				<span id="nicknameSpan"></span>
 				<hr />
 				<label>偏好食物：</label>
 				<c:forEach items="${fervorList}" var="fervorObject">
-					<input type="checkbox" name="fervorOption" class="fervor"
-						value="${fervorObject.fervorCode}" onblur="checkFervor()" />
-					<label><c:out value="${fervorObject.fervorItem}"></c:out></label>
+						<input type="checkbox" name="fervorOption" class="fervor"
+							value="${fervorObject.fervorCode}" onblur="checkFervor()" />
+						<label>
+							<c:out value="${fervorObject.fervorItem}">
+							</c:out>
+						</label>
 				</c:forEach>
 				<span id="fervorSpan"></span>
 				<hr />
-				<label>居住區域：</label> <select name="selectedLocationCode"
+				<label>居住區域：</label> 
+				<select name="selectedLocationCode"
 					id="locationCode" onblur="checkLocationCode()">
 					<option value="">請選擇目前您居住/生活的區域</option>
 					<c:forEach items="${cityInfoList}" var="cityInfo">
 						<option value="${cityInfo.cityCode}" label="${cityInfo.cityName}" />
 					</c:forEach>
-				</select> <span id="locationCodeSpan"></span>
+				</select> 
+				<span id="locationCodeSpan"></span>
 				<c:if test='${userFullData.accountLv.lv == -1}'>
 					<hr />
 					<label>帳號狀態：</label>
@@ -230,14 +237,18 @@ ul.slides li img {
 			src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
 			$("#search").click(function() {
-				let userLv = document.getElementById("userLv").value.trim();
-				let accountObjValue = document.getElementById("account").value.trim();
-				let nicknameObjValue = document.getElementById("nickname").value.trim();
-				let fervorObjValue = "";
+				var counter = 0;
+				var userLv = document.getElementById("userLv").value.trim();
+				var accountObjValue = document.getElementById("account").value.trim();
+				var nicknameObjValue = document.getElementById("nickname").value.trim();
+				var fervorObj = document.getElementsByClassName("fervor");
+				var fervorObjValue = "";
 				for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+					fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
 					fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 				}
-				let locationCodeObjValue = document.getElementById("locationCode").value;
+				var locationCodeObjValue = document.getElementById("locationCode").value;
+				var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
 				
 				if (checkForm()) {
 					if (accountObjValue == "" && accountObjValue.length == 0) {
@@ -256,16 +267,16 @@ ul.slides li img {
 						if (counter == 4){
 							selectAllUser();
 						} else {
-							selectUser();
+							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus);
 						}
 					} else {
-						if (statusObjValue == "" || statusObjValue.length == 0) {
+						if (selectedStatus == "" || selectedStatus.length == 0) {
 							counter++;
 						}
 						if (counter == 5){
 							selectAllUser();
 						} else {
-							selectUser();
+							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus);
 						} 
 					}
 				}
@@ -275,7 +286,7 @@ ul.slides li img {
 				selectAllUser();
 			};
 			
-			function selectUser() {
+			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus) {
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
@@ -289,8 +300,12 @@ ul.slides li img {
 				$.ajax({
 					type : "POST",
 					url : "<c:url value='/webUser/controller/WebUserSearchForm' />",
-					data:{
-						
+					data : {
+						'selectedAccount':accountObjValue,
+						'selectedNickname':nicknameObjValue,
+						'selectedFervor':fervorObjValue,
+						'selectedLocationCode':locationCodeObjValue,
+						'selectedStatus':selectedStatus
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -302,7 +317,7 @@ ul.slides li img {
 							searchSpan.style.fontStyle = "normal";
 
 							let content = "";
-							if (resultObj.userDataList != null) {
+							if (resultObj.userDataList.length != 0) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
 										+ "<legend>以下為使用者列表：</legend>"

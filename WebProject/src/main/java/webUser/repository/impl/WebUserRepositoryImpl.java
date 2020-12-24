@@ -233,17 +233,13 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
-//		/* 如果StringBuilder物件有內容，則先清空 */
-//		if (sb.toString() != null) {
-//			sb.setLength(0);
-//		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM WebUserData AS wu WHERE ");
 
 		String account = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
 		String nickname = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
 		String fervor = (selectedParameters.split(":")[2].equals("?")) ? "" : selectedParameters.split(":")[2];
-		String locationCode = (selectedParameters.split(":")[3].equals("?")) ? "" : selectedParameters.split(":")[3];
+		Integer locationCode = (selectedParameters.split(":")[3].equals("0")) ? 0 : Integer.parseInt(selectedParameters.split(":")[3]);
 		Integer lv = Integer.parseInt(selectedParameters.split(":")[4]);
 		String status = "'" + selectedParameters.split(":")[5] + "'";
 		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? ""
@@ -270,12 +266,12 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 			sb.append(" AND wu.fervor LIKE " + fervor);
 		}
 
-		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !locationCode.equals("")) {
-			locationCode = "'" + selectedParameters.split(":")[3] + "'";
-			sb.append("wu.locationCode = " + locationCode);
-		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !locationCode.equals("")) {
-			locationCode = "'" + selectedParameters.split(":")[3] + "'";
-			sb.append(" AND wu.locationCode = " + locationCode);
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append("wu.locationInfo.cityCode = " + locationCode);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append(" AND wu.locationInfo.cityCode = " + locationCode);
 		}
 
 		if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
@@ -287,17 +283,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		}
 
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
-			sb.append("wu.lv >= :lv");
+			sb.append("wu.accountLv.lv >= :lv");
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
-			sb.append(" AND wu.lv >= :lv");
+			sb.append(" AND wu.accountLv.lv >= :lv");
 		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
-			sb.append("wu.lv = :lv AND wu.status = " + status);
+			sb.append("wu.accountLv.lv = :lv AND wu.status = " + status);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
-			sb.append(" AND wu.lv = :lv AND wu.status = " + status);
+			sb.append(" AND wu.accountLv.lv = :lv AND wu.status = " + status);
 		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
-			sb.append("wu.lv <= :lv AND wu.lv >= 0 AND wu.status = " + status);
+			sb.append("wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
-			sb.append(" AND wu.lv <= :lv AND wu.lv >= 0 AND wu.status = " + status);
+			sb.append(" AND wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
 		}
 
 		/* 取得當前Session，然後執行HQL以取得陣列 */

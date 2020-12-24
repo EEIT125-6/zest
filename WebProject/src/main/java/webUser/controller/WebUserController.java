@@ -808,12 +808,14 @@ public class WebUserController {
 			getResultMessage = "本帳號無法使用此功能！";
 		}
 		
-		/* 調用服務裡的方法 */
-		try {
-			userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
-		} catch (SQLException sqlE) {
-			String getDataMessageTmp = sqlE.getMessage();
-			getResultMessage = getDataMessageTmp.split(":")[1];
+		if (getResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
+			} catch (SQLException sqlE) {
+				String getDataMessageTmp = sqlE.getMessage();
+				getResultMessage = getDataMessageTmp.split(":")[1];
+			}
 		}
 		
 		if (userDataList != null) {
@@ -832,9 +834,16 @@ public class WebUserController {
 	}
 	
 	/* 回傳所有有效使用者的資料 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
-			Model model) 
+			Model model,
+			@RequestParam(value = "selectedAccount", defaultValue = "?") String selectedAccount,
+			@RequestParam(value = "selectedNickname", defaultValue = "?") String selectedNickname,
+			@RequestParam(value = "selectedFervor", defaultValue = "?") String selectedFervor,
+			@RequestParam(value = "selectedLocationCode", defaultValue = "0") Integer selectedLocationCode,
+			@RequestParam(value = "selectedStatus", defaultValue = "?") String selectedStatus
+			) 
 	{
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
@@ -843,17 +852,68 @@ public class WebUserController {
 		
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
+		
+		/* 從session取出陣列來繼續完成設定 */
+		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
+		
 		/* 取出使用者身分相關資訊 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-		
 		String selectedParameters = "";
 		
-		/* 調用服務裡的方法 */
-		try {
-			userDataList = wus.getOtherWebUserData(selectedParameters);
-		} catch (SQLException sqlE) {
-			String getDataMessageTmp = sqlE.getMessage();
-			getResultMessage = getDataMessageTmp.split(":")[1];
+		/* 檢查身分 */
+		if (userData == null) {
+			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
+		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
+			getResultMessage = "本帳號無法使用此功能！";
+		}
+		
+		String fervorTemp = "";
+		/* 驗證部分值 */
+		if (!selectedFervor.equals("?")) {
+			for (String selectedItem: selectedFervor.split(",")) {
+				for (FoodFervor fervorItem: fervorList) {
+					if (fervorItem.getFervorCode().toString().equals(selectedItem)) {
+						if (!fervorTemp.equals("")) {
+							fervorTemp += "%";
+						}
+						fervorTemp += fervorItem.getFervorItem();
+					}
+				}
+			}
+		}
+		selectedFervor = (fervorTemp.equals("")) ? selectedFervor: fervorTemp;
+		
+		/* 產生驗證用字串 */
+		if (getResultMessage.equals("")) {
+			Integer lv = userData.getAccountLv().getLv();
+			
+			String status = "active";
+			if (lv == -1) {
+				status = userData.getStatus();
+			}
+			
+			if (lv != -1) {	
+				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
+						+ selectedFervor + ":" + selectedLocationCode + ":" 
+						+ String.valueOf(lv) + ":" + status + ":?";
+			} else {
+				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
+						+ selectedFervor + ":" + selectedLocationCode + ":" 
+						+ String.valueOf(lv) + ":" + status + ":" + selectedStatus;
+			}
+			
+			/* 預防性後端輸入檢查 */
+			getResultMessage = doSelectUserDataInputCheck(selectedParameters, userData);
+		}
+
+		if (getResultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				userDataList = wus.getOtherWebUserData(selectedParameters);
+			} catch (SQLException sqlE) {
+				String getDataMessageTmp = sqlE.getMessage();
+				getResultMessage = getDataMessageTmp.split(":")[1];
+			}
 		}
 		
 		if (userDataList != null) {
@@ -1731,5 +1791,78 @@ public class WebUserController {
 		}
 		
 		return updateResultMessage;
+	}
+	
+	public String doSelectUserDataInputCheck(String selectedParameters, WebUserData userData) {
+		String checkResult = "";
+		
+		String selectedAccount = selectedParameters.split(":")[0];
+		if (checkResult.equals("")) {
+			if (selectedAccount.length() > 20) {
+				checkResult = "搜尋的帳號名稱過長！";
+			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,20}") && !selectedAccount.equals("?")) {
+				checkResult = "搜尋的帳號含有無效字元！";
+			} 
+		}
+		
+		String selectedNickname = selectedParameters.split(":")[1];
+		if (checkResult.equals("")) {
+			if (selectedNickname.length() > 20) {
+				checkResult = "搜尋的稱呼名稱過長！";
+			}
+		}
+		
+		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+		if (checkResult.equals("")) {
+			if (selectedLocationCode != 0)  {
+				switch(selectedLocationCode) {
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
+					case 8:
+					case 9:
+					case 10:
+					case 11:
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+					case 16:
+					case 17:
+					case 18:
+					case 19:
+					case 20:
+					case 21:
+					case 22:
+					case 23:
+						break;
+					default:
+						checkResult = "居住區域設定異常";
+						break;
+				}
+			}
+		}
+		
+		if (userData.getAccountLv().getLv() == -1) {
+			String selectedStatus = selectedParameters.split(":")[6];
+			if (checkResult.equals("")) {
+				if (!selectedStatus.equals("?")) {
+					switch(selectedStatus) {
+						case "active":
+						case "quit":
+							break;
+						default:
+							checkResult = "帳號狀態設定異常";
+							break;
+					}
+				}
+			}
+		}
+		
+		return checkResult;
 	}
 }

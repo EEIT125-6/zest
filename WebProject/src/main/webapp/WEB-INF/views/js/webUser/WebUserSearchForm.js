@@ -2,15 +2,15 @@ function checkForm() {
 	let counter = 0;
 	let accountObjValue = document.getElementById("account").value.trim();
 	let nicknameObjValue = document.getElementById("nickname").value.trim();
-	let fervorObj = document.getElementsByName("selectedFervor");
+	let fervorObj = document.getElementsByClassName("fervor");
 	let fervorObjValue = "";
 	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let locationCodeObjValue = document.getElementById("locationCode").value;
 	let searchSpan = document.getElementById("searchSpan");
-	let statusObjValue = document.getElementById("status").value;
 	let userLv = document.getElementById("userLv").value.trim();
+	let statusObjValue = (userLv == -1) ? document.getElementById("status").value : "";
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
 	if (choice) {
@@ -118,7 +118,7 @@ function checkNickname() {
 }
 
 function checkFervor() {
-	let fervorObj = document.getElementsByName("selectedFervor");
+	let fervorObj = document.getElementsByClassName("fervor");
 	let fervorObjValue = "";
 	for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
