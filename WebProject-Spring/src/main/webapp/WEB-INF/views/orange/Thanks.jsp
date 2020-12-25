@@ -140,7 +140,7 @@
             </div>
 <script>
 	setTimeout(function(){
-		window.location.href="ShowComment.jsp"
+		window.location.href="show"
 	}
 	,5000);
 </script>

@@ -16,7 +16,8 @@ import javax.persistence.Table;
 public class BoardBean {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer boardid;
+	private Integer boardid;  //根據上面註釋
+	
 	private String name;
 	private Integer star;
 	private Date date;
@@ -24,20 +25,24 @@ public class BoardBean {
 	private String photo;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "Store_Id")
-	private StoreBean storebean;
+	private StoreBean storebean;      //外來鍵
+		
 	
-	public StoreBean getStorebean() {
-		return storebean;
+	public StoreBean getStorebean() {     //外來鍵方法get和set
+		return storebean;				  //資料型態StoreBean
 	}
 	public void setStorebean(StoreBean storebean) {
 		this.storebean = storebean;
 	}
+	                                     //set存放值，有this
+	                  
+	
 	
 	public BoardBean(){
 		
 	}
 	
-	
+	//多載建構值
 	public BoardBean(Integer boardid, String name, Integer star, Date date, String context, String photo,
 			StoreBean storebean) {
 		super();
@@ -55,11 +60,11 @@ public class BoardBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getStars() {
+	public Integer getStar() {
 		return star;
 	}
-	public void setStars(Integer stars) {
-		this.star = stars;
+	public void setStar(Integer star) {
+		this.star = star;
 	}
 	public Date getDate() {
 		return date;

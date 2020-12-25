@@ -71,6 +71,18 @@
             margin: 0;
             margin-left:5px ;
        }
+       
+       .box1{
+       			text-align:center;
+       }
+       
+       .box2{
+       
+       }
+       .container{
+       
+       
+       }
 
 #gotop {
     position:fixed;
@@ -187,22 +199,27 @@
         <hr>
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">  
-             <div class="box1" style="text-align: left;margin: auto;" >   
+     <div class="box1" style="text-align:center ;margin: auto;" >   
         <div class="d1" >評分總人數:</div>
         <br>
         <div class="d2">
             <h3>給予評價</h3>
-            <img id="idimg1" src="image/s1.png" height="25px"、 width="25px"/>
-            <img id="idimg2" src="image/s1.png" height="25px"、 width="25px"/>
-            <img id="idimg3" src="image/s1.png" height="25px"、 width="25px"/>
-            <img id="idimg4" src="image/s1.png" height="25px"、 width="25px"/>
-            <img id="idimg5" src="image/s1.png" height="25px"、 width="25px"/>
+            <img id="img1" class="i" src="star/s1.png" height="25px"、 width="25px"/>
+            <img id="img2" class="i" src="star/s1.png" height="25px"、 width="25px"/>
+            <img id="img3" class="i" src="star/s1.png" height="25px"、 width="25px"/>
+            <img id="img4" class="i" src="star/s1.png" height="25px"、 width="25px"/>
+            <img id="img5" class="i" src="star/s1.png" height="25px"、 width="25px"/>
+            <br>
+            <label id = "startPcs"></label>
         </div>
+<!--                    <span id="score" style="color : blue;font-size:200%;"></span> -->
+            <div id="d1"></div>
+        
         <div class="d3"> 
             <div class="container">
                 <div class="row">
                   <div class="s1">
-                    <img  src="image/Mstar.png" height="110px"、width="110px">
+                    <img  src="star/Mstar.png" height="110px"、width="110px">
                 </div>
                   <div class="s2">
                       <div style="line-height: 20px;background-color ; padding-top: 3px;"> <input type="range" min="0" max="100" step="1" value="100" > </div>
@@ -232,8 +249,8 @@
        <input type="text" id="name" name="name" ><br>
     </div>
     <div class="st1">
-        <label for="star" class="t1">評分:</label>
-        <input type="text" id="star" name="star" ><br>
+        <label for="star" class="t1"></label>
+        <input type="hidden" id="star" name="star" ><br>
     </div>
      <!--  <div class="st1">
         <label class="t1" for="photo">照片:</label>
@@ -252,44 +269,26 @@
    
 </form>
     </div>
-    <script>  
     
-        let imgs=document.querySelectorAll("img");
-
-            for(i=0;i<imgs.length;i++){
-            imgs[i].onmouseover=mouseover;
-            imgs[i].onmouseout=mouseout;
-            }
-
-
-                
-
-        function mouseover() {
-      
-            let a = this.id.charAt(5)
-            for(i=1;i<=a;i++){
-            document.querySelector("#idimg"+i).src="image/s3.png";            
-            }
-            
-        }
-
-        function mouseout() {
-
-            let a = this.id.charAt(5)
-
-            for(i=1;i<=a;i++){
-            document.querySelector("#idimg"+i).src="image/s1.png";
-            }
-            
-        }
-
-        function focus() {
-            console.log("focus");
-        }
-
-        function blur() {
-            console.log("blur");
-        }
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script >  
+           
+        $(".i").mousedown(function(){
+            let starts = $(this).attr("id").split("img")[1];
+//             $('#startPcs').html("給你"+starts+"顆星");
+			$("#star").val(starts);
+        })
+         
+        $(".i").mouseenter(function(){
+            $(this).attr("src","star/s3.png");
+            $(this).prevAll().attr("src","star/s3.png");
+            $(this).nextAll().attr("src","star/s1.png")
+            let starts = $(this).attr("id").split("img")[1]
+//             $('#startPcs').html("打分中..."+starts+"顆星")
+        });
+        
+        
     </script></span>
             <div>
              <c:forEach var="row" items="${Comments}">

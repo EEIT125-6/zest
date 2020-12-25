@@ -152,8 +152,8 @@ request.setCharacterEncoding("UTF-8");
         ${boardBean.name }<br>
     </div>
     <div class="st1">
-        <label for="stars" class="t1">評分:</label>
-      ${boardBean.stars }<br>
+        <label for="star" class="t1">評分:</label>
+      ${boardBean.star }<br>
         
     </div> 
        <div class="st1">

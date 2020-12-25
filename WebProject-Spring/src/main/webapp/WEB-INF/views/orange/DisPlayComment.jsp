@@ -143,19 +143,20 @@ request.setCharacterEncoding("UTF-8");
 <body>
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
- <form method="get" action="<c:url value="/pack"/>">
+ <form method="get" action="<c:url value="/updateboard"/>">
+
 
    <fieldset>
-        <legend>留言</legend>
-        <input type="hidden" name="id" value="<jsp:getProperty name="commentBean" property="boardid" />">
+<!--         <legend>留言</legend> -->
+        <input type="hidden" name="id" value="${boardBean.boardid }">
     <div class="st1">
         <label class="t1" for="name">姓名:</label>
         <input type="text" name="name" value=" ${boardBean.name }">
         <br>
     </div>
     <div class="st1">
-        <label for="stars" class="t1">評分:</label>
-        <input type="text" name="stars" value="${boardBean.stars }">
+        <label for="star" class="t1">評分:</label>
+        <input type="text" name="star" value="${boardBean.star }">
         <br>
         
     </div> 
@@ -164,27 +165,27 @@ request.setCharacterEncoding("UTF-8");
         <input type="text" readonly name="date" value=" ${boardBean.date }">
 <br>
     </div>
-   <div class="st1">
-        <label class="t1" for="photo">照片:</label>
-        <input type="text" name="photo" value="${boardBean.photo }">
-        <br>
-    </div>
+<!--    <div class="st1"> -->
+<!--         <label class="t1" for="photo">照片:</label> -->
+<%--         <input type="text" name="photo" value="${boardBean.photo }"> --%>
+<!--         <br> -->
+<!--     </div> -->
 <div class="st1">
     <label class="t1" for="comment">留言:</label>
-    <textarea name="comment" id="" cols="30" rows="10" >${boardBean.date }</textarea>
+    <textarea name="comment" id="" cols="30" rows="10" >${boardBean.context }</textarea>
     <br>
 </div>
- <div class="st1">
-        <label class="t1" for="storeId">餐廳</label>
-        <input type="text" name="storeId" value="${boardBean.storeId }">
-        <br>
-    </div>
+<!--  <div class="st1"> -->
+<!--         <label class="t1" for="storeId">餐廳</label> -->
+        <input type="hidden" name="storeId" value="${boardBean.storebean.id }">
+<!--         <br> -->
+<!--     </div> -->
 
     <div class="sub">
-    	<a href="/updateboard?update=${boardBean.boardId }" >更新</a>
-    	<a href="/deleteboard?delete=${boardBean.boardId }" >刪除</a>
+<%--     	<a href="<c:url value="/updateboard?update=${boardBean.boardid }"/>" >更新</a> --%>
+        <input type="submit"  value="更新">
+    	<a href="<c:url value="/deleteboard?update=${boardBean.boardid }"/>" >刪除</a>
     
-<!--         <input type="submit" name="update" value="更新"> -->
 <!--         <input type="submit" name="delete" value="刪除">  -->
     </div>
 </fieldset>

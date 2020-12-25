@@ -46,7 +46,7 @@ public class BoardDaoImpl implements BoardDao {
 		public BoardBean getBoardByName(String name) {
 			BoardBean bean = null;
 			Session session = factory.getCurrentSession();
-			String hql  = "FROM BoardBean bb WHERE bb.boardName = :name";
+			String hql  = "FROM BoardBean bb WHERE bb.name = :name";
 			try {
 				bean = (BoardBean)session.createQuery(hql)
 										.setParameter("name", name)
