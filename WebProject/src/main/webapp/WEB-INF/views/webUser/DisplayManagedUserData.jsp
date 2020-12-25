@@ -150,19 +150,7 @@
 				</c:if>
 				<form method="post">
 					<fieldset>
-						<c:if test="${deleteMessage == null}">
-							<c:if test="${updateResultMessage != null}">
-								<legend><c:out value="${updateResultMessage}" /></legend>
-							</c:if>
-						</c:if>
-						<c:if test="${deleteMessage != null}">
-							<legend><c:out value="${deleteMessage}" /></legend>
-						</c:if>
-						<c:if test="${deleteMessage == null}">
-							<c:if test="${updateResultMessage == null}">
-								<legend><c:out value="${getResultMessage}" /></legend>
-							</c:if>
-						</c:if>
+						<legend>以下為所點選的使用者帳號：</legend>
 						<hr />
 							<input type="hidden" name="userId" id="userId" value="${managedUserData.userId}" />
 							<input type="hidden" name="account" id="account" value="${managedUserData.account}" />
@@ -253,8 +241,9 @@
 						<input type="button" id="updateAccount" name="update" value="編輯帳號(尚未完成)">
 						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
 						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
+						<hr />
+						<span id="operatResult"></span>
 					</div>
-					<hr />
 				</form>
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 				<script>
@@ -277,19 +266,63 @@
 					function lastCheck(mode) {
 						let choice=confirm("是否要執行特定的操作？");
 						if (choice) {
+							let userId = document.getElementById("userId").value;
+							let account = document.getElementById("account").value;
+							let status = document.getElementById("status").value;
+							
+							let operateResultSpan = document.getElementById("operateResult");
+							let operateResultStr = "...處理中，請稍後";
+							let operateResultIsOk = true;
+							
+							operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+								+ operateResultStr;
+							operateResultSpan.style.color = "black";
+							operateResultSpan.style.fontStyle = "normal";
 							
 							$.ajax({
 								type : "POST",
 								url : "<c:url value='/webUser/ManageWebUser/" + mode + "' />",
 								data : {
-									
+									'userId':userId,
+									'account':account,
+									'status':status
 								},
 								dataType : "json",
 								success : function(resultObj) {
-									
+									if (resultObj.resultCode == 1) {
+										operateResultStr = resultObj.resultMessage;
+										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+												+ operateResultStr;
+										operateResultSpan.style.color = "black";
+										operateResultSpan.style.fontStyle = "normal";
+										/* 顯示彈窗異常訊息 */
+										alert(resultObj.resultMessage);
+									} else if (resultObj.resultCode == 0) {
+										operateResultStr = resultObj.resultMessage;
+										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+												+ operateResultStr;
+										operateResultSpan.style.color = "black";
+										operateResultSpan.style.fontStyle = "normal";
+										/* 顯示彈窗異常訊息 */
+										alert(resultObj.resultMessage);
+									} else if (resultObj.resultCode == -1) {
+										operateResultStr = resultObj.resultMessage;
+										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+												+ operateResultStr;
+										operateResultSpan.style.color = "black";
+										operateResultSpan.style.fontStyle = "normal";
+										/* 顯示彈窗異常訊息 */
+										alert(resultObj.resultMessage);
+									}
 								},
 								error : function(err) {
-									
+									operateResultStr = "發生錯誤，無法執行指定的操作！";
+									operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+											+ operateResultStr;
+									operateResultSpan.style.color = "black";
+									operateResultSpan.style.fontStyle = "normal";
+									/* 顯示彈窗異常訊息 */
+									alert(resultObj.resultMessage);
 								}
 							});
 						}

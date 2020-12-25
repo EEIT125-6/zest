@@ -1,5 +1,6 @@
 package webUser.controller;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,13 +39,16 @@ public class UserInfoController {
 	@PostMapping(value="/webUser/controller/UserInfoController", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doRegisterCheck(
 			@RequestParam(value="inputAccount", required=false, defaultValue="") String account, 
+			@RequestParam(value="inputPassword", required=false, defaultValue="") String password,
 			@RequestParam(value="inputNickname", required=false, defaultValue="") String nickname,
 			@RequestParam(value="inputEmail", required=false, defaultValue="") String email,
 			@RequestParam(value="inputPhone", required=false, defaultValue="") String phone,
+			@RequestParam(value="inputBirth", required=false, defaultValue="1800-01-01") Date birth,
 			@RequestParam(value="register", required=false, defaultValue="undo") String mode,
 			Model model) 
 	{
 		Map<String, String> map = new HashMap<>();
+		/* 檢查帳號是否存在 */
 		if (mode.equals("checkAccount")) {	
 			/* 宣告欲回傳的參數 */
 			Integer accountCheckResult = -1;
@@ -58,6 +62,7 @@ public class UserInfoController {
 			
 			map.put("resultCode", accountCheckResult.toString());
 			map.put("resultMessage", message);
+		/* 檢查稱呼是否存在 */
 		} else if (mode.equals("checkNickname")) {
 			/* 宣告欲回傳的參數 */
 			Integer nicknameCheckResult = -1;
@@ -71,6 +76,7 @@ public class UserInfoController {
 			
 			map.put("resultCode", nicknameCheckResult.toString());
 			map.put("resultMessage", message);
+		/* 檢查Email是否存在 */
 		} else if (mode.equals("checkEmail")) {
 			/* 宣告欲回傳的參數 */
 			Integer emailCheckResult = -1;
@@ -84,6 +90,7 @@ public class UserInfoController {
 			
 			map.put("resultCode", emailCheckResult.toString());
 			map.put("resultMessage", message);
+		/* 檢查電話是否存在 */
 		} else if (mode.equals("checkPhone")) {
 			/* 宣告欲回傳的參數 */
 			Integer phoneCheckResult = -1;
@@ -97,6 +104,7 @@ public class UserInfoController {
 			
 			map.put("resultCode", phoneCheckResult.toString());
 			map.put("resultMessage", message);
+		/* 執行寄送驗證碼 */
 		} else if (mode.equals("sendCheckCode")) {
 			/* 宣告欲回傳的參數 */
 			Boolean sendResult = false;
@@ -126,11 +134,20 @@ public class UserInfoController {
 			map.put("resultCode", sendResult.toString());
 			map.put("resultMessage", message);
 			map.put("resultText", checkCode);
+		/* 驗證帳號重設資訊 */
+		} else if (mode.equals("recovery")) {
+			
 		}
 		
 		return map;
 	}
 	
+	/* 執行重設流程的相關檢查，並交由Ajax回傳 */
+	public @ResponseBody Map<String, String> doRecoveryCheck() {
+		return null;
+	}
+	
+	/* 產生寄送註冊所需的驗證碼 */
 	public String doCreateCheckCode() {
 		String[] leterSpace = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
@@ -149,6 +166,7 @@ public class UserInfoController {
 		return sb.toString();
 	}
 	
+	/* 寄送Email */
 	public Boolean doSendEmail(String account, String email, String checkCode, String mode) 
 			throws Exception {
 		Boolean sendResult = false;
@@ -165,13 +183,16 @@ public class UserInfoController {
 		/* email內文 */
 		String mailContext = "";
 		if (mode.equals("submit")) {
-			mailContext = "親愛的 " + account + " ！<br />" 
-					+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
-					+ "<br />" + checkCode;
+			mailContext = "親愛的 "
+								+ account 
+								+ " ！<br /><br />" 
+								+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
+								+ "<br /><br />" 
+								+ checkCode;
 		} else if (mode.equals("forget")) {
-			mailContext = "親愛的 " + account + " ！<br />" 
+			mailContext = "親愛的 " + account + " ！<br /><br />" 
 					+ "請按下方的連結以重設您的帳號資訊"
-					+ "<br /><a href=" + checkCode + "></a>本連結將定時失效";
+					+ "<br /><br /><a href=" + checkCode + "></a>本連結將定時失效";
 		}
 		
 		Properties props = new Properties();

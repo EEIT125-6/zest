@@ -14,6 +14,7 @@
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
     <title>忘記帳號或密碼</title>
     <style>
         .classimg{
@@ -148,9 +149,9 @@
             	<c:if test="${userFullData.password != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post" >
+                <form method="post" >
                 	<fieldset>
-                		<legend>請進行填寫下列資料以便重新取回您的帳號，如選填的欄位不確定可保持空白</legend>
+                		<legend>請進行填寫下列資料以便重新取回您的帳號，如不確定可保持空白</legend>
                 		<hr />
                 		<label>帳號名稱：</label>
                 		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
@@ -181,12 +182,13 @@
 						<span id="requestSpan"></span>
                 	</fieldset>
                 	<div align="center">
+                		<a href="<c:url value='/webUser/WebUserLogin' /> "><input type="button" id="login" name="login" value="返回登入"></a>
 						<input type="button" id="recovery" name="recovery" value="送出請求">
 						<input type="reset" name="reset" value="重設" onclick="">
 					</div>
 					<hr />
                 </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserForgetForm.js"></script>
                 <script>
 	                $("#recovery").click(function () {
@@ -205,17 +207,19 @@
 	                	let email = document.getElementById("email").value.trim();
 	                	let phone = document.getElementById("phone").value.trim();
 	                	let birth = document.getElementById("birth").value.trim();
+	                	
 	                	let requestSpan = document.getElementById("requestSpan");
 	                	let requestStr;
 	                	let requestIsOk = false;
+	                	let mode = "recovery";
 	                	
 	                	$.ajax({
 							type:"POST",
-				            url:"/WebProject/webUser/WebUserServlet",
+				            url:"/WebProject/webUser/controller/UserInfoController",
 				            data:{
-				            	'recovery':'送出請求',
-				            	'account':account,
-				            	'password':password,
+				            	'register':mode,
+				            	'inputAccount':account,
+				            	'inputPassword':password,
 				            	'email':email,
 				            	'phone':phone,
 				            	'birth':birth

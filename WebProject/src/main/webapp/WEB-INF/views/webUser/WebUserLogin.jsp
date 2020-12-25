@@ -14,6 +14,7 @@
 <head>
    	<%@include file = "../Link_Meta-Include.jsp" %>
    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css"> 
     <title>進行登入</title>
     <style>
         .classimg{
