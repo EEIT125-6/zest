@@ -358,6 +358,18 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return updateResult;
 	}
 	
+	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
+	@Override
+	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
+		int count = 0;
+		/* 取得當前session，產生操作物件並執行刪除 */
+		getSession().delete( (WebUserData) getSession().get(WebUserData.class, deletedUserId));
+		/* 成功則遞增 */
+		count++;
+		return count;
+	}
+	
+	/* 由系統管理員執行的使用者變更 */
 	@Override
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
 		/* 變數宣告 */

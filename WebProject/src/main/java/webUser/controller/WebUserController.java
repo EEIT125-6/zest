@@ -363,7 +363,7 @@ public class WebUserController {
 				userFullData = wus.getWebUserData(account);
 			} catch (SQLException sqlE) {
 				String loginMessageTmp = sqlE.getMessage();
-				loginMessage = loginMessageTmp.split(":")[1];
+				loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
 			}
 		} else {
 			switch(inputCheckResult) {
@@ -452,6 +452,8 @@ public class WebUserController {
 		if (quitMessage.equals("")) {			
 			/* 調用服務裡的方法 */
 			try {
+				quitUserData.setVersion(quitUserData.getVersion() + 1);
+				quitUserData.setStatus("quit");
 				deleteResult = wus.quitWebUserData(quitUserData);
 			} catch (SQLException sqlE) {
 				String quitMessageTmp = sqlE.getMessage();
@@ -464,7 +466,7 @@ public class WebUserController {
 			quitMessage = "感謝您的使用，" + quitUserData.getAccount() + "！我們有緣再見...";
 			/* 清空SessionAttribute */
 			sessionStatus.setComplete();
-			redirectPage = "/webUser/WebUserRegisterForm";
+			redirectPage = "/";
 		} 
 		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
@@ -985,13 +987,6 @@ public class WebUserController {
 		return destinationUrl;
 	}
 	
-	/* 無輸入任何帳號則返回登入 */
-	@GetMapping("/ManageWebUser")
-	public String doGoBackToLogin() 
-	{
-		return "webUser/WebUserLogin";
-	}
-	
 	/* 根據輸入模式執行對應功能 */
 	@PostMapping("/ManageWebUser/{mode}")
 	public @ResponseBody Map<String, String> doAdminOperate(
@@ -1003,7 +998,9 @@ public class WebUserController {
 			) 
 	{
 		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
+		Integer operateResult = -1;
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
@@ -1014,18 +1011,50 @@ public class WebUserController {
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
 			switch(mode) {
-			case "inactive":
-				break;
-			case "active":
-			case "reactive":
-				break;
-			default:
-				operateMessage = "未提供此功能！";
-				break;
+				case "quit":
+					/* 調用服務裡的方法 */
+					try {
+						operateResult = wus.adminChangeWebUserData(userId, status);
+					} catch (SQLException sqlE) {
+						operateMessage = sqlE.getMessage();
+					}
+					break;
+				case "delete":
+					/* 調用服務裡的方法 */
+					try {
+						operateResult = wus.deleteWebUserData(userId);
+					} catch (SQLException sqlE) {
+						operateMessage = sqlE.getMessage();
+					}
+					break;
+				case "active":
+				case "reactive":
+					/* 重新啟用與初次啟用實質上是相同的操作 */
+					status = (status.equals("reactive")) ? "active": status;
+					/* 調用服務裡的方法 */
+					try {
+						operateResult = wus.adminChangeWebUserData(userId, status);
+					} catch (SQLException sqlE) {
+						operateMessage = sqlE.getMessage();
+					}
+					break;
+				default:
+					operateMessage = "未提供此功能！";
+					break;
 			}
 		}
 		
-		return null;
+		/* 成功 */
+		if (operateResult == 1) {
+			operateMessage = "順利完成指定的操作！";
+		} else if (operateResult == 0 && operateMessage.equals("")) {
+			operateMessage = "無法完成指定的操作！";
+		} 
+		
+		map.put("resultCode", operateResult.toString());
+		map.put("resultMessage", operateMessage);
+		
+		return map;
 	}
 	
 	/* 前往顯示註冊資料畫面 */
@@ -1092,6 +1121,13 @@ public class WebUserController {
 	@GetMapping(value = "DisplayManagedUserData")
 	public String doGoDisplayManagedWebUserData() {
 		return "webUser/DisplayManagedUserData";
+	}
+	
+	/* 無輸入任何帳號則返回登入 */
+	@GetMapping("/ManageWebUser")
+	public String doGoBackToLogin() 
+	{
+		return "webUser/WebUserLogin";
 	}
 	
 	/* 使用者註冊資料檢查 */
@@ -1535,6 +1571,8 @@ public class WebUserController {
 		/* 檢查JavaBean物件 */
 		if (userData == null) {
 			checkInputResult = "您似乎沒有登入本系統！請登入後再試一次";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			checkInputResult = "身分驗證失敗，請登入後重試一次！";
 		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
 			checkInputResult = "本帳號無法使用此功能";
 		} else {
@@ -1560,7 +1598,7 @@ public class WebUserController {
 			
 			if (checkResult != 1) {
 				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
-			} else if (checkResult2 == 1) {
+			} else if (checkResult2 == 0) {
 				checkInputResult = "異常的使用者資訊，本帳號已被停用！";
 			} else if (checkResult2 == -1) {
 				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
@@ -1577,6 +1615,8 @@ public class WebUserController {
 		/* 檢查JavaBean物件 */
 		if (userData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			updateResultMessage = "身分驗證失敗，請登入後重試一次！";
 		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
 			updateResultMessage = "本帳號無法使用此功能";
 		} else {
@@ -1636,6 +1676,8 @@ public class WebUserController {
 		/* 檢查JavaBean物件 */
 		if (updatedUserData == null) {
 			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (updatedUserData.getAccountLv().getLv() != Integer.parseInt(updatedUserData.getUserId().substring(0, 1)) - 1) {
+			updateResultMessage = "身分驗證失敗，請登入後重試一次！";
 		} else if (updatedUserData.getStatus().equals("quit") || updatedUserData.getStatus().equals("inactive")) {
 			updateResultMessage = "本帳號無法使用此功能";
 		} 
@@ -1975,6 +2017,8 @@ public class WebUserController {
 		/* 檢查使用者身分 */
 		if (userData == null) {
 			checkMessage = "無法使用本功能，請確定您已經登入本系統！";;
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			checkMessage = "身分驗證失敗，請登入後重試一次！";
 		} else if (userData.getAccountLv().getLv() != -1) {
 			checkMessage = "本帳號無法使用此功能！";
 		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
@@ -2033,11 +2077,27 @@ public class WebUserController {
 			}
 		}
 		
-		/* 檢查狀態 */
-		
-		
-		/* 檢查模式與狀態的匹配 */
-		
+		/* 檢查狀態、檢查模式與狀態的匹配 */
+		if (checkMessage.equals("")) {
+			switch(mode) {
+				case "quit":
+					if (status.equals(mode) || status.equals("inactive")) {
+						checkMessage = "操作模式錯誤";
+					} 
+					break;
+				case "delete":
+					break;
+				case "active":
+				case "reactive":
+					if (status.equals("active")) {
+						checkMessage = "操作模式錯誤";
+					}
+					break;
+				default:
+					checkMessage = "操作模式錯誤";
+					break;
+			}
+		}
 		
 		return checkMessage;
 	}

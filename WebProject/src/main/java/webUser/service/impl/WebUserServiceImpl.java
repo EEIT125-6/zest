@@ -156,6 +156,11 @@ public class WebUserServiceImpl implements WebUserService {
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
 		return webUserDAO.updateWebUserPassword(updatedUserData);
 	}
+	
+	@Override
+	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
+		return webUserDAO.deleteWebUserData(deletedUserId);
+	}
 
 	@Override
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException {

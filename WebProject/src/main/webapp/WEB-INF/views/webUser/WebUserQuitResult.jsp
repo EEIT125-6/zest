@@ -149,9 +149,9 @@
                 <p id = "pPage">${redirectPage}</p>
                 <script>
                 	let directPage = "WebUserLogin";
-                	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "webUser/WebUserLogin") {
-                		document.getElementById("pPage").innerHTML = "登入";
-                		directPage = "WebUserLogin";
+                	if (document.getElementById("pPage").innerHTML == "") {
+                		document.getElementById("pPage").innerHTML = "首頁";
+                		directPage = "/WebProject";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserRegisterForm") {
                 		document.getElementById("pPage").innerHTML = "註冊";
                 		directPage = "WebUserRegisterForm";

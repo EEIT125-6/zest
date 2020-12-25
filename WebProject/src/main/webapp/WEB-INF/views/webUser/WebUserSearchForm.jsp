@@ -227,6 +227,9 @@ ul.slides li img {
 				<input type="button" id="search" name="select" value="執行查詢"> 
 				<input type="reset" name="reset" value="重設條件"
 					onclick="clearMessage()">
+				<c:if test="${userFullData.accountLv.lv == -1}" >
+					<input type="button" id="adminAdd" name="adminAdd" value="新增帳號(尚未完成)">
+				</c:if>
 			</div>
 			<hr />
 		</form>

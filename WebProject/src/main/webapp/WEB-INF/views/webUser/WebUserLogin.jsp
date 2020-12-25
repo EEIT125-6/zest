@@ -248,7 +248,7 @@
 						            		loginStr = "檢查途中遭遇錯誤！";
 						            		loginIsOk = false;
 						            		/* 顯示彈窗訊息 */
-						            		alert(resultSpace[1]);
+						            		alert(resultObj.resultMessage);
 						            	}
 										if (!loginIsOk) {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;

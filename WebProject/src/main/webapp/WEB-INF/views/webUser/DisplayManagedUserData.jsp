@@ -241,15 +241,17 @@
 					<div align="center">
 						<c:choose>
 							<c:when test="${managedUserData.status=='inactive'}">
-								<input type="submit" id="activeAccount" name="update" value="啟用帳號">
+								<input type="button" id="activeAccount" name="update" value="啟用帳號">
 							</c:when>
 							<c:when test="${managedUserData.status=='active'}">
-								<input type="submit" id="quitAccount" name="update" value="停用帳號">
+								<input type="button" id="quitAccount" name="update" value="停用帳號">
 							</c:when>
 							<c:when test="${managedUserData.status=='quit'}">
-								<input type="submit" id="reactiveAccount" name="update" value="恢復帳號">
+								<input type="button" id="reactiveAccount" name="update" value="恢復帳號">
 							</c:when>
 						</c:choose>
+						<input type="button" id="updateAccount" name="update" value="編輯帳號(尚未完成)">
+						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
 						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
 					</div>
 					<hr />
@@ -266,6 +268,10 @@
 				    });
 					$("#reactiveAccount").click(function () {
 						var mode = "reactive";
+						lastCheck(mode);
+				    });
+					$("#deleteAccount").click(function () {
+						var mode = "delete";
 						lastCheck(mode);
 				    });
 					function lastCheck(mode) {

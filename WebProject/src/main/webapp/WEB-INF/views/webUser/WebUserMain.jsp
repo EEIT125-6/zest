@@ -149,7 +149,15 @@
 				</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserMain/Modify' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
-                		<legend>${userFullData.account}</legend>
+                		<legend>
+                			${userFullData.account} 
+                			<c:if test="${userFullData.accountLv.lv == -1}">
+                				<c:out value="-管理員" />
+                			</c:if>
+                			<c:if test="${userFullData.accountLv.lv == 1}">
+                				<c:out value="-店家" />
+                			</c:if>
+            			</legend>
                 		<div align="center">
                 			<hr />
                 			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
@@ -160,7 +168,15 @@
                 <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
-                			<input type="submit" id="select" name="select" value="進行搜索">
+                			<c:if test="${userFullData.accountLv.lv == 0}" >
+                				<input type="submit" id="select" name="select" value="搜索使用者">
+                			</c:if>
+                			<c:if test="${userFullData.accountLv.lv == 1}" >
+                				<input type="submit" id="select" name="select" value="搜索客戶與同業">
+                			</c:if>
+                			<c:if test="${userFullData.accountLv.lv == -1}" >
+                				<input type="submit" id="select" name="select" value="管理使用者">
+                			</c:if>
 							<hr />
 						</div>
                 	</fieldset>
@@ -168,7 +184,7 @@
                 <form action="<c:url value='/webUser/controller/WebUserMain/Quit' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
-                			<input type="submit" id="quit" name="update" value="放棄使用帳戶">
+                			<input type="submit" id="quit" name="quit" value="放棄使用帳戶">
                 			<hr />
 						</div>
                 	</fieldset>

@@ -142,9 +142,9 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <p>${logoutMessage}</p>
-                <p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
+                <p>5秒後將移至首頁，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
                 <script>
-                	let redirectPage = "WebUserLogin";
+                	let redirectPage = "/WebProject";
 	                setTimeout(function () {
 	             	   window.location.href = redirectPage;
 	        	  	}
