@@ -158,8 +158,6 @@
 <!--               </div> -->
 <!--             </div> -->
 <%@include file = "Header-Include.jsp" %>
-<img src="xun/picture/1" />
-<!-- <img src="photo/pic" /> -->
             <div class="container-fluid photo">
                 <!-- <img src="images/backbar2-1.jpg"> -->
                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
@@ -181,6 +179,7 @@
             </div>
 
 <!-- -------------------------------------------------------------- -->
+
             <div class="container"  style="margin-top: 20px;">
             		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">
@@ -244,6 +243,7 @@
         	<c:forEach var="row" items="${AD}">
 	        <c:url value="StoreGetFullstore" var="GOGOURL">
 			<c:param name="id" value="${row.id}" />
+			<c:param name="stname" value="${row.stname}" />
 			</c:url>  
 	        <li><a href="${GOGOURL}"><img src="${row.bannerurl}" alt=""></a></li>
 	         </c:forEach>
@@ -263,7 +263,6 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../js/jquery-3.5.1.min.js"></script>
     <script>
          $(function(){
             let slideNum=0;
@@ -335,6 +334,7 @@
 	                		<c:forEach var="row" items="${ADP}">
 	        				<c:url value="StoreGetFullstore" var="GOURL">
 							<c:param name="id" value="${row.id}" />
+							<c:param name="stname" value="${row.stname}" />
 							</c:url>  
 	                		<a href="${GOURL}"><img src="${row.photourl}" style="width:170px;height: 160px;margin-left:10px;border-radius:5px"></a>
 	                  		</c:forEach>
