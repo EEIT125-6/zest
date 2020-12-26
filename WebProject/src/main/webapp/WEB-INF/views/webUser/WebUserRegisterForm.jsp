@@ -323,7 +323,7 @@
 							let choice=confirm("是否要寄往 " + email + " ?");
 							if (choice) {
 								sendEmailCheckCodeBtn.disabled = true;
-								setTimeout(enableBtn, 60000);
+								setTimeout(enableBtn, 45000);
 								sendEmailCheckCode();
 								function enableBtn() {
 									sendEmailCheckCodeBtn.disabled = false;

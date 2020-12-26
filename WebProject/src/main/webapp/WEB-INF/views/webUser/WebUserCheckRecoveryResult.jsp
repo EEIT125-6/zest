@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>停用流程結束</title>
+    <title>即將導向新畫面</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -144,7 +144,7 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${quitMessage}</p>
+                <p>${recoveryResult}</p>
                 <p>5秒後將移至</p>
                 <p id = "pPage">${redirectPage}</p>
                 <script>
@@ -152,9 +152,9 @@
                 	if (document.getElementById("pPage").innerHTML == "") {
                 		document.getElementById("pPage").innerHTML = "首頁";
                 		directPage = "/WebProject";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserRegisterForm") {
-                		document.getElementById("pPage").innerHTML = "註冊";
-                		directPage = "WebUserRegisterForm";
+                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserResetPassword") {
+                		document.getElementById("pPage").innerHTML = "重設密碼";
+                		directPage = "WebUserResetPassword";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
                 		directPage = "WebUserMain";

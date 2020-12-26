@@ -198,7 +198,17 @@
 	                	if (!checkForm()) {
 	                		alert("輸入的欄位有錯誤，請修正後再次執行!");
 	                	} else {
-	                		sendRecoveryRequest();
+	                		let sendRecoveryUrlBtn = document.getElementById("recovery");
+	                		let email = document.getElementById("email").value.trim();
+							let choice=confirm("是否要寄往 " + email + " ?");
+							if (choice) {
+								sendRecoveryUrlBtn.disabled = true;
+								setTimeout(enableBtn, 45000);
+		                		sendRecoveryRequest();
+								function enableBtn() {
+									sendRecoveryUrlBtn.disabled = false;
+								}
+							}
 	                	}
 	                }
 	                function sendRecoveryRequest() {
@@ -209,31 +219,37 @@
 	                	let birth = document.getElementById("birth").value.trim();
 	                	
 	                	let requestSpan = document.getElementById("requestSpan");
-	                	let requestStr;
+	                	let requestStr = "...處理中，請稍後";
 	                	let requestIsOk = false;
 	                	let mode = "recovery";
 	                	
+	                	requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+	    					+ requestStr;
+	                	requestSpan.style.color = "black";
+	                	requestSpan.style.fontStyle = "normal";
+	                	
 	                	$.ajax({
 							type:"POST",
-				            url:"/WebProject/webUser/controller/UserInfoController",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
 				            data:{
 				            	'register':mode,
 				            	'inputAccount':account,
 				            	'inputPassword':password,
-				            	'email':email,
-				            	'phone':phone,
-				            	'birth':birth
+				            	'inputEmail':email,
+				            	'inputPhone':phone,
+				            	'inputBirth':birth
 				            },
-				            success:function(result) {
-				            	let resultSpace = result.split(",");
-				            	if(resultSpace[0] == 'true') {
+				            success:function(resultObj) {
+				            	if(resultObj.resultCode == 'true') {
 				            		requestStr = "信件已成功寄出！";
 				            		requestIsOk = true;
-				            	} else if(resultSpace[0] == 'false') {
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	} else if(resultObj.resultCode == 'false') {
 				            		requestStr = "信件未能寄出！";
 				            		requestIsOk = false;
 				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultSpace[1]);
+				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!requestIsOk) {
 				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
@@ -247,7 +263,7 @@
 				            },
 				            error:function(err) {
 				            	requestStr = "發生錯誤，無法執行";
-				            	requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
+				            	requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
 				            	requestSpan.style.color = "red";
 				            	requestSpan.style.fontStyle = "italic";
 				            }

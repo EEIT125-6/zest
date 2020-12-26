@@ -331,7 +331,7 @@ public class WebUserController {
 	}
 	
 	/* 執行登入檢查 */
-	@PostMapping(value = "/controller/WebUserLogin", produces="application/json; charset=UTF-8")
+	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			@RequestParam(value = "account", defaultValue="") String account,
@@ -902,7 +902,7 @@ public class WebUserController {
 			}
 			
 			/* 預防性後端輸入檢查 */
-			getResultMessage = doSelectUserDataInputCheck(selectedParameters, userData);
+			getResultMessage = doCheckSelectUserDataInput(selectedParameters, userData);
 		}
 
 		if (getResultMessage.equals("")) {
@@ -1000,7 +1000,7 @@ public class WebUserController {
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
 		/* 預防性後端輸入檢查 */
-		operateMessage = doAdminInputCheck(userData, userId, account, status, mode);
+		operateMessage = doCheckAdminInput(userData, userId, account, status, mode);
 		
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
@@ -1047,6 +1047,64 @@ public class WebUserController {
 		
 		map.put("resultCode", operateResult.toString());
 		map.put("resultMessage", operateMessage);
+		
+		return map;
+	}
+	
+	/* 執行密碼重設 */
+	@PostMapping(value = "/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doResetWebUserPassword(
+			@RequestParam(value = "inputUserId", required = false, defaultValue = "") String userId,
+			@RequestParam(value = "inputPassword", required = false, defaultValue = "") String password
+			) 
+	{
+		Map<String, String> map = new HashMap<>();
+		
+		/* 宣告參數 */
+		Integer inputCheckResult = -1;
+		Integer resetResult = -3;
+		String resetMessage = "";
+		
+		/* 預防性後端檢查，正常時回傳1 */
+		inputCheckResult = doCheckResetInput(userId, password);
+		
+		if (inputCheckResult == 1) {
+			/* 調用服務裡的方法 */
+			try {
+				resetResult = wus.resetWebUserPassword(userId, password);
+			} catch (SQLException sqlE) {
+				String loginMessageTmp = sqlE.getMessage();
+				resetMessage = loginMessageTmp.split(":")[1];
+			}
+		} else {
+			switch(inputCheckResult) {
+				case 0:
+				case -1:
+				case -2:
+				case -3:
+				case -4:
+					resetMessage = "無效的使用者身分";
+					break;
+				case 2:
+					resetMessage = "密碼不可為空白";
+					break;
+				case 3:
+					resetMessage = "密碼長度不足，至少需8個字元";
+					break;
+				case 4:
+					resetMessage = "密碼長度過長，最多僅20個字元";
+					break;
+				case 5:
+					resetMessage = "密碼不可以數字開頭";
+					break;
+				case 6:
+					resetMessage = "密碼不符合格式";
+					break;
+			}
+		}
+		
+		map.put("resultCode", resetResult.toString());
+		map.put("resultMessage", resetMessage);
 		
 		return map;
 	}
@@ -1122,6 +1180,12 @@ public class WebUserController {
 	public String doGoBackToLogin() 
 	{
 		return "webUser/WebUserLogin";
+	}
+	
+	/* 前往重設密碼 */
+	@GetMapping("/WebUserResetPassword")
+	public String doGoResetPassword() {
+		return "webUser/WebUserResetPassword";
 	}
 	
 	/* 使用者註冊資料檢查 */
@@ -1932,7 +1996,7 @@ public class WebUserController {
 		return updateResultMessage;
 	}
 	
-	public String doSelectUserDataInputCheck(String selectedParameters, WebUserData userData) {
+	public String doCheckSelectUserDataInput(String selectedParameters, WebUserData userData) {
 		String checkResult = "";
 		
 		String selectedAccount = selectedParameters.split(":")[0];
@@ -2005,7 +2069,7 @@ public class WebUserController {
 		return checkResult;
 	}
 	
-	public String doAdminInputCheck(WebUserData userData, String userId, String account, String status, String mode) {
+	public String doCheckAdminInput(WebUserData userData, String userId, String account, String status, String mode) {
 		String checkMessage = "";
 		
 		/* 檢查使用者身分 */
@@ -2094,5 +2158,37 @@ public class WebUserController {
 		}
 		
 		return checkMessage;
+	}
+	
+	public Integer doCheckResetInput(String userId, String password) {
+		Integer inputCheckResult = 1;
+		
+		/* 使用者Id */
+		if (userId.equals("")) {
+			inputCheckResult = 0;
+		} else if(userId.length() < 7) {
+			inputCheckResult = -1;
+		} else if(userId.length() > 7) {
+			inputCheckResult = -2;
+		} else if (userId.matches("[0-2]{1}[0]{8}")) {
+			inputCheckResult = -3;
+		} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
+			inputCheckResult = -4;
+		} 
+		
+		/* 使用者密碼 */
+		if (password.equals("")) {
+			inputCheckResult = 2;
+		} else if (password.length() < 8) {
+			inputCheckResult = 3;
+		} else if (password.length() > 20) {
+			inputCheckResult = 4;
+		} else if (password.matches("[1-9]{1}.")) {
+			inputCheckResult = 5;
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			inputCheckResult = 6;
+		} 
+		
+		return inputCheckResult;
 	}
 }
