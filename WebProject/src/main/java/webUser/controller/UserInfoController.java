@@ -18,6 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,10 @@ import webUser.service.WebUserService;
 @Controller
 @SessionAttributes({"registerEmail", "checkCode", "recoveryResult", "redirectPage", "userId"})
 public class UserInfoController {
+	/* ServletContext */
+	@Autowired
+	ServletContext context;
+	
 	/* WebUserData Service */
 	@Autowired
 	WebUserService wus;

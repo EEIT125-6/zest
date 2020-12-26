@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +52,10 @@ import webUser.service.WillingService;
 @Controller
 @RequestMapping("/webUser")
 public class WebUserController {
+	/* ServletContext */
+	@Autowired
+	ServletContext context;
+	
 	/* WebUserData Service */
 	@Autowired
 	WebUserService wus;

@@ -46,7 +46,7 @@ public class RootAppConfig {
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		/* 掃描的package暫時留空，有需要時請填入 */
-		factory.setPackagesToScan(new String[] { "xun" });
+		factory.setPackagesToScan(new String[] { "xun", "webUser" });
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;
@@ -67,8 +67,8 @@ public class RootAppConfig {
 		properties.put("hibernate.format_sql", Boolean.TRUE);
 		properties.put("default_batch_fetch_size", 10);
 		properties.put("hibernate.hbm2ddl.auto", "update");
-		properties.put("hibernate.transaction.coordinator_class","jdbc"); // By Mimicker0903-12-13 原本的例子 有特別填寫個 所以補上
-		properties.put("hibernate.bytecode.use_reflection_optimizer","false"); // By Mimicker0903-12-13 映射優化 取消
+//		properties.put("hibernate.transaction.coordinator_class","jdbc"); // By Mimicker0903-12-13 原本的例子 有特別填寫個 所以補上
+//		properties.put("hibernate.bytecode.use_reflection_optimizer","false"); // By Mimicker0903-12-13 映射優化 取消
 		return properties;
 	}
 }

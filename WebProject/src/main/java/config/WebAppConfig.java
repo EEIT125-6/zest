@@ -15,10 +15,10 @@ import xun.AOP.LogAspect;
 
 @Configuration
 @EnableWebMvc
-/* 掃描的package暫時留空，有需要時請填入 */
+/* 掃描的package */
 @ComponentScan({
 	"config", 
-	"webUser", 
+	"webUser",
 	"xun"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
