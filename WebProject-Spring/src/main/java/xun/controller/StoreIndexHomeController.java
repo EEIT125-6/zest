@@ -18,10 +18,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import xun.model.StoreBean;
 import xun.service.StoreService;
 @Controller
+@SessionAttributes("sa")
 public class StoreIndexHomeController {
 	
 	@Autowired
@@ -37,6 +39,9 @@ public class StoreIndexHomeController {
 		List<StoreBean> list_AD = ss.getAdvertisementstore();
 		model.addAttribute("ADP", list_ADP);
 		model.addAttribute("AD", list_AD);
+		
+		System.out.println("sasasasasasa:::::"+model.getAttribute("sa"));
+		
 		return "Index1";
 	}
 	
