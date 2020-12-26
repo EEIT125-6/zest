@@ -66,7 +66,7 @@ public class ProductCUD_Controller {
 //		處理圖片
 		if(!file.isEmpty()) {
 		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
-		String FileName = file.getOriginalFilename();
+		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 		String FileFormat = FileName.split("\\.")[1];
 
@@ -156,7 +156,7 @@ public class ProductCUD_Controller {
 			
 			}else {
 			String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
-			String FileName = file.getOriginalFilename();
+			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
 

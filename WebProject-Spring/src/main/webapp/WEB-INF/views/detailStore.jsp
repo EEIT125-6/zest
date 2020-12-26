@@ -109,16 +109,16 @@
 <!--             </div> -->
 
 <!-- -------------------------------------------------------------- -->
-            <div class="container-fluid photo" style="background-image: url('${bannerurl}');background-size:100% 100%">
+            <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
             	<%if(true){ %>
-		<c:url value="Update" var="EDITURL">
+		<c:url value="/Update" var="EDITURL">
 <%-- 			<c:param name="stname" value="${stname1}" /> --%>
 			<c:param name="id" value="${id}" />	
 		</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
-		<c:url value="Insert" var="CEATEURL">
+		<c:url value="/Insert" var="CEATEURL">
 		</c:url> 
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
@@ -129,14 +129,14 @@
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
 			<span>|</span>
-		<c:url value="UpdatePhoto" var="photoURL">
+		<c:url value="/UpdatePhoto" var="photoURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"></c:param>
 		<c:param name="photo" value="photo"></c:param>
 		</c:url>
 			<a href="${photoURL}">修改店家photo</a>
 			<span>|</span>
-		<c:url value="UpdateBanner" var="bannerURL">
+		<c:url value="/UpdateBanner" var="bannerURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"/>
 		<c:param name="banner" value="banner"></c:param>
@@ -144,7 +144,7 @@
 			<a href="${bannerURL}">修改店家banner</a>
 			
 			<span>|</span>
-			<form action="InsertProduct" method="GET" style="display:inline">
+			<form action="/InsertProduct" method="GET" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
@@ -209,12 +209,12 @@
 								    <div class="card" style="background:#f28633;">
 								    <c:if test="${row1.product_picture != null}">
 								    	<div class="imgBx">
-				             				<img src="${row1.product_picture}" style="border-radius: 7 px;"/>
+				             				<img src="${pageContext.request.contextPath}/${row1.product_picture}" style="border-radius: 7 px;"/>
 				             			</div>	
 				             		</c:if>
 				             		<c:if test="${row1.product_picture == null }">
 								        <div class="imgBx" >
-				    	         			<img src="Images/LOGO1-removebg-preview.png" style="border-radius: 7 px;"/>
+				    	         			<img src="${pageContext.request.contextPath}/Images/LOGO1-removebg-preview.png" style="border-radius: 7 px;"/>
 								        </div>
 				             		</c:if>
 								        <div class="contentBx">

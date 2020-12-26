@@ -173,7 +173,7 @@ public class StoreCUD_Controller {
 //		String fakePath = "C:\\ProjectGithub\\";
 		
 		String filePath = request.getSession().getServletContext().getRealPath("");
-		String FileName = file.getOriginalFilename();
+		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 		String fakeFilePath =fakePath+FileName;
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
@@ -221,7 +221,7 @@ public class StoreCUD_Controller {
 		String filePath = request.getSession().getServletContext().getRealPath("");
 		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
 		
-		String FileName = file.getOriginalFilename();
+		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 		
 		String fakeFilePath =fakePath+FileName;
 		

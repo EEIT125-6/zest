@@ -7,7 +7,9 @@
 		<a href="${pageContext.request.contextPath}/"> <!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
 			<%-- 		 <c:set var = "logo" value = "/Images/LOGO1-removebg-preview.png"/> --%>
 			<c:set var="logo" value="LOGO1-removebg-preview.png" /> <%-- 		<img src="photo/<c:out value = "${logo }"/>" --%>
-			<img src="Images/LOGO1-removebg-preview.png"
+			
+<!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
+			<img src="${pageContext.request.contextPath}/Images/LOGO1-removebg-preview.png"
 			<%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
 			style="float: left; height: 70px;"></a>
 		<p

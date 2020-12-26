@@ -139,7 +139,6 @@ body {
 </style>
 </head>
 <body>
-
 		<%@include file ="Header-Include-prototype.jsp" %>
             <div class="container-fluid " style="margin-top:10px">
                 <!-- <img src="images/backbar2-1.jpg"> -->
@@ -298,36 +297,170 @@ body {
       
       
 		<div class="test1" style="margin-bottom:50px;">
-		<c:forEach var="row" items="${Results}">
+			<div id="ajax"></div>
+<%-- 		<c:forEach var="row" items="${Results}"> --%>
 
-				<c:url value="StoreGetFullstore" var="GOURL">
-				<c:param name="id" value="${row.id}" />
-				<c:param name="stname" value="${row.stname}" />				
-				</c:url>
-			<a href="${GOURL}" style="text-decoration:none;color:black">  
-			    <div class="outside" >
-       				 	<div class="photo"  style="background-image: url('${row.photourl}');background-size:100% 100%">
+<%-- 				<c:url value="StoreGetFullstore" var="GOURL"> --%>
+<%-- 				<c:param name="id" value="${row.id}" /> --%>
+<%-- 				<c:param name="stname" value="${row.stname}" />				 --%>
+<%-- 				</c:url> --%>
+<%-- 			<a href="${GOURL}" style="text-decoration:none;color:black">   --%>
+<!-- 			    <div class="outside" > -->
+<%--        				 	<div class="photo"  style="background-image: url('${row.photourl}');background-size:100% 100%"> --%>
 
-      				  	</div>
-				        	<div class="textdiv" style="font-size: 135%">
-				            <h1 class="h11" >
-				                ${row.stname }
-				            </h1>
-				            <div class="postion">
-				                ${row.saddress }
-				            </div>
-				            <hr>
-				            <span class="itdc">
-				                ${row.sclass}<br>
-				                ${row.stitd}	
-				            </span>
-			        	</div>
-			    </div>
-			</a> 
+<!--       				  	</div> -->
+<!-- 				        	<div class="textdiv" style="font-size: 135%"> -->
+<!-- 				            <h1 class="h11" > -->
+<%-- 				                ${row.stname } --%>
+<!-- 				            </h1> -->
+<!-- 				            <div class="postion"> -->
+<%-- 				                ${row.saddress } --%>
+<!-- 				            </div> -->
+<!-- 				            <hr> -->
+<!-- 				            <span class="itdc"> -->
+<%-- 				                ${row.sclass}<br> --%>
+<%-- 				                ${row.stitd}	 --%>
+<!-- 				            </span> -->
+<!-- 			        	</div> -->
+<!-- 			    </div> -->
+<!-- 			</a>  -->
 
-		</c:forEach>
+<%-- 		</c:forEach> --%>
 		</div>
+<!-- 		----------------AJAX 大餅   START----------------------------- -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript">
+		var context = "";
+		$(document).ready(function(){
 		
+			var flag = 0;
+				
+				$.ajax({
+						
+						type:"GET",
+// 						url:"StoreGetClassStoreAjax/${sclass}",
+						url:"StoreGetClassStoreAjax",
+						data:{
+							'sclass':"${sclass}",
+							'stname':"${stname}",
+							'limit':3,
+							'offset':flag
+						},
+						datatype:'json',
+// 						datatype:'html',
+
+						success:function (data){
+				for(var i = 0; i < data.length;i++){
+					context +=
+						"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"' id=a"+data[i].id+"  style='text-decoration:none;color:black'> "+ 
+// 						"<a href='StoreGetFullstore'"+"id=a"+data[i].id+"  style='text-decoration:none;color:black'> "+
+						    "<div class='outside' >"+
+			       				 	"<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+		
+			      				  	"</div>"+
+							        	"<div class='textdiv' style='font-size: 135%'>"+
+							            "<h1 class='h11' >"+
+// 							                ${row.stname }
+							                data[i].stname+
+							            "</h1>"+
+							            "<div class='postion'>"+
+// 							                ${row.saddress }
+							                data[i].saddress+
+							            "</div>"+
+							            "<hr>"+
+							            "<span class='itdc'>"+
+// 							                ${row.sclass}<br>
+							                data[i].sclass+"<br>"+
+// 							                ${row.stitd}	
+							                data[i].stitd+
+							            "</span>"+
+						        	"</div>"+
+						    "</div>"+
+						"</a>" ;
+// 					$("#a"+data[i].id).on("click",function(event){
+						
+// 						event.preventDefault();
+// 						$.ajax({
+// 							type:"POST",
+// 							url:"StoreGetFullstore/",
+// 							data:{
+// 								"id":data[i].id,
+// 								"stname":data[i].stname
+// 							},
+// 							contentType:"application/x-www-form-urlencoded",
+// 							success : function(suc) {
+							
+// 							}
+// 						});
+// 					});
+				
+				}
+						$("#ajax").html(context)
+// 							console.log(data);
+// 							console.log(data[0].stname);						
+// 							console.log(data[1].stname);
+
+							flag += 3;
+						}
+// 						error:function (err) {
+// 							alert(err.Message);
+// 						}
+				})
+
+				$(window).scroll(function(){
+					
+					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+						
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'limit':3,
+								'offset':flag
+							},
+							datatype:'json',
+							success:function (data){
+								for(var i = 0; i < data.length;i++){
+									context +=
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+							       				 "<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+//				 							                ${row.stname }
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+//				 							                ${row.saddress }
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+//				 							                ${row.sclass}<br>
+											                data[i].sclass+"<br>"+
+//				 							                ${row.stitd}	
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+							}
+								flag += 3;
+								$("#ajax").html(context);
+								
+					
+							}
+					})
+					}
+				});
+
+			});
+		
+		</script>
+<!-- 		----------------AJAX 大餅   END----------------------------- -->
 		</div>
 	<div class="col-sm-3">
 	</div>
@@ -345,7 +478,7 @@ body {
 
 
 <!-- ---------------------------------------- -->
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
    <i class="fas fa-chevron-up"></i>
 </a>
