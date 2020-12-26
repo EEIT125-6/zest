@@ -4,16 +4,19 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /* 永續類別 */
 @Entity
 /* 定義表格名 */
-@Table(name="WebUserData")
-public class WebUserData implements Serializable{
+@Table(name="WebUserInfo")
+public class WebUserData implements Serializable{	
 	private static final long serialVersionUID = 1L;
 	
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
@@ -31,8 +34,6 @@ public class WebUserData implements Serializable{
 	private String lastName;
 	@Column(nullable = false , unique = true , columnDefinition="nvarchar(20)")
 	private String nickname;
-	@Column(nullable = false , unique = false , columnDefinition="char(1)")
-	private String gender;
 	@Column(nullable = false , unique = false , columnDefinition="date")
 	private Date birth;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(50)")
@@ -41,14 +42,8 @@ public class WebUserData implements Serializable{
 	private String email;
 	@Column(nullable = false , unique = true , columnDefinition="varchar(11)")
 	private String phone;
-	@Column(nullable = false , unique = false , columnDefinition="char(1)")
-	private String getEmail;
-	@Column(nullable = false , unique = false , columnDefinition="char(3)")
-	private String locationCode;
 	@Column(nullable = false , unique = false , columnDefinition="date")
 	private Date joinDate;
-	@Column(nullable = true , unique = false , columnDefinition="int default 0")
-	private Integer lv;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(65)")
 	private String addr0;
 	@Column(nullable = true , unique = false , columnDefinition="nvarchar(65) default '' ")
@@ -61,18 +56,36 @@ public class WebUserData implements Serializable{
 	private Integer version;
 	@Column(nullable = true , unique = false , columnDefinition="varchar(8) default 'inactive' ")
 	private String status;
+	@Column(nullable = false , unique = true , columnDefinition="varchar(255) ")
+	private String iconUrl;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "lv")
+	private UserIdentity accountLv;	
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "genderCode")
+	private Gender gender;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "willingCode")
+	private UserWilling getEmail;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cityCode")
+	private CityInfo locationInfo;
 	
 	/* 無參數建構子 */
 	public WebUserData() {
 		super();
 	}
-	
+
 	/* 帶參數建構子 */
-	public WebUserData(String userId, String account, String password, String firstName, String lastName, String nickname,
-			String gender, Date birth, String fervor, String email, String phone, String getEmail,
-			String locationCode, Date joinDate, Integer lv, 
-			String addr0, String addr1, String addr2, BigDecimal zest,
-			Integer version, String status) {
+	public WebUserData(String userId, String account, String password, String firstName, String lastName,
+			String nickname, Date birth, String fervor, String email, String phone, Date joinDate, String addr0,
+			String addr1, String addr2, BigDecimal zest, Integer version, String status, String iconUrl,
+			UserIdentity accountLv, Gender gender, UserWilling getEmail,
+			CityInfo locationInfo) {
 		super();
 		this.userId = userId;
 		this.account = account;
@@ -80,21 +93,22 @@ public class WebUserData implements Serializable{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickname = nickname;
-		this.gender = gender;
 		this.birth = birth;
 		this.fervor = fervor;
 		this.email = email;
 		this.phone = phone;
-		this.getEmail = getEmail;
-		this.locationCode = locationCode;
 		this.joinDate = joinDate;
-		this.lv = lv;
 		this.addr0 = addr0;
 		this.addr1 = addr1;
 		this.addr2 = addr2;
 		this.zest = zest;
 		this.version = version;
 		this.status = status;
+		this.iconUrl = iconUrl;
+		this.accountLv = accountLv;
+		this.gender = gender;
+		this.getEmail = getEmail;
+		this.locationInfo = locationInfo;
 	}
 
 	/* setter & getter */
@@ -146,14 +160,6 @@ public class WebUserData implements Serializable{
 		this.nickname = nickname;
 	}
 
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
 	public Date getBirth() {
 		return birth;
 	}
@@ -186,36 +192,12 @@ public class WebUserData implements Serializable{
 		this.phone = phone;
 	}
 
-	public String getGetEmail() {
-		return getEmail;
-	}
-
-	public void setGetEmail(String getEmail) {
-		this.getEmail = getEmail;
-	}
-
-	public String getLocationCode() {
-		return locationCode;
-	}
-
-	public void setLocationCode(String locationCode) {
-		this.locationCode = locationCode;
-	}
-
 	public Date getJoinDate() {
 		return joinDate;
 	}
 
 	public void setJoinDate(Date joinDate) {
 		this.joinDate = joinDate;
-	}
-
-	public Integer getLv() {
-		return lv;
-	}
-
-	public void setLv(Integer lv) {
-		this.lv = lv;
 	}
 
 	public String getAddr0() {
@@ -264,5 +246,45 @@ public class WebUserData implements Serializable{
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
+	public UserIdentity getAccountLv() {
+		return accountLv;
+	}
+
+	public void setAccountLv(UserIdentity accountLv) {
+		this.accountLv = accountLv;
+	}
+
+	public UserWilling getGetEmail() {
+		return getEmail;
+	}
+
+	public void setGetEmail(UserWilling getEmail) {
+		this.getEmail = getEmail;
+	}
+	
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public CityInfo getLocationInfo() {
+		return locationInfo;
+	}
+
+	public void setLocationInfo(CityInfo locationInfo) {
+		this.locationInfo = locationInfo;
 	}
 }

@@ -4,8 +4,11 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import webUser.model.WebUserData;
 
+@Repository
 public interface WebUserService {
 	/* 檢查Id是否存在 -1->異常、0->不存在、1->存在 */
 	public Integer checkUserIdExist(String inputUserId) throws SQLException;
@@ -25,6 +28,21 @@ public interface WebUserService {
 	/* 檢查電話是否已使用 -1->異常、0->不存在、1->存在 */
 	public Integer checkPhoneExist(String inputPhone) throws SQLException;
 	
+	/* 驗證使用者資料 */
+	public WebUserData checkRecoveryInfo(String email, String phone, Date birth) throws SQLException;
+	
+	/* 驗證使用者資料 */
+	public WebUserData checkRecoveryInfo(String account, String email, String phone, Date birth) throws SQLException;
+	
+	/* 驗證使用者資料 */
+	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException;
+	
+	/* 驗證使用者資料 */
+	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException;
+	
+	/* 檢查密碼 -1->異常、0->錯誤、1->正確 */
+	public Integer checkResetPassword(String inputUserId, String inputPassword) throws SQLException;
+	
 	/* 執行資料新增 1->成功、0->失敗 */
 	public Integer insertWebUserData(WebUserData registerData) throws SQLException;
 	
@@ -43,9 +61,6 @@ public interface WebUserService {
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
 	
-	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
-	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
-	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
 	
@@ -55,8 +70,8 @@ public interface WebUserService {
 	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
 	
-	/* 驗證使用者資料 */
-	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException;
+	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
+	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
 	
 	/* 執行重設 -1->異常、0->失敗、1->成功 */
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException;
