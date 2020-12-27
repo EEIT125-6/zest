@@ -1,10 +1,13 @@
 package webUser.controller;
 
 import java.math.BigDecimal;
+
 import java.sql.Date;
 import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,7 @@ import webUser.model.Gender;
 import webUser.model.UserIdentity;
 import webUser.model.UserWilling;
 import webUser.model.WebUserData;
+
 import webUser.service.FervorService;
 import webUser.service.GenderService;
 import webUser.service.IdentityService;
@@ -38,8 +42,8 @@ import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import webUser.service.WillingService;
 
-@SessionAttributes(
-		{"registerEmail", 
+@SessionAttributes({
+		"registerEmail", 
 		"checkCode", 
 		"willingList", 
 		"identityList", 
@@ -48,7 +52,8 @@ import webUser.service.WillingService;
 		"cityInfoList",
 		"reg_webUser",
 		"userFullData",
-		"managedUserData"})
+		"managedUserData"
+		})
 @Controller
 @RequestMapping("/webUser")
 public class WebUserController {
@@ -92,6 +97,7 @@ public class WebUserController {
 		List<FoodFervor> fervorList = fvs.getFoodFervorList();
 		List<Gender> genderList = gds.getGenderList();
 		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
+		
 		/* 設定入Model中 */
 		model.addAttribute("willingList", willingList);
 		model.addAttribute("identityList", identityList);
@@ -346,7 +352,7 @@ public class WebUserController {
 	{
 		/* 宣告欲回傳的參數 */
 		Map<String, String> map = new HashMap<>();
-		Integer inputCheckResult = -1;
+		String inputCheckResult = "";
 		Integer accountCheckResult = -3;
 		String loginMessage = "";
 		WebUserData userFullData = new WebUserData();
@@ -354,7 +360,7 @@ public class WebUserController {
 		/* 預防性後端檢查，正常時回傳1 */
 		inputCheckResult = doCheckLoginInput(account, password);
 		
-		if (inputCheckResult == 1) {
+		if (inputCheckResult.equals("")) {
 			/* 調用服務裡的方法 */
 			try {
 				/* 檢查登入 */
@@ -365,40 +371,7 @@ public class WebUserController {
 				String loginMessageTmp = sqlE.getMessage();
 				loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
 			}
-		} else {
-			switch(inputCheckResult) {
-				case 0:
-					loginMessage = "帳號不可為空白";
-					break;
-				case -1:
-					loginMessage = "帳號長度不足";
-					break;
-				case -2:
-					loginMessage = "帳號長度過長";
-					break;
-				case -3:
-					loginMessage = "帳號不可以數字開頭";
-					break;
-				case -4:
-					loginMessage = "帳號不符合格式";
-					break;
-				case 2:
-					loginMessage = "密碼不可為空白";
-					break;
-				case 3:
-					loginMessage = "密碼長度不足，至少需8個字元";
-					break;
-				case 4:
-					loginMessage = "密碼長度過長，最多僅20個字元";
-					break;
-				case 5:
-					loginMessage = "密碼不可以數字開頭";
-					break;
-				case 6:
-					loginMessage = "密碼不符合格式";
-					break;
-			}
-		}
+		} 
 		
 		if (accountCheckResult == 1) {
 			loginMessage = "歡迎 " + userFullData.getNickname() + " ！";
@@ -805,8 +778,8 @@ public class WebUserController {
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
 		
-		/* 檢查身分 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 檢查身分 */
 		if (userData == null) {
 			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
 		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
@@ -1067,45 +1040,19 @@ public class WebUserController {
 		Map<String, String> map = new HashMap<>();
 		
 		/* 宣告參數 */
-		Integer inputCheckResult = -1;
 		Integer resetResult = -3;
 		String resetMessage = "";
 		
 		/* 預防性後端檢查，正常時回傳1 */
-		inputCheckResult = doCheckResetInput(userId, password);
+		resetMessage = doCheckResetInput(userId, password);
 		
-		if (inputCheckResult == 1) {
+		if (resetMessage.equals("")) {
 			/* 調用服務裡的方法 */
 			try {
 				resetResult = wus.resetWebUserPassword(userId, password);
 			} catch (SQLException sqlE) {
 				String loginMessageTmp = sqlE.getMessage();
 				resetMessage = loginMessageTmp.split(":")[1];
-			}
-		} else {
-			switch(inputCheckResult) {
-				case 0:
-				case -1:
-				case -2:
-				case -3:
-				case -4:
-					resetMessage = "無效的使用者身分";
-					break;
-				case 2:
-					resetMessage = "密碼不可為空白";
-					break;
-				case 3:
-					resetMessage = "密碼長度不足，至少需8個字元";
-					break;
-				case 4:
-					resetMessage = "密碼長度過長，最多僅20個字元";
-					break;
-				case 5:
-					resetMessage = "密碼不可以數字開頭";
-					break;
-				case 6:
-					resetMessage = "密碼不符合格式";
-					break;
 			}
 		}
 		
@@ -1203,7 +1150,6 @@ public class WebUserController {
 		String submitMessage = "";
 		/* 是否符合條件 */
 		Boolean inputIsOk = true;
-		
 		/* 取出參數 */
 		String account = reg_webUser.getAccount();
 		String password = reg_webUser.getPassword();
@@ -1222,7 +1168,6 @@ public class WebUserController {
 		String genderCode = reg_webUser.getGender().getGenderCode();
 		String willingCode = reg_webUser.getGetEmail().getWillingCode();
 		Integer cityCode = reg_webUser.getLocationInfo().getCityCode();
-		
 		/* 檢查身分 */
 		switch (lv) {
 			case -1:
@@ -1235,161 +1180,36 @@ public class WebUserController {
 				break;
 		}
 		submitMessage = (inputIsOk) ? "" : "帳號身分錯誤";
-
 		/* 檢查帳號 */
 		if (inputIsOk) {
-			if (account.equals("")) {
-				submitMessage = "帳號不可為空白";
-				inputIsOk = false;
-			} else if (account.length() < 8 || account.length() > 20) {
-				submitMessage = "帳號長度不符格式，僅接受8~20個字元";
-				inputIsOk = false;
-			} else if (account.matches("[1-9]{1}.")) {
-				submitMessage = "帳號不可以數字開頭";
-				inputIsOk = false;
-			} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-				submitMessage = "帳號不符合格式";
-				inputIsOk = false;
-			} else {
-				Integer accountCheckResult = -1;
-
-				/* 調用服務裡的方法 */
-				try {
-					accountCheckResult = wus.checkAccountExist(account);
-				} catch (SQLException sqlE) {
-					submitMessage = sqlE.getMessage();
-					inputIsOk = false;
-				}
-
-				if (accountCheckResult == 0) {
-					inputIsOk = true;
-				} else if (accountCheckResult == 1) {
-					submitMessage = "帳號已存在，請挑選別的名稱作為帳號";
-					inputIsOk = false;
-				}
-			}
+			String resultTmp = doCheckAccount(account, "submit");
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
 		/* 檢查密碼 */
 		if (inputIsOk) {
-			if (password.equals("")) {
-				submitMessage = "密碼不可為空白";
-				inputIsOk = false;
-			} else if (password.length() < 8 || password.length() > 20) {
-				submitMessage = "密碼長度不符格式，僅接受8~20個字元";
-				inputIsOk = false;
-			} else if (password.matches("[1-9]{1}.")) {
-				submitMessage = "密碼不可以數字開頭";
-				inputIsOk = false;
-			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-				submitMessage = "密碼不符合格式";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckPassword(password);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 中文姓氏 */
+		/* 檢查中文姓氏 */
 		if (inputIsOk) {
-			if (firstName.equals("")) {
-				submitMessage = "姓氏不可為空白";
-				inputIsOk = false;
-			} else if (firstName.length() > 3) {
-				submitMessage = "姓氏長度過長，最多僅3個字元";
-				inputIsOk = false;
-			} else {
-				Integer charCountBegin = 0;
-				Boolean firstNameIsOk = true;
-				/* 16進位表示 */
-				Integer charChineseWordCountBegin = 0x4e00;
-				Integer charChineseWordCountEnd = 0x9fff;
-				
-				for (Integer charIndex = charCountBegin; charIndex < firstName.length(); charIndex++) {
-					int firstNameChar = firstName.charAt(charIndex);
-
-					if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
-						firstNameIsOk = false;
-					}
-					if (!firstNameIsOk) {
-						break;
-					}
-				}
-				
-				if (!firstNameIsOk) {
-					submitMessage = "姓氏中含有非中文";
-					inputIsOk = false;
-				} else {
-					inputIsOk = true;
-				}
-			}
+			String resultTmp = doCheckFirstName(firstName);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 中文名字 */
+		/* 檢查中文名字 */
 		if (inputIsOk) {
-			if (lastName.equals("")) {
-				submitMessage = "名字不可為空白";
-				inputIsOk = false;
-			} else if (lastName.length() > 3) {
-				submitMessage = "名字長度過長，最多僅3個字元";
-				inputIsOk = false;
-			} else {
-				Integer charCountBegin = 0;
-				Boolean lastNameIsOk = true;
-				/* 16進位表示 */
-				Integer charChineseWordCountBegin = 0x4e00;
-				Integer charChineseWordCountEnd = 0x9fff;
-				
-				for (Integer charIndex = charCountBegin; charIndex < lastName.length(); charIndex++) {
-					int lastNameChar = lastName.charAt(charIndex);
-
-					if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
-						lastNameIsOk = false;
-					}
-					if (!lastNameIsOk) {
-						break;
-					}
-				}
-				
-				if (!lastNameIsOk) {
-					submitMessage = "名字中含有非中文";
-					inputIsOk = false;
-				} else {
-					inputIsOk = true;
-				}
-			}
+			String resultTmp = doCheckLastName(lastName);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 稱呼 */
+		/* 檢查稱呼 */
 		if (inputIsOk) {
-			if (nickname.equals("") && lastName.equals("")) {
-				submitMessage = "稱呼不可為空白";
-				inputIsOk = false;
-			} else if (nickname.equals("") && !lastName.equals("")) {
-				nickname = lastName;
-				inputIsOk = true;
-			} else if (nickname.length() > 20){
-				submitMessage = "稱呼長度過長";
-				inputIsOk = false;
-			} else {
-				Integer nicknameCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					nicknameCheckResult = wus.checkNicknameExist(nickname);
-				} catch (SQLException sqlE) {
-					submitMessage = sqlE.getMessage();
-					inputIsOk = false;
-				}
-				
-				if (nicknameCheckResult == 0) {
-					inputIsOk = true;
-				} else if (nicknameCheckResult == 1){
-					submitMessage = "稱呼已存在，請挑選別的名稱作為稱呼";
-					inputIsOk = false;
-				}
-			}
+			String resultTmp = doCheckNickname(nickname, lastName);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
 		/* 生理性別 */
 		if (inputIsOk) {
 			switch(genderCode) {
@@ -1404,7 +1224,6 @@ public class WebUserController {
 					break;
 			}
 		}
-		
 		/* 西元生日 */
 		if (inputIsOk) {
 			if (birth == Date.valueOf(LocalDate.now())) {
@@ -1423,209 +1242,70 @@ public class WebUserController {
 				inputIsOk = true;
 			}
 		}
-		
-		/* 偏好食物 */
+		/* 檢查偏好食物 */
 		if (inputIsOk) {
-			if (fervor.equals("")) {
-				submitMessage = "偏好食物不可為空白";
-				inputIsOk = false;
-			} else if (fervor.length() > 50){
-				submitMessage = "偏好食物長度過長";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckFervor(fervor);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* email */
+		/* 檢查Email */
 		if (inputIsOk) {
-			if (email.equals("")) {
-				submitMessage = "信箱資訊不可為空白";
-				inputIsOk = false;
-			} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
-				submitMessage = "信箱資訊格式錯誤";
-				inputIsOk = false;
-			} else {
-				Integer emailCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					emailCheckResult = wus.checkEmailExist(email);
-				} catch (SQLException sqlE) {
-					submitMessage = sqlE.getMessage();
-					inputIsOk = false;
-				}
-				
-				if (emailCheckResult == 0) {
-					inputIsOk = true;
-				} else if (emailCheckResult == 1){
-					submitMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
-					inputIsOk = false;
-				}
-			}
+			String resultTmp = doCheckEmail(email);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* getEmail */
+		/* 檢查getEmail */
 		if (inputIsOk) {
-			switch(willingCode) {
-				case "Y":
-				case "N":
-					inputIsOk = true;
-					break;
-				default:
-					submitMessage = "接收促銷/優惠訊息設定異常";
-					inputIsOk = false;
-					break;
-			}
+			String resultTmp = doCheckGetEmail(willingCode);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* phone */
+		/* 檢查電話 */
 		if (inputIsOk) {
-			if (phone.equals("")) {
-				submitMessage = "連絡電話不可為空白";
-				inputIsOk = false;
-			} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
-				submitMessage = "連絡電話格式錯誤";
-				inputIsOk = false;
-			} else if (!phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
-				submitMessage = "連絡電話格式錯誤";
-				inputIsOk = false;
-			} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
-				submitMessage = "行動電話格式錯誤";
-				inputIsOk = false;
-			} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
-				submitMessage = "室內電話格式錯誤";
-				inputIsOk = false;
-			} else {
-				Integer phoneCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					phoneCheckResult = wus.checkPhoneExist(phone);
-				} catch (SQLException sqlE) {
-					submitMessage = sqlE.getMessage();
-					inputIsOk = false;
-				}
-				
-				if (phoneCheckResult == 0) {
-					inputIsOk = true;
-				} else if (phoneCheckResult == 1){
-					submitMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
-					inputIsOk = false;
-				}
-			}
+			String resultTmp = doCheckPhone(phone);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 居住區域 */
+		/* 檢查居住區域 */
 		if (inputIsOk) {
-			switch(cityCode) {
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
-				case 10:
-				case 11:
-				case 12:
-				case 13:
-				case 14:
-				case 15:
-				case 16:
-				case 17:
-				case 18:
-				case 19:
-				case 20:
-				case 21:
-				case 22:
-				case 23:
-					inputIsOk = true;
-					break;
-				default:
-					submitMessage = "居住區域設定異常";
-					inputIsOk = false;
-					break;
-			}
+			String resultTmp = doCheckCityCode(cityCode);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 生活地點一 */
+		/* 檢查生活地點一 */
 		if (inputIsOk) {
-			if (addr0.equals("")) {
-				submitMessage = "生活地點一不可為空白";
-				inputIsOk = false;
-			} else if (addr0.length() > 65) {
-				submitMessage = "生活地點一超過長度限制";
-				inputIsOk = false;
-			} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
-				submitMessage = "生活地點重複填寫";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckAddr0(addr0, addr1, addr2);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 生活地點二 */
+		/* 檢查生活地點二 */
 		if (inputIsOk) {
-			if (addr1.length() > 65) {
-				submitMessage = "生活地點二超過長度限制";
-				inputIsOk = false;
-			} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
-				submitMessage = "生活地點重複填寫";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckAddr1(addr0, addr1, addr2);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
-		/* 生活地點三 */
+		/* 檢查生活地點三 */
 		if (inputIsOk) {
-			if (addr2.length() > 65) {
-				submitMessage = "生活地點三超過長度限制";
-				inputIsOk = false;
-			} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
-				submitMessage = "生活地點重複填寫";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckAddr2(addr0, addr1, addr2);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
-		
 		return submitMessage;
 	}
 	
 	/* 使用者登入資料檢查 */
-	public Integer doCheckLoginInput(String account, String password) {
+	public String doCheckLoginInput(String account, String password) {
 		/* 傳回參數宣告 */
-		Integer inputCheckResult = 1;
-		
-		/* 使用者帳號 */
-		if (account.equals("")) {
-			inputCheckResult = 0;
-		} else if(account.length() < 8 || account.length() > 20) {
-			inputCheckResult = -1;
-		} else if (account.matches("[1-9]{1}.")) {
-			inputCheckResult = -2;
-		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-			inputCheckResult = -3;
-		} 
-		
-		/* 使用者密碼 */
-		if (password.equals("")) {
-			inputCheckResult = 2;
-		} else if (password.length() < 8) {
-			inputCheckResult = 3;
-		} else if (password.length() > 20) {
-			inputCheckResult = 4;
-		} else if (password.matches("[1-9]{1}.")) {
-			inputCheckResult = 5;
-		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-			inputCheckResult = 6;
-		} 
-		
-		return inputCheckResult;
+		String message = "";	
+		/* 檢查帳號 */
+		String resultTmp = doCheckAccount(account, "login");
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		/* 檢查密碼 */
+		if (message.equals("")) {
+			resultTmp = doCheckPassword(password);
+			message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		}
+		return message;
 	}
 	
 	/* 使用者停用帳戶時的輸入檢查 */
@@ -1667,8 +1347,7 @@ public class WebUserController {
 			} else if (checkResult2 == -1) {
 				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
 			}
-		}
-			
+		}		
 		return checkInputResult;
 	}
 	
@@ -1690,31 +1369,27 @@ public class WebUserController {
 				updateResultMessage = "密碼與確認密碼不一致！";
 			} else if (password.equals(oldPassword)){
 				updateResultMessage = "密碼未修改！";
-			} else if (password.equals("")) {
-				updateResultMessage = "密碼不可為空白";
-			} else if (password.length() < 8 || password.length() > 20) {
-				updateResultMessage = "密碼長度不符格式，僅接受8~20個字元";
-			} else if (password.matches("[1-9]{1}.")) {
-				updateResultMessage = "密碼不可以數字開頭";
-			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-				updateResultMessage = "密碼不符合格式";
 			} else {
-				String userId = userData.getUserId();
-				Integer checkIdResult = -1;
+				String resultTmp = doCheckPassword(password);
+				updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 				
-				try {
-					checkIdResult = wus.checkUserIdExist(userId);
-				} catch(SQLException sqlE) {
-					String quitMessageTmp = sqlE.getMessage();
-					updateResultMessage = quitMessageTmp.split(":")[1];
-				}
-				
-				if (checkIdResult != 1) {
-					updateResultMessage = "使用者身分異常!請確定您已經登入本系統";
-				}
+				if (updateResultMessage.equals("")) {	
+					String userId = userData.getUserId();
+					Integer checkIdResult = -1;
+					
+					try {
+						checkIdResult = wus.checkUserIdExist(userId);
+					} catch(SQLException sqlE) {
+						String quitMessageTmp = sqlE.getMessage();
+						updateResultMessage = quitMessageTmp.split(":")[1];
+					}
+					
+					if (checkIdResult != 1) {
+						updateResultMessage = "使用者身分異常!請確定您已經登入本系統";
+					}
+				} 
 			}
 		}
-		
 		return updateResultMessage;
 	}
 	
@@ -1758,248 +1433,90 @@ public class WebUserController {
 		String newAddr1 = (updatedUserData == null) ? "" : updatedUserData.getAddr1();
 		String newAddr2 = (updatedUserData == null) ? "" : updatedUserData.getAddr2();
 		
-		/* 檢查姓氏 */
+		/* 檢查中文姓氏 */
 		if (updateResultMessage.equals("")) {
-			if (newFirstName.equals("")) {
-				updateResultMessage = "姓氏不可為空白";
-			} else if (newFirstName.length() > 3) {
-				updateResultMessage = "姓氏長度過長，最多僅3個字元";
-			} else {
-				Integer charCountBegin = 0;
-				Boolean firstNameIsOk = true;
-				/* 16進位表示 */
-				Integer charChineseWordCountBegin = 0x4e00;
-				Integer charChineseWordCountEnd = 0x9fff;
-				
-				for (Integer charIndex = charCountBegin; charIndex < newFirstName.length(); charIndex++) {
-					int firstNameChar = newFirstName.charAt(charIndex);
-					
-					if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
-						firstNameIsOk = false;
-					}
-					if (!firstNameIsOk) {
-						break;
-					}
-				}
-				
-				if (!firstNameIsOk) {
-					updateResultMessage = "姓氏中含有非中文";
-				} else if (newFirstName.equals(oldFirstName)){
-					count++;
-				}
-			}
+			String resultTmp = doCheckFirstName(newFirstName);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
-		
-		/* 檢查名字 */
+		/* 檢查中文名字 */
 		if (updateResultMessage.equals("")) {
-			if (newLastName.equals("")) {
-				updateResultMessage = "名字不可為空白";
-			} else if (newLastName.length() > 3) {
-				updateResultMessage = "名字長度過長，最多僅3個字元";
-			} else {
-				Integer charCountBegin = 0;
-				Boolean lastNameIsOk = true;
-				/* 16進位表示 */
-				Integer charChineseWordCountBegin = 0x4e00;
-				Integer charChineseWordCountEnd = 0x9fff;
-				
-				for (Integer charIndex = charCountBegin; charIndex < newLastName.length(); charIndex++) {
-					int lastNameChar = newLastName.charAt(charIndex);
-					
-					if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
-						lastNameIsOk = false;
-					}
-					if (!lastNameIsOk) {
-						break;
-					}
-				}
-				
-				if (!lastNameIsOk) {
-					updateResultMessage = "名字中含有非中文";
-				} else if (newLastName.equals(oldLastName)){
-					count++;
-				}
-			}
+			String resultTmp = doCheckLastName(newLastName);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
-		
 		/* 檢查稱呼 */
 		if (updateResultMessage.equals("")) {
-			if (newNickname.equals("") && newLastName.equals("")) {
-				updateResultMessage = "稱呼不可為空白";
-			} else if (newNickname.equals("") && !newLastName.equals("")) {
-				newNickname = newLastName;
-			} else if (newNickname.length() > 20){
-				updateResultMessage = "稱呼長度過長";
-			} else if (newNickname.equals(oldNickname)){
+			String resultTmp = doCheckNickname(newNickname, newLastName);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (updateResultMessage.equals("") && newNickname.equals(oldNickname)) {
 				count++;
-			} else {
-				Integer nicknameCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					nicknameCheckResult = wus.checkNicknameExist(newNickname);
-				} catch (SQLException sqlE) {
-					updateResultMessage = sqlE.getMessage();
-				}
-				
-				if (nicknameCheckResult == 1){
-					updateResultMessage = "稱呼已存在，請挑選別的名稱作為稱呼";
-				}
 			}
 		}
-		
 		/* 檢查偏好食物 */
 		if (updateResultMessage.equals("")) {
-			if (fervor.equals("")) {
-				updateResultMessage = "偏好食物不可為空白";
-			} else if (fervor.length() > 50){
-				updateResultMessage = "偏好食物長度過長";
-			} else if (fervor.equals(oldFervor)) {
+			String resultTmp = doCheckFervor(fervor);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (fervor.equals(oldFervor) && updateResultMessage.equals("")) {
 				count++;
 			}
 		}
-		
-		/* 檢查email */
+		/* 檢查Email */
 		if (updateResultMessage.equals("")) {
-			if (newEmail.equals("")) {
-				updateResultMessage = "信箱資訊不可為空白";
-			} else if(newEmail.indexOf("@") == -1 || newEmail.split("@").length > 2 || newEmail.indexOf(" ") != -1) {
-				updateResultMessage = "信箱資訊格式錯誤";
-			} else if (newEmail.equals(oldEmail)) {
+			String resultTmp = doCheckEmail(newEmail);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newEmail.equals(oldEmail) && updateResultMessage.equals("")) {
 				count++;
-			} else {
-				Integer emailCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					emailCheckResult = wus.checkEmailExist(newEmail);
-				} catch (SQLException sqlE) {
-					updateResultMessage = sqlE.getMessage();
-				}
-				
-				if (emailCheckResult == 1){
-					updateResultMessage = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
-				} 
-			}
+			} 
 		}
-		
 		/* 檢查聯絡電話 */
 		if (updateResultMessage.equals("")) {
-			if (newPhone.equals("")) {
-				updateResultMessage = "連絡電話不可為空白";
-			} else if(newPhone.length() < 9 || newPhone.indexOf(" ") != -1) {
-				updateResultMessage = "連絡電話格式錯誤";
-			} else if (!newPhone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
-				updateResultMessage = "連絡電話格式錯誤";
-			} else if (newPhone.substring(0, 2).equals("09") && newPhone.length() != 10) {
-				updateResultMessage = "行動電話格式錯誤";
-			} else if (!newPhone.substring(0, 2).equals("09") && newPhone.length() == 10) {
-				updateResultMessage = "室內電話格式錯誤";
-			} else if (newPhone.equals(oldPhone)) {
+			String resultTmp = doCheckPhone(newPhone);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newPhone.equals(oldPhone) && updateResultMessage.equals("")) {
 				count++;
-			} else {
-				Integer phoneCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					phoneCheckResult = wus.checkPhoneExist(newPhone);
-				} catch (SQLException sqlE) {
-					updateResultMessage = sqlE.getMessage();
-				}
-				
-				if (phoneCheckResult == 1){
-					updateResultMessage = "該聯絡電話已被註冊，請輸入別的聯絡電話";
-				}
-			}
+			} 
 		}
-		
 		/* 檢查接收促銷/優惠訊息 */
 		if (updateResultMessage.equals("")) {
-			if (getEmail.equals(oldGetEmail)) {
+			String resultTmp = doCheckGetEmail(getEmail);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (getEmail.equals(oldGetEmail) && updateResultMessage.equals("")) {
 				count++;
-			} else if (!getEmail.equals("Y") && !getEmail.equals("N")){ 
-				updateResultMessage = "接收促銷/優惠訊息輸入異常";
-			}
+			} 
 		}
-		
 		/* 檢查區住區域 */
 		if (updateResultMessage.equals("")) {
-			if (locationCode == oldLocationCode) {
+			String resultTmp = doCheckCityCode(locationCode);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (locationCode == oldLocationCode && updateResultMessage.equals("")) {
 				count++;
-			} else {	
-				switch(locationCode) {
-					case 1:
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-					case 12:
-					case 13:
-					case 14:
-					case 15:
-					case 16:
-					case 17:
-					case 18:
-					case 19:
-					case 20:
-					case 21:
-					case 22:
-					case 23:
-						break;
-					default:
-						updateResultMessage = "居住區域設定異常";
-						break;
-				}
 			}
 		}
-		
-		/* 檢查地點一 */
+		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
-			if (newAddr0.equals("")) {
-				updateResultMessage = "生活地點一不可為空白";
-			} else if (newAddr0.length() > 65) {
-				updateResultMessage = "生活地點一超過長度限制";
-			} else if (newAddr0.equals(newAddr1) || newAddr0.equals(newAddr2)) {
-				updateResultMessage = "生活地點重複填寫";
-			} else if (newAddr0.equals(oldAddr0)) {
+			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newAddr0.equals(oldAddr0) && updateResultMessage.equals("")) {
 				count++;
 			}
 		}
-		
-		/* 檢查地點二 */
+		/* 檢查生活地點二 */
 		if (updateResultMessage.equals("")) {
-			if (newAddr1.length() > 65) {
-				updateResultMessage = "生活地點二超過長度限制";
-			} else if (newAddr1.equals(newAddr0) || (newAddr1.equals(newAddr2) && !newAddr2.equals(""))) {
-				updateResultMessage = "生活地點重複填寫";
-			} else if (newAddr1.equals(oldAddr1)) {
+			String resultTmp = doCheckAddr1(newAddr0, newAddr1, newAddr2);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newAddr1.equals(oldAddr1) && updateResultMessage.equals("")) {
 				count++;
 			}
 		}
-		
-		/* 檢查地點三 */
+		/* 檢查生活地點三 */
 		if (updateResultMessage.equals("")) {
-			if (newAddr2.length() > 65) {
-				updateResultMessage = "生活地點三超過長度限制";
-			} else if (newAddr2.equals(newAddr0) || (newAddr2.equals(newAddr1) && !newAddr1.equals(""))) {
-				updateResultMessage = "生活地點重複填寫";
-			} else if (newAddr2.equals(oldAddr2)) {
+			String resultTmp = doCheckAddr2(newAddr0, newAddr1, newAddr2);
+			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newAddr2.equals(oldAddr2) && updateResultMessage.equals("")) {
 				count++;
 			}
 		}
-		
 		/* 結算有效變動項目 */
-		if (count == 11) {
-			updateResultMessage = "沒有輸入任何有效的修改內容，請重新操作";
-		}
-		
-		return updateResultMessage;
+		return (count == 11) ? "沒有輸入任何有效的修改內容，請重新操作" : updateResultMessage;
 	}
 	
 	public String doCheckSelectUserDataInput(String selectedParameters, WebUserData userData) {
@@ -2023,37 +1540,8 @@ public class WebUserController {
 		
 		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
 		if (checkResult.equals("")) {
-			if (selectedLocationCode != 0)  {
-				switch(selectedLocationCode) {
-					case 1:
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-					case 12:
-					case 13:
-					case 14:
-					case 15:
-					case 16:
-					case 17:
-					case 18:
-					case 19:
-					case 20:
-					case 21:
-					case 22:
-					case 23:
-						break;
-					default:
-						checkResult = "居住區域設定異常";
-						break;
-				}
-			}
+			String resultTmp = doCheckCityCode(selectedLocationCode);
+			checkResult = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
 		if (userData.getAccountLv().getLv() == -1) {
@@ -2071,7 +1559,6 @@ public class WebUserController {
 				}
 			}
 		}
-		
 		return checkResult;
 	}
 	
@@ -2088,59 +1575,16 @@ public class WebUserController {
 		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
 			checkMessage = "本帳號無法使用此功能！";
 		}
-		
-		/* 檢查id */
+		/* 檢查userId */
 		if (checkMessage.equals("")) {
-			if (userId.equals("")) {
-				checkMessage = "Id不可為空白";
-			} else if (userId.length() != 7) {
-				checkMessage = "Id長度錯誤";
-			} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
-				checkMessage = "Id格式錯誤";
-			} else {
-				Integer userIdCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					userIdCheckResult = wus.checkUserIdExist(userId);
-				} catch (SQLException sqlE) {
-					checkMessage = sqlE.getMessage();
-				}
-				
-				if (userIdCheckResult == 0){
-					checkMessage = "Id不存在";
-				}
-			}
+			String resultTmp = doCheckUserId(userId);
+			checkMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
-		
 		/* 檢查帳號 */
 		if (checkMessage.equals("")) {
-			if (account.equals("")) {
-				checkMessage = "帳號不可為空白";
-			} else if(account.length() < 8) {
-				checkMessage = "帳號長度不足";
-			} else if(account.length() > 20) {
-				checkMessage = "帳號長度過長";
-			} else if (account.matches("[1-9]{1}.")) {
-				checkMessage = "帳號不可以數字開頭";
-			} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-				checkMessage = "帳號不符合格式";
-			} else {
-				Integer accountCheckResult = -1;
-				
-				/* 調用服務裡的方法 */
-				try {
-					accountCheckResult = wus.checkAccountExist(account);
-				} catch (SQLException sqlE) {
-					checkMessage = sqlE.getMessage();
-				}
-				
-				if (accountCheckResult == 0){
-					checkMessage = "帳號不存在";
-				}
-			}
+			String resultTmp = doCheckAccount(account, "adminOperate");
+			checkMessage= (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
-		
 		/* 檢查狀態、檢查模式與狀態的匹配 */
 		if (checkMessage.equals("")) {
 			switch(mode) {
@@ -2162,39 +1606,383 @@ public class WebUserController {
 					break;
 			}
 		}
-		
 		return checkMessage;
 	}
 	
-	public Integer doCheckResetInput(String userId, String password) {
-		Integer inputCheckResult = 1;
-		
-		/* 使用者Id */
+	public String doCheckResetInput(String userId, String password) {
+		String checkMessage = "";
+		/* 檢查userId */
+		checkMessage = doCheckUserId(userId);
+		/* 檢查密碼 */
+		checkMessage = (checkMessage.equals("")) ? doCheckPassword(password) : checkMessage;
+		return checkMessage;
+	}
+	
+	/* 統一檢查userId方法 */
+	public String doCheckUserId(String userId) {
+		String checkMessage = "";
 		if (userId.equals("")) {
-			inputCheckResult = 0;
-		} else if(userId.length() < 7) {
-			inputCheckResult = -1;
-		} else if(userId.length() > 7) {
-			inputCheckResult = -2;
-		} else if (userId.matches("[0-2]{1}[0]{8}")) {
-			inputCheckResult = -3;
+			checkMessage = "Id不可為空白";
+		} else if (userId.length() != 7) {
+			checkMessage = "Id長度錯誤";
 		} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
-			inputCheckResult = -4;
-		} 
-		
-		/* 使用者密碼 */
+			checkMessage = "Id格式錯誤";
+		} else {
+			Integer userIdCheckResult = -1;
+			
+			/* 調用服務裡的方法 */
+			try {
+				userIdCheckResult = wus.checkUserIdExist(userId);
+			} catch (SQLException sqlE) {
+				checkMessage = sqlE.getMessage();
+			}
+			
+			if (userIdCheckResult == 0){
+				checkMessage = "Id不存在";
+			}
+		}
+		return checkMessage;
+	}
+	
+	/* 統一檢查帳號方法 */
+	public String doCheckAccount(String account, String mode) {
+		String submitMessage = "?";
+		Boolean inputIsOk = true;
+		if (account.equals("")) {
+			submitMessage = "帳號不可為空白";
+			inputIsOk = false;
+		} else if (account.length() < 8 || account.length() > 20) {
+			submitMessage = "帳號長度不符格式，僅接受8~20個字元";
+			inputIsOk = false;
+		} else if (account.matches("[1-9]{1}.")) {
+			submitMessage = "帳號不可以數字開頭";
+			inputIsOk = false;
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			submitMessage = "帳號不符合格式";
+			inputIsOk = false;
+		} else {
+			Integer accountCheckResult = -1;
+
+			/* 調用服務裡的方法 */
+			try {
+				accountCheckResult = wus.checkAccountExist(account);
+			} catch (SQLException sqlE) {
+				submitMessage = sqlE.getMessage();
+				inputIsOk = false;
+			}
+
+			if (mode.equals("submit")) {
+				if (accountCheckResult == 1) {
+					submitMessage = "帳號已存在，請挑選別的名稱作為帳號";
+					inputIsOk = false;
+				}
+			}
+		}
+		return submitMessage + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查密碼方法 */
+	public String doCheckPassword(String password) {
+		String submitMessage = "?";
+		Boolean inputIsOk = true;
 		if (password.equals("")) {
-			inputCheckResult = 2;
-		} else if (password.length() < 8) {
-			inputCheckResult = 3;
-		} else if (password.length() > 20) {
-			inputCheckResult = 4;
+			submitMessage = "密碼不可為空白";
+			inputIsOk = false;
+		} else if (password.length() < 8 || password.length() > 20) {
+			submitMessage = "密碼長度不符格式，僅接受8~20個字元";
+			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
-			inputCheckResult = 5;
+			submitMessage = "密碼不可以數字開頭";
+			inputIsOk = false;
 		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
-			inputCheckResult = 6;
+			submitMessage = "密碼不符合格式";
+			inputIsOk = false;
 		} 
-		
-		return inputCheckResult;
+		return submitMessage + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查姓氏方法 */
+	public String doCheckFirstName(String firstName) {
+		String message = "?";
+		Boolean inputIsOk = true;
+		if (firstName.equals("")) {
+			message = "姓氏不可為空白";
+			inputIsOk = false;
+		} else if (firstName.length() > 3) {
+			message = "姓氏長度過長，最多僅3個字元";
+			inputIsOk = false;
+		} else {
+			Integer charCountBegin = 0;
+			Boolean firstNameIsOk = true;
+			/* 16進位表示 */
+			Integer charChineseWordCountBegin = 0x4e00;
+			Integer charChineseWordCountEnd = 0x9fff;
+			
+			for (Integer charIndex = charCountBegin; charIndex < firstName.length(); charIndex++) {
+				int firstNameChar = firstName.charAt(charIndex);
+
+				if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
+					firstNameIsOk = false;
+				}
+				if (!firstNameIsOk) {
+					break;
+				}
+			}
+			
+			if (!firstNameIsOk) {
+				message = "姓氏中含有非中文";
+				inputIsOk = false;
+			} 
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查名字方法 */
+	public String doCheckLastName(String lastName) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (lastName.equals("")) {
+			message = "名字不可為空白";
+			inputIsOk = false;
+		} else if (lastName.length() > 3) {
+			message = "名字長度過長，最多僅3個字元";
+			inputIsOk = false;
+		} else {
+			Integer charCountBegin = 0;
+			Boolean lastNameIsOk = true;
+			/* 16進位表示 */
+			Integer charChineseWordCountBegin = 0x4e00;
+			Integer charChineseWordCountEnd = 0x9fff;
+			
+			for (Integer charIndex = charCountBegin; charIndex < lastName.length(); charIndex++) {
+				int lastNameChar = lastName.charAt(charIndex);
+
+				if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
+					lastNameIsOk = false;
+				}
+				if (!lastNameIsOk) {
+					break;
+				}
+			}
+			
+			if (!lastNameIsOk) {
+				message = "名字中含有非中文";
+				inputIsOk = false;
+			} 
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查稱呼方法 */
+	public String doCheckNickname(String nickname, String lastName) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (nickname.equals("") && lastName.equals("")) {
+			message = "稱呼不可為空白";
+			inputIsOk = false;
+		} else if (nickname.equals("") && !lastName.equals("")) {
+			nickname = lastName;
+			inputIsOk = true;
+		} else if (nickname.length() > 20){
+			message = "稱呼長度過長";
+			inputIsOk = false;
+		} else {
+			Integer nicknameCheckResult = -1;
+			
+			/* 調用服務裡的方法 */
+			try {
+				nicknameCheckResult = wus.checkNicknameExist(nickname);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if (nicknameCheckResult == 1){
+				message = "稱呼已存在，請挑選別的名稱作為稱呼";
+				inputIsOk = false;
+			}
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查偏好食物方法 */
+	public String doCheckFervor(String fervor) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (fervor.equals("")) {
+			message = "偏好食物不可為空白";
+			inputIsOk = false;
+		} else if (fervor.length() > 50){
+			message = "偏好食物長度過長";
+			inputIsOk = false;
+		} 
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查Email方法 */
+	public String doCheckEmail(String email) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (email.equals("")) {
+			message = "信箱資訊不可為空白";
+			inputIsOk = false;
+		} else if(email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
+			message = "信箱資訊格式錯誤";
+			inputIsOk = false;
+		} else {
+			Integer emailCheckResult = -1;
+			
+			/* 調用服務裡的方法 */
+			try {
+				emailCheckResult = wus.checkEmailExist(email);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if (emailCheckResult == 1){
+				message = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
+				inputIsOk = false;
+			}
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查是否接受促銷資訊方法 */
+	public String doCheckGetEmail(String willingCode) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		switch(willingCode) {
+			case "Y":
+			case "N":
+					inputIsOk = true;
+					break;
+			default:
+				message = "接收促銷/優惠訊息設定異常";
+				inputIsOk = false;
+				break;
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查電話方法 */
+	public String doCheckPhone(String phone) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (phone.equals("")) {
+			message = "連絡電話不可為空白";
+			inputIsOk = false;
+		} else if(phone.length() < 9 || phone.indexOf(" ") != -1) {
+			message = "連絡電話格式錯誤";
+			inputIsOk = false;
+		} else if (!phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
+			message = "連絡電話格式錯誤";
+			inputIsOk = false;
+		} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
+			message = "行動電話格式錯誤";
+			inputIsOk = false;
+		} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
+			message = "室內電話格式錯誤";
+			inputIsOk = false;
+		} else {
+			Integer phoneCheckResult = -1;
+			
+			/* 調用服務裡的方法 */
+			try {
+				phoneCheckResult = wus.checkPhoneExist(phone);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if (phoneCheckResult == 1){
+				message = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+				inputIsOk = false;
+			}
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查居住區域方法 */
+	public String doCheckCityCode(Integer cityCode) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		switch(cityCode) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+			case 18:
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+				inputIsOk = true;
+				break;
+			default:
+				message = "居住區域設定異常";
+				inputIsOk = false;
+				break;
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查生活地點一方法 */
+	public String doCheckAddr0(String addr0, String addr1, String addr2) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (addr0.equals("")) {
+			message = "生活地點一不可為空白";
+			inputIsOk = false;
+		} else if (addr0.length() > 65) {
+			message = "生活地點一超過長度限制";
+			inputIsOk = false;
+		} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
+			message = "生活地點重複填寫";
+			inputIsOk = false;
+		} 
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查生活地點二方法 */
+	public String doCheckAddr1(String addr0, String addr1, String addr2) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (addr1.length() > 65) {
+			message = "生活地點二超過長度限制";
+			inputIsOk = false;
+		} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
+			message = "生活地點重複填寫";
+			inputIsOk = false;
+		} 
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查生活地點三方法 */
+	public String doCheckAddr2(String addr0, String addr1, String addr2) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (addr2.length() > 65) {
+			message = "生活地點三超過長度限制";
+			inputIsOk = false;
+		} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
+			message = "生活地點重複填寫";
+			inputIsOk = false;
+		} 
+		return message + "," + inputIsOk.toString();
 	}
 }
