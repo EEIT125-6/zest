@@ -327,38 +327,45 @@
 						let addResultIsOk = true;
 						
 						let lv = document.getElementsByName("userLv");
-						let userLv = 0;
+						let userLv;
 						for (let lvIndex = 0; lvIndex < lv.length; lvIndex++) {
                 			if (lv[lvIndex].checked) {
                 				userLv = lv[lvIndex].value;
                 			}
                 		}
-						let account = document.getElementById("account");
-						let password = document.getElementById("password");
-						let firstName = document.getElementById("firstName");
-						let lastName = document.getElementById("lastName");
-						let nickname = document.getElementById("nickname");
+						let account = document.getElementById("account").value.trim();
+						let password = document.getElementById("password").value.trim();
+						let firstName = document.getElementById("firstName").value.trim();
+						let lastName = document.getElementById("lastName").value.trim();
+						let nickname = document.getElementById("nickname").value.trim();
 						let genderCode = document.getElementsByName("gender");
-						let birth = document.getElementById("birth");
-						let fervorObj = document.getElementsByClassName("fervor");
-                		let fervorValue = "";
-                		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
-                			if (fervorValue != "" && fervorObj[fervorIndex].checked) {
-                				fervorValue += ",";
+						let gender;
+						for (let genderIndex = 0; genderIndex < genderCode.length; genderIndex++) {
+                			if (genderCode[genderIndex].checked) {
+                				gender = genderCode[genderIndex].value;
                 			}
-                			fervorValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
+						let birth = document.getElementById("birth").value;
+						let fervorObj = document.getElementsByClassName("fervor");
+                		let fervorValue = [];
+                		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+                			if (fervorObj[fervorIndex].checked) {		
+                				fervorValue.push(fervorObj[fervorIndex].value);
+                			}
+                		}
+                		let email = document.getElementById("email").value.trim();
                 		let getEmail = document.getElementsByName("getEmail");
-                		let getEmailValue = "Y";
+                		let getEmailValue = "";
                 		for (let getEmailIndex = 0; getEmailIndex < getEmail.length; getEmailIndex++) {
                 			if (getEmail[getEmailIndex].checked) {
                 				getEmailValue = getEmail[getEmailIndex].value;
                 			}
                 		}
-                		let cityCode = document.getElementById("locationCode");
-                		let addr0 = document.getElementById("addr0");
-                		let addr1 = document.getElementById("addr1");
-                		let addr2 = document.getElementById("addr2");
+                		let phone = document.getElementById("phone").value.trim();
+                		let cityCode = document.getElementById("locationCode").value;
+                		let addr0 = document.getElementById("addr0").value.trim();
+                		let addr1 = document.getElementById("addr1").value.trim();
+                		let addr2 = document.getElementById("addr2").value.trim();
                 		
 						addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + addResultStr;
 						addResultSpan.style.color = "black";
@@ -368,22 +375,22 @@
 						if (xhrObject != null) {
 							xhrObject.open("POST", "<c:url value='/webUser/controller/WebUserAddForm' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("userLv" + userLv 
-										+ "&account=" + account
-										+ "&password=" + password
-										+ "&firstName=" + firstName
-										+ "&lastName=" + lastName
-										+ "&nickname=" + nickname
-										+ "&gender=" + genderCode
-										+ "&birth=" + birth
-										+ "&fervorOption=" + fervorValue
-										+ "&email=" + email
-										+ "&phone=" + phone
-										+ "&getEmail=" + getEmailValue
-										+ "&locationCode=" + cityCode
-										+ "&addr0=" + addr0
-										+ "&addr1=" + addr1
-										+ "&addr2=" + addr2);
+							xhrObject.send("userLv=" + userLv 
+												+ "&account=" + account
+												+ "&password=" + password
+												+ "&firstName=" + firstName
+												+ "&lastName=" + lastName
+												+ "&nickname=" + nickname
+												+ "&gender=" + gender
+												+ "&birth=" + birth
+												+ "&fervorOption=" + fervorValue
+												+ "&email=" + email
+												+ "&phone=" + phone
+												+ "&willing=" + getEmailValue
+												+ "&locationCode=" + cityCode
+												+ "&addr0=" + addr0
+												+ "&addr1=" + addr1
+												+ "&addr2=" + addr2);
 							
 							xhrObject.onreadystatechange = function() {
 								if (xhrObject.readyState === 4 && xhrObject.status === 200) {

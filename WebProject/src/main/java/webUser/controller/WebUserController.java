@@ -111,7 +111,8 @@ public class WebUserController {
 
 	/* 執行註冊資料檢查 */
 	@PostMapping(value = "/controller/WebUserRegisterForm")
-	public String doRegisterSubmit(Model model,
+	public String doRegisterSubmit(
+			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
 			@RequestParam(value = "account", defaultValue = "") String account,
 			@RequestParam(value = "password", defaultValue = "") String password,
@@ -926,7 +927,8 @@ public class WebUserController {
 				case "active":
 				case "reactive":
 					/* 重新啟用與初次啟用實質上是相同的操作 */
-					status = (status.equals("reactive")) ? "active": status;
+					status = (status.equals("inactive")) ? "active": status;
+					status = (status.equals("quit")) ? "active": status;
 					/* 調用服務裡的方法 */
 					try {
 						operateResult = wus.adminChangeWebUserData(userId, status);
@@ -1002,7 +1004,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
-	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/controller/WebUserAddForm", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -1016,14 +1018,12 @@ public class WebUserController {
 			@RequestParam(value = "fervorOption", defaultValue="{7}") List<String> fervorValue,
 			@RequestParam(value = "email", defaultValue = "") String email,
 			@RequestParam(value = "phone", defaultValue = "") String phone,
-			@RequestParam(value = "getEmail", defaultValue = "Y") String willingCode,
+			@RequestParam(value = "willing", defaultValue = "Y") String willingCode,
 			@RequestParam(value = "locationCode", defaultValue = "0") Integer cityCode,
 			@RequestParam(value = "addr0", defaultValue = "") String addr0,
 			@RequestParam(value = "addr1", defaultValue = "") String addr1,
 			@RequestParam(value = "addr2", defaultValue = "") String addr2,
 			RedirectAttributes redirectAttributes) {
-		
-		System.out.println("Begin in ajax");
 		
 		Map<String, String> resultMap = new HashMap<>();
 		String resultMessage = "";
@@ -1075,9 +1075,6 @@ public class WebUserController {
 				resultMessage = "已將 " + reg_webUser.getAccount() + " 的帳號已成功建立";
 			} 
 		} 
-		
-		/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("resultMessage", resultMessage);
 		
 		resultMap.put("resultCode", insertResult.toString());
 		resultMap.put("resultMessage", resultMessage);

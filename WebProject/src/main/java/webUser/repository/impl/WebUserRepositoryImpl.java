@@ -375,11 +375,13 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 變數宣告 */
 		Integer quitResult = 0;
 		/* 取得當前Session，產生操作物件 */
-		WebUserData quitUserData = (WebUserData) getSession().get(WebUserData.class, userId);
+		WebUserData changedUserData = (WebUserData) getSession().get(WebUserData.class, userId);
 		/* 設定狀態 */
-		quitUserData.setStatus(status);
+		changedUserData.setStatus(status);
+		/* 更新版本 */
+		changedUserData.setVersion(changedUserData.getVersion() + 1);
 		/* 執行變更 */
-		getSession().saveOrUpdate(quitUserData);
+		getSession().saveOrUpdate(changedUserData);
 		quitResult++;
 		return quitResult;
 	}
@@ -393,6 +395,8 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		WebUserData resetUserData = getSession().get(WebUserData.class, userId);
 		/* 設定新密碼 */
 		resetUserData.setPassword(password);
+		/* 更新版本 */
+		resetUserData.setVersion(resetUserData.getVersion() + 1);
 		/* 執行變更 */
 		getSession().saveOrUpdate(resetUserData);
 		updateResult++;
