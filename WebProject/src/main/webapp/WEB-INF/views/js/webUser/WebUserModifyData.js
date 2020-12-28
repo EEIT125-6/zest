@@ -25,12 +25,13 @@ function checkForm() {
 	
 	let emailObjValue = document.getElementById("updatedEmail").value.trim();
 	let oldEmailObjValue = document.getElementById("originalEmail").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
 	
 	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
 	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
-	let getEmailObjValue = document.getElementsByName("updatedGetEmail");
-	let oldgetEmailObjValue = document.getElementById("originalGetEmail").value;
+	let getEmailObjValue = document.getElementsByName("updatedGetEmail").value;
+	let oldGetEmailObjValue = document.getElementById("originalGetEmail").value;
 	
 	let locationCodeObjValue = document.getElementById("updatedLocationCode").value;
 	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
@@ -86,13 +87,22 @@ function checkForm() {
 			}
 			if (emailObjValue == oldEmailObjValue) {
 				counter++;
+			} else {
+				if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+					alert("請先執行電子信箱檢查");
+					return false;
+				} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
+					alert("請先執行電子信箱驗證");
+					return false;
+				}
 			}
 			if (phoneObjValue == oldPhoneObjValue) {
 				counter++;
 			}
-			if (getEmailObjValue == oldgetEmailObjValue) {
+			alert("getEmailObjValue = "+getEmailObjValue+",oldGetEmailObjValue="+oldGetEmailObjValue);
+			if (getEmailObjValue == oldGetEmailObjValue) {
 				counter++;
-			}
+			} 
 			if (locationCodeObjValue == oldLocationCodeObjValue) {
 				counter++;
 			}
@@ -303,6 +313,7 @@ function checkEmail() {
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
 		document.getElementById("checkEmailUsed").style = "display:none";
+		document.getElementById("emailSendSpace").style = "display:none";
 		return false;
 	}
 	else {
@@ -313,6 +324,7 @@ function checkEmail() {
 			emailSpan.style.color = "black";
 			emailSpan.style.fontStyle = "normal";
 			document.getElementById("checkEmailUsed").style = "display:inline";
+			document.getElementById("emailSendSpace").style = "display:inline";
 		}
 		return true;
 	} 
@@ -594,6 +606,44 @@ function checkSameEmail(){
 			}
 		}
 	} else {
+		return true;
+	}
+}
+
+function checkEmailCheckCode() {
+	let emailCheckCodeObjValue = document.getElementById("emailCheckCode").value.trim();
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let checkCode = document.getElementById("checkCode").value.trim();
+	
+	let emailCheckCodeIsOk = true;
+	let emailCheckCodeStr;
+	
+	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		emailCheckCodeStr = "請先執行聯絡信箱檢查";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode == "" || checkCode.length == 0) {
+		emailCheckCodeStr = "尚未產生驗證碼";
+		emailCheckCodeIsOk = false;
+	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
+		emailCheckCodeStr = "驗證碼不可為空值";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode != emailCheckCodeObjValue) {
+		emailCheckCodeStr = "聯絡信箱驗證碼錯誤";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode == emailCheckCodeObjValue) {
+		emailCheckCodeStr = "聯絡信箱驗證成功";
+		emailCheckCodeIsOk = true;
+	} 
+	if (!emailCheckCodeIsOk) {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "red";
+		emailCheckCodeSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "black";
+		emailCheckCodeSpan.style.fontStyle = "normal";
 		return true;
 	}
 }
