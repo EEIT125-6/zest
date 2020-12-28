@@ -141,15 +141,15 @@ public class UserInfoController {
 			/* 宣告欲回傳的參數 */
 			Boolean sendResult = false;
 			String message = "";
-			String checkCode = (String) model.getAttribute("checkCode");
-			String registerEmail = (String) model.getAttribute("registerEmail");
+			String checkCode = doCreateCheckCode();
+			String registerEmail;
 			
-			checkCode = doCreateCheckCode();
 			try {
 				sendResult = doSendEmail(account, email, checkCode, "submit");
 			} catch (Exception e) {
 				message = e.getMessage();
 			}
+			
 			if (sendResult) {		
 				message = "驗證碼已寄出，請至您填寫的信箱收信，並將驗證碼複製貼上至指定欄位";
 				sendResult = true;
@@ -166,7 +166,6 @@ public class UserInfoController {
 			map.put("resultCode", sendResult.toString());
 			map.put("resultMessage", message);
 			map.put("resultText", checkCode);
-			
 		/* 驗證帳號重設資訊 */
 		} else if (mode.equals("recovery")) {
 			/* 宣告欲回傳的參數 */
@@ -495,16 +494,16 @@ public class UserInfoController {
 		String mailContext = "";
 		if (mode.equals("submit")) {
 			mailContext = "親愛的 "
-								+ account 
-								+ " ！<br /><br />" 
-								+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
-								+ "<br /><br />" 
-								+ checkCode;
+						+ account 
+						+ " ！<br /><br />" 
+						+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
+						+ "<br /><br />" 
+						+ checkCode;
 		} else if (mode.equals("forget")) {
 			mailContext = "親愛的 " + account + " ！<br /><br />" 
-					+ "請按下方的連結以重設您的帳號資訊"
-					+ "<br /><br /><a href=\"" + checkCode + "\">重設密碼連結請點我</a>"
-					+ "<br /><br />本連結將定時失效，請盡速使用";
+						+ "請按下方的連結以重設您的帳號資訊"
+						+ "<br /><br /><a href=\"" + checkCode + "\">重設密碼連結請點我</a>"
+						+ "<br /><br />本連結將定時失效，請盡速使用";
 		}
 		
 		Properties props = new Properties();

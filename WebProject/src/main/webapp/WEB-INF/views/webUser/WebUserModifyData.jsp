@@ -154,6 +154,7 @@
                 		<legend>以下為您可變更的資料：</legend>
                 		<span id="updatedResultSpan"></span>
 						<hr />
+						<input type="hidden" name="account" id="account" value="${selfData.account}">
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
@@ -195,6 +196,16 @@
 						<input type="button" name="update" id="checkEmailUsed" value="檢查信箱">
 						<span id="emailSpan"></span>
 						<hr />
+						<div id="emailSendSpace">
+							<label>信箱驗證：</label>
+							<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
+							    placeholder="請輸入E-Mail中所收到的驗證碼" />
+							<input type="button" name="update" id="sendCheckCode" value="傳送驗證碼">
+							<span id="emailCheckCodeSpan"></span>
+							<br />
+							<input type="hidden" name="inputCheckCode" id="checkCode" value="" />
+							<hr />
+						</div>
 						<input type="hidden" name="originalPhone" id="originalPhone" value="${selfData.phone}">
 						<label>聯絡電話：</label>
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
@@ -265,6 +276,9 @@
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
                 <script>
+                	$(document).ready(function() {
+                		document.getElementById("emailSendSpace").style = "display:none";
+                	});
                 	$("#updateConfirm").click(function() {
                 		checkUpdate();
                 	});
@@ -291,6 +305,7 @@
                 		}
                 		let oldEmail = document.getElementById("originalEmail").value.trim();
                 		let newEmail = document.getElementById("updatedEmail").value.trim();
+                		let emailCheckCode = docuemtn.getElementById("emailCheckCode").value.trim();
                 		let oldPhone = document.getElementById("originalPhone").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
                 		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
@@ -332,6 +347,7 @@
 								'newFervor':newFervor,
 								'oldEmail':oldEmail,
 								'newEmail':newEmail,
+								'inputCheckCode':emailCheckCode,
 								'oldPhone':oldPhone,
 								'newPhone':newPhone,
 								'oldGetEmail':oldGetEmail,
@@ -434,7 +450,7 @@
 					}	
                 
 					$("#checkEmailUsed").click(function() {
-				        checkUpdateEmail();
+						checkUpdateEmail();
 				    });
 					function checkUpdateEmail() {
 						let email = document.getElementById("updatedEmail").value.trim();
@@ -454,6 +470,7 @@
 				            	'register':mode,
 				            	'inputEmail':email
 				            },
+				            dataType:"json",
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == 1) {
 				            		emailStr = "此電子信箱已有人使用！";
@@ -507,6 +524,7 @@
 				            	'register':mode,
 				            	'inputPhone':phone
 				            },
+				            dataType:"json",
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == 1) {
 				            		phoneStr = "此聯絡電話已有人使用！";
@@ -535,6 +553,38 @@
 				            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 				            	phoneSpan.style.color = "red";
 				            	phoneSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+					
+					function sendTestEmail() {
+						let mode = "sendCheckCode";
+						let email = document.getElementById("updatedEmail").value.trim();
+						let account = document.getElementById("account").value.trim();
+						let checkCode = document.getElementById("checkCode");
+						let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+						let checkCodeStr;
+						let emailCheckCodeStr = "...處理中，請稍後";
+						let emailCheckCodeIsOk = true;
+						
+						$.ajax({
+							type:"POST",
+							url:"<c:url value='/webUser/controller/UserInfoController' />",
+							data:{
+				            	'register':mode,
+				            	'inputEmail':email,
+				            	'inputAccount':account
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if (resultObj.resultCode == "true") {
+				            		alert(resultObj.resultMessage);
+				            	} else if (resultObj.resultCode == "false") {
+				            		alert(resultObj.resultMessage);
+				            	}
+				            },
+				            error:function(err) {
+				            	alert("發生錯誤，無法寄出測試信");
 				            }
 						});
 					}

@@ -33,7 +33,7 @@
 			</c:if>
 			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-door-open" style="font-size: 25px;color: yellow"></i>
-			<a href="${pageContext.request.contextPath}/webUser/WebUserLogoutResult">
+			<a href="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout">
 			登出 |
 			</a>
 			</c:if>

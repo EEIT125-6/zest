@@ -229,7 +229,7 @@
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
 						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
+						            		alert(resultObj.resultMessage);
 										} else if (resultObj.resultCode == 0) {
 											loginStr = "帳號或密碼錯誤！";
 						            		loginIsOk = false;

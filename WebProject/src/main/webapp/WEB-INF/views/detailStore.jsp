@@ -144,7 +144,8 @@
 			<a href="${bannerURL}">修改店家banner</a>
 			
 			<span>|</span>
-			<form action="/InsertProduct" method="GET" style="display:inline">
+<%-- 			<c:url value="/InsertProduct"/> --%>
+			<form action="${pageContext.request.contextPath}/InsertProduct" method="GET" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
