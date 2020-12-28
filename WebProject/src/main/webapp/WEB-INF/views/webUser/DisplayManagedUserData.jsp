@@ -13,6 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">    
     <title>查詢結果</title>
     <style>
@@ -242,7 +243,7 @@
 						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
 						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
 						<hr />
-						<span id="operatResult"></span>
+						<span id="operateResult"></span>
 					</div>
 				</form>
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>

@@ -305,7 +305,7 @@
                 		}
                 		let oldEmail = document.getElementById("originalEmail").value.trim();
                 		let newEmail = document.getElementById("updatedEmail").value.trim();
-                		let emailCheckCode = docuemtn.getElementById("emailCheckCode").value.trim();
+                		let emailCheckCode = document.getElementById("emailCheckCode").value.trim();
                 		let oldPhone = document.getElementById("originalPhone").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
                 		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
