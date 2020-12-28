@@ -110,7 +110,6 @@ public class WebUserController {
 	}
 
 	/* 執行註冊資料檢查 */
-	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -134,116 +133,34 @@ public class WebUserController {
 		
 		/* 參數宣告 */
 		String submitMessage = "";
-		String fervorTemp = "";
-		
-		/* 建立物件 */
-		WebUserData reg_webUser = new WebUserData(
-				"", 
-				account, 
-				password, 
-				firstName, 
-				lastName, 
-				nickname, 
-				birth, 
-				"",
-				email, 
-				phone, 
-				Date.valueOf(today), 
-				addr0, 
-				addr1, 
-				addr2, 
-				BigDecimal.ZERO, 
-				0, 
-				"inactive", 
-				"",
-				new UserIdentity(), 
-				new Gender(), 
-				new UserWilling(), 
-				new CityInfo());
-		
-		/* 從session取出陣列來繼續完成設定 */
-		List<UserIdentity> identityList = (List<UserIdentity>) model.getAttribute("identityList");
-		List<Gender> genderList = (List<Gender>) model.getAttribute("genderList");
-		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
-		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
-		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
-		
 		String checkCode = ((String) model.getAttribute("checkCode")).toUpperCase();
 		String registerEmail = (String) model.getAttribute("registerEmail");
 		
-		/* 設定物件 */
-		switch (lv) {
-			case 0:
-				reg_webUser.setStatus("active");
-				break;
-			case 1:
-				reg_webUser.setStatus("inactive");
-				break;
-			default:
-				submitMessage = "帳號身分異常";
-				break;
-		}
+		Map<String, Object> map = doCheckNewWebUserObj(
+				model, 
+				lv, 
+				account, 
+				password,
+				firstName,
+				lastName,
+				nickname,
+				birth,
+				email, 
+				phone,
+				addr0,
+				addr1,
+				addr2,
+				genderCode,
+				willingCode,
+				fervorValue,
+				cityCode);
 		
-		/* 用forEach直到取出符合條件的值來 */
-		for (UserIdentity identity : identityList) {
-			if (identity.getLv() == lv) {
-				/* 將符合條件的值放入物件 */
-				reg_webUser.setAccountLv(identity);
-			}
-		}
-		
-		for (Gender gender: genderList) {
-			if (gender.getGenderCode().equals(genderCode)) {
-				/* 將符合條件的值放入物件 */
-				reg_webUser.setGender(gender);
-			}
-		}
-		
-		for (FoodFervor fervorItem: fervorList) {
-			for (String fervor: fervorValue) {
-				if (fervor.equals(fervorItem.getFervorCode().toString())) {
-					if (!fervorTemp.equals("")) {
-						fervorTemp += ",";
-					}
-					fervorTemp += fervorItem.getFervorItem();
-				}
-			}
-		}
-		
-		reg_webUser.setFervor(fervorTemp);
-		for (UserWilling getEmail: willingList) {
-			if (getEmail.getWillingCode().equals(willingCode)) {
-				/* 將符合條件的值放入物件 */
-				reg_webUser.setGetEmail(getEmail);
-			}
-		}
-		
-		for (CityInfo locationInfo: cityInfoList) {
-			if (locationInfo.getCityCode().equals(cityCode)) {
-				/* 將符合條件的值放入物件 */
-				reg_webUser.setLocationInfo(locationInfo);
-			}
-		}
-		
-		/* 預防性後端輸入檢查，正常時回傳空字串 */
-		submitMessage = (submitMessage.equals("")) ? doCheckRegisterInput(
-				reg_webUser, 
-				model) 
-				: submitMessage;
+		WebUserData reg_webUser = (WebUserData)map.get("reg_webUser");
+		submitMessage = (String) map.get("submitMessage");
 		
 		/* 追加檢查checkCode */
 		if (submitMessage.equals("")) {
-			if (inputCheckCode.equals("")) {
-				submitMessage = "驗證碼不可為空白";
-			} else if (checkCode == null || registerEmail == null) {
-				submitMessage = "未產生驗證碼";
-			} else if (!inputCheckCode.equals(checkCode)) {
-				submitMessage = "驗證碼檢查失敗";
-			} else if (!registerEmail.equals(email)) {
-				submitMessage = "email資訊不吻合";
-			} else if (!checkCode.matches("[0-9A-Z]{8}")) {
-				submitMessage = "驗證碼錯誤";
-			}
+			submitMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, email);
 		}
 		
 		/* 成功 */
@@ -438,7 +355,7 @@ public class WebUserController {
 		
 		/* 成功變更 */
 		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用，" + quitUserData.getNickname() + "！我們有緣再見...";
+			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";
 			/* 清空SessionAttribute */
 			sessionStatus.setComplete();
 			redirectPage = "/";
@@ -642,8 +559,8 @@ public class WebUserController {
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-		String checkCode = ((String) model.getAttribute("checkCode")).toUpperCase();
-		String registerEmail = (String) model.getAttribute("registerEmail");
+		String checkCode = (model.getAttribute("checkCode") == null) ? "" : ((String) model.getAttribute("checkCode")).toUpperCase();
+		String registerEmail = (model.getAttribute("registerEmail") == null) ? "" : (String) model.getAttribute("registerEmail");
 		
 		/* 從session取出陣列來繼續完成設定 */
 		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
@@ -722,17 +639,7 @@ public class WebUserController {
 		/* 追加檢查checkCode */
 		if (updateResultMessage.equals("")) {
 			if (!newEmail.equals(oldEmail)) {	
-				if (inputCheckCode.equals("")) {
-					updateResultMessage = "驗證碼不可為空白";
-				} else if (checkCode == null || registerEmail == null) {
-					updateResultMessage = "未產生驗證碼";
-				} else if (!inputCheckCode.equals(checkCode)) {
-					updateResultMessage = "驗證碼檢查失敗";
-				} else if (!registerEmail.equals(newEmail)) {
-					updateResultMessage = "email資訊不吻合";
-				} else if (!checkCode.matches("[0-9A-Z]{8}")) {
-					updateResultMessage = "驗證碼錯誤";
-				}
+				updateResultMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail);
 			}
 		}
 		
@@ -1092,6 +999,91 @@ public class WebUserController {
 		
 		/* 前往註冊畫面 */
 		return "webUser/WebUserAddForm";
+	}
+	
+	/* 執行管理員新增 */
+	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doAdminInsertWebUser(
+			Model model,
+			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
+			@RequestParam(value = "account", defaultValue = "") String account,
+			@RequestParam(value = "password", defaultValue = "") String password,
+			@RequestParam(value = "firstName", defaultValue = "") String firstName,
+			@RequestParam(value = "lastName", defaultValue = "") String lastName,
+			@RequestParam(value = "nickname", defaultValue = "") String nickname,
+			@RequestParam(value = "gender", defaultValue = "N") String genderCode,
+			@RequestParam(value = "birth", defaultValue = "1800-01-01") Date birth,
+			@RequestParam(value = "fervorOption", defaultValue="{7}") List<String> fervorValue,
+			@RequestParam(value = "email", defaultValue = "") String email,
+			@RequestParam(value = "phone", defaultValue = "") String phone,
+			@RequestParam(value = "getEmail", defaultValue = "Y") String willingCode,
+			@RequestParam(value = "locationCode", defaultValue = "0") Integer cityCode,
+			@RequestParam(value = "addr0", defaultValue = "") String addr0,
+			@RequestParam(value = "addr1", defaultValue = "") String addr1,
+			@RequestParam(value = "addr2", defaultValue = "") String addr2,
+			RedirectAttributes redirectAttributes) {
+		
+		System.out.println("Begin in ajax");
+		
+		Map<String, String> resultMap = new HashMap<>();
+		String resultMessage = "";
+		Integer insertResult = -1;
+		
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		WebUserData reg_webUser = new WebUserData();
+		
+		if (userData == null || userData.getAccountLv().getLv() != -1) {
+			resultMessage = "使用者未登入或權限不符！";
+		} else if (!userData.getStatus().equals("active")) {
+			resultMessage = "本帳號無法使用本服務！";
+		}
+		
+		if (resultMessage.equals("")) {	
+			Map<String, Object> map = doCheckNewWebUserObj(
+					model, 
+					lv, 
+					account, 
+					password,
+					firstName,
+					lastName,
+					nickname,
+					birth,
+					email, 
+					phone,
+					addr0,
+					addr1,
+					addr2,
+					genderCode,
+					willingCode,
+					fervorValue,
+					cityCode);
+			
+			reg_webUser = (WebUserData)map.get("reg_webUser");
+			resultMessage = (String) map.get("submitMessage");
+		}
+		
+		/* 成功 */
+		if (resultMessage.equals("")) {
+			/* 調用服務裡的方法 */
+			try {
+				insertResult = wus.insertWebUserData(reg_webUser);
+			} catch (SQLException sqlE) {
+				resultMessage = "發生錯誤！" + sqlE.getMessage();
+			}
+			
+			if (insertResult > 0) {
+				resultMessage = "已將 " + reg_webUser.getAccount() + " 的帳號已成功建立";
+			} 
+		} 
+		
+		/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
+		redirectAttributes.addFlashAttribute("resultMessage", resultMessage);
+		
+		resultMap.put("resultCode", insertResult.toString());
+		resultMap.put("resultMessage", resultMessage);
+		
+		System.out.println("End in ajax");
+		return resultMap;
 	}
 	
 	/* 前往顯示註冊資料畫面 */
@@ -2073,5 +2065,148 @@ public class WebUserController {
 		} 
 		
 		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查驗證碼方法 */
+	public String doCheckCheckCode(String inputCheckCode, String checkCode, String registerEmail, String email) {
+		String message = "";
+		if (inputCheckCode.equals("")) {
+			message = "驗證碼不可為空白";
+		} else if (checkCode == null || registerEmail == null) {
+			message = "未產生驗證碼";
+		} else if (!inputCheckCode.equals(checkCode)) {
+			message = "驗證碼檢查失敗";
+		} else if (!registerEmail.equals(email)) {
+			message = "email資訊不吻合";
+		} else if (!checkCode.matches("[0-9A-Z]{8}")) {
+			message = "驗證碼錯誤";
+		}
+		return message;
+	}
+	
+	/* 使用者物件初始化 */
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> doCheckNewWebUserObj(
+			Model model,
+			Integer lv,
+			String account,
+			String password,
+			String firstName,
+			String lastName,
+			String nickname,
+			Date birth,
+			String email,
+			String phone,
+			String addr0,
+			String addr1,
+			String addr2,
+			String genderCode,
+			String willingCode,
+			List<String> fervorValue,
+			Integer cityCode) {
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		String submitMessage= "";
+		String fervorTemp = "";
+		
+		/* 建立物件 */
+		WebUserData reg_webUser = new WebUserData(
+				"", 
+				account, 
+				password, 
+				firstName, 
+				lastName, 
+				nickname, 
+				birth, 
+				"",
+				email, 
+				phone, 
+				Date.valueOf(today), 
+				addr0, 
+				addr1, 
+				addr2, 
+				BigDecimal.ZERO, 
+				0, 
+				"inactive", 
+				"",
+				new UserIdentity(), 
+				new Gender(), 
+				new UserWilling(), 
+				new CityInfo());
+		
+		/* 從session取出陣列來繼續完成設定 */
+		List<UserIdentity> identityList = (List<UserIdentity>) model.getAttribute("identityList");
+		List<Gender> genderList = (List<Gender>) model.getAttribute("genderList");
+		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
+		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
+		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
+		
+		/* 設定物件 */
+		switch (lv) {
+			case -1:
+				reg_webUser.setStatus("inactive");
+				break;
+			case 0:
+				reg_webUser.setStatus("active");
+				break;
+			case 1:
+				reg_webUser.setStatus("inactive");
+				break;
+			default:
+				submitMessage = "帳號身分異常";
+				break;
+		}
+		
+		/* 用forEach直到取出符合條件的值來 */
+		for (UserIdentity identity : identityList) {
+			if (identity.getLv() == lv) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setAccountLv(identity);
+			}
+		}
+		
+		for (Gender gender: genderList) {
+			if (gender.getGenderCode().equals(genderCode)) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setGender(gender);
+			}
+		}
+		
+		for (FoodFervor fervorItem: fervorList) {
+			for (String fervor: fervorValue) {
+				if (fervor.equals(fervorItem.getFervorCode().toString())) {
+					if (!fervorTemp.equals("")) {
+						fervorTemp += ",";
+					}
+					fervorTemp += fervorItem.getFervorItem();
+				}
+			}
+		}
+		reg_webUser.setFervor(fervorTemp);
+		
+		for (UserWilling getEmail: willingList) {
+			if (getEmail.getWillingCode().equals(willingCode)) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setGetEmail(getEmail);
+			}
+		}
+		
+		for (CityInfo locationInfo: cityInfoList) {
+			if (locationInfo.getCityCode().equals(cityCode)) {
+				/* 將符合條件的值放入物件 */
+				reg_webUser.setLocationInfo(locationInfo);
+			}
+		}
+		
+		/* 預防性後端輸入檢查，正常時回傳空字串 */
+		submitMessage = (submitMessage.equals("")) ? doCheckRegisterInput(
+				reg_webUser, 
+				model) 
+				: submitMessage;
+		
+		map.put("reg_webUser", reg_webUser);
+		map.put("submitMessage", submitMessage);
+		return map;
 	}
 }

@@ -99,7 +99,6 @@ function checkForm() {
 			if (phoneObjValue == oldPhoneObjValue) {
 				counter++;
 			}
-			alert("getEmailObjValue = "+getEmailObjValue+",oldGetEmailObjValue="+oldGetEmailObjValue);
 			if (getEmailObjValue == oldGetEmailObjValue) {
 				counter++;
 			} 
