@@ -173,6 +173,8 @@ ul.slides li img {
 				<legend>搜尋選項</legend>
 				<input type="hidden" name="userLv" id="userLv"
 					value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
+				<input type="hidden" name="userAccount" id="userAccount"
+					value=<c:out value="${userFullData.account}"></c:out> />
 				<c:if test="${operateMessage != null}">
 					<p><c:out value="${operateMessage}" /></p>
 				</c:if>
@@ -222,13 +224,12 @@ ul.slides li img {
 			</fieldset>
 			<div align="center">
 				<a href="WebUserMain">
-				<input type="button" id="back" name="back" value="返回">
+				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
-				<input type="button" id="search" name="select" value="執行查詢"> 
-				<input type="reset" name="reset" value="重設條件"
-					onclick="clearMessage()">
+				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+				<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 				<c:if test="${userFullData.accountLv.lv == -1}" >
-					<a href="WebUserAddForm"><input type="button" id="adminAdd" name="adminAdd" value="新增帳號"></a>
+					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:blue">add</i></button></a>
 				</c:if>
 			</div>
 			<hr />
@@ -245,6 +246,7 @@ ul.slides li img {
 			$("#search").click(function() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
+				var account = document.getElementById("userAccount").value.trim();
 				var accountObjValue = document.getElementById("account").value.trim();
 				var nicknameObjValue = document.getElementById("nickname").value.trim();
 				var fervorObj = document.getElementsByClassName("fervor");
@@ -367,14 +369,16 @@ ul.slides li img {
 									content += "<tr>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
-												+ userData.account
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>";
+										content += (userData.account != account && userData.account != "WebAdmin" && userData.account != "TestUser" && userData.account != "TestBoss")
+													? "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
+													+ userData.account
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+													+ "</a>"
+													+ "</td>"
+													: "<td></td>";			
+										content += "<td>";
 										content += (userData.status == 'active') 
 												? "<a href='${pageContext.request.contextPath}/webUser/QuitWebUser/"
 												+ userData.account
@@ -500,31 +504,31 @@ ul.slides li img {
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
-											+ "<th>刪除</th>"
-											+ "<th>其他</th>"
-											+ "<th>查看</th>"
-											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼</th>"
-											+ "<th>偏好食物</th>"
-											+ "<th>居住區域</th>"
-											+ "<th>帳號身分</th>"
-											+ "<th>帳號狀態</th>"
-											+ "</tr>";
+												+ "<th>刪除</th>"
+												+ "<th>其他</th>"
+												+ "<th>查看</th>"
+												+ "<th>帳號名稱</th>"
+												+ "<th>稱呼</th>"
+												+ "<th>偏好食物</th>"
+												+ "<th>居住區域</th>"
+												+ "<th>帳號身分</th>"
+												+ "<th>帳號狀態</th>"
+												+ "</tr>";
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
-											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼</th>"
-											+ "<th>偏好食物</th>"
-											+ "<th>居住區域</th>"
-											+ "<th>帳號身分</th>"
-											+ "</tr>";
+												+ "<th>帳號名稱</th>"
+												+ "<th>稱呼</th>"
+												+ "<th>偏好食物</th>"
+												+ "<th>居住區域</th>"
+												+ "<th>帳號身分</th>"
+												+ "</tr>";
 								} else {
 									content += "<tr>"
-											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼</th>"
-											+ "<th>偏好食物</th>"
-											+ "<th>居住區域</th>"
-											+ "</tr>";
+												+ "<th>帳號名稱</th>"
+												+ "<th>稱呼</th>"
+												+ "<th>偏好食物</th>"
+												+ "<th>居住區域</th>"
+												+ "</tr>";
 								}
 
 								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
@@ -533,25 +537,27 @@ ul.slides li img {
 									content += "<tr>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
-												+ userData.account
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>";
+										content += (userData.account != account && userData.account != "WebAdmin" && userData.account != "TestUser" && userData.account != "TestBoss")
+													? "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
+													+ userData.account
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+													+ "</a>"
+													+ "</td>"
+													: "<td></td>";			
+										content += "<td>";
 										content += (userData.status == 'active') 
-												? "<a href='${pageContext.request.contextPath}/webUser/QuitWebUser/"
-												+ userData.account
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-												+ "</a>"
-												: "<a href='${pageContext.request.contextPath}/webUser/ActiveWebUser/"
-												+ userData.account
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-												+ "</a>"										
+													? "<a href='${pageContext.request.contextPath}/webUser/QuitWebUser/"
+													+ userData.account
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+													+ "</a>"
+													: "<a href='${pageContext.request.contextPath}/webUser/ActiveWebUser/"
+													+ userData.account
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+													+ "</a>"										
 										content += "</td>"
 												+ "<td>"
 												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"

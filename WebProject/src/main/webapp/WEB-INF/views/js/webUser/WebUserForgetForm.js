@@ -243,7 +243,7 @@ function changeVisibility() {
 function clearMessage() {
 	document.getElementById("accountSpan").innerHTML = "";
 	document.getElementById("passwordSpan").innerHTML = "";
-	document.getElementById("birthdaySpan").innerHTML = "";
+	document.getElementById("birthSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
 	document.getElementById("phoneSpan").innerHTML = "";
 }

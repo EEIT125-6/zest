@@ -182,9 +182,9 @@
 						<span id="requestSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="<c:url value='/webUser/WebUserLogin' /> "><input type="button" id="login" name="login" value="返回登入"></a>
-						<input type="button" id="recovery" name="recovery" value="送出請求">
-						<input type="reset" name="reset" value="重設" onclick="">
+                		<a href="<c:url value='/webUser/WebUserLogin' /> "><button type="button" style="font-size:18px" id="login" name="login" >返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>  		
+						<button type="button" style="font-size:18px" id="recovery" name="recovery" >送出請求 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>

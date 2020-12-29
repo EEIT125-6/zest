@@ -258,10 +258,10 @@
 								<input type="button" id="reactiveAccount" name="update" value="恢復帳號">
 							</c:when>
 						</c:choose>
-						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號(尚未完成) <i class="material-icons" style="font-size:18px;color:green">build</i></button>
+						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號(尚未完成) <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
 						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
-						<button type="button" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:green">cached</i></button>
-						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
+						<button type="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="WebUserSearchForm"><button type="button" style="font-size:18px" >返回上一頁 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<hr />
 						<span id="operateResult"></span>
 					</div>

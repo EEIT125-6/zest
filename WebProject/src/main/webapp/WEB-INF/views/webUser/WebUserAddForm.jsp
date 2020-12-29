@@ -173,13 +173,13 @@
 						<label>帳號名稱：</label> 
 						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 							placeholder="請輸入帳號，8~20個字" required="required" />
-						<input type="button" name="register" id="checkAccount" value="檢查帳號">
+						<button type="button" style="font-size:18px" id="checkAccount" >檢查帳號 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>中文姓氏：</label>
@@ -195,7 +195,7 @@
 						<label>稱呼方式：</label>
 						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
-						<input type="button" name="register" id="checkRegisterNickname" value="檢查稱呼">
+						<button type="button" style="font-size:18px" id="checkRegisterNickname" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<label>生理性別：</label>
@@ -228,13 +228,13 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱" />
+						<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<label>聯絡電話：</label>
 						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
-						<input type="button" name="register" id="checkRegisterPhone" value="檢查電話">
+						<button type="button" style="font-size:18px" id="checkRegisterPhone" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
@@ -277,9 +277,9 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<input type="button" id="add" name="add" value="送出">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
-						<a href="<c:url value='/webUser/WebUserSearchForm' /> "><input type="button" name="login" value="返回" onclick="clearMessage()"></a>
+						<button type="button" style="font-size:18px" id="add" name="add" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="<c:url value='/webUser/WebUserSearchForm' /> "><button type="button" name="login" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<span id="addResultSpan"></span>
 					</div>
 					<hr />

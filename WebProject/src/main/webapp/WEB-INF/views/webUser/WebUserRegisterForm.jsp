@@ -285,9 +285,9 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" id="submit" name="register" value="送出">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
-						<a href="<c:url value='/webUser/WebUserLogin' /> "><input type="button" name="login" value="前往登入" onclick="clearMessage()"></a>
+						<button type="submit" style="font-size:18px" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="<c:url value='/webUser/WebUserLogin' /> "><button type="button" name="login" style="font-size:18px" >前往登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
 				</form>

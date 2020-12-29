@@ -13,6 +13,7 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <title>註冊資料確認</title>
     <style>
@@ -164,7 +165,7 @@
 								<c:out value = "*" />
 							</c:forEach>
 						</c:if>
-						<input type="button" name="showPassword" id="showPassword" value="顯示密碼">
+						<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<input type="hidden" name="password" id="password" value="${reg_webUser.password}">
 						<hr />
 						<label>中文姓氏：</label>
@@ -219,8 +220,8 @@
 						<hr />
 					</fieldset>
 					<div align="center">
-						<input type="submit" name="register" id="registerConfirm" value="確認">
-						<a href="<c:url value='/webUser/controller/DisplayWebUserInfo/undo' />"><input type="button" name="register" id="registerCancel" value="取消"></a>
+						<button type="submit" name="register" id="registerConfirm" style="font-size:18px" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<a href="<c:url value='/webUser/controller/DisplayWebUserInfo/undo' />"><button type="button" name="register" id="registerCancel" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
 				</form>
@@ -231,7 +232,10 @@
 						
 						showPasswordBtn.onclick = function() {
 							document.getElementById("password").type = (document.getElementById("password").type == "hidden") ? "text" : "hidden";
-					    	document.getElementById("showPassword").value = (document.getElementById("showPassword").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼";
+					    	document.getElementById("showPassword").innerHTML 
+							= (document.getElementById("showPassword").textContent == "顯示密碼 visibility") 
+							? "隱藏密碼 "+"<i class='material-icons' style='font-size:18px;color:green'>visibility_off</i>" 
+							: "顯示密碼 "+"<i class='material-icons' style='font-size:18px;color:red'>visibility</i>"; 
 						}
 					}
 				</script>
