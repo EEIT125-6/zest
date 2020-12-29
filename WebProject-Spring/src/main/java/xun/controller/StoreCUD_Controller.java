@@ -46,6 +46,19 @@ public class StoreCUD_Controller {
 		return "Insert";
 	}
 	
+//	@InitBinder
+//	public void whiteListing(WebDataBinder binder) {
+//	    binder.setAllowedFields(
+//	    "author", 
+//	    "bookNo", 
+//	    "category", 
+//	    "price", 
+//	    "title", 
+//	    "companyId" 
+//	    );
+//	}
+	
+	
 	@PostMapping("/InsertStore")
 	public String InsertStore(
 			@ModelAttribute("storeBean") StoreBean storeBean,

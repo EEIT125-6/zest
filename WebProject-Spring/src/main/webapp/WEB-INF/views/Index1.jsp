@@ -43,7 +43,7 @@
        }
        .photo{
            padding: 0%;
-           background: url("Images/backbar2-1.jpg"); 
+           background: url("Images/hero-bg.jpg"); 
            height: 540px;
            padding-top: 220px;
            background-size:100%
@@ -147,9 +147,25 @@
 #gotop :hover{
     background:#0099CC;
 }
+
+
+
     </style>
 </head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <body>
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    </script>
+    <!--PreLoader Ends-->
 <!--             <div class="container-fluid  header" style="height: 100px;border-bottom: 3px solid #e76f51;height: 90px;padding-top: 5px;background-color: #003049" > -->
 <!--               <div class="container" > -->
 <!--               <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a> -->
@@ -262,8 +278,11 @@
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script>
+
+    
+    
          $(function(){
             let slideNum=0;
             let slideCount=$(".slides li").length;

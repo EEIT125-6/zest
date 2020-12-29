@@ -139,6 +139,19 @@ body {
 </style>
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    </script>
+<!--PreLoader Ends-->    
 		<%@include file ="Header-Include-prototype.jsp" %>
             <div class="container-fluid " style="margin-top:10px">
                 <!-- <img src="images/backbar2-1.jpg"> -->
@@ -298,6 +311,7 @@ body {
       
 		<div class="test1" style="margin-bottom:50px;">
 			<div id="ajax"></div>
+<!-- 			<div id="lazyload" class="circle" ></div> -->
 <%-- 		<c:forEach var="row" items="${Results}"> --%>
 
 <%-- 				<c:url value="StoreGetFullstore" var="GOURL"> --%>
@@ -328,7 +342,7 @@ body {
 <%-- 		</c:forEach> --%>
 		</div>
 <!-- 		----------------AJAX 大餅   START----------------------------- -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 		<script type="text/javascript">
 		var context = "";
 		$(document).ready(function(){
@@ -408,6 +422,8 @@ body {
 
 				$(window).scroll(function(){
 					
+					
+					
 					if($(window).scrollTop() >= $(document).height() - $(window).height()){
 						
 						$.ajax({
@@ -447,8 +463,11 @@ body {
 										        	"</div>"+
 										    "</div>"+
 										"</a>" ;
+
 							}
 								flag += 3;
+// 								$(".circle").fadeOut(1000);
+// 								$(".circle").fadeIn("1000");
 								$("#ajax").html(context);
 								
 					

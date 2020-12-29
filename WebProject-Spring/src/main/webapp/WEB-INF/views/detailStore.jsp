@@ -97,7 +97,18 @@
 </head>
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    </script>
+    <!--PreLoader Ends-->
     <%@include file = "Header-Include.jsp" %>
 
 <!--             <div class="container-fluid  header" > -->
@@ -144,7 +155,8 @@
 			<a href="${bannerURL}">修改店家banner</a>
 			
 			<span>|</span>
-			<form action="/InsertProduct" method="GET" style="display:inline">
+						
+			<form action="<c:url value='/InsertProduct'/>" method="GET" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
@@ -230,14 +242,17 @@
 <%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
 <%-- 				             		</c:if> --%>
 				             		
-							<form action="updateProductpage" method="post" style="display:inline">
+				             		
+<!-- 							<form action="updateProductpage" method="get" style="display:inline"> -->
+							<form action="<c:url value = '/updateProductpage' />" method="Post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
 							</form>
 							
+<%-- 								<c:url value = '/deleteProductpage'/> --%>
 							<span>|</span>
-							<form action="deleteProductpage" method="post" style="display:inline">
+							<form action="<c:url value = '/deleteProductpage'/>" method="Post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
@@ -296,6 +311,7 @@
 <a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
    <i class="fas fa-chevron-up"></i>
 </a>
+
 <script type="text/javascript">
 $(function() {
     /* 按下GoTop按鈕時的事件 */

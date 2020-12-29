@@ -1,9 +1,19 @@
 package xun.AOP;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -30,6 +40,11 @@ public class LogAspect {
 
 	@Autowired
 	StoreService ss;
+	
+
+	@Autowired
+	HttpServletRequest req;
+	
 	@Pointcut("execution(* xun.controller.*.*(..))")
 	public void pointcut() {
 		
@@ -58,6 +73,72 @@ public class LogAspect {
 		
 	}
 
+	@After("pointcut()")
+	public void afterLog(JoinPoint joinPoint) {
+		
+
+		String remoteAddr = req.getRemoteAddr();
+		System.out.println(remoteAddr);
+		
+		System.out.println("資料寫進LOG");
+		File logpath = new File("C://WebProjectLog");
+		logpath.mkdir();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern("yyyy-MM-dd");
+        Date date = new Date();// 获取当前时间 
+        System.out.println("现在时间：" + sdf.format(date)); // 输出已经格式化的现在时间（24小时制）
+        File logfile = new File("C://WebProjectLog//"+sdf.format(date)+".txt");
+        if(!logfile.exists()) {
+        	try {
+				logfile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+		String methodName = joinPoint.getSignature().getName();
+		List<Object> args = Arrays.asList(joinPoint.getArgs());
+		System.out.println("methodName:"+methodName);
+//		System.out.println("args:"+args);
+//		-----------------------------------------
+        StringBuffer buf = new StringBuffer();
+    	try (
+    			FileInputStream fis	= new FileInputStream(logfile);
+    			InputStreamReader isr =  new InputStreamReader(fis,"UTF-8");
+    			BufferedReader br = new BufferedReader(isr);
+    			){
+    		String line = "";
+    		while ((line = br.readLine()) != null) { 
+//    			System.out.println(line); 
+    			buf.append(line);
+    			buf.append(System.getProperty("line.separator"));
+    			} 				
+    		System.out.println("讀取完畢");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	try (
+    			FileOutputStream fos = new FileOutputStream(logfile);
+    			PrintWriter pw = new PrintWriter(fos);        			
+    			){
+//    		sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
+    		sdf.applyPattern(" HH:mm:ss a");
+    		String newcontent = 
+    				"執行時間 : "+  sdf.format(date)
+    				+"  methodName:"+methodName
+//    				+"  args:"+args
+    				;
+    		buf.append(newcontent);
+//    		System.out.println(buf.toString());
+    		pw.write(buf.toString());
+    		pw.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		-----------------------------------------
+	}
 	
 	
 	@After("execution(* xun.controller.ProductCUD_Controller.*(..))")

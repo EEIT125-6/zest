@@ -146,7 +146,7 @@ public class StoreR_Controller {
 		List<StoreBean> list = ss.getNamestore(stname);
 //		model.addAttribute("Results", list);
 		model.addAttribute("Results", null);
-		model.addAttribute("stname", stname);
+		model.addAttribute("stname", stname.replace("<", "").replace(">", ""));
 		return "SimpleStore";
 	}
 	
