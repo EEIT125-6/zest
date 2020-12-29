@@ -317,56 +317,19 @@ function checkEmail() {
 	} 
 }
 
-function checkEmailCheckCode() {
-	let emailCheckCodeObjValue = document.getElementById("emailCheckCode").value.trim();
-	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
-	let checkCode = document.getElementById("checkCode").value.trim();
-	
-	let emailCheckCodeIsOk = true;
-	let emailCheckCodeStr;
-	
-	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-		emailCheckCodeStr = "請先執行聯絡信箱檢查";
-		emailCheckCodeIsOk = false;
-	} else if (checkCode == "" || checkCode.length == 0) {
-		emailCheckCodeStr = "尚未產生驗證碼";
-		emailCheckCodeIsOk = false;
-	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
-		emailCheckCodeStr = "驗證碼不可為空值";
-		emailCheckCodeIsOk = false;
-	} else if (checkCode != emailCheckCodeObjValue) {
-		emailCheckCodeStr = "聯絡信箱驗證碼錯誤";
-		emailCheckCodeIsOk = false;
-	} else if (checkCode == emailCheckCodeObjValue) {
-		emailCheckCodeStr = "聯絡信箱驗證成功";
-		emailCheckCodeIsOk = true;
-	} 
-	if (!emailCheckCodeIsOk) {
-		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
-		emailCheckCodeSpan.style.color = "red";
-		emailCheckCodeSpan.style.fontStyle = "italic";
-		return false;
-	}
-	else {
-		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
-		emailCheckCodeSpan.style.color = "black";
-		emailCheckCodeSpan.style.fontStyle = "normal";
-		return true;
-	}
-}
-
 function checkPhone() {
-	let phoneObjValue = document.getElementById("phone").value;
+	let phoneObjValue = document.getElementById("updatedPhone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
 	let phoneIsOk = true;
 	let phoneStr;
 	let phoneReg = /[0]{1}[2-9]{1}[0-9]{7,9}/
 	
 	if (phoneObjValue == "" || phoneObjValue.length == 0) {
-		phoneStr = "連絡電話不可為空白";
+		phoneStr = "連絡電話不可為空";
 		phoneIsOk = false;
-	} else if(phoneObjValue.length < 9 || phoneObjValue.indexOf(" ") != -1) {
+	} else if (phoneObjValue.length < 9 || phoneObjValue.indexOf(" ") != -1) {
 		phoneStr = "連絡電話格式錯誤";
 		phoneIsOk = false;
 	} else if (!phoneObjValue.match(phoneReg)) {
@@ -378,22 +341,28 @@ function checkPhone() {
 	} else if (phoneObjValue.substring(0, 2) != "09" && phoneObjValue.length == 10) {
 		phoneStr = "室內電話格式錯誤";
 		phoneIsOk = false;
-	} else {
+	} else if (phoneObjValue == oldPhoneObjValue){
 		phoneStr = "連絡電話已填寫完畢";
+		phoneIsOk = true;
+	} else {
+		phoneStr = "連絡電話已修改完畢";
 		phoneIsOk = true;
 	}
 	if (!phoneIsOk) {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
-		document.getElementById("checkRegisterPhone").style = "display:none";
 		return false;
 	}
 	else {
-		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
-		phoneSpan.style.color = "black";
-		phoneSpan.style.fontStyle = "normal";
-		document.getElementById("checkRegisterPhone").style = "display:inline";
+		if (phoneObjValue == oldPhoneObjValue) {
+			phoneSpan.innerHTML = "";
+		} else {
+			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
+			phoneSpan.style.color = "black";
+			phoneSpan.style.fontStyle = "normal";
+			document.getElementById("checkEmailUsed").style = "display:inline";
+		}
 		return true;
 	}
 }
@@ -427,95 +396,122 @@ function checkLocation_code() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
 	let addr0Span = document.getElementById("addr0Span");
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	
 	let addr0IsOk = true;
 	let addr0Str;
 	
 	if (addr0ObjValue == "" || addr0ObjValue.length == 0) {
-		addr0Str = "生活地點一不可為空白";
+		addr0Str = "生活地點一不可為空";
 		addr0IsOk = false;
-	} else if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
-		addr0Str = "生活地點一不可與其他地點重複";
+	} else if ((addr0ObjValue == addr1ObjValue && addr1ObjValue != "") || (addr0ObjValue == addr2ObjValue && addr2ObjValue != "")) {
+		addr0Str = "生活地點重複填寫";
+		addr0IsOk = false;
+	} else if ((addr0ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr2ObjValue) || (addr0ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr1ObjValue)) {
+		addr0Str = "生活地點重複填寫";
 		addr0IsOk = false;
 	} else {
 		addr0Str = "生活地點一已填寫完畢";
 		addr0IsOk = true;
 	}
-	if (!addr0IsOk) {
+	if (addr0IsOk) {
+		if (addr0ObjValue == oldAddr0ObjValue) {
+			addr0Span.innerHTML = "";
+		} else {			
+			addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
+			addr0Span.style.color = "black";
+			addr0Span.style.fontStyle = "normal";
+		}
+		return true;
+	} else {
 		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr0Str;
 		addr0Span.style.color = "red";
 		addr0Span.style.fontStyle = "italic";
 		return false;
 	}
-	else {
-		addr0Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr0Str;
-		addr0Span.style.color = "black";
-		addr0Span.style.fontStyle = "normal";
-		return true;
-	}
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
 	let addr1Span = document.getElementById("addr1Span");
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	
 	let addr1IsOk = true;
 	let addr1Str;
 	
 	if ((addr1ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr1ObjValue == addr2ObjValue && addr2ObjValue != "")) {
-		addr1Str = "生活地點二不可與其他地點重複";
+		addr1Str = "生活地點重複填寫";
+		addr1IsOk = false;
+	} else if ((addr1ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr2ObjValue) || (addr1ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr0ObjValue)) {
+		addr1Str = "生活地點重複填寫";
 		addr1IsOk = false;
 	} else {
 		addr1Str = "生活地點二已填寫完畢";
 		addr1IsOk = true;
 	}
-	if (!addr1IsOk) {
+	if (addr1IsOk) {
+		if (addr1ObjValue == oldAddr1ObjValue || (addr1ObjValue == "" || addr1ObjValue.length == 0)) {
+			addr1Span.innerHTML = "";
+		} else {
+			addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr1Str;
+			addr1Span.style.color = "black";
+			addr1Span.style.fontStyle = "normal";
+		}
+		return true;
+	} else {
 		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr1Str;
 		addr1Span.style.color = "red";
 		addr1Span.style.fontStyle = "italic";
 		return false;
 	}
-	else {
-		addr1Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr1Str;
-		addr1Span.style.color = "black";
-		addr1Span.style.fontStyle = "normal";
-		return true;
-	}
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
 	let addr2Span = document.getElementById("addr2Span");
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
 	
 	let addr2IsOk = true;
 	let addr2Str;
 	
 	if ((addr2ObjValue == addr0ObjValue && addr0ObjValue != "") || (addr2ObjValue == addr1ObjValue && addr1ObjValue != "")) {
-		addr2Str = "生活地點三不可與其他地點重複";
+		addr2Str = "生活地點重複填寫";
+		addr2IsOk = false;
+	} else if ((addr2ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr1ObjValue) || (addr2ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr0ObjValue)) {
+		addr2Str = "生活地點重複填寫";
 		addr2IsOk = false;
 	} else {
 		addr2Str = "生活地點三已填寫完畢";
 		addr2IsOk = true;
 	}
-	if (!addr2IsOk) {
+	if (addr2IsOk) {
+		if (addr2ObjValue != oldAddr2ObjValue || (addr2ObjValue == "" || addr2ObjValue.length == 0)) {
+			addr2Span.innerHTML = "";
+		} else {
+			addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr2Str;
+			addr2Span.style.color = "black";
+			addr2Span.style.fontStyle = "normal";
+		}
+		return true;
+	} else {
 		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addr2Str;
 		addr2Span.style.color = "red";
 		addr2Span.style.fontStyle = "italic";
 		return false;
-	}
-	else {
-		addr2Span.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addr2Str;
-		addr2Span.style.color = "black";
-		addr2Span.style.fontStyle = "normal";
-		return true;
 	}
 }
 

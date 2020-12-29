@@ -202,10 +202,10 @@
 							<span id="emailSpan"></span>
 							<hr />
 							<label>聯絡電話：</label>
-							<input type="hidden" name="phone" id="phone" value="${managedUserData.phone}" onblur="checkPhone()"
+							<input type="text" name="phone" id="phone" value="${managedUserData.phone}" onblur="checkPhone()"
 								size="40" maxlength="11" placeholder="請輸入行動電話或市內電話號碼">
 							<input type="hidden" name="oldPhone" id="oldPhone" value="${managedUserData.phone}">
-							<button type="button" style="font-size:18px" id="checkPhoneEmailUsed" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+							<button type="button" style="font-size:18px" id="checkPhoneUsed" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 							<span id="phoneSpan"></span>
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
@@ -217,16 +217,22 @@
 							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationInfo.cityCode}">
 							<hr />
 							<label>生活地點一：</label>
-							<c:out value="${managedUserData.addr0}" />
+							<input type="text" name="addr0" id="addr0" value="${managedUserData.addr0}" onblur="checkAddr0()"
+								size="65" maxlength="65" placeholder="此項為必填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr0" id="addr0" value="${managedUserData.addr0}">
+							<span id="addr0Span"></span>
 							<hr />
 							<label>生活地點二：</label>
-							<c:out value="${managedUserData.addr1}" />
+							<input type="text" name="addr1" id="addr1" value="${managedUserData.addr1}" onblur="checkAddr1()"
+								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr1" id="addr1" value="${managedUserData.addr1}">
+							<span id="addr1Span"></span>
 							<hr />
 							<label>生活地點三：</label>
-							<c:out value="${managedUserData.addr2}" />
+							<input type="text" name="addr2" id="addr2" value="${managedUserData.addr2}" onblur="checkAddr2()"
+								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr2" id="addr2" value="${managedUserData.addr2}">
+							<span id="addr2Span"></span>
 							<hr />
 							<label>所擁有的橙幣：</label>
 							<c:out value="${managedUserData.zest}" />
@@ -252,8 +258,9 @@
 								<input type="button" id="reactiveAccount" name="update" value="恢復帳號">
 							</c:when>
 						</c:choose>
-						<input type="button" id="updateAccount" name="update" value="編輯帳號(尚未完成)">
+						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號(尚未完成) <i class="material-icons" style="font-size:18px;color:green">build</i></button>
 						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
+						<button type="button" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:green">cached</i></button>
 						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
 						<hr />
 						<span id="operateResult"></span>
