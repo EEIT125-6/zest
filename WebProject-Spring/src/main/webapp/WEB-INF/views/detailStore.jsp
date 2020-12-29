@@ -42,6 +42,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+  
+          <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+  
     <%@include file = "Link_Meta-Include.jsp" %>
     <title>橙皮  </title>
     <style>
@@ -79,10 +82,67 @@
        .box2{
        
        }
-       .container{
+       .uploadImage{
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    width: 90px;
+    height: 90px;
+    background: url("../點選上傳.png") no-repeat;
+    background-size: cover;
+    text-align: center;
+    cursor: pointer;
+}
+.uploadImage p{
+    position: absolute;
+    left:0;right:0;
+    bottom: 10px;
+    font-size: 14px;
+    color: #999999;
+}
+.uploadImage input#file{
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.preview{
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+    width: 90px;
+    height: 90px;
+    background: #E1E6ED;
+    text-align: center;
+}
+.preview img{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+.preview img[src=""]{
+    opacity:0;
+    filter: Alpha(0); /* 相容IE8-9 */
+}
+.preview img:not([src]){
+    opacity:0;
+    filter: Alpha(0); /* 相容IE8-9 */
+}
+.preview .word{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    line-height: 90px;
+    font-size: 14px;
+    color: #999999;
+    z-index: 0;
+}
+
+ 
        
-       
-       }
 
 #gotop {
     position:fixed;
@@ -199,8 +259,22 @@
         <hr>
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">  
-     <div class="box1" style="text-align:center ;margin: auto;" >   
-        <div class="d1" >評分總人數:</div>
+            
+     <div class="box1" style="text-align:center ;margin: auto;" > 
+       
+       <textarea name="content" id="editor">This is some sample content.</textarea>
+                       <script>
+                        ClassicEditor
+                                .create( document.querySelector( '#editor' ) )
+                                .then( editor => {
+                                        console.log( editor );
+                                } )
+                                .catch( error => {
+                                        console.error( error );
+                                } );
+                </script>
+                
+        <div class="d1" style="text-align:left ;">評分總人數:</div>
         <br>
         <div class="d2">
             <h3>給予評價</h3>
@@ -238,7 +312,7 @@
         </div>
     </div>
     <br>
-    <div class="box2" style="text-align: center;margin: auto;">
+    <div class="box2" style="text-align:center ;margin: auto;">
        <form method="get" action="<c:url value='/pack'/>">
 		<input type="hidden" name="storeId" value="${id}">
    <fieldset>
@@ -256,6 +330,34 @@
         <label class="t1" for="photo">照片:</label>
         <input type="text" id="photo" name="photo" ><br>
     </div> -->  
+    
+    
+<!--    <div> -->
+<!-- 		 <form action="/somewhere/to/upload" enctype="multipart/form-data"> -->
+		
+<!-- 		   <input type="file" onchange="readURL(this)" targetID="preview_progressbarTW_img" accept="image/gif, image/jpeg, image/png"/ > -->
+<!-- 		<div> -->
+<!-- 		   <img id="preview_progressbarTW_img" src="#"  height="200px"  wight="200ㄌ"/> -->
+<!-- 		</div> -->
+<!-- 		</form> -->
+<!--     </div><br> -->
+<div class="pic">
+    <div class="uploadImage">
+        <input type="file" value="上傳檔案" id="file" accept="image/png, image/jpeg, image/gif, image/jpg" multiple/>
+        <p>點選上傳</p>
+    </div>
+    <div class="preview">
+        <img src="" id="look1">
+        <p class="word">圖片1</p>
+    </div>
+    <div class="preview">
+        <img src="" id="look2">
+        <p class="word">圖片2</p>
+    </div>
+</div>
+
+
+    
 <div class="st1">
     <label class="t1" for="pwd1">留言:</label>
     <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
@@ -271,6 +373,8 @@
     </div>
     
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+
     
     <script >  
            
@@ -287,6 +391,70 @@
             let starts = $(this).attr("id").split("img")[1]
 //             $('#startPcs').html("打分中..."+starts+"顆星")
         });
+        
+        
+        
+        
+        
+        
+
+// var hasUploadedOne = false;// 已上傳過1張圖片
+// var hasUploadedTwo = false;// 已上傳過2張圖片
+
+// //獲取到預覽框
+// var imgObjPreview1 = document.getElementById("look1");
+// var imgObjPreview2 = document.getElementById("look2");
+
+// document.getElementById('file').onchange = function() {
+//     // 若還沒完成2張圖片的上傳
+//     if(!hasUploadedTwo){
+//         //獲取到file的檔案
+//         var docObj = this;
+
+//         //獲取到檔名和型別（非IE，可一次上傳1張或多張）
+//         if(docObj.files && docObj.files[0]) {
+//             // 一次上傳了>=2張圖片（只有前兩張會真的上傳上去）
+//             if(docObj.files.length >= 2){
+//                 imgObjPreview1.src = window.URL.createObjectURL(docObj.files[0]);
+//                 imgObjPreview2.src = window.URL.createObjectURL(docObj.files[1]);
+//                 hasUploadedTwo = true;
+//             }
+//             //一次只上傳了1張照片
+//             else{
+//                 // 這是上傳的第一張照片
+//                 if(!hasUploadedOne){
+//                     imgObjPreview1.src = window.URL.createObjectURL(docObj.files[0]);
+//                     hasUploadedOne = true;
+//                 }
+//                 // 這是上傳的第二張照片
+//                 else{
+//                     imgObjPreview2.src = window.URL.createObjectURL(docObj.files[0]);
+//                     hasUploadedTwo = true;
+//                 }
+//             }
+
+//         }
+//         //IE（只能一次上傳1張）
+//         else {
+//             //使用濾鏡
+//             docObj.select();
+//             var imgSrc = document.selection.createRange().text;
+//             // 這是上傳的第一張照片
+//             if(!hasUploadedOne){
+//                 imgObjPreview1.src = imgSrc;
+//                 hasUploadedOne = true;
+//             }
+//             // 這是上傳的第二張照片
+//             else{
+//                 imgObjPreview2.src = imgSrc;
+//                 hasUploadedTwo = true;
+//             }
+//             document.selection.empty();
+//         }
+//         return true;
+//     }
+// }
+
         
         
     </script></span>
@@ -492,3 +660,8 @@ $(function() {
         
 </body>
 </html>
+
+
+<script>
+
+</script>

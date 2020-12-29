@@ -1,13 +1,36 @@
 package board.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import board.service.BoardService;
 import xun.model.BoardBean;
@@ -17,7 +40,8 @@ import xun.service.StoreService;
 @Controller
 @SessionAttributes("boardBean")
 public class BoardController {
-
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired // 自動注入參數到servicec或dao
 	BoardService boardService;
 	@Autowired
@@ -89,6 +113,21 @@ public class BoardController {
 		System.out.println("!!!" + boardid);
 		if (boardService.deleteBoard(boardid) > 0)
 			model.addAttribute("message", "success");
+		return "/orange/Thanks";
+	}
+
+	@PostMapping("/upload")
+	public String doUpload(@RequestParam("uploadFile") MultipartFile uploadfiles) throws IOException {
+		
+		 // 檔案存放服務端的位置
+   	 String UPLOADED_FOLDER = request.getServletContext().getRealPath("/upload/");
+        File dir = new File(UPLOADED_FOLDER + File.separator + "tmpFiles");
+        if (!dir.exists())
+            dir.mkdirs();
+        // 寫檔案到伺服器
+        File serverFile = new File(dir.getAbsolutePath() + File.separator + uploadfiles.getOriginalFilename());
+        uploadfiles.transferTo(serverFile);
+
 		return "/orange/Thanks";
 	}
 }

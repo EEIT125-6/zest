@@ -3,8 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<%-- <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" --%>
+<%-- url="jdbc:sqlserver://10.31.25.130:1433;databaseName=WebProject" user="scott" password="tiger"/> --%>
+
 <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-url="jdbc:sqlserver://10.31.25.130:1433;databaseName=WebProject" user="scott" password="tiger"/>
+url="jdbc:sqlserver://localhost;databaseName=DemoLab" user="sa" password="sa123456"/>
 
 <%-- <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" --%>
 <%-- url="jdbc:sqlserver://localhost;databaseName=DemoLab" user="scott" password="tiger"/> --%>
@@ -121,6 +124,10 @@ SELECT * FROM Board;
             color:rgba(255,255,255,1);            
         }
         
+        .file {
+    display: none;
+}
+        
         
 #gotop {
     position:fixed;
@@ -150,7 +157,7 @@ SELECT * FROM Board;
 		<form method=Get action="<c:url value="/selectboard"/>">
 			<label for="">搜尋:</label><input type="text" width="300" name="param">
 			<input type="submit" name="select" value="select">
-			<table border="1" class="tb1">
+			<table border="1" class="tb1 container" >
 				<tr>
 					<th>name</th>
 					<th>star</th>
@@ -169,6 +176,7 @@ SELECT * FROM Board;
 				</c:forEach>
 			</table>
 		</form>
+
 	</div>
 	<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#"
 		id="gotop"> <i class="fas fa-chevron-up"></i>

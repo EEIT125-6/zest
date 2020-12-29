@@ -21,19 +21,19 @@ public class RootAppConfig {
 	@Bean
 	public DataSource msSQLDataSource() {
 		ComboPooledDataSource ds = new ComboPooledDataSource();
-		ds.setUser("scott");
-		ds.setPassword("tiger");
+//		ds.setUser("scott");
+//		ds.setPassword("tiger");
 		
-//		ds.setUser("sa");
-//		ds.setPassword("sa123456");
+		ds.setUser("sa");
+		ds.setPassword("sa123456");
 		try {
 			ds.setDriverClass("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}
 //		ds.setJdbcUrl("jdbc:sqlserver://127.0.0.1:1433;DatabaseName=WebProject");
-		ds.setJdbcUrl("jdbc:sqlserver://10.31.25.130:1433;DatabaseName=WebProject");
-//		ds.setJdbcUrl("jdbc:sqlserver://localhost;DatabaseName=DemoLab");
+//		ds.setJdbcUrl("jdbc:sqlserver://10.31.25.130:1433;DatabaseName=WebProject");
+		ds.setJdbcUrl("jdbc:sqlserver://localhost;DatabaseName=DemoLab");
 		ds.setInitialPoolSize(4);
 		ds.setMaxPoolSize(8);
 		ds.setMaxIdleTime(3500); //12-13
