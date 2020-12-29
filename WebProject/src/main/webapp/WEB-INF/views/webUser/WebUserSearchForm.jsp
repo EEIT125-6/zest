@@ -334,8 +334,11 @@ ul.slides li img {
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
+											+ "<th>刪除</th>"
+											+ "<th>其他</th>"
+											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -344,7 +347,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -352,7 +355,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "</tr>";
@@ -365,9 +368,34 @@ ul.slides li img {
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
-												+ userData.account 
+												+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
 												+ "</a>"
+												+ "</td>"
+												+ "<td>";
+										content += (userData.status == 'active') 
+												? "<a href='${pageContext.request.contextPath}/webUser/QuitWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+												+ "</a>"
+												: "<a href='${pageContext.request.contextPath}/webUser/ActiveWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+												+ "</a>"
+										content += "</td>"
+												+ "<td>"
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
+												+ userData.account 
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+												+ "</a>"
+												+ "</td>"
+												+ "<td>"
+												+ userData.account 
 												+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
@@ -472,8 +500,11 @@ ul.slides li img {
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
+											+ "<th>刪除</th>"
+											+ "<th>其他</th>"
+											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -482,7 +513,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -490,7 +521,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "</tr>";
@@ -503,9 +534,32 @@ ul.slides li img {
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
-												+ userData.account 
+												+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
 												+ "</a>"
+												+ "</td>"
+												+ "<td>";
+										content += (userData.status == 'active') 
+												? "<a href='${pageContext.request.contextPath}/webUser/QuitWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+												+ "</a>"
+												: "<a href='${pageContext.request.contextPath}/webUser/ActiveWebUser/"
+												+ userData.account
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+												+ "</a>"										
+										content += "</td>"
+												+ "<td>"
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+												+ "</a>"
+												+ "</td>"
+												+ "<td>"
+												+ userData.account 
 												+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";

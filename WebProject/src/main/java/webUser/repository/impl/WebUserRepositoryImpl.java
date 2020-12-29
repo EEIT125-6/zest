@@ -244,7 +244,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		String status = "'" + selectedParameters.split(":")[5] + "'";
 		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? ""
 				: "'" + selectedParameters.split(":")[6] + "'";
-
+		
 		if (!account.equals("")) {
 			account = "'%" + selectedParameters.split(":")[0] + "%'";
 			sb.append("wu.account LIKE " + account);

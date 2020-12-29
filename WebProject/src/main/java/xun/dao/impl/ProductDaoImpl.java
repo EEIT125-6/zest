@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import xun.dao.ProductDao;
-import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
+import xun.model.ProductInfoBean;
 
 @Repository
 public class ProductDaoImpl implements ProductDao{

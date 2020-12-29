@@ -909,6 +909,7 @@ public class WebUserController {
 		if(operateMessage.equals("")) {
 			switch(mode) {
 				case "quit":
+					status = "quit";
 					/* 調用服務裡的方法 */
 					try {
 						operateResult = wus.adminChangeWebUserData(userId, status);
@@ -1302,7 +1303,7 @@ public class WebUserController {
 		
 		/* 檢查居住區域 */
 		if (inputIsOk) {
-			String resultTmp = doCheckCityCode(cityCode);
+			String resultTmp = doCheckCityCode(cityCode, "register");
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
@@ -1539,7 +1540,7 @@ public class WebUserController {
 		
 		/* 檢查區住區域 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckCityCode(locationCode);
+			String resultTmp = doCheckCityCode(locationCode, "update");
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (locationCode == oldLocationCode && updateResultMessage.equals("")) {
 				count++;
@@ -1598,7 +1599,7 @@ public class WebUserController {
 		
 		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
 		if (checkResult.equals("")) {
-			String resultTmp = doCheckCityCode(selectedLocationCode);
+			String resultTmp = doCheckCityCode(selectedLocationCode, "search");
 			checkResult = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
@@ -1975,7 +1976,7 @@ public class WebUserController {
 	}
 	
 	/* 統一檢查居住區域方法 */
-	public String doCheckCityCode(Integer cityCode) {
+	public String doCheckCityCode(Integer cityCode, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
@@ -2008,6 +2009,10 @@ public class WebUserController {
 				message = "居住區域設定異常";
 				inputIsOk = false;
 				break;
+		}
+		if (mode.equals("search") && cityCode == 0) {
+			inputIsOk = true;
+			message = "?";
 		}
 		
 		return message + "," + inputIsOk.toString();

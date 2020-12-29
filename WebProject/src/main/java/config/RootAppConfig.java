@@ -45,7 +45,7 @@ public class RootAppConfig {
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-		/* 掃描的package暫時留空，有需要時請填入 */
+		/* 掃描的package */
 		factory.setPackagesToScan(new String[] { "xun", "webUser" });
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());

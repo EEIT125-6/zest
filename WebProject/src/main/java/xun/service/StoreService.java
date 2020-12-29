@@ -3,8 +3,8 @@ package xun.service;
 import java.util.List;
 
 import xun.model.BoardBean;
-import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
+import xun.model.ProductInfoBean;
 
 public interface StoreService {
 	
