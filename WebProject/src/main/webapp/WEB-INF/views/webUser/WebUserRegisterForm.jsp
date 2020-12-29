@@ -173,7 +173,7 @@
 						<label>帳號名稱：</label> 
 						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 							placeholder="請輸入帳號，8~20個字" required="required" />
-						<input type="button" name="register" id="checkAccount" value="檢查帳號">
+						<button type="button" style="font-size:18px" id="checkAccount" >檢查帳號 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
@@ -195,7 +195,7 @@
 						<label>稱呼方式：</label>
 						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
-						<input type="button" name="register" id="checkRegisterNickname" value="檢查稱呼">
+						<button type="button" style="font-size:18px" id="checkRegisterNickname" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<label>生理性別：</label>
@@ -228,13 +228,13 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<input type="button" name="register" id="checkEmailUsed" value="檢查信箱" />
+						<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<label>信箱驗證：</label>
 						<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
 						    placeholder="請輸入E-Mail中所收到的驗證碼" required="required" />
-						<input type="button" name="register" id="sendCheckCode" value="傳送驗證碼">
+						<button type="button" style="font-size:18px" id="sendCheckCode" >傳送驗證碼 <i class="material-icons" style="font-size:18px;color:green">mail</i></button>
 						<span id="emailCheckCodeSpan"></span>
 						<br />
 						<input type="hidden" name="inputCheckCode" id="checkCode" value="" />
@@ -242,7 +242,7 @@
 						<label>聯絡電話：</label>
 						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
-						<input type="button" name="register" id="checkRegisterPhone" value="檢查電話">
+						<button type="button" style="font-size:18px" id="checkRegisterPhone" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>

@@ -161,7 +161,7 @@
 						<label>帳號密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<span id="loginSpan">

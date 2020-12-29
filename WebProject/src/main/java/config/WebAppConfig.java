@@ -19,7 +19,11 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan({
 	"config", 
 	"webUser",
-	"xun"})
+	"xun",
+	"model",
+	"service",
+	"dao",
+	"controller"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {

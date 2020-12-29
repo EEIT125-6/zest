@@ -39,9 +39,10 @@
 			</c:if>
 			<!-- 			<img src="Images/PLZPLZ-removebg-preview.png" -->
 			<!-- 				class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> -->
-			<i class="fas fa-shopping-cart"
-				style="font-size: 25px; color: yellow"> </i> 
-			購物車 | 
+			<i class="fas fa-shopping-cart" style="font-size: 25px; color: yellow"></i>
+			<a href="${pageContext.request.contextPath}/controller/checkMemberStatus"> 
+			購物車 |
+			</a> 
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
 			確認訂位
 		</p>
