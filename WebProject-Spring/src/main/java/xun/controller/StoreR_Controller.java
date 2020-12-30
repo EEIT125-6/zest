@@ -107,7 +107,8 @@ public class StoreR_Controller {
 			@RequestParam String sclass,
 			@RequestParam String stname,
 			@RequestParam Integer limit,
-			@RequestParam Integer offset
+			@RequestParam Integer offset,
+			@RequestParam Integer stopload
 			) {
 //		System.out.println("sclass = "+sclass);
 		List<StoreBean> list = new ArrayList<StoreBean>();
@@ -122,6 +123,7 @@ public class StoreR_Controller {
 		Integer off3 = offset+3;
 		if(off3>list.size()) {
 			off3 = list.size();
+			stopload = 1;
 		}
 		if(offset>off3) {
 			offset=off3;

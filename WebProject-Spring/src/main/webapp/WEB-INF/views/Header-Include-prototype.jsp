@@ -13,7 +13,7 @@
 			<%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
 			style="float: left; height: 70px;"></a>
 		<p
-			style="text-align: right; font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;; float: right">
+			style="text-align: right; font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650; float: right">
 			<br> <i class="fas fa-user"
 				style="font-size: 25px; color: yellow"></i> 登入 | <i
 				class="fas fa-user-plus" style="font-size: 25px; color: yellow"></i>
@@ -24,6 +24,10 @@
 				style="font-size: 25px; color: yellow"> </i> 購物車 | <i
 				class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
 			確認訂位
+			 |
+			<a class="search-bar-icon" href="#"><i class="fas fa-search" style="font-size: 25px; color: yellow"></i>
+				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">搜尋餐廳</span>
+			</a>
 		</p>
 	</div>
 
@@ -58,8 +62,8 @@
 <%-- 					href="${pageContext.request.contextPath}/webUser/WebUserLogoutManual.jsp"> --%>
 <!-- 					登出 |</a> -->
 <%-- 			</c:if> --%>
-<!-- 			<!--    <img src="Images/PLZPLZ-removebg-preview.png" --> -->
-<!-- 			<!--     class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> --> -->
+<!-- 			<!--    <img src="Images/PLZPLZ-removebg-preview.png" --> 
+<!-- 			<!--     class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> --> 
 <!-- 			<i class="fas fa-shopping-cart" -->
 <!-- 				style="font-size: 25px; color: yellow"></i> <a -->
 <%-- 				href="${pageContext.request.contextPath}/product/index.jsp"> --%>

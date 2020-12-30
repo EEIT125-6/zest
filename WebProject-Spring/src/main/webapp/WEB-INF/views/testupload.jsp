@@ -52,14 +52,36 @@
 			<form:hidden path="stname"/>
 			<form:hidden path="id"/>
 		<br>
-			<input name="file"  type='file'/>
+			<input name="file"  type='file' id="imgInp" />
 		<br>
-<!-- 		<input type="submit" style="margin-top:30px" value="上傳圖片!" /> -->
-		<input type="submit" style="margin-top:30px" value="上傳Photo!" />
+			  <img id="blah" src="#" alt="your image" width="100%;" height="100% "  />
+		<br>
+		<div>
+				<input type="submit" style="margin-top:30px" value="上傳Photo!" />
+		</div>
 	</form:form>
 	
+<!-- 		<input type="submit" style="margin-top:30px" value="上傳圖片!" /> -->
 </div>	
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:230px">
             <%@include file = "Footer-Include-prototype.jsp" %>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		function readURL(input) {
+			  if (input.files && input.files[0]) {
+			    var reader = new FileReader();
+			    
+			    reader.onload = function(e) {
+			      $('#blah').attr('src', e.target.result);
+			    }
+			    
+			    reader.readAsDataURL(input.files[0]); // convert to base64 string
+			  }
+			}
+
+			$("#imgInp").change(function() {
+			  readURL(this);
+			});
+	</script>
 </html>

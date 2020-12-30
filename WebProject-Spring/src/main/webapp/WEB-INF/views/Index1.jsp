@@ -147,7 +147,115 @@
 #gotop :hover{
     background:#0099CC;
 }
+.search-area {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5555;
+  background-color: #051922;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 
+span.close-btn {
+  position: absolute;
+  right: 0%;
+  color: #fff;
+  top: 5%;
+  cursor: pointer;
+}
+
+.search-area {
+  height: 100%;
+}
+
+.search-area div {
+  height: 100%;
+}
+
+.search-bar {
+  height: 100%;
+  display: table;
+  width: 100%;
+}
+
+a.mobile-show {
+  display: none;
+}
+
+.search-area .search-bar div.search-bar-tablecell {
+  display: table-cell;
+  vertical-align: middle;
+  height: auto;
+}
+
+.search-bar-tablecell input {
+  border: none;
+  padding: 15px;
+  width: 60%;
+  background-color: transparent;
+  border-bottom: 1px solid #F28123;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] {
+  border: none;
+  background-color: #F28123;
+  padding: 15px 30px;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.search-bar-tablecell input::-webkit-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input:-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] i {
+  margin-left: 5px;
+}
+
+.search-area {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.search-area.search-active {
+  visibility: visible;
+  opacity: 1;
+  z-index: 999;
+}
+
+.search-bar-tablecell h3 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+}
 
 
     </style>
@@ -164,6 +272,19 @@
     jQuery(window).on("load",function(){
         jQuery(".loader").fadeOut(1000);
     });
+    
+	$(document).ready(function(){
+		$("#lazyload").hide();
+		
+         // search form
+        $(".search-bar-icon").on("click", function(){
+            $(".search-area").addClass("search-active");
+        });
+
+        $(".close-btn").on("click", function() {
+            $(".search-area").removeClass("search-active");
+        });		
+	});
     </script>
     <!--PreLoader Ends-->
 <!--             <div class="container-fluid  header" style="height: 100px;border-bottom: 3px solid #e76f51;height: 90px;padding-top: 5px;background-color: #003049" > -->
@@ -195,7 +316,26 @@
             </div>
 
 <!-- -------------------------------------------------------------- -->
-
+<!-- search area -->
+		<div class="search-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<span class="close-btn"><i class="fas fa-window-close"></i></span>
+						<div class="search-bar">
+							<div class="search-bar-tablecell">
+								<form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
+									<h3>搜尋商家名稱:</h3>
+									<input type="text" name="nsrch" placeholder="搜尋商家">
+									<button type="submit">搜尋 <i class="fas fa-search"></i></button>
+							    </form>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- end search arewa -->
             <div class="container"  style="margin-top: 20px;">
             		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">

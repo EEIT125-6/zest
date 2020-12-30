@@ -1,6 +1,6 @@
-USE [DemoLab]
-GO
-/****** Object:  Table [dbo].[Board]    Script Date: 2020/12/18 下午 03:06:34 ******/
+--USE [DemoLab]
+--GO
+/****** Object:  Table [dbo].[Board]    Script Date: 2020/12/30 下午 07:57:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20,7 +20,7 @@ CREATE TABLE [dbo].[Board](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductInfo]    Script Date: 2020/12/18 下午 03:06:34 ******/
+/****** Object:  Table [dbo].[ProductInfo]    Script Date: 2020/12/30 下午 07:57:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -39,7 +39,7 @@ CREATE TABLE [dbo].[ProductInfo](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Store]    Script Date: 2020/12/18 下午 03:06:34 ******/
+/****** Object:  Table [dbo].[Store]    Script Date: 2020/12/30 下午 07:57:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -109,7 +109,7 @@ INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [produ
 GO
 INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (14, N'地獄叉燒拉麵', N'拉麵吧', 240, N'../productInfo/images/地獄叉燒拉麵.jpg', 0, 18)
 GO
-INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (15, N'霜降和牛飯', N'硬派主廚的軟嫩料理', 300, N'../productInfo/images/霜降和牛飯.jpg', 0, 19)
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (15, N'霜降和牛飯', N'硬派主廚的軟嫩料理', 300, N'Images\霜降和牛飯.jpg', 0, 19)
 GO
 INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (16, N'鮮牛肉湯', N'硬派主廚的軟嫩料理', 320, N'../productInfo/images/鮮牛肉湯.jpg', 0, 19)
 GO
@@ -133,9 +133,31 @@ INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [produ
 GO
 INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (26, N'酥皮濃湯', N'RAINBOWPAPA', 90, N'../productInfo/images/酥皮濃湯.jpg', 0, 20)
 GO
-INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (27, N'測試商品', N'測試用15', 13, NULL, 12, 46)
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (27, N'測試商品', N'測試用15', 13, N'Images\測試商品.jpg', 12, 46)
 GO
 INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (28, N'測試用商品_15', N'測試用15', 200, N'Images\測試用商品_15.jpeg', 1, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (29, N'測試用商品_15_3', N'測試用15', 1222, N'Images\測試用商品_15_3.jpeg', 1, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (34, N'測試用商品_15_6', N'測試用15', 1, NULL, 3, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (35, N'測試商品1333', N'測試用15', 111, NULL, 22, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (36, N'測試商品15123', N'測試用15', 1, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (37, N'測試商品15123', N'測試用15', 1, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (38, N'測試商品15123', N'測試用15', 13, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (39, N'測試商品1512399', N'測試用15', 134, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (40, N'測試商品199', N'測試用15', 12, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (41, N'測試商品199', N'測試用15', 12, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (42, N'測試商品1444', N'測試用15', 132, NULL, 2, 46)
+GO
+INSERT [dbo].[ProductInfo] ([product_id], [product_name], [product_shop], [product_price], [product_picture], [product_quantity], [Store_Id]) VALUES (44, N'測試商品15123dad', N'測試用15', 1111, N'Images\測試商品15123dad.jpeg', 3, 46)
 GO
 SET IDENTITY_INSERT [dbo].[ProductInfo] OFF
 GO
@@ -204,7 +226,7 @@ INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [ban
 營業時間：早上11:30~14:30，17:00~22:00', NULL)
 GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (4, N'瑞記海南雞飯', N'中式', N'桃園市中壢區中園路二段501號(大江國際購物中心GB樓東側G026店號)', N'每日產地直送新鮮溫體雞，以低溫烹煮方法達到極致口感。十年經驗老牌手法獨家去骨處理，保證啖啖鮮雞肉。只使用當日新鮮食材，絕不過夜。搭配三款秘製醬汁以及兩款獨特口味雞油飯。
-營業時間:11:00~22:00(週日到週四)，11:00~22:30(週五~週六，例假日前一天)', N'03-4680689', N'Images/banner_page-0001.jpg', N'Images/1538116798-1112015215_l.jpg', N'每日產地直送新鮮溫體雞，以低溫烹煮方法達到極致口感。十年經驗老牌手法獨家去骨處理，保證啖啖鮮雞肉。只使用當日新鮮食材，絕不過夜。搭配三款秘製醬汁以及兩款獨特口味雞油飯。
+', N'03-4680689', N'Images/banner_page-0001.jpg', N'Images/1538116798-1112015215_l.jpg', N'每日產地直送新鮮溫體雞，以低溫烹煮方法達到極致口感。十年經驗老牌手法獨家去骨處理，保證啖啖鮮雞肉。只使用當日新鮮食材，絕不過夜。搭配三款秘製醬汁以及兩款獨特口味雞油飯。
 營業時間:11:00~22:00(週日到週四)，11:00~22:30(週五~週六，例假日前一天)', NULL)
 GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (5, N'地平線1號', N'快餐', N'桃園市龜山區復興一路212巷25號', N'位於桃園龜山林口長庚醫院附近的巷弄裡
@@ -248,7 +270,7 @@ GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (12, N'Morning Burger茉莉漢堡', N'快餐', N'桃園區桃園市同德十街28號', N'每天為您現做漢堡、三明治、歐姆蕾捲及精心製作早午餐點。
 早餐也可以成為您樂活的一種享受，在這裡請盡情展現您悠閒的姿態!
 MORNING BURGER”以客為尊”的創店初衷，將傳統早餐店注入新元素；低價消費享受美食的同時亦能感受熱情服務是我們的經營理念。
-', N'03-215 1538', N'Images/Morning Burger茉莉漢堡banner.jpp.jpg', N'Images/Morning Burger茉莉漢堡.jpeg', N'每天為您現做漢堡、三明治、歐姆蕾捲及精心製作早午餐點。
+', N'03-215 1538', N'Images/Morning Burger茉莉漢堡banner.jpp.jpg', N'Images/MorningBurger茉莉漢堡.jpeg', N'每天為您現做漢堡、三明治、歐姆蕾捲及精心製作早午餐點。
 早餐也可以成為您樂活的一種享受，在這裡請盡情展現您悠閒的姿態!
 MORNING BURGER”以客為尊”的創店初衷，將傳統早餐店注入新元素；低價消費享受美食的同時亦能感受熱情服務是我們的經營理念。
 ', NULL)
@@ -307,7 +329,7 @@ INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [ban
 GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (18, N'拉麵吧RamanBar', N'日式', N'桃園市中壢區大同路84號', N'說起日本美食就讓人想起串燒和拉麵，拉麵吧結合日本的美食代表，推出雞肉串燒拉麵，提供多種湯頭讓饕客依偏好選擇，讓來拉麵吧客人們花少少錢就可以品嚐到日本的代表美食。', N'03-4220111', N'Images/拉麵吧banner.jpg', N'Images/拉麵吧3.JPG', N'說起日本美食就讓人想起串燒和拉麵，拉麵吧結合日本的美食代表，推出雞肉串燒拉麵，提供多種湯頭讓饕客依偏好選擇，讓來拉麵吧客人們花少少錢就可以品嚐到日本的代表美食。', NULL)
 GO
-INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (19, N'硬派主廚的軟嫩料理', N'燒肉', N'新竹市東區中央路102巷10號300(東門市場 1143號', N'選用USDA Choice美國特選級牛肉，採用低溫熟成的舒服料理技法製作，保留了每塊肉品的原汁原味，再將表皮炙燒到微焦，一口咬下軟嫩的口感，搭配季節時蔬的享用，拌入半熟溫泉蛋、古早味肉燥飯，整體料理不過度烹調反而保留了食材的真實味道，肉肉控的必點料理～', N'03-5251323', N'Images/硬派主廚banner.JPG', N'Images/硬派主廚.jpg', N'選用USDA Choice美國特選級牛肉，採用低溫熟成的舒服料理技法製作，保留了每塊肉品的原汁原味，再將表皮炙燒到微焦，一口咬下軟嫩的口感，搭配季節時蔬的享用，拌入半熟溫泉蛋、古早味肉燥飯，整體料理不過度烹調反而保留了食材的真實味道，肉肉控的必點料理～', NULL)
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (19, N'硬派主廚的軟嫩料理', N'燒肉', N'新竹市東區中央路102巷10號300(東門市場 1143號', N'選用USDA Choice美國特選級牛肉，採用低溫熟成的舒服料理技法製作，保留了每塊肉品的原汁原味，再將表皮炙燒到微焦，一口咬下軟嫩的口感，搭配季節時蔬的享用，拌入半熟溫泉蛋、古早味肉燥飯，整體料理不過度烹調反而保留了食材的真實味道，肉肉控的必點料理～', N'03-5251323', N'Images/硬派主廚banner.JPG', N'Images/硬派主廚.jpg', N'選用USDA Choice美國特選級牛肉，採用低溫熟成的舒服料理技法製作，保留了每塊肉品的原汁原味，再將表皮炙燒到微焦，一口咬下軟嫩的口感，搭配季節時蔬的享用，拌入半熟溫泉蛋、古早味肉燥飯，整體料理不過度烹調反而保留了食材的真實味道，肉肉控的必點料理～', 3)
 GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (20, N'RAINBOWPAPA', N'下午茶', N'桃園市中壢區幸福新村3號', N'每週都供應不同的主廚特餐，讓饕客每次來都有不一樣的味覺感受與驚喜，走進RAINBOW PAPA，感受全新的幸福滋味。', N'03-4655377', N'Images/RAINBOWPAPAbanner.JPG', N'Images/RAINBOWPAPAphoto.JPG', N'每週都供應不同的主廚特餐，讓饕客每次來都有不一樣的味覺感受與驚喜，走進RAINBOW PAPA，感受全新的幸福滋味。', NULL)
 GO
@@ -317,7 +339,11 @@ INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [ban
 GO
 INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (45, N'測試用134', N'中式', N'測試用13', N'測試用13', N'0983625126', NULL, NULL, N'測試用13', NULL)
 GO
-INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (46, N'測試用15', N'中式', N'測試用15', N'1測試用15', N'123213123', NULL, NULL, N'測試用15', NULL)
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (46, N'測試用15', N'中式', N'測試用15', N'1測試用15', N'123213123', NULL, NULL, N'測試用15', 1)
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (49, N'測試', N'中式', N'測試', N'測試', N'022222222', N'Images/20191022092315775_700_0_80.jpg', N'Images/20191022092315775_700_0_80.jpg', N'測試', NULL)
+GO
+INSERT [dbo].[Store] ([id], [stname], [sclass], [saddress], [stitd], [tel], [bannerurl], [photourl], [stitddt], [price]) VALUES (50, N'測試空白   測試', N'日式', N'測試空白   測試', N'測試空白   測試測試空白   測試測試空白   測試', N'0912345678', N'Images/RembrandtTest_01.jpg', N'Images/FlowersTest.jpg', N'測試空白   測試測試空白   測試測試空白   測試', NULL)
 GO
 SET IDENTITY_INSERT [dbo].[Store] OFF
 GO

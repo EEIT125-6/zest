@@ -62,13 +62,13 @@ public class LogAspect {
 //		System.out.println(joinPoint.getSignature().getName());
 //		System.out.println("END!!!!!!!!!!!!!!!!!!");
 		String sa = ss.get(1).getStname();
-		System.out.println("sasasasasasasasasasasasa"+sa);
+//		System.out.println("sasasasasasasasasasasasa"+sa);
 		logger.info("print STAR BEFORE!!!");
-		System.out.println("BEFORE!");
+//		System.out.println("BEFORE!");
 		logger.info("SS");
 		File testdir = new File("C:/bookestore!");
 		boolean ee = testdir.mkdir();
-		System.out.println(ee);
+//		System.out.println(ee);
 		
 		
 	}
@@ -78,7 +78,7 @@ public class LogAspect {
 		
 
 		String remoteAddr = req.getRemoteAddr();
-		System.out.println(remoteAddr);
+//		System.out.println(remoteAddr);
 		
 		System.out.println("資料寫進LOG");
 		File logpath = new File("C://WebProjectLog");
