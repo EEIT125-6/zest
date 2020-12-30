@@ -124,9 +124,7 @@ SELECT * FROM Board;
             color:rgba(255,255,255,1);            
         }
         
-        .file {
-    display: none;
-}
+ 
         
         
 #gotop {

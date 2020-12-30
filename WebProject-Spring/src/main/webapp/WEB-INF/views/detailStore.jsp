@@ -42,9 +42,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-  
-          <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-  
+    
     <%@include file = "Link_Meta-Include.jsp" %>
     <title>橙皮  </title>
     <style>
@@ -262,17 +260,8 @@
             
      <div class="box1" style="text-align:center ;margin: auto;" > 
        
-       <textarea name="content" id="editor">This is some sample content.</textarea>
-                       <script>
-                        ClassicEditor
-                                .create( document.querySelector( '#editor' ) )
-                                .then( editor => {
-                                        console.log( editor );
-                                } )
-                                .catch( error => {
-                                        console.error( error );
-                                } );
-                </script>
+       
+
                 
         <div class="d1" style="text-align:left ;">評分總人數:</div>
         <br>
@@ -292,15 +281,11 @@
         <div class="d3"> 
             <div class="container">
                 <div class="row">
-                  <div class="s1">
-                    <img  src="star/Mstar.png" height="110px"、width="110px">
-                </div>
+<!--                   <div class="s1"> -->
+<!--                     <img  src="star/Mstar.png" height="110px"、width="110px"> -->
+<!--                 </div> -->
                   <div class="s2">
-                      <div style="line-height: 20px;background-color ; padding-top: 3px;"> <input type="range" min="0" max="100" step="1" value="100" > </div>
-                       <input type="range" min="0" max="100" step="1" value="50"><br>
-                       <input type="range" min="0" max="100" step="1" value="100"><br>
-                       <input type="range" min="0" max="100" step="1" value="100"><br>
-                       <input type="range" min="0" max="100" step="1" value="100"><br>
+
                   </div>
                   <div class="s3">
                     <h3></h3>        
@@ -313,7 +298,7 @@
     </div>
     <br>
     <div class="box2" style="text-align:center ;margin: auto;">
-       <form method="get" action="<c:url value='/pack'/>">
+       <form id="form1" method="get" action="<c:url value='/pack'/>">
 		<input type="hidden" name="storeId" value="${id}">
    <fieldset>
         <legend>留言</legend>
@@ -326,35 +311,44 @@
         <label for="star" class="t1"></label>
         <input type="hidden" id="star" name="star" ><br>
     </div>
+    
+<!--     圖片欄位 -->
+
      <!--  <div class="st1">
         <label class="t1" for="photo">照片:</label>
         <input type="text" id="photo" name="photo" ><br>
     </div> -->  
     
+<!--     上傳圖片 -->
     
 <!--    <div> -->
 <!-- 		 <form action="/somewhere/to/upload" enctype="multipart/form-data"> -->
 		
 <!-- 		   <input type="file" onchange="readURL(this)" targetID="preview_progressbarTW_img" accept="image/gif, image/jpeg, image/png"/ > -->
 <!-- 		<div> -->
-<!-- 		   <img id="preview_progressbarTW_img" src="#"  height="200px"  wight="200ㄌ"/> -->
+<!-- 		   <img id="preview_progressbarTW_img" src="#"  height="200px"  wight="200px"/> -->
 <!-- 		</div> -->
 <!-- 		</form> -->
 <!--     </div><br> -->
-<div class="pic">
-    <div class="uploadImage">
-        <input type="file" value="上傳檔案" id="file" accept="image/png, image/jpeg, image/gif, image/jpg" multiple/>
-        <p>點選上傳</p>
-    </div>
-    <div class="preview">
-        <img src="" id="look1">
-        <p class="word">圖片1</p>
-    </div>
-    <div class="preview">
-        <img src="" id="look2">
-        <p class="word">圖片2</p>
-    </div>
-</div>
+
+
+
+<!-- 上傳圖片(2) -->
+
+<!-- <div class="pic"> -->
+<!--     <div class="uploadImage"> -->
+<!--         <input type="file" value="上傳檔案" id="file" accept="image/png, image/jpeg, image/gif, image/jpg" multiple/> -->
+<!--         <p>點選上傳</p> -->
+<!--     </div> -->
+<!--     <div class="preview"> -->
+<!--         <img src="" id="look1"> -->
+<!--         <p class="word">圖片1</p> -->
+<!--     </div> -->
+<!--     <div class="preview"> -->
+<!--         <img src="" id="look2"> -->
+<!--         <p class="word">圖片2</p> -->
+<!--     </div> -->
+<!-- </div> -->
 
 
     
@@ -364,14 +358,14 @@
 </div>
 
     <div class="sub">
-        <input type="submit" name="submit" value="傳送"  >
+        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
         <input type="reset" value="清除"> 
     </div>
 </fieldset>
    
 </form>
     </div>
-    
+    <br>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   
 
@@ -396,7 +390,7 @@
         
         
         
-        
+//    上傳圖片(2)     
 
 // var hasUploadedOne = false;// 已上傳過1張圖片
 // var hasUploadedTwo = false;// 已上傳過2張圖片
@@ -458,13 +452,27 @@
         
         
     </script></span>
-            <div>
-             <c:forEach var="row" items="${Comments}">
-             	${row.name} 
-             	${row.date}
-             	<br>
-             </c:forEach>
-            </div>
+	    <table id="detail" border="1" class="tb1 container">
+		    <thead>
+		    	<tr>
+		    		<th>名子</th>
+		    		<th>日期</th>
+		    		<th>評分</th>
+		    		<th>內容</th>
+		    	</tr>	
+		    </thead>
+		    <tbody>
+		    	<c:forEach var="row" items="${Comments}">
+			    	<tr>
+			    		<td>${row.name} </td>
+			    		<td>${row.date}</td>
+			    		<td>${row.star}</td>
+			    		<td>${row.context}</td>
+			    	</tr>
+	             </c:forEach>
+		    </tbody>
+	    </table>
+            
         </div>
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> hello</span>
@@ -485,6 +493,44 @@
         </div>
     </div>
         <script>
+        function doInsert(){
+			var storeId = $('input[name="storeId"]').val();
+			var comment = $('textarea[name="comment"]').val();
+			var name = $('input[name="name"]').val();
+			var star = $("#star").val();
+			var map = {};
+			map['storeId'] = storeId;
+			map['comment'] = comment;
+			map['name'] = name;
+			map['star'] = star;
+			map['photo'] = '';
+        	$.ajax({
+        		  url:'<c:url value="/insertboard"/>',
+        		  type:'POST',
+        		  //data:$('#form1').serialize(),
+        		  data:map,
+        		  success:function(res){
+        				console.log(res);
+        				if(typeof res.boardBean !== 'undefined'){
+        					var tr = $('<tr>');
+        					tr.append($('<td>').text(res.boardBean.name));
+        					tr.append($('<td>').text(new Date(res.boardBean.date).toLocaleString()));
+        					tr.append($('<td>').text(res.boardBean.star));
+        					tr.append($('<td>').text(res.boardBean.context));
+        					$('#detail').find('tbody').append(tr);
+            				alert('新增成功');
+            				$('#name').val("");
+            				$('#comment').val("");
+            				$('.i').attr("src","star/s1.png")
+        				}else{
+            				alert('新增異常');
+        				}
+        	      },error:function(err){
+        				console.log(err);
+        				alert('新增失敗');
+        		  }
+        		});
+        }
         $("#sp1").click(function(){
             $(".ddiv").css("display","none")
             $("#div1").css("display","inline")

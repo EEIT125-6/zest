@@ -38,7 +38,7 @@ public class StoreR_Controller {
 		model.addAttribute("Results", list);
 		
 		List<BoardBean> list2 = ss.getComment((Integer) model.getAttribute("id"));
-//		model.addAttribute("Comments", list2);
+		model.addAttribute("Comments", list2);
 		
 		List<ProductInfoBean> list3 = ss.getProductInfoBeans((Integer) model.getAttribute("id"));
 		model.addAttribute("Products", list3);
