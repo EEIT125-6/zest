@@ -7,8 +7,8 @@
 <%@include file = "../Link_Meta-Include.jsp" %>
 <title>訂位紀錄</title>
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
    <script >
     $(document).ready(function(){
       $.datepicker.regional['zh-TW']={
@@ -23,6 +23,9 @@
       $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
       $("#datepicker1").datepicker({dateFormat:"yy-mm-dd" });
       
+		document.getElementById("cancel").onclick=function() {
+			window.alert("aaa");
+	}
       });
   </script>
       <style>
@@ -159,16 +162,89 @@
             background:#e5e5e5
         } 
     </style>
-    <script type="text/javascript">
-  function confirmDelete(bookingNo){
-	  var result = confirm("確定刪除此筆訂位記錄(訂單編號:" + bookingNo + ")?");
-	  if (result) {
-		  document.forms[0].finalDecision.value = "DELETE";
-	      return true;
-	  }
-	  return false;
-  }
-</script>
+
+ <script>
+ /* 
+		document.getElementById("cancel").onclick=function() {
+			window.alert("aaa");
+	}
+ 			var dateTime=new Date();
+			dateTime=dateTime.setDate(dateTime.getDate()+1);
+			dateTime=new Date(dateTime); //當天日期加一天
+			alert(dateTime);
+			var bookingdate = document.getElementByName("bookingdate").value.trim();
+			alert(bookingdate);
+			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
+				alert("已超過取消訂位的時限！");
+				
+			} else {
+				window.alert("發生錯誤。。");
+			}		  */
+		
+// 		function dateCheck() {
+
+
+// 			$.ajax({
+// 						type : "POST",
+// 						url : "/WebProject-Spring/controller/BookingController",
+// 						async : false,
+// 						data : {
+// 							'bookingdate' : bookingdate
+// 						},
+// 						dataType : "json",
+// 						success : function(result) {
+// 							if (resultSpace[0] == '1') {
+// 								loginStr = "登入成功！";
+// 								loginIsOk = true;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '0') {
+// 								loginStr = "密碼錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-1') {
+// 								loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-2') {
+// 								loginStr = "帳號錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-3') {
+// 								loginStr = "檢查途中遭遇錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(resultSpace[1]);
+// 							}
+// 							if (!loginIsOk) {
+// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 										+ loginStr;
+// 								loginSpan.style.color = "red";
+// 								loginSpan.style.fontStyle = "italic";
+// 							} else {
+// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+// 										+ loginStr;
+// 								loginSpan.style.color = "black";
+// 								loginSpan.style.fontStyle = "normal";
+// 								/* 刷新 */
+// 								location.reload(true);
+// 							}
+// 						},
+// 						error : function(err) {
+// 							loginStr = "發生錯誤，無法刪改訂位";
+// 							loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 									+ loginStr;
+// 							loginSpan.style.color = "red";
+// 							loginSpan.style.fontStyle = "italic";
+// 							/* 顯示彈窗訊息 */
+// 							alert(loginStr);
+// 						}
+// 					});
+//		}
+	</script>
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
@@ -230,10 +306,10 @@
 
 </table>
 <label class="aa">
-	<input type="submit" value="確認修改" name='confirmUpd' > 
+	<input type="button" value="確認修改" name='confirmUpd' > 
 </label>
 <label class="aa">
-	<input type="submit" value="刪除此筆訂位" name='cancel' >
+	<input type="button" value="刪除此筆訂位" name='cancel' id="cancel">
 </label>
 </form>        
 </center> 
