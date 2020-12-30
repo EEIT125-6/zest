@@ -157,21 +157,21 @@
 						<input type="hidden" name="userId" id="userId" value="${userId}" />
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>確認新密碼：</label> 
 						<input type="password" name="confirmPassword" id="confirmPassword" size="40" maxlength="20" onblur="checkConfirmPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch_confirm" id="visibility_switch_confirm" value="顯示密碼" onclick="changeConfirmVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="confirmPasswordSpan"></span>
 						<hr />
 						<span id="resetSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserLogin"><input type="button" name="update" value="取消/返回登入"></a>
-						<input type="button" id="sendReset" name="update" value="密碼重設完畢">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
+                		<a href="WebUserLogin"><button type="button" name="update" style="font-size:18px" >取消/返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button type="button" id="sendReset" name="update" style="font-size:18px" >密碼重設完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>

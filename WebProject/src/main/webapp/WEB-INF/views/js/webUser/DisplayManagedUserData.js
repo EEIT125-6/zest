@@ -1,19 +1,90 @@
 function checkForm() {
-	let choice=confirm("是否要送出修改後的資料？");
-	if (choice==true) {
-		if (!checkSameInput()) {
+	let counter = 0;
+	
+	let passwordObjValue = document.getElementById("password").value.trim();
+	let oldPasswordObjValue = document.getElementById("oldPassword").value.trim();
+	
+	let firstNameObjValue = document.getElementById("firstName").value.trim();
+	let oldFirstNameObjValue = document.getElementById("oldFirstName").value.trim();
+	
+	let lastNameObjValue = document.getElementById("lastName").value.trim();
+	let oldLastNameObjValue = document.getElementById("oldLastName").value.trim();
+	
+	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
+	
+	let birthObjValue = document.getElementById("birth").value.trim();
+	let oldBirthObjValue = document.getElementById("oldBirth").value.trim();
+	
+	let genderObj = document.getElementsByClassName("fervor");
+	let genderObjValue = "";
+	if (genderObj.length > 0) {
+		for (let genderIndex = 0; genderIndex < genderObj.length; genderIndex++) {
+			genderObjValue = (genderObj[genderIndex].checked) ? genderObj[genderIndex].value : "";
+		}
+	} 
+	let oldGenderObjValue = document.getElementById("oldGender").value.trim();
+	
+	let fervorObj = document.getElementsByClassName("fervor");
+	let fervorObjValue = "";
+	if (fervorObj.length > 0) {
+		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+			if (fervorObjValue != "" && fervorObj[fervorIndex].checked) {
+				fervorObjValue += ",";
+			}
+			fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+		}
+	} 
+	let oldFervorObjValue = document.getElementById("oldFervor").value.trim();
+	
+	let emailObjValue = document.getElementById("email").value.trim();
+	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
+	
+	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	
+	let getEmailObjValue = document.getElementsByName("updatedGetEmail").value;
+	let oldGetEmailObjValue = document.getElementById("originalGetEmail").value;
+	
+	let locationCodeObjValue = document.getElementById("updatedLocationCode").value;
+	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
+	
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	
+	let updatedSpan = document.getElementById("updatedSpan");
+	let updatedStr = "";
+
+	let choice=confirm("是否確定要送出修改後的資料？");
+	if (choice == true) {
+		if (!checkPassword()) {
 			return false;
-		} else if (!checkAccountPassword()) {
+		} else if (!checkFirstName()) {
 			return false;
-		} else if (!checkFirst_name()) {
+		} else if (!checkLastName()) {
 			return false;
-		} else if (!checkLast_name()) {
+		} else if (!checkSameNickname()) {
 			return false;
-		} else if (!checkBirthday()) {
+		} else if (!checkGender()) {
+			return false;
+		} else if (!checkBirth()) {
 			return false;
 		} else if (!checkFervor()) {
 			return false;
-		} else if (!checkLocation_code()) {
+		} else if (!checkSameEmail()) {
+			return false;
+		} else if (!checkSamePhone()) {
+			return false;
+		} else if (!checkGetEmail()) {
+			return false;
+		} else if (!checkLocationCode()) {
 			return false;
 		} else if (!checkAddr0()){
 			return false;
@@ -22,7 +93,67 @@ function checkForm() {
 		} else if (!checkAddr2()){
 			return false;
 		} else {
-			return true;
+			if (passwordObjValue == oldPasswordObjValue) {
+				counter++;
+			}
+			if (firstNameObjValue == oldFirstNameObjValue) {
+				counter++;
+			}
+			if (lastNameObjValue == oldLastNameObjValue) {
+				counter++;
+			}
+			if (nicknameObjValue == oldNicknameObjValue) {
+				counter++;
+			}
+			if (genderObjValue == oldGenderObjValue) {
+				counter++;
+			}
+			if (birthObjValue == oldBirthObjValue) {
+				counter++;
+			}
+			if (fervorObjValue == oldFervorObjValue) {
+				counter++;
+			}
+			if (emailObjValue == oldEmailObjValue) {
+				counter++;
+			} else {
+				if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+					alert("請先執行電子信箱檢查");
+					return false;
+				} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
+					alert("請先執行電子信箱驗證");
+					return false;
+				}
+			}
+			if (phoneObjValue == oldPhoneObjValue) {
+				counter++;
+			}
+			if (getEmailObjValue == oldGetEmailObjValue) {
+				counter++;
+			} 
+			if (locationCodeObjValue == oldLocationCodeObjValue) {
+				counter++;
+			}
+			if (addr0ObjValue == oldAddr0ObjValue) {
+				counter++;
+			}
+			if (addr1ObjValue == oldAddr1ObjValue && addr1ObjValue != null) {
+				counter++;
+			}
+			if (addr2ObjValue == oldAddr2ObjValue && addr2ObjValue != null) {
+				counter++;
+			}
+			
+			if (counter == 14) {
+				updatedStr = "至少需填寫/選擇一項條件才能執行修改/更正！";
+				updatedSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updatedStr;
+				updatedSpan.style.color = "red";
+				updatedSpan.style.fontStyle = "italic";
+				return false;
+			} else {
+				updatedSpan.innerHTML = "";
+				return true;
+			}
 		}
 	} else {
 		return false;
@@ -32,6 +163,7 @@ function checkForm() {
 function checkAccountPassword() {
 	let passwordObjValue = document.getElementById("password").value.trim();
 	let passwordSpan = document.getElementById("passwordSpan");
+	let oldPasswordObjValue = document.getElementById("oldPassword").value.trim();
 
 	let passwordIsOk = true;
 	let passwordStr;
@@ -49,6 +181,9 @@ function checkAccountPassword() {
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
+	} else if (passwordObjValue == oldPasswordObjValue) {
+		passwordStr = "";
+		passwordIsOk = true;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
 
@@ -56,7 +191,7 @@ function checkAccountPassword() {
 			passwordStr = "密碼不符合格式";
 			passwordIsOk = false;
 		} else {
-			passwordStr = "密碼格式正確";
+			passwordStr = "密碼修改完成";
 			passwordIsOk = true;
 		}
 	}
@@ -66,9 +201,13 @@ function checkAccountPassword() {
 		passwordSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
-		passwordSpan.style.color = "black";
-		passwordSpan.style.fontStyle = "normal";
+		if (passwordObjValue == oldPasswordObjValue) {
+			passwordSpan.innerHTML = "";
+		} else {
+			passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
+			passwordSpan.style.color = "black";
+			passwordSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
@@ -76,6 +215,7 @@ function checkAccountPassword() {
 function checkFirstName() {
 	let firstNameObjValue = document.getElementById("firstName").value.trim();
 	let firstNameSpan = document.getElementById("firstNameSpan");
+	let oldFirstNameObjValue = document.getElementById("oldFirstName").value.trim();
 
 	let firstNameIsOk = true;
 	let firstNameStr;
@@ -83,6 +223,9 @@ function checkFirstName() {
 	if (firstNameObjValue == "" || firstNameObjValue.length == 0) {
 		firstNameStr = "姓氏不可為空";
 		firstNameIsOk = false;
+	} else if (firstNameObjValue == oldFirstNameObjValue) {
+		firstNameStr = "";
+		firstNameIsOk = true;
 	} else if (firstNameObjValue.length < 4) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
@@ -107,9 +250,13 @@ function checkFirstName() {
 		return false;
 	}
 	else {
-		firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
-		firstNameSpan.style.color = "black";
-		firstNameSpan.style.fontStyle = "normal";
+		if (firstNameObjValue == oldFirstNameObjValue) {
+			firstNameSpan.innerHTML = "";
+		} else {
+			firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
+			firstNameSpan.style.color = "black";
+			firstNameSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
@@ -117,6 +264,7 @@ function checkFirstName() {
 function checkLastName() {
 	let lastNameObjValue = document.getElementById("lastName").value.trim();
 	let lastNameSpan = document.getElementById("lastNameSpan");
+	let oldLastNameObjValue = document.getElementById("oldLastName").value.trim();
 	
 	let lastNameIsOk = true;
 	let lastNameStr;
@@ -124,6 +272,9 @@ function checkLastName() {
 	if (lastNameObjValue == "" || lastNameObjValue.length == 0) {
 		lastNameStr = "名字不可為空";
 		lastNameIsOk = false;
+	} else if (lastNameObjValue == oldLastNameObjValue) {
+		lastNameStr = "";
+		lastNameIsOk = true;
 	} else if (lastNameObjValue.length < 4) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
@@ -147,9 +298,13 @@ function checkLastName() {
 		lastNameSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
-		lastNameSpan.style.color = "black";
-		lastNameSpan.style.fontStyle = "normal";
+		if (lastNameObjValue == oldLastNameObjValue) {
+			lastNameSpan.innerHTML = "";
+		} else {
+			lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
+			lastNameSpan.style.color = "black";
+			lastNameSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
@@ -157,6 +312,7 @@ function checkLastName() {
 function checkNickname() {
 	let nicknameObjValue = document.getElementById("nickname").value.trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
+	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	
 	let nicknameIsOk = true;
 	let nicknameStr;
@@ -170,8 +326,11 @@ function checkNickname() {
 			nicknameStr = "稱呼不可為空";
 			nicknameIsOk = false;
 		}
+	} else if (nicknameObjValue == oldNicknameObjValue) {
+		nicknameStr = "";
+		nicknameIsOk = true;
 	} else {
-		nicknameStr = "稱呼填寫完畢";
+		nicknameStr = "稱呼修改完畢";
 		nicknameIsOk = true;
 	}
 	if (nicknameIsOk) {
@@ -180,16 +339,55 @@ function checkNickname() {
 		nicknameSpan.style.fontStyle = "normal";
 		return true;
 	} else {
-		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-		nicknameSpan.style.color = "red";
-		nicknameSpan.style.fontStyle = "italic";
+		if (nicknameObjValue == oldNicknameObjValue) {
+			nicknameSpan.innerHTML = "";
+		} else {
+			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+			nicknameSpan.style.color = "red";
+			nicknameSpan.style.fontStyle = "italic";
+		}
 		return false;
 	} 
 }
 
+function checkGender() {
+	let genderObj = document.getElementsByClassName("gender");
+	let genderObjValue = "";
+	for (let genderIndex = 0; genderIndex < genderObj.length; genderIndex++) {
+		genderObjValue = (genderObj[genderIndex].checked) ? genderObj[genderIndex].value : "";
+	}
+	let genderSpan = document.getElementById("genderSpan");
+	let oldGenderObjValue = document.getElementById("oldGender").value;
+	
+	if (oldGenderObjValue == genderObjValue) {
+		genderStr = "";
+		genderIsOk = true;
+	} else {
+		genderStr = "生理性別修改完成";
+		genderIsOk = true;
+	}
+	if (!genderIsOk) {
+		genderSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + genderStr;
+		genderSpan.style.color = "red";
+		genderSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		if (oldGenderObjValue == genderObjValue) {
+			genderSpan.innerHTML = "";
+		} else {
+			genderSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + genderStr;
+			genderSpan.style.color = "black";
+			genderSpan.style.fontStyle = "normal";
+		}
+		return true;
+	} 
+}
+ 
 function checkBirthday() {
 	let birthdayObjValue = document.getElementById("birth").value;
 	let birthdaySpan = document.getElementById("birthdaySpan");
+	let oldBirthObjValue = document.getElementById("oldBirth").value;
 
 	let birthdayIsOk = true;
 	let birthdayStr;
@@ -200,6 +398,9 @@ function checkBirthday() {
 	} else if (birthdayObjValue.length > 10 || birthdayObjValue.length < 8) {
 		birthdayStr = "日期長度錯誤";
 		birthdayIsOk = false;
+	} else if (oldBirthObjValue == birthdayObjValue) {
+		birthdayStr = "";
+		birthdayIsOk = true;
 	} else {
 		let inputYear = parseInt(birthdayObjValue.split("-")[0]);
 		let inputMonth = parseInt(birthdayObjValue.split("-")[1]);
@@ -234,9 +435,13 @@ function checkBirthday() {
 		return false;
 	}
 	else {
-		birthdaySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + birthdayStr;
-		birthdaySpan.style.color = "black";
-		birthdaySpan.style.fontStyle = "normal";
+		if (oldBirthObjValue == birthdayObjValue) {
+			birthdaySpan.innerHTML = "";
+		} else {
+			birthdaySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + birthdayStr;
+			birthdaySpan.style.color = "black";
+			birthdaySpan.style.fontStyle = "normal";
+		}
 		return true;
 	} 
 }
@@ -251,6 +456,7 @@ function checkFervor() {
 		fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
 	}
 	let fervorSpan = document.getElementById("fervorSpan");
+	let oldFervorObjValue = document.getElementById("oldFervor").value;
 	
 	let fervorIsOk = true;
 	let fervorStr;
@@ -258,8 +464,11 @@ function checkFervor() {
 	if (fervorObjValue == "" || fervorObjValue.length == 0) {
 		fervorStr = "偏好食物不可空白";
 		fervorIsOk = false;
+	} else if (fervorObjValue == oldFervorObjValue) {
+		fervorStr = "";
+		fervorIsOk = true;
 	} else {
-		fervorStr = "偏好食物填寫完成";
+		fervorStr = "偏好食物修改完成";
 		fervorIsOk = true;
 	}
 	if (!fervorIsOk) {
@@ -269,17 +478,21 @@ function checkFervor() {
 		return false;
 	}
 	else {
-		fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
-		fervorSpan.style.color = "black";
-		fervorSpan.style.fontStyle = "normal";
+		if (fervorObjValue == oldFervorObjValue) {
+			fervorSpan.innerHTML = "";
+		} else {
+			fervorSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + fervorStr;
+			fervorSpan.style.color = "black";
+			fervorSpan.style.fontStyle = "normal";
+		}
 		return true;
 	} 
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("updatedEmail").value.trim();
+	let emailObjValue = document.getElementById("email").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
-	let oldEmailObjValue = document.getElementById("originalEmail").value;
+	let oldEmailObjValue = document.getElementById("oldEmail").value;
 	
 	let emailIsOk = true;
 	let emailStr;
@@ -318,9 +531,9 @@ function checkEmail() {
 }
 
 function checkPhone() {
-	let phoneObjValue = document.getElementById("updatedPhone").value;
+	let phoneObjValue = document.getElementById("phone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
-	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	let oldPhoneObjValue = document.getElementById("oldPhone").value;
 	
 	let phoneIsOk = true;
 	let phoneStr;
@@ -342,7 +555,7 @@ function checkPhone() {
 		phoneStr = "室內電話格式錯誤";
 		phoneIsOk = false;
 	} else if (phoneObjValue == oldPhoneObjValue){
-		phoneStr = "連絡電話已填寫完畢";
+		phoneStr = "";
 		phoneIsOk = true;
 	} else {
 		phoneStr = "連絡電話已修改完畢";
@@ -367,42 +580,76 @@ function checkPhone() {
 	}
 }
 
-function checkLocation_code() {
-	let location_codeObjValue = document.getElementById("locationCode").value;
-	let location_codeSpan = document.getElementById("locationCodeSpan");
+function checkGetEmail() {
+	let getEmailObjValue;
+	getEmailObjValue = (document.getElementById("getEmail1") == null) ? "" : document.getElementById("getEmail1").value;
+	getEmailObjValue = (document.getElementById("getEmail2") == null) ? "" : document.getElementById("getEmail2").value;
+	let getEmailSpan = document.getElementById("getEmailSpan");
+	let oldGetEmailObjValue = document.getElementById("oldGetEmail").value;
 	
-	let location_codeIsOk = true;
-	let location_codeStr;
+	let getEmailIsOk = true;
+	let getEmailStr;
 	
-	if (location_codeObjValue == "" || location_codeObjValue.length == 0) {
-		location_codeStr = "居住區域不可為空白";
-		location_codeIsOk = false;
-	} else {
-		location_codeStr = "居住區域已選擇完畢";
-		location_codeIsOk = true;
+	if (getEmailObjValue != oldGetEmailObjValue) {
+		getEmailStr = "接收促銷/優惠意願已修改完畢";
+		getEmailIsOk = true;
 	}
-	if (!location_codeIsOk) {
-		location_codeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + location_codeStr;
-		location_codeSpan.style.color = "red";
-		location_codeSpan.style.fontStyle = "italic";
+	if (getEmailIsOk) {
+		if (getEmailObjValue == oldGetEmailObjValue) {
+			getEmailSpan.innerHTML = "";
+		} else {
+			getEmailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + getEmailStr;
+			getEmailSpan.style.color = "black";
+			getEmailSpan.style.fontStyle = "normal";
+		}
+		return true;
+	} 
+}
+
+function checkLocationCode() {
+	let locationCodeObjValue = document.getElementById("locationCode").value;
+	let locationCodeSpan = document.getElementById("locationCodeSpan");
+	let oldLocationCodeObjValue = document.getElementById("oldLocationCode").value;
+	
+	let locationCodeIsOk = true;
+	let locationCodeStr;
+	
+	if (locationCodeObjValue == "" || locationCodeObjValue.length == 0) {
+		locationCodeStr = "居住區域不可為空白";
+		locationCodeIsOk = false;
+	} else if (locationCodeObjValue == oldLocationCodeObjValue) {
+		locationCodeStr = "";
+		locationCodeIsOk = true;
+	} else {
+		locationCodeStr = "居住區域已選擇完畢";
+		locationCodeIsOk = true;
+	}
+	if (!locationCodeIsOk) {
+		locationCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + locationCodeStr;
+		locationCodeSpan.style.color = "red";
+		locationCodeSpan.style.fontStyle = "italic";
 		return false;
 	}
 	else {
-		location_codeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + location_codeStr;
-		location_codeSpan.style.color = "black";
-		location_codeSpan.style.fontStyle = "normal";
+		if (locationCodeObjValue == oldLocationCodeObjValue) {
+			locationCodeSpan.innerHTML = "";
+		} else {
+			locationCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + locationCodeStr;
+			locationCodeSpan.style.color = "black";
+			locationCodeSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
 	let addr0Span = document.getElementById("addr0Span");
-	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
-	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
-	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
+	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	
 	let addr0IsOk = true;
 	let addr0Str;
@@ -416,8 +663,11 @@ function checkAddr0() {
 	} else if ((addr0ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr2ObjValue) || (addr0ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr1ObjValue)) {
 		addr0Str = "生活地點重複填寫";
 		addr0IsOk = false;
+	} else if (addr0ObjValue == oldAddr0ObjValue) {
+		addr0Str = "";
+		addr0IsOk = true;
 	} else {
-		addr0Str = "生活地點一已填寫完畢";
+		addr0Str = "生活地點一已修改完畢";
 		addr0IsOk = true;
 	}
 	if (addr0IsOk) {
@@ -438,13 +688,13 @@ function checkAddr0() {
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
 	let addr1Span = document.getElementById("addr1Span");
-	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
-	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
-	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
+	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	
 	let addr1IsOk = true;
 	let addr1Str;
@@ -455,8 +705,11 @@ function checkAddr1() {
 	} else if ((addr1ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr2ObjValue) || (addr1ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr0ObjValue)) {
 		addr1Str = "生活地點重複填寫";
 		addr1IsOk = false;
+	} else if (addr1ObjValue == oldAddr1ObjValue) {
+		addr1Str = "";
+		addr1IsOk = true;
 	} else {
-		addr1Str = "生活地點二已填寫完畢";
+		addr1Str = "生活地點二已修改完畢";
 		addr1IsOk = true;
 	}
 	if (addr1IsOk) {
@@ -477,13 +730,13 @@ function checkAddr1() {
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
 	let addr2Span = document.getElementById("addr2Span");
-	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
-	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
-	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
+	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	
 	let addr2IsOk = true;
 	let addr2Str;
@@ -494,8 +747,11 @@ function checkAddr2() {
 	} else if ((addr2ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr1ObjValue) || (addr2ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr0ObjValue)) {
 		addr2Str = "生活地點重複填寫";
 		addr2IsOk = false;
+	} else if (addr2ObjValue == oldAddr2ObjValue) {
+		addr2Str = "";
+		addr2IsOk = true;
 	} else {
-		addr2Str = "生活地點三已填寫完畢";
+		addr2Str = "生活地點三已修改完畢";
 		addr2IsOk = true;
 	}
 	if (addr2IsOk) {
@@ -524,59 +780,85 @@ function changeVisibility() {
 }
 
 function clearMessage() {
-	document.getElementById("accountSpan").innerHTML = "";
-	document.getElementById("checkAccount").style = "display:none";
 	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkRegisterNickname").style = "display:none";
-	document.getElementById("birthdaySpan").innerHTML = "";
+	document.getElementById("checkNicknameUsed").style = "display:none";
 	document.getElementById("fervorSpan").innerHTML = "";
+	document.getElementById("genderSpan").innerHTML = "";
+	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
 	document.getElementById("checkEmailUsed").style = "display:none";
-	document.getElementById("emailCheckCodeSpan").innerHTML = "";
-	document.getElementById("sendCheckCode").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkRegisterPhone").style = "display:none";
+	document.getElementById("checkPhoneUsed").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";
 	document.getElementById("addr2Span").innerHTML = "";
+	/* 刷新 */
+	location.reload(true);
 }
 
-
-function checkSameInput(){
-	let accountSpan = document.getElementById("accountSpan");
-	let emailSpan = document.getElementById("emailSpan");
-	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+function checkSameNickname(){
+	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameSpan = document.getElementById("nicknameSpan");
+	let oldNicknameObjValue = document.getElementById("oldNickname").value;
 	
-	if (accountSpan.textContent != "check_circle可建立此帳號！") {
-		alert("請先執行帳號檢查");
-		return false;
-	} else if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
-		alert("請先執行稱呼檢查");
-		return false;
-	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-		alert("請先執行電子信箱檢查");
-		return false;
-	} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
-		alert("請先執行電子信箱驗證");
-		return false;
-	} else if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
-		alert("請先執行聯絡電話檢查");
-		return false;
-	} else {
-		if (!checkAccountName()) {
-			return false;
-		} else if (!checkNickname()) {
-			return false;
-		} else if (!checkEmailCheckCode()) {
-			return false;
-		} else if (!checkPhone()) {
+	if (nicknameObjValue != oldNicknameObjValue) {
+		if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+			alert("請先執行稱呼檢查");
 			return false;
 		} else {
-			return true;
+			if (!checkNickname()) {
+				return false;
+			} else {
+				return true;
+			}
 		}
+	} else {
+		return true;
+	}
+}
+
+function checkSameEmail(){
+	let emailObjValue = document.getElementById("email").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
+	let oldEmailObjValue = document.getElementById("oldEmail").value;
+	
+	if (emailObjValue != oldEmailObjValue) {
+		if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+			alert("請先執行電子信箱檢查");
+			return false;
+		} else {
+			if (!checkEmail()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	} else {
+		return true;
+	}
+}
+
+function checkSamePhone(){
+	let phoneObjValue = document.getElementById("phone").value.trim();
+	let phoneSpan = document.getElementById("phoneSpan");
+	let oldPhoneObjValue = document.getElementById("oldPhone").value;
+	
+	if (phoneObjValue != oldPhoneObjValue) {
+		if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+			alert("請先執行聯絡電話檢查");
+			return false;
+		} else {
+			if (!checkPhone()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	} else {
+		return true;
 	}
 }

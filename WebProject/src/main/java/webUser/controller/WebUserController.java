@@ -83,6 +83,9 @@ public class WebUserController {
 
 	/* Today */
 	final LocalDate today = LocalDate.now();
+	
+	/* Default Account List */
+	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
@@ -339,15 +342,28 @@ public class WebUserController {
 		String redirectPage = "/webUser/WebUserMain";
 		
 		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
-		
+	
 		/* 預防性後端檢查 */
 		quitMessage = doCheckQuitInput(quitUserData);
-		if (quitMessage.equals("")) {			
+		if (quitMessage.equals("")) {
+			Integer quitUserLv = quitUserData.getAccountLv().getLv();
+			Boolean runQuit = true;
 			/* 調用服務裡的方法 */
 			try {
 				quitUserData.setVersion(quitUserData.getVersion() + 1);
 				quitUserData.setStatus("quit");
-				deleteResult = wus.quitWebUserData(quitUserData);
+				/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
+				if (quitUserLv == -1) {
+					if (wus.checkAdminAccess() - 1 == 0) {
+						runQuit = false;
+						quitMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
+					}
+				}
+				/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
+				if (runQuit) {
+					/* 執行停用 */
+					deleteResult = wus.quitWebUserData(quitUserData);
+				}
 			} catch (SQLException sqlE) {
 				String quitMessageTmp = sqlE.getMessage();
 				quitMessage = quitMessageTmp.split(":")[1];
@@ -365,7 +381,7 @@ public class WebUserController {
 		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
 		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("redirectPag", redirectPage);
+		redirectAttributes.addFlashAttribute("redirectPage", redirectPage);
 		/* 導向停用結束畫面 */
 		return "redirect:/webUser/WebUserQuitResult";
 	}
@@ -682,9 +698,11 @@ public class WebUserController {
 		List<UserWilling> willingList = wis.getUserWillingList();
 		List<FoodFervor> fervorList = fvs.getFoodFervorList();
 		List<CityInfo> cityInfoList = lcs.getLocationInfoList();
+		List<UserIdentity> identityList = ids.getIdentityList();
 		
 		/* 設定入Model中 */
 		model.addAttribute("willingList", willingList);
+		model.addAttribute("identityList", identityList);
 		model.addAttribute("fervorList", fervorList);
 		model.addAttribute("cityInfoList", cityInfoList);
 		return "webUser/WebUserSearchForm";
@@ -749,7 +767,10 @@ public class WebUserController {
 			@RequestParam(value = "selectedNickname", defaultValue = "?") String selectedNickname,
 			@RequestParam(value = "selectedFervor", defaultValue = "?") String selectedFervor,
 			@RequestParam(value = "selectedLocationCode", defaultValue = "0") Integer selectedLocationCode,
-			@RequestParam(value = "selectedStatus", defaultValue = "?") String selectedStatus) {
+			@RequestParam(value = "selectedStatus", defaultValue = "?") String selectedStatus,
+			@RequestParam(value = "selectedIdentity", defaultValue = "-2") Integer selectedIdentity) {
+		
+		System.out.println(selectedIdentity);
 		
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
@@ -800,11 +821,11 @@ public class WebUserController {
 			if (lv != -1) {	
 				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
 						+ selectedFervor + ":" + selectedLocationCode + ":" 
-						+ String.valueOf(lv) + ":" + status + ":?";
+						+ String.valueOf(lv) + ":" + status + ":?:-2";
 			} else {
 				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
 						+ selectedFervor + ":" + selectedLocationCode + ":" 
-						+ String.valueOf(lv) + ":" + status + ":" + selectedStatus;
+						+ String.valueOf(lv) + ":" + status + ":" + selectedStatus + ":" + selectedIdentity.toString();
 			}
 			
 			/* 預防性後端輸入檢查 */
@@ -905,14 +926,41 @@ public class WebUserController {
 		/* 預防性後端輸入檢查 */
 		operateMessage = doCheckAdminInput(userData, userId, account, status, mode);
 		
+		/* 特殊情況檢查
+		 * 1.自己刪自己
+		 * 2.刪預設的3個特定帳號 */
+		if (operateMessage.equals("")) {
+			if (mode.equals("delete") && userData.getAccount().equals(account)) {
+				operateMessage = "無法由操作者刪除操作者自身的帳號!";
+			} else if (mode.equals("delete")) {
+				for (String defaultAccount:defaultAccounts) {
+					if (defaultAccount.equals(account)) {
+						operateMessage = "無法刪除系統內建的帳號!";
+					}
+				}
+			}
+		}
+		
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
 			switch(mode) {
 				case "quit":
 					status = "quit";
+					Integer quitUserLv = userData.getAccountLv().getLv();
+					Boolean runQuit = true;
 					/* 調用服務裡的方法 */
 					try {
-						operateResult = wus.adminChangeWebUserData(userId, status);
+						/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
+						if (quitUserLv == -1) {
+							if (wus.checkAdminAccess() - 1 == 0) {
+								runQuit = false;
+								operateMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
+							}
+						}
+						/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
+						if (runQuit) {
+							operateResult = wus.adminChangeWebUserData(userId, status);
+						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
 					}
@@ -926,7 +974,6 @@ public class WebUserController {
 					}
 					break;
 				case "active":
-				case "reactive":
 					/* 重新啟用與初次啟用實質上是相同的操作 */
 					status = (status.equals("inactive")) ? "active": status;
 					status = (status.equals("quit")) ? "active": status;
@@ -982,7 +1029,7 @@ public class WebUserController {
 		return map;
 	}
 	
-	/* 傳送表單所必需的資料 */
+	/* 傳送管理員後台新增表單所必需的資料 */
 	@GetMapping(value = "/WebUserAddForm")
 	public String doCreateManagedUserRegisterForm(Model model) {
 		
@@ -1080,7 +1127,15 @@ public class WebUserController {
 		resultMap.put("resultCode", insertResult.toString());
 		resultMap.put("resultMessage", resultMessage);
 		
-		System.out.println("End in ajax");
+		return resultMap;
+	}
+	
+	/* 執行管理員修改 */
+	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doAdminUpdateInsertWebUser() {
+		Map<String, String> resultMap = new HashMap<>();
+		String resultMessage = "";
+		Integer updateResult = -1;
 		return resultMap;
 	}
 	

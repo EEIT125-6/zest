@@ -171,4 +171,9 @@ public class WebUserServiceImpl implements WebUserService {
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException {
 		return webUserDAO.adminChangeWebUserData(userId, status);
 	}
+
+	@Override
+	public Integer checkAdminAccess() throws SQLException {
+		return webUserDAO.checkAdminAccess();
+	}
 }

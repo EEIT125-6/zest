@@ -16,7 +16,7 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
+	href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
 .classimg {
@@ -183,7 +183,6 @@ ul.slides li img {
 					id="account" size="40" maxlength="20" onblur="checkAccountName()"
 					placeholder="請輸入要查詢的帳號，8~20個字" /> 
 				<span id="accountSpan"></span>
-				<hr />
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
 					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 					placeholder="請輸入要查詢的暱稱" /> 
@@ -210,7 +209,6 @@ ul.slides li img {
 				</select> 
 				<span id="locationCodeSpan"></span>
 				<c:if test='${userFullData.accountLv.lv == -1}'>
-					<hr />
 					<label>帳號狀態：</label>
 					<select name="selectedStatus" id="status" onblur="checkStatus()">
 						<option value="">請選擇要查詢的狀態</option>
@@ -218,7 +216,15 @@ ul.slides li img {
 						<option value="inactive">未啟用</option>
 						<option value="quit">已停用</option>
 					</select>
+					<label>帳號身分：</label>
+					<select name="selectedIdentity" id="identity" onblur="checkIdentity()">
+						<option value="">請選擇要查詢的身分</option>
+						<c:forEach items="${identityList}" var="userType">
+							<option value="${userType.lv}" label="${userType.levelName}" />
+						</c:forEach>
+					</select>
 					<span id="statusSpan"></span>
+					<span id="identitySpan"></span>
 				</c:if>
 				<hr />
 			</fieldset>
@@ -226,10 +232,10 @@ ul.slides li img {
 				<a href="WebUserMain">
 				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
-				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 				<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 				<c:if test="${userFullData.accountLv.lv == -1}" >
-					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:blue">add</i></button></a>
+					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:green">add</i></button></a>
 				</c:if>
 			</div>
 			<hr />
@@ -259,6 +265,7 @@ ul.slides li img {
 				
 				var locationCodeObjValue = document.getElementById("locationCode").value;
 				var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+				var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
 				
 				if (checkForm()) {
 					if (accountObjValue == "" && accountObjValue.length == 0) {
@@ -283,10 +290,13 @@ ul.slides li img {
 						if (selectedStatus == "" || selectedStatus.length == 0) {
 							counter++;
 						}
-						if (counter == 5){
+						if (selectedIdentity == "" || selectedIdentity.length == 0) {
+							counter++;
+						}
+						if (counter == 6){
 							selectAllUser();
 						} else {
-							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus);
+							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 						} 
 					}
 				}
@@ -296,7 +306,7 @@ ul.slides li img {
 				selectAllUser();
 			};
 			
-			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus) {
+			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity) {
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
@@ -315,7 +325,8 @@ ul.slides li img {
 						'selectedNickname':nicknameObjValue,
 						'selectedFervor':fervorObjValue,
 						'selectedLocationCode':locationCodeObjValue,
-						'selectedStatus':selectedStatus
+						'selectedStatus':selectedStatus,
+						'selectedIdentity':selectedIdentity
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -369,7 +380,7 @@ ul.slides li img {
 									content += "<tr>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != account && userData.account != "WebAdmin" && userData.account != "TestUser" && userData.account != "TestBoss")
+										content += (userData.account != document.getElementById("userAccount").value)
 													? "<td>"
 													+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
 													+ userData.account
@@ -537,7 +548,7 @@ ul.slides li img {
 									content += "<tr>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != account && userData.account != "WebAdmin" && userData.account != "TestUser" && userData.account != "TestBoss")
+										content += (userData.account != document.getElementById("userAccount").value)
 													? "<td>"
 													+ "<a href='${pageContext.request.contextPath}/webUser/DeleteWebUser/"
 													+ userData.account

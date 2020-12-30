@@ -147,6 +147,12 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${managedUserData.account == null}">
+					<c:redirect url="WebUserSearchForm" />
+				</c:if>
+				<c:if test="${userFullData.accountLv.lv != -1}">
+					<c:redirect url="WebUserMain" />
+				</c:if>
+				<c:if test="${userFullData.account.length() == 0}">
 					<c:redirect url="WebUserLogin" />
 				</c:if>
 				<form method="post">
@@ -185,14 +191,40 @@
 							<span id="nicknameSpan"></span>
 							<hr />
 							<label>生理性別：</label>
-							<c:out value="${managedUserData.gender.genderText}" />
+							<c:forEach items="${genderList}" var="userGender" >
+								<c:if test="${userGender.genderCode == managedUserData.gender.genderCode}" >
+									<input type="radio" name="gender" value="${userGender.genderCode}" 
+										class="gender" checked="checked" onblur="checkGender()" />
+								</c:if>
+								<c:if test="${userGender.genderCode != managedUserData.gender.genderCode}" >
+									<input type="radio" name="gender" value="${userGender.genderCode}"
+										class="gender" onblur="checkGender()" />
+								</c:if>
+								<label><c:out value="${userGender.genderText}" /></label>
+							</c:forEach>
+							<input type="hidden" name="oldGender" id="oldGender" value="${managedUserData.gender.genderCode}" />
+							<span id="genderSpan"></span>
 							<hr />
 							<label>西元生日：</label>
-							<c:out value="${managedUserData.birth}" />
+							<input type="date" name="birth" id="birth" value="${managedUserData.birth}" 
+								onblur="checkBirthday()" />
+							<input type="hidden" name="oldBirth" id="oldBirth" value="${managedUserData.birth}" />
+							<span id="birthdaySpan"></span>
 							<hr />
 							<label>偏好食物：</label>
-							<c:out value="${managedUserData.fervor}" />
+							<c:forEach items="${fervorList}" var="fervorObject" >
+								<c:if test="${managedUserData.fervor.indexOf(fervorObject.fervorItem)!=-1}">
+									<input type="checkbox" id="updatedFervor" name="updatedFervor"  
+										class="fervor" value="${fervorObject.fervorCode}" onblur="checkFervor()" checked="checked" />
+								</c:if>
+								<c:if test="${managedUserData.fervor.indexOf(fervorObject.fervorItem)==-1}">
+									<input type="checkbox" id="updatedFervor" name="updatedFervor" class="fervor" 
+										value="${fervorObject.fervorCode}" onblur="checkFervor()" />
+								</c:if>
+								<label>${fervorObject.fervorItem}</label>
+							</c:forEach>
 							<input type="hidden" name="fervor" id="fervor" value="${managedUserData.fervor}">
+							<span id="fervorSpan"></span>
 							<hr />
 							<label>聯絡信箱：</label>
 							<input type="text" name="email" id="email" value="${managedUserData.email}" onblur="checkEmail()"
@@ -209,12 +241,34 @@
 							<span id="phoneSpan"></span>
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
-							<c:out value="${managedUserData.getEmail.willingText}" />
-							<input type="hidden" name="getEmail" id="getEmail" value="${managedUserData.getEmail.willingCode}">
+							<c:forEach items="${willingList}" var="userWilling" >
+						    	<c:if test="${userWilling.willingCode.equals(managedUserData.getEmail.willingCode)}" >
+						    		<input type="radio" id="getEmail1" name="getEmail" value="${userWilling.willingCode}" 
+										onblur="checkGetEmail()" checked="checked" >
+						    	</c:if>
+						    	<c:if test="${!userWilling.willingCode.equals(managedUserData.getEmail.willingCode)}" >
+						    		<input type="radio" id="getEmail2" name="getEmail" value="${userWilling.willingCode}" 
+										onblur="checkGetEmail()" >
+						    	</c:if>
+						    	<label><c:out value="${userWilling.willingText}"></c:out></label>
+						    </c:forEach>
+							<input type="hidden" name="oldGetEmail" id="oldGetEmail" value="${managedUserData.getEmail.willingCode}">
+						    <span id="getEmailSpan"></span>
 							<hr />
 							<label>居住區域：</label>
-							<c:out value="${managedUserData.locationInfo.cityName}" />
-							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationInfo.cityCode}">
+							<select name="locationCode" id="locationCode" onblur="checkLocationCode()">
+						    	<c:forEach items="${cityInfoList}" var="cityInfo">
+					    			<option value="${cityInfo.cityCode}"
+					    				<c:if test="${cityInfo.cityCode == managedUserData.locationInfo.cityCode}">
+			                         		selected="selected"
+			                         	</c:if> 
+					    			>
+					    				<c:out value="${cityInfo.cityName}" /> 	
+					    		 	</option>
+					    		</c:forEach>
+						    </select>
+							<input type="hidden" name="oldLocationCode" id="oldLocationCode" value="${managedUserData.locationInfo.cityCode}">
+							<span id="locationCodeSpan"></span>
 							<hr />
 							<label>生活地點一：</label>
 							<input type="text" name="addr0" id="addr0" value="${managedUserData.addr0}" onblur="checkAddr0()"
@@ -248,18 +302,15 @@
 					</fieldset>
 					<div align="center">
 						<c:choose>
-							<c:when test="${managedUserData.status=='inactive'}">
-								<input type="button" id="activeAccount" name="update" value="啟用帳號">
+							<c:when test="${managedUserData.status=='inactive' || managedUserData.status=='quit'}">
+								<button type="button" style="font-size:18px" id="activeAccount" >恢復/啟用帳號 <i class="material-icons" style="font-size:18px;color:green">lock_open</i></button>
 							</c:when>
 							<c:when test="${managedUserData.status=='active'}">
-								<input type="button" id="quitAccount" name="update" value="停用帳號">
-							</c:when>
-							<c:when test="${managedUserData.status=='quit'}">
-								<input type="button" id="reactiveAccount" name="update" value="恢復帳號">
+								<button type="button" style="font-size:18px" id="quitAccount" >停用帳號 <i class="material-icons" style="font-size:18px;color:red">lock</i></button>
 							</c:when>
 						</c:choose>
-						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號(尚未完成) <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
-						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
+						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
+						<button type="button" style="font-size:18px" id="deleteAccount" >刪除帳號 <i class="material-icons" style="font-size:18px;color:red">delete_forever</i></button>
 						<button type="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 						<a href="WebUserSearchForm"><button type="button" style="font-size:18px" >返回上一頁 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<hr />
@@ -430,6 +481,7 @@
 				            }
 						});
 					}
+					
 					$("#activeAccount").click(function () {
 						var mode = "active";
 						lastCheck(mode);
@@ -438,14 +490,11 @@
 						var mode = "quit";
 						lastCheck(mode);
 				    });
-					$("#reactiveAccount").click(function () {
-						var mode = "reactive";
-						lastCheck(mode);
-				    });
 					$("#deleteAccount").click(function () {
 						var mode = "delete";
 						lastCheck(mode);
 				    });
+					
 					function lastCheck(mode) {
 						let choice=confirm("是否要執行特定的操作？");
 						if (choice) {
@@ -482,34 +531,153 @@
 										alert(resultObj.resultMessage);
 									} else if (resultObj.resultCode == 0) {
 										operateResultStr = resultObj.resultMessage;
-										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-												+ operateResultStr;
-										operateResultSpan.style.color = "black";
-										operateResultSpan.style.fontStyle = "normal";
+										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+										operateResultSpan.style.color = "red";
+										operateResultSpan.style.fontStyle = "italic";
 										/* 顯示彈窗異常訊息 */
 										alert(resultObj.resultMessage);
 									} else if (resultObj.resultCode == -1) {
 										operateResultStr = resultObj.resultMessage;
-										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-												+ operateResultStr;
-										operateResultSpan.style.color = "black";
-										operateResultSpan.style.fontStyle = "normal";
+										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+										operateResultSpan.style.color = "red";
+										operateResultSpan.style.fontStyle = "italic";
 										/* 顯示彈窗異常訊息 */
 										alert(resultObj.resultMessage);
 									}
 								},
 								error : function(err) {
 									operateResultStr = "發生錯誤，無法執行指定的操作！";
-									operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-											+ operateResultStr;
-									operateResultSpan.style.color = "black";
-									operateResultSpan.style.fontStyle = "normal";
+									operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+									operateResultSpan.style.color = "red";
+									operateResultSpan.style.fontStyle = "italic";
 									/* 顯示彈窗異常訊息 */
 									alert(resultObj.resultMessage);
 								}
 							});
 						}
 					}
+					
+					$("#updateAccount").click(function() {
+						let choice=confirm("是否要執行特定的操作？");
+						if (choice){
+							checkUpdate();
+						}
+                	});
+                	function checkUpdate() {
+                		if (checkForm()) {
+                			doUpdate();
+                		}	
+                	}
+                	function doUpdate() {
+                		let userId = document.getElementById("userId").value.trim();
+                		let oldPassword = document.getElementById("oldPassword").value.trim();
+                		let newPassword = document.getElementById("password").value.trim();
+                		let oldFirstName = document.getElementById("oldFirstName").value.trim();
+                		let newFirstName = document.getElementById("firstName").value.trim();
+                		let oldLastName = document.getElementById("oldLastName").value.trim();
+                		let newLastName = document.getElementById("lastName").value.trim();
+                		let oldNickname = document.getElementById("oldNickname").value.trim();
+                		let newNickname = document.getElementById("nickname").value.trim();
+                		let oldGender = document.getElementById("oldGender").value.trim();
+                		let genderObj = document.getElementsByClassName("gender");
+                		let newGender = "";
+                		for (let genderIndex = 0; genderIndex < genderObj.length; genderIndex++) {
+                			newGender = (genderObj[genderIndex].checked) ? genderObj[genderIndex].value : "";
+                		}
+                		let oldBirth = document.getElementById("oldBirth").value.trim();
+                		let newBirth = document.getElementById("birth").value.trim();
+                		let oldFervor = document.getElementById("oldFervor").value.trim();
+                		let fervorObj = document.getElementsByClassName("fervor");
+                		let newFervor = "";
+                		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+                			if (newFervor != "" && fervorObj[fervorIndex].checked) {
+                				newFervor += ",";
+                			}
+                			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+                		}
+                		let oldEmail = document.getElementById("oldEmail").value.trim();
+                		let newEmail = document.getElementById("email").value.trim();
+                		let oldPhone = document.getElementById("oldPhone").value.trim();
+                		let newPhone = document.getElementById("phone").value.trim();
+                		let oldGetEmail = document.getElementById("oldGetEmail").value.trim();
+                		let getEmailObj = document.getElementsByClassName("getEmail");
+                		let newGetEmail =(document.getElementById("getEmail1") == null) ? "" : document.getElementById("getEmail1").value;
+                		newGetEmail = (document.getElementById("getEmail2") == null) ? "" : document.getElementById("getEmail2").value;
+                		let oldLocationCode = document.getElementById("oldLocationCode").value.trim();
+                		let newLocationCode = document.getElementById("locationCode").value.trim();
+                		let oldAddr0 = document.getElementById("oldAddr0").value.trim();
+                		let newAddr0 = document.getElementById("addr0").value.trim();
+                		let oldAddr1 = document.getElementById("oldAddr1").value.trim();
+                		let newAddr1 = document.getElementById("addr1").value.trim();
+                		let oldAddr2 = document.getElementById("oldAddr2").value.trim();
+                		let newAddr2 = document.getElementById("addr2").value.trim();
+                		
+                		let updateSpan = document.getElementById("operateResult");
+                		let updateStr = "...處理中，請稍後";
+						let updateIsOk = true;
+						
+						updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
+						updateSpan.style.color = "black";
+						updateSpan.style.fontStyle = "normal";
+						
+						$.ajax({
+							type:"POST",
+							url:"<c:url value='/webUser/controller/WebUserAdminModifyData' />",
+							data:{
+								'userId':userId,
+								'oldPassword':oldPassword,
+				            	'newPassword':newPassword,
+				            	'oldFirstName':oldFirstName,
+				            	'newFirstName':newFirstName,
+				            	'oldLastName':oldLastName,
+								'newLastName':newLastName,
+								'oldNickname':oldNickname,
+								'newNickname':newNickname,
+								'oldGender':oldGender,
+								'newGender':newGender,
+								'oldBirth':oldBirth,
+								'newBirth':newBirth,
+								'oldFervor':oldFervor,
+								'newFervor':newFervor,
+								'oldEmail':oldEmail,
+								'newEmail':newEmail,
+								'oldPhone':oldPhone,
+								'newPhone':newPhone,
+								'oldGetEmail':oldGetEmail,
+								'newGetEmail':newGetEmail,
+								'oldLocationCode':oldLocationCode,
+								'newLocationCode':newLocationCode,
+								'oldAddr0':oldAddr0,
+								'newAddr0':newAddr0,
+								'oldAddr1':oldAddr1,
+								'newAddr1':newAddr1,
+								'oldAddr2':oldAddr2,
+								'newAddr2':newAddr2
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if (resultObj.resultCode == 1) {
+				            		updateStr = resultObj.resultMessage;
+				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+				            		updateSpan.style.color = "black";
+				            		updateSpan.style.fontStyle = "normal";
+				            	} else {
+				            		updateStr = resultObj.resultMessage;
+					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+					            	updateSpan.style.color = "red";
+					            	updateSpan.style.fontStyle = "italic";
+					            	/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	}
+				            },
+				            error:function(err) {
+				            	updateStr = "發生錯誤，無法執行檢查";
+				            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+				            	updateSpan.style.color = "red";
+				            	updateSpan.style.fontStyle = "italic";
+				            }
+						});
+                	}
 				</script>
             </div>
 <!-- -------------------------------------------------------------------- -->

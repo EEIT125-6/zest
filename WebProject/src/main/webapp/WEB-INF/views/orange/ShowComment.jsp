@@ -1,20 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%
-	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
-%>
-<!-- taglib宣告 -->
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
+
+<%-- <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" --%>
+<%-- url="jdbc:sqlserver://10.31.25.130:1433;databaseName=WebProject" user="scott" password="tiger"/> --%>
+
+<sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+url="jdbc:sqlserver://localhost;databaseName=WebProject" user="scott" password="tiger"/>
+
+<%-- <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" --%>
+<%-- url="jdbc:sqlserver://localhost;databaseName=DemoLab" user="scott" password="tiger"/> --%>
+
+<sql:query var="rs" dataSource="${ds}">
+SELECT * FROM Board;
+</sql:query>
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>停用流程結束</title>
-    <style>
+<html>
+<%@include file = "../Link_Meta-Include.jsp" %>
+<title>橙皮</title>
+<style>
         .classimg{
 		 transition: 0.2s;	
         	width:80px
@@ -118,6 +124,8 @@
             color:rgba(255,255,255,1);            
         }
         
+ 
+        
         
 #gotop {
     position:fixed;
@@ -132,8 +140,8 @@
     line-height:50px;
     border-radius:50%;
     transition:all 1.5s;
-    text-align: center;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+    text-align: center; 2p
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0x 10px 0 rgba(0,0,0,0.12);
 }
 #gotop :hover{
     background:#0099CC;
@@ -143,28 +151,55 @@
 <body>
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
-                <p>${quitMessage}</p>
-                <p>5秒後將移至</p>
-                <p id = "pPage">${redirectPage}</p>
-                <script>
-                	let directPage = "";
-                	if (document.getElementById("pPage").innerHTML == "") {
-                		document.getElementById("pPage").innerHTML = "首頁";
-                		directPage = "/WebProject";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
-                		document.getElementById("pPage").innerHTML = "主畫面";
-                		directPage = "WebUserMain";
-                	}
-        
-                	setTimeout(function () {
-	                	   window.location.href = directPage;
-               	  	}
-	                , 5000);
-                </script>
-            </div>
-<!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+	<div class="container">
+		<form method=Get action="<c:url value="/selectboard"/>">
+			<label for="">搜尋:</label><input type="text" width="300" name="param">
+			<input type="submit" name="select" value="select">
+			<table border="1" class="tb1 container" >
+				<tr>
+					<th>name</th>
+					<th>star</th>
+					<th>date</th>
+					<th>context</th>
+					<th>photo</th>
+				</tr>
+				<c:forEach var="row" items="${rs.rows}">
+					<tr>
+						<td>${row.NAME}</td>
+						<td>${row.STAR}</td>
+						<td>${row.DATE}</td>
+						<td>${row.CONTEXT}</td>
+						<td>${row.PHOTO}</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</form>
+
+	</div>
+	<a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#"
+		id="gotop"> <i class="fas fa-chevron-up"></i>
+	</a>
+	<script type="text/javascript">
+		$(function() {
+			/* 按下GoTop按鈕時的事件 */
+			$('#gotop').click(function() {
+				$('html,body').animate({
+					scrollTop : 0
+				}, 'slow'); /* 返回到最頂上 */
+				return false;
+			});
+
+			/* 偵測卷軸滑動時，往下滑超過400px就讓GoTop按鈕出現 */
+			$(window).scroll(function() {
+				if ($(this).scrollTop() > 700) {
+					$('#gotop').fadeIn();
+				} else {
+					$('#gotop').fadeOut();
+				}
+			});
+		});
+	</script>
+	<!-- -------------------------------------------------------------------- -->
+	                        <%@include file = "../Footer-Include.jsp" %>
 </body>
 </html>
