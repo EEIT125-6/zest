@@ -41,25 +41,25 @@ function checkForm() {
 	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
-	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
-	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	let phoneObjValue = document.getElementById("phone").value.trim();
+	let oldPhoneObjValue = document.getElementById("oldPhone").value;
 	
-	let getEmailObjValue = document.getElementsByName("updatedGetEmail").value;
-	let oldGetEmailObjValue = document.getElementById("originalGetEmail").value;
+	let getEmailObjValue = document.getElementsByName("getEmail").value;
+	let oldGetEmailObjValue = document.getElementById("oldGetEmail").value;
 	
-	let locationCodeObjValue = document.getElementById("updatedLocationCode").value;
-	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
+	let locationCodeObjValue = document.getElementById("locationCode").value;
+	let oldLocationCodeObjValue = document.getElementById("oldLocationCode").value;
 	
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
-	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
 	
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
-	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
-	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	
-	let updatedSpan = document.getElementById("updatedSpan");
+	let updatedSpan = document.getElementById("operateResult");
 	let updatedStr = "";
 
 	let choice=confirm("是否確定要送出修改後的資料？");
@@ -160,7 +160,7 @@ function checkForm() {
 	}
 }
 
-function checkAccountPassword() {
+function checkPassword() {
 	let passwordObjValue = document.getElementById("password").value.trim();
 	let passwordSpan = document.getElementById("passwordSpan");
 	let oldPasswordObjValue = document.getElementById("oldPassword").value.trim();
@@ -384,7 +384,7 @@ function checkGender() {
 	} 
 }
  
-function checkBirthday() {
+function checkBirth() {
 	let birthdayObjValue = document.getElementById("birth").value;
 	let birthdaySpan = document.getElementById("birthdaySpan");
 	let oldBirthObjValue = document.getElementById("oldBirth").value;

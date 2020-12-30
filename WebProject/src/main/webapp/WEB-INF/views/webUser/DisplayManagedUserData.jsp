@@ -165,7 +165,7 @@
 							<c:out value="${managedUserData.account}" />
 							<hr />
 							<label>帳號密碼：</label>
-							<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkAccountPassword()"
+							<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkPassword()"
 								size="40" maxlength="20" placeholder="請輸入密碼，8~20個字">
 							<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
 							<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
@@ -207,23 +207,23 @@
 							<hr />
 							<label>西元生日：</label>
 							<input type="date" name="birth" id="birth" value="${managedUserData.birth}" 
-								onblur="checkBirthday()" />
+								onblur="checkBirth()" />
 							<input type="hidden" name="oldBirth" id="oldBirth" value="${managedUserData.birth}" />
 							<span id="birthdaySpan"></span>
 							<hr />
 							<label>偏好食物：</label>
 							<c:forEach items="${fervorList}" var="fervorObject" >
 								<c:if test="${managedUserData.fervor.indexOf(fervorObject.fervorItem)!=-1}">
-									<input type="checkbox" id="updatedFervor" name="updatedFervor"  
+									<input type="checkbox" id="fervor" name="fervor"  
 										class="fervor" value="${fervorObject.fervorCode}" onblur="checkFervor()" checked="checked" />
 								</c:if>
 								<c:if test="${managedUserData.fervor.indexOf(fervorObject.fervorItem)==-1}">
-									<input type="checkbox" id="updatedFervor" name="updatedFervor" class="fervor" 
+									<input type="checkbox" id="fervor" name="fervor" class="fervor" 
 										value="${fervorObject.fervorCode}" onblur="checkFervor()" />
 								</c:if>
 								<label>${fervorObject.fervorItem}</label>
 							</c:forEach>
-							<input type="hidden" name="fervor" id="fervor" value="${managedUserData.fervor}">
+							<input type="hidden" name="oldFervor" id="oldFervor" value="${managedUserData.fervor}">
 							<span id="fervorSpan"></span>
 							<hr />
 							<label>聯絡信箱：</label>
@@ -273,19 +273,19 @@
 							<label>生活地點一：</label>
 							<input type="text" name="addr0" id="addr0" value="${managedUserData.addr0}" onblur="checkAddr0()"
 								size="65" maxlength="65" placeholder="此項為必填，請輸入完整地址方面後續服務之利用">
-							<input type="hidden" name="addr0" id="addr0" value="${managedUserData.addr0}">
+							<input type="hidden" name="oldAddr0" id="oldAddr0" value="${managedUserData.addr0}">
 							<span id="addr0Span"></span>
 							<hr />
 							<label>生活地點二：</label>
 							<input type="text" name="addr1" id="addr1" value="${managedUserData.addr1}" onblur="checkAddr1()"
 								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
-							<input type="hidden" name="addr1" id="addr1" value="${managedUserData.addr1}">
+							<input type="hidden" name="oldAddr1" id="oldAddr1" value="${managedUserData.addr1}">
 							<span id="addr1Span"></span>
 							<hr />
 							<label>生活地點三：</label>
 							<input type="text" name="addr2" id="addr2" value="${managedUserData.addr2}" onblur="checkAddr2()"
 								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
-							<input type="hidden" name="addr2" id="addr2" value="${managedUserData.addr2}">
+							<input type="hidden" name="oldAddr2" id="oldAddr2" value="${managedUserData.addr2}">
 							<span id="addr2Span"></span>
 							<hr />
 							<label>所擁有的橙幣：</label>

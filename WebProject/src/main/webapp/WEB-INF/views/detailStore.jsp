@@ -177,7 +177,9 @@
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span style="font-size: 140%">餐廳服務</span>
+		<a href="<c:url value='/booking/${stname1}'/> ">	
+			<span style="font-size: 140%">餐廳服務</span>
+		</a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">

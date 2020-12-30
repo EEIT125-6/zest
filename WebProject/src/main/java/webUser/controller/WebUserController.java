@@ -894,8 +894,11 @@ public class WebUserController {
 		
 		/* 成功 */
 		if (operateMessage.equals("") && managedUserData != null) {
+			List<Gender> genderList = gds.getGenderList();
 			/* 將物件managedUserData以"managedUserData"的名稱放入Attribute中 */
 			model.addAttribute("managedUserData", managedUserData);
+			/* 設定入Model中 */
+			model.addAttribute("genderList", genderList);
 			/* 前往個人資料畫面 */
 			destinationUrl = "redirect:/webUser/DisplayManagedUserData";
 		} else {
@@ -1132,10 +1135,46 @@ public class WebUserController {
 	
 	/* 執行管理員修改 */
 	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, String> doAdminUpdateInsertWebUser() {
+	public @ResponseBody Map<String, String> doAdminUpdateInsertWebUser(
+			Model model,
+			@RequestParam(value = "userId", required = false, defaultValue="") String updatedUserId,
+			@RequestParam(value = "oldPassword", required = false, defaultValue="") String oldPassword,
+			@RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword,
+			@RequestParam(value = "oldFirstName", required = false, defaultValue="") String oldFirstName,
+			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
+			@RequestParam(value = "oldLastName", required = false, defaultValue="") String oldLastName,
+			@RequestParam(value = "newLastName", required = false, defaultValue="") String newLastName,
+			@RequestParam(value = "oldNickname", required = false, defaultValue="") String oldNickname,
+			@RequestParam(value = "newNickname", required = false, defaultValue="") String newNickname,
+			@RequestParam(value = "oldGender", required = false, defaultValue="") String oldGender,
+			@RequestParam(value = "newGender", required = false, defaultValue="") String newGender,
+			@RequestParam(value = "oldBirth", defaultValue = "1800-01-01") Date olbBirth,
+			@RequestParam(value = "newBirth", defaultValue = "1800-01-01") Date newBirth,
+			@RequestParam(value = "oldFervor", required = false, defaultValue="") String oldFervor,
+			@RequestParam(value = "newFervor", required = false, defaultValue="") String newFervor,
+			@RequestParam(value = "oldEmail", required = false, defaultValue="") String oldEmail,
+			@RequestParam(value = "newEmail", required = false, defaultValue="") String newEmail,
+			@RequestParam(value = "oldPhone", required = false, defaultValue="") String oldPhone,
+			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
+			@RequestParam(value = "oldGetEmail", required = false, defaultValue="") String oldGetEmail,
+			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
+			@RequestParam(value = "oldLocationCode", required = false, defaultValue="") Integer oldLocationCode,
+			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
+			@RequestParam(value = "oldAddr0", required = false, defaultValue="") String oldAddr0,
+			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
+			@RequestParam(value = "oldAddr1", required = false, defaultValue="") String oldAddr1,
+			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
+			@RequestParam(value = "oldAddr2", required = false, defaultValue="") String oldAddr2,
+			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
+		System.out.println("Test 0");
+		
 		Map<String, String> resultMap = new HashMap<>();
 		String resultMessage = "";
 		Integer updateResult = -1;
+		WebUserData updatedUserData = (WebUserData) model.getAttribute("managedUserData");
+		
+		System.out.println("Test "+updatedUserData.getUserId());
+		
 		return resultMap;
 	}
 	
