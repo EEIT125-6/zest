@@ -236,11 +236,13 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 		nicknameSpan.style.color = "black";
 		nicknameSpan.style.fontStyle = "normal";
+		document.getElementById("checkNicknameUsed").style = "display:inline";
 		return true;
 	} else {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
+		document.getElementById("checkNicknameUsed").style = "display:none";
 		return false;
 	} 
 }
@@ -364,6 +366,7 @@ function checkPhone() {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
+		document.getElementById("checkPhoneUsed").style = "display:none";
 		return false;
 	}
 	else {
@@ -373,7 +376,7 @@ function checkPhone() {
 			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 			phoneSpan.style.color = "black";
 			phoneSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
+			document.getElementById("checkPhoneUsed").style = "display:inline";
 		}
 		return true;
 	}
@@ -550,6 +553,7 @@ function checkAddr2() {
 }
 
 function clearMessage() {
+	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";

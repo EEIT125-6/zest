@@ -12,6 +12,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<%@include file = "../Link_Meta-Include.jsp" %>
     <title>已登入</title>
     <style>
@@ -160,7 +161,7 @@
             			</legend>
                 		<div align="center">
                 			<hr />
-                			<input type="submit" id="select" name="select" value="檢視/修改個人資料">
+                			<button type="submit" id="select" name="select" style="font-size:18px" >檢視/修改個人資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
 							<hr />
 						</div>
                 	</fieldset>
@@ -169,13 +170,13 @@
                 	<fieldset>
                 		<div align="center">
                 			<c:if test="${userFullData.accountLv.lv == 0}" >
-                				<input type="submit" id="select" name="select" value="搜索使用者">
+                				<button type="submit" id="select" name="select" style="font-size:18px" >搜索使用者 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
                 			</c:if>
                 			<c:if test="${userFullData.accountLv.lv == 1}" >
-                				<input type="submit" id="select" name="select" value="搜索客戶與同業">
+                				<button type="submit" id="select" name="select" style="font-size:18px" >搜索客戶與同業 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
                 			</c:if>
                 			<c:if test="${userFullData.accountLv.lv == -1}" >
-                				<input type="submit" id="select" name="select" value="管理使用者">
+                				<button type="submit" id="select" name="select" style="font-size:18px" >管理使用者 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
                 			</c:if>
 							<hr />
 						</div>
@@ -184,7 +185,7 @@
                 <form action="<c:url value='/webUser/controller/WebUserMain/Quit' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
-                			<input type="submit" id="quit" name="quit" value="放棄使用帳戶">
+                			<button type="submit" id="quit" name="quit" style="font-size:18px" >放棄使用帳戶 <i class="material-icons" style="font-size:18px;color:red">delete_forever</i></button>
                 			<hr />
 						</div>
                 	</fieldset>
@@ -192,7 +193,7 @@
                 <form action="<c:url value='/webUser/controller/WebUserMain/Logout' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
-							<input type="submit" id="logout" name="login" value="登出帳戶">
+                			<button type="submit" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
 							<hr />
 						</div>
                 	</fieldset>

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import xun.dao.StoreDao;
 
-import xun.model.BoardBean;
 import xun.model.ProductInfoBean;
+import xun.model.BoardBean;
 import xun.model.StoreBean;
 import xun.service.StoreService;
 

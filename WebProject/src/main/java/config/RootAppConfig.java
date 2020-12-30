@@ -22,7 +22,7 @@ public class RootAppConfig {
 	public static final String dbPassword = "tiger";
 	public static final String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static final String sqlType = "sqlserver";
-	public static final String sqlUrl = "127.0.0.1";
+	public static final String sqlUrl = "10.31.25.130";
 	public static final String sqlPort = "1433";
 	public static final String dbName = "WebProject";
 	
@@ -45,8 +45,8 @@ public class RootAppConfig {
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-		/* 掃描的package暫時留空，有需要時請填入 */
-		factory.setPackagesToScan(new String[] { "xun", "webUser" });
+		/* 掃描的package */
+		factory.setPackagesToScan(new String[] { "xun", "webUser", "controller", "dao", "service" });
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;

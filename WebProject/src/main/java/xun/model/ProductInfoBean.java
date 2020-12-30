@@ -1,5 +1,7 @@
 package xun.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,10 @@ public class ProductInfoBean {
 	private StoreBean storebean;
 	
 	public ProductInfoBean() {
+		super();
+	}
+	
+	public ProductInfoBean(List<ProductInfoBean> list, int i) {
 		super();
 	}
 

@@ -159,23 +159,30 @@
 							<c:out value="${managedUserData.account}" />
 							<hr />
 							<label>帳號密碼：</label>
-							<c:if test="${managedUserData.password.length() > 0}">
-								<c:forEach var="passwordChar" begin="0" end="${managedUserData.password.length()-1}">
-									<c:out value = "*" />
-								</c:forEach>
-							</c:if>
+							<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkAccountPassword()"
+								size="40" maxlength="20" placeholder="請輸入密碼，8~20個字">
+							<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
+							<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+							<span id="passwordSpan"></span>
 							<hr />
 							<label>中文姓氏：</label>
-							<c:out value="${managedUserData.firstName}" />
-							<input type="hidden" name="firstName" id="firstName" value="${managedUserData.firstName}">
+							<input type="text" name="firstName" id="firstName" value="${managedUserData.firstName}" onblur="checkFirstName()"
+								size="40" maxlength="20" placeholder="請輸入名字，1~3個中文字">
+							<input type="hidden" name="oldFirstName" id="oldFirstName" value="${managedUserData.firstName}">
+							<span id="firstNameSpan"></span>
 							<hr />
 							<label>中文名字：</label>
-							<c:out value="${managedUserData.lastName}" />
-							<input type="hidden" name="lastName" id="lastName" value="${managedUserData.lastName}">
+							<input type="text" name="lastName" id="lastName" value="${managedUserData.lastName}" onblur="checkLastName()"
+								size="40" maxlength="20" placeholder="請輸入名字，1~3個中文字">
+							<input type="hidden" name="oldLastName" id="oldLastName" value="${managedUserData.lastName}">
+							<span id="lastNameSpan"></span>
 							<hr />
 							<label>稱呼方式：</label>
-							<c:out value="${managedUserData.nickname}" />
-							<input type="hidden" name="nickname" id="nickname" value="${managedUserData.nickname}">
+							<input type="text" name="nickname" id="nickname" value="${managedUserData.nickname}" onblur="checkNickname()"
+								size="40" maxlength="20" placeholder="請輸入想要的稱呼">
+							<input type="hidden" name="oldNickname" id="oldNickname" value="${managedUserData.nickname}">
+							<button type="button" style="font-size:18px" id="checkNicknameUsed" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+							<span id="nicknameSpan"></span>
 							<hr />
 							<label>生理性別：</label>
 							<c:out value="${managedUserData.gender.genderText}" />
@@ -188,12 +195,18 @@
 							<input type="hidden" name="fervor" id="fervor" value="${managedUserData.fervor}">
 							<hr />
 							<label>聯絡信箱：</label>
-							<c:out value="${managedUserData.email}" />
-							<input type="hidden" name="email" id="email" value="${managedUserData.email}">
+							<input type="text" name="email" id="email" value="${managedUserData.email}" onblur="checkEmail()"
+								size="40" maxlength="30" placeholder="請輸入驗證、聯絡用的E-Mail地址">
+							<input type="hidden" name="oldEmail" id="oldEmail" value="${managedUserData.email}">
+							<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+							<span id="emailSpan"></span>
 							<hr />
 							<label>聯絡電話：</label>
-							<c:out value="${managedUserData.phone}" />
-							<input type="hidden" name="phone" id="phone" value="${managedUserData.phone}">
+							<input type="text" name="phone" id="phone" value="${managedUserData.phone}" onblur="checkPhone()"
+								size="40" maxlength="11" placeholder="請輸入行動電話或市內電話號碼">
+							<input type="hidden" name="oldPhone" id="oldPhone" value="${managedUserData.phone}">
+							<button type="button" style="font-size:18px" id="checkPhoneUsed" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+							<span id="phoneSpan"></span>
 							<hr />
 							<label>是否願意接收促銷/優惠訊息：</label>
 							<c:out value="${managedUserData.getEmail.willingText}" />
@@ -204,16 +217,22 @@
 							<input type="hidden" name="locationCode" id="locationCode" value="${managedUserData.locationInfo.cityCode}">
 							<hr />
 							<label>生活地點一：</label>
-							<c:out value="${managedUserData.addr0}" />
+							<input type="text" name="addr0" id="addr0" value="${managedUserData.addr0}" onblur="checkAddr0()"
+								size="65" maxlength="65" placeholder="此項為必填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr0" id="addr0" value="${managedUserData.addr0}">
+							<span id="addr0Span"></span>
 							<hr />
 							<label>生活地點二：</label>
-							<c:out value="${managedUserData.addr1}" />
+							<input type="text" name="addr1" id="addr1" value="${managedUserData.addr1}" onblur="checkAddr1()"
+								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr1" id="addr1" value="${managedUserData.addr1}">
+							<span id="addr1Span"></span>
 							<hr />
 							<label>生活地點三：</label>
-							<c:out value="${managedUserData.addr2}" />
+							<input type="text" name="addr2" id="addr2" value="${managedUserData.addr2}" onblur="checkAddr2()"
+								size="65" maxlength="65" placeholder="此項為選填，請輸入完整地址方面後續服務之利用">
 							<input type="hidden" name="addr2" id="addr2" value="${managedUserData.addr2}">
+							<span id="addr2Span"></span>
 							<hr />
 							<label>所擁有的橙幣：</label>
 							<c:out value="${managedUserData.zest}" />
@@ -239,15 +258,178 @@
 								<input type="button" id="reactiveAccount" name="update" value="恢復帳號">
 							</c:when>
 						</c:choose>
-						<input type="button" id="updateAccount" name="update" value="編輯帳號(尚未完成)">
+						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號(尚未完成) <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
 						<input type="button" id="deleteAccount" name="delete" value="刪除帳號">
-						<a href="WebUserSearchForm"><input type="button" name="select" value="返回上一頁"></a>
+						<button type="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="WebUserSearchForm"><button type="button" style="font-size:18px" >返回上一頁 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<hr />
 						<span id="operateResult"></span>
 					</div>
 				</form>
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+				<script src="<c:url value='/js/webUser/DisplayManagedUserData.js' />"></script>
 				<script>
+					$("#checkNicknameUsed").click(function() {
+				        checkUpdateNickname();
+				    });
+					function checkUpdateNickname() {
+						let nickname = document.getElementById("nickname").value.trim();
+						let nicknameSpan = document.getElementById("nicknameSpan");
+						let nicknameStr = "處理中...，請稍後";
+						let nicknameIsOk = true;
+						let mode = "checkNickname";
+						
+						nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + nicknameStr;
+	            		nicknameSpan.style.color = "black";
+	            		nicknameSpan.style.fontStyle = "normal";
+						
+						$.ajax({
+							type:"POST",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
+				            data:{
+				            	'register':mode,
+				            	'inputNickname':nickname
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if (resultObj.resultCode == 1) {
+				            		nicknameStr = "此稱呼已有人使用！";
+				            		nicknameIsOk = false;
+				            	} else if (resultObj.resultCode == 0) {
+				            		nicknameStr = "可使用此稱呼！";
+				            		nicknameIsOk = true;
+				            	} else if (resultObj.resultCode == -1) {
+				            		nicknameStr = "檢查途中遭遇錯誤！";
+				            		nicknameIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	}
+				            	if (!nicknameIsOk) {
+				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+				            		nicknameSpan.style.color = "red";
+				            		nicknameSpan.style.fontStyle = "italic";
+				            	} else {
+				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+				            		nicknameSpan.style.color = "black";
+				            		nicknameSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	nicknameStr = "發生錯誤，無法執行檢查";
+				            	nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+				            	nicknameSpan.style.color = "red";
+				            	nicknameSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+					
+					$("#checkEmailUsed").click(function() {
+						checkUpdateEmail();
+				    });
+					function checkUpdateEmail() {
+						let email = document.getElementById("email").value.trim();
+						let emailSpan = document.getElementById("emailSpan");
+						let emailStr = "...處理中，請稍後";
+						let emailIsOk = true;
+						let mode = "checkEmail";
+						
+						emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailStr;
+	            		emailSpan.style.color = "black";
+	            		emailSpan.style.fontStyle = "normal";
+						
+						$.ajax({
+							type:"POST",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
+				            data:{
+				            	'register':mode,
+				            	'inputEmail':email
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if (resultObj.resultCode == 1) {
+				            		emailStr = "此電子信箱已有人使用！";
+				            		emailIsOk = false;
+				            	} else if (resultObj.resultCode == 0) {
+				            		emailStr = "可使用此電子信箱！";
+				            		emailIsOk = true;
+				            	} else if (resultObj.resultCode == -1) {
+				            		emailStr = "檢查途中遭遇錯誤！";
+				            		emailIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	}
+				            	if (!emailIsOk) {
+				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+				            		emailSpan.style.color = "red";
+				            		emailSpan.style.fontStyle = "italic";
+				            	} else {
+				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
+				            		emailSpan.style.color = "black";
+				            		emailSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	emailStr = "發生錯誤，無法執行檢查";
+				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
+				            	emailSpan.style.color = "red";
+				            	emailSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
+					
+					$("#checkPhoneUsed").click(function() {
+				        checkUpdatePhone();
+				    });
+					function checkUpdatePhone() {
+						let phone = document.getElementById("phone").value.trim();
+						let phoneSpan = document.getElementById("phoneSpan");
+						let phoneStr= "...處理中，請稍後";
+						let phoneIsOk = true;
+						let mode = "checkPhone";
+						
+						phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + phoneStr;
+	            		phoneSpan.style.color = "black";
+	            		phoneSpan.style.fontStyle = "normal";
+						
+						$.ajax({
+							type:"POST",
+				            url:"<c:url value='/webUser/controller/UserInfoController' />",
+				            data:{
+				            	'register':mode,
+				            	'inputPhone':phone
+				            },
+				            dataType:"json",
+				            success:function(resultObj) {
+				            	if (resultObj.resultCode == 1) {
+				            		phoneStr = "此聯絡電話已有人使用！";
+				            		phoneIsOk = false;
+				            	} else if (resultObj.resultCode == 0) {
+				            		phoneStr = "可使用此聯絡電話！";
+				            		phoneIsOk = true;
+				            	} else if (resultObj.resultCode == -1) {
+				            		phoneStr = "檢查途中遭遇錯誤！";
+				            		phoneIsOk = false;
+				            		/* 顯示彈窗異常訊息 */
+				            		alert(resultObj.resultMessage);
+				            	}
+				            	if (!phoneIsOk) {
+				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+				            		phoneSpan.style.color = "red";
+				            		phoneSpan.style.fontStyle = "italic";
+				            	} else {
+				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
+				            		phoneSpan.style.color = "black";
+				            		phoneSpan.style.fontStyle = "normal";
+				            	}
+				            },
+				            error:function(err) {
+				            	phoneStr = "發生錯誤，無法執行檢查";
+				            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
+				            	phoneSpan.style.color = "red";
+				            	phoneSpan.style.fontStyle = "italic";
+				            }
+						});
+					}
 					$("#activeAccount").click(function () {
 						var mode = "active";
 						lastCheck(mode);
