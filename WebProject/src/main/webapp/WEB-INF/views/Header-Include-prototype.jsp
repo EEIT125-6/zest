@@ -44,7 +44,7 @@
 			購物車 |
 			</a> 
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
-			<a href="">
+			<a href="${pageContext.request.contextPath}/booking/Page1">
 			確認訂位 |
 			</a>
 			<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i>

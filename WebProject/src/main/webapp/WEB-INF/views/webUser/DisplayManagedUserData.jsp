@@ -569,24 +569,16 @@
                 		}	
                 	}
                 	function doUpdate() {
-                		let userId = document.getElementById("userId").value.trim();
-                		let oldPassword = document.getElementById("oldPassword").value.trim();
                 		let newPassword = document.getElementById("password").value.trim();
-                		let oldFirstName = document.getElementById("oldFirstName").value.trim();
                 		let newFirstName = document.getElementById("firstName").value.trim();
-                		let oldLastName = document.getElementById("oldLastName").value.trim();
                 		let newLastName = document.getElementById("lastName").value.trim();
-                		let oldNickname = document.getElementById("oldNickname").value.trim();
                 		let newNickname = document.getElementById("nickname").value.trim();
-                		let oldGender = document.getElementById("oldGender").value.trim();
                 		let genderObj = document.getElementsByClassName("gender");
                 		let newGender = "";
                 		for (let genderIndex = 0; genderIndex < genderObj.length; genderIndex++) {
                 			newGender = (genderObj[genderIndex].checked) ? genderObj[genderIndex].value : "";
                 		}
-                		let oldBirth = document.getElementById("oldBirth").value.trim();
                 		let newBirth = document.getElementById("birth").value.trim();
-                		let oldFervor = document.getElementById("oldFervor").value.trim();
                 		let fervorObj = document.getElementsByClassName("fervor");
                 		let newFervor = "";
                 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
@@ -595,21 +587,13 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let oldEmail = document.getElementById("oldEmail").value.trim();
                 		let newEmail = document.getElementById("email").value.trim();
-                		let oldPhone = document.getElementById("oldPhone").value.trim();
                 		let newPhone = document.getElementById("phone").value.trim();
-                		let oldGetEmail = document.getElementById("oldGetEmail").value.trim();
-                		let getEmailObj = document.getElementsByClassName("getEmail");
                 		let newGetEmail =(document.getElementById("getEmail1") == null) ? "" : document.getElementById("getEmail1").value;
                 		newGetEmail = (document.getElementById("getEmail2") == null) ? "" : document.getElementById("getEmail2").value;
-                		let oldLocationCode = document.getElementById("oldLocationCode").value.trim();
                 		let newLocationCode = document.getElementById("locationCode").value.trim();
-                		let oldAddr0 = document.getElementById("oldAddr0").value.trim();
                 		let newAddr0 = document.getElementById("addr0").value.trim();
-                		let oldAddr1 = document.getElementById("oldAddr1").value.trim();
                 		let newAddr1 = document.getElementById("addr1").value.trim();
-                		let oldAddr2 = document.getElementById("oldAddr2").value.trim();
                 		let newAddr2 = document.getElementById("addr2").value.trim();
                 		
                 		let updateSpan = document.getElementById("operateResult");
@@ -624,34 +608,19 @@
 							type:"POST",
 							url:"<c:url value='/webUser/controller/WebUserAdminModifyData' />",
 							data:{
-								'userId':userId,
-								'oldPassword':oldPassword,
 				            	'newPassword':newPassword,
-				            	'oldFirstName':oldFirstName,
 				            	'newFirstName':newFirstName,
-				            	'oldLastName':oldLastName,
 								'newLastName':newLastName,
-								'oldNickname':oldNickname,
 								'newNickname':newNickname,
-								'oldGender':oldGender,
 								'newGender':newGender,
-								'oldBirth':oldBirth,
 								'newBirth':newBirth,
-								'oldFervor':oldFervor,
 								'newFervor':newFervor,
-								'oldEmail':oldEmail,
 								'newEmail':newEmail,
-								'oldPhone':oldPhone,
 								'newPhone':newPhone,
-								'oldGetEmail':oldGetEmail,
 								'newGetEmail':newGetEmail,
-								'oldLocationCode':oldLocationCode,
 								'newLocationCode':newLocationCode,
-								'oldAddr0':oldAddr0,
 								'newAddr0':newAddr0,
-								'oldAddr1':oldAddr1,
 								'newAddr1':newAddr1,
-								'oldAddr2':oldAddr2,
 								'newAddr2':newAddr2
 				            },
 				            dataType:"json",

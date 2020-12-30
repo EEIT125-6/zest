@@ -48,7 +48,8 @@ import webUser.service.WillingService;
 		"cityInfoList",
 		"reg_webUser",
 		"userFullData",
-		"managedUserData"
+		"managedUserData",
+		"selfData"
 		})
 @Controller
 @RequestMapping("/webUser")
@@ -545,37 +546,28 @@ public class WebUserController {
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
-			@RequestParam(value = "oldFirstName", required = false, defaultValue="") String oldFirstName,
 			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
-			@RequestParam(value = "oldLastName", required = false, defaultValue="") String oldLastName,
 			@RequestParam(value = "newLastName", required = false, defaultValue="") String newLastName,
-			@RequestParam(value = "oldNickname", required = false, defaultValue="") String oldNickname,
 			@RequestParam(value = "newNickname", required = false, defaultValue="") String newNickname,
-			@RequestParam(value = "oldFervor", required = false, defaultValue="") String oldFervor,
 			@RequestParam(value = "newFervor", required = false, defaultValue="") String newFervor,
-			@RequestParam(value = "oldEmail", required = false, defaultValue="") String oldEmail,
 			@RequestParam(value = "newEmail", required = false, defaultValue="") String newEmail,
 			@RequestParam(value = "inputCheckCode", required = false, defaultValue="") String inputCheckCode,
-			@RequestParam(value = "oldPhone", required = false, defaultValue="") String oldPhone,
 			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
-			@RequestParam(value = "oldGetEmail", required = false, defaultValue="") String oldGetEmail,
 			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
-			@RequestParam(value = "oldLocationCode", required = false, defaultValue="") Integer oldLocationCode,
 			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
-			@RequestParam(value = "oldAddr0", required = false, defaultValue="") String oldAddr0,
 			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
-			@RequestParam(value = "oldAddr1", required = false, defaultValue="") String oldAddr1,
 			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
-			@RequestParam(value = "oldAddr2", required = false, defaultValue="") String oldAddr2,
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
 		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String updateResultMessage = "";
 		Integer updateResult = -1;
+		/* 更新用的同型物件 */
+		WebUserData updatedUserData = new WebUserData();
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
-		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		WebUserData selfData = (WebUserData) model.getAttribute("selfData");
 		String checkCode = (model.getAttribute("checkCode") == null) ? "" : ((String) model.getAttribute("checkCode")).toUpperCase();
 		String registerEmail = (model.getAttribute("registerEmail") == null) ? "" : (String) model.getAttribute("registerEmail");
 		
@@ -611,57 +603,56 @@ public class WebUserController {
 			}
 		}
 		
-		/* 更新用的同型物件 */
-		WebUserData updatedUserData = new WebUserData(
-				userData.getUserId(), 
-				userData.getAccount(), 
-				userData.getPassword(), 
-				newFirstName, 
-				newLastName, 
-				newNickname,
-				userData.getBirth(),
-				fervor,
-				newEmail,
-				newPhone,
-				userData.getJoinDate(),
-				newAddr0,
-				newAddr1,
-				newAddr2,
-				userData.getZest(),
-				userData.getVersion() + 1,
-				userData.getStatus(),
-				userData.getIconUrl(),
-				userData.getAccountLv(),
-				userData.getGender(),
-				willingOption,
-				locationInfo);
+		/* 檢查JavaBean物件 */
+		if (selfData == null) {
+			updateResultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (selfData.getAccountLv().getLv() != Integer.parseInt(selfData.getUserId().substring(0, 1)) - 1) {
+			updateResultMessage = "身分驗證失敗，請登入後重試一次！";
+		} else if (selfData.getStatus().equals("quit") || selfData.getStatus().equals("inactive")) {
+			updateResultMessage = "本帳號無法使用此功能";
+		} 
+		
+		if (updateResultMessage.equals("")) {
+			updatedUserData = new WebUserData(
+					selfData.getUserId(), 
+					selfData.getAccount(), 
+					selfData.getPassword(), 
+					newFirstName, 
+					newLastName, 
+					newNickname,
+					selfData.getBirth(),
+					fervor,
+					newEmail,
+					newPhone,
+					selfData.getJoinDate(),
+					newAddr0,
+					newAddr1,
+					newAddr2,
+					selfData.getZest(),
+					selfData.getVersion() + 1,
+					selfData.getStatus(),
+					selfData.getIconUrl(),
+					selfData.getAccountLv(),
+					selfData.getGender(),
+					willingOption,
+					locationInfo);
+		}
 		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			updateResultMessage = doCheckUpdateDataInput(
-					updatedUserData,
-					oldFirstName,
-					oldLastName,
-					oldNickname,
-					oldFervor,
-					oldEmail,
-					oldPhone,
-					oldGetEmail,
-					oldLocationCode,
-					oldAddr0,
-					oldAddr1,
-					oldAddr2);
+			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData);
 		}
 		
 		/* 追加檢查checkCode */
 		if (updateResultMessage.equals("")) {
-			if (!newEmail.equals(oldEmail)) {	
+			if (!newEmail.equals(selfData.getEmail())) {	
 				updateResultMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail);
 			}
 		}
 		
 		/* 檢查完畢 */
 		if (updateResultMessage.equals("")) {
+			
 			/* 調用服務裡的方法 */
 			try {
 				updateResult = wus.updateWebUserData(updatedUserData);
@@ -1134,46 +1125,37 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員修改 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminUpdateInsertWebUser(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue="") String updatedUserId,
-			@RequestParam(value = "oldPassword", required = false, defaultValue="") String oldPassword,
 			@RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword,
-			@RequestParam(value = "oldFirstName", required = false, defaultValue="") String oldFirstName,
 			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
-			@RequestParam(value = "oldLastName", required = false, defaultValue="") String oldLastName,
 			@RequestParam(value = "newLastName", required = false, defaultValue="") String newLastName,
-			@RequestParam(value = "oldNickname", required = false, defaultValue="") String oldNickname,
 			@RequestParam(value = "newNickname", required = false, defaultValue="") String newNickname,
-			@RequestParam(value = "oldGender", required = false, defaultValue="") String oldGender,
 			@RequestParam(value = "newGender", required = false, defaultValue="") String newGender,
-			@RequestParam(value = "oldBirth", defaultValue = "1800-01-01") Date olbBirth,
 			@RequestParam(value = "newBirth", defaultValue = "1800-01-01") Date newBirth,
-			@RequestParam(value = "oldFervor", required = false, defaultValue="") String oldFervor,
 			@RequestParam(value = "newFervor", required = false, defaultValue="") String newFervor,
-			@RequestParam(value = "oldEmail", required = false, defaultValue="") String oldEmail,
 			@RequestParam(value = "newEmail", required = false, defaultValue="") String newEmail,
-			@RequestParam(value = "oldPhone", required = false, defaultValue="") String oldPhone,
 			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
-			@RequestParam(value = "oldGetEmail", required = false, defaultValue="") String oldGetEmail,
 			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
-			@RequestParam(value = "oldLocationCode", required = false, defaultValue="") Integer oldLocationCode,
 			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
-			@RequestParam(value = "oldAddr0", required = false, defaultValue="") String oldAddr0,
 			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
-			@RequestParam(value = "oldAddr1", required = false, defaultValue="") String oldAddr1,
 			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
-			@RequestParam(value = "oldAddr2", required = false, defaultValue="") String oldAddr2,
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
-		System.out.println("Test 0");
 		
+		/* 宣告參數 */
 		Map<String, String> resultMap = new HashMap<>();
 		String resultMessage = "";
 		Integer updateResult = -1;
-		WebUserData updatedUserData = (WebUserData) model.getAttribute("managedUserData");
+		/* 更新用的同型物件 */
+		WebUserData updatedUserData = new WebUserData();
 		
-		System.out.println("Test "+updatedUserData.getUserId());
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData managedUserData = (WebUserData) model.getAttribute("managedUserData");
+		
+		
 		
 		return resultMap;
 	}
@@ -1533,41 +1515,34 @@ public class WebUserController {
 	/* 使用者修改資料時的輸入檢查 */
 	public String doCheckUpdateDataInput(
 			WebUserData updatedUserData,
-			String oldFirstName,
-			String oldLastName,
-			String oldNickname,
-			String oldFervor,
-			String oldEmail,
-			String oldPhone,
-			String oldGetEmail,
-			Integer oldLocationCode,
-			String oldAddr0,
-			String oldAddr1,
-			String oldAddr2) {
+			WebUserData selfData) {
 		
 		String updateResultMessage = "";
 		Integer count = 0;
 		
-		/* 檢查JavaBean物件 */
-		if (updatedUserData == null) {
-			updateResultMessage = "未登入系統，請登入後再進行操作！";
-		} else if (updatedUserData.getAccountLv().getLv() != Integer.parseInt(updatedUserData.getUserId().substring(0, 1)) - 1) {
-			updateResultMessage = "身分驗證失敗，請登入後重試一次！";
-		} else if (updatedUserData.getStatus().equals("quit") || updatedUserData.getStatus().equals("inactive")) {
-			updateResultMessage = "本帳號無法使用此功能";
-		} 
+		String oldFirstName = selfData.getFirstName();
+		String oldLastName = selfData.getLastName();
+		String oldNickname = selfData.getNickname();
+		String oldFervor = selfData.getFervor();
+		String oldEmail = selfData.getEmail();
+		String oldPhone = selfData.getPhone();
+		String oldGetEmail = selfData.getGetEmail().getWillingCode();
+		Integer oldLocationCode = selfData.getLocationInfo().getCityCode();
+		String oldAddr0 = selfData.getAddr0();
+		String oldAddr1 = selfData.getAddr1();
+		String oldAddr2 = selfData.getAddr2();
 		
-		String newFirstName = (updatedUserData == null) ? "" : updatedUserData.getFirstName();
-		String newLastName = (updatedUserData == null) ? "" : updatedUserData.getLastName();
-		String newNickname = (updatedUserData == null) ? "" : updatedUserData.getNickname();
-		String fervor = (updatedUserData == null) ? "" : updatedUserData.getFervor();
-		String newEmail = (updatedUserData == null) ? "" : updatedUserData.getEmail();
-		String newPhone = (updatedUserData == null) ? "" : updatedUserData.getPhone();
-		String getEmail = (updatedUserData == null) ? "" : updatedUserData.getGetEmail().getWillingCode();
-		Integer locationCode = (updatedUserData == null) ? 0 : updatedUserData.getLocationInfo().getCityCode();
-		String newAddr0 = (updatedUserData == null) ? "" : updatedUserData.getAddr0();
-		String newAddr1 = (updatedUserData == null) ? "" : updatedUserData.getAddr1();
-		String newAddr2 = (updatedUserData == null) ? "" : updatedUserData.getAddr2();
+		String newFirstName = updatedUserData.getFirstName();
+		String newLastName = updatedUserData.getLastName();
+		String newNickname = updatedUserData.getNickname();
+		String fervor = updatedUserData.getFervor();
+		String newEmail = updatedUserData.getEmail();
+		String newPhone = updatedUserData.getPhone();
+		String getEmail = updatedUserData.getGetEmail().getWillingCode();
+		Integer locationCode = updatedUserData.getLocationInfo().getCityCode();
+		String newAddr0 = updatedUserData.getAddr0();
+		String newAddr1 = updatedUserData.getAddr1();
+		String newAddr2 = updatedUserData.getAddr2();
 		
 		/* 檢查中文姓氏 */
 		if (updateResultMessage.equals("")) {

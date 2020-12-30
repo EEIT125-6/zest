@@ -27,9 +27,9 @@ public class DisplayController {
 		
 	}
 	
-	@GetMapping("/")
+	@GetMapping("/booking/Index1")
 	public String home() {
-		return "Index1";
+		return "booking/Index1";
 	}
 	
 	@GetMapping("/booking/{restaurant}")
