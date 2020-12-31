@@ -244,7 +244,9 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		String status = "'" + selectedParameters.split(":")[5] + "'";
 		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? ""
 				: "'" + selectedParameters.split(":")[6] + "'";
-
+		Integer selectedIdentity = (selectedParameters.split(":")[6].equals("-2")) ? -2
+				: Integer.parseInt(selectedParameters.split(":")[7]);
+		
 		if (!account.equals("")) {
 			account = "'%" + selectedParameters.split(":")[0] + "%'";
 			sb.append("wu.account LIKE " + account);
@@ -280,6 +282,14 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		} else if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
 				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
 			sb.append(" AND wu.status = " + selectedStatus);
+		}
+		
+		if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.accountLv.lv = " + selectedIdentity);
+		} else if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.accountLv.lv = " + selectedIdentity);
 		}
 
 		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
@@ -401,5 +411,14 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		getSession().saveOrUpdate(resetUserData);
 		updateResult++;
 		return updateResult;
+	}
+
+	/* 檢查有多少可登入的管理員帳號(回傳整數或0) */
+	@Override
+	public Integer checkAdminAccess() throws SQLException {
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = -1 AND wu.status = 'active'";
+		/* 回傳符合條件的比數 */
+		return getSession().createQuery(hql).getResultList().size();
 	}
 }

@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import xun.dao.ProductDao;
-import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
 import xun.service.ProductService;
+import xun.model.ProductInfoBean;
 
 @Service
 public class ProductServiceImpl implements ProductService {

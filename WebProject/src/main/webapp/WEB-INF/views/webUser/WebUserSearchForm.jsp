@@ -16,7 +16,7 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
+	href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
 .classimg {
@@ -173,6 +173,8 @@ ul.slides li img {
 				<legend>搜尋選項</legend>
 				<input type="hidden" name="userLv" id="userLv"
 					value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
+				<input type="hidden" name="userAccount" id="userAccount"
+					value=<c:out value="${userFullData.account}"></c:out> />
 				<c:if test="${operateMessage != null}">
 					<p><c:out value="${operateMessage}" /></p>
 				</c:if>
@@ -181,7 +183,6 @@ ul.slides li img {
 					id="account" size="40" maxlength="20" onblur="checkAccountName()"
 					placeholder="請輸入要查詢的帳號，8~20個字" /> 
 				<span id="accountSpan"></span>
-				<hr />
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
 					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 					placeholder="請輸入要查詢的暱稱" /> 
@@ -208,7 +209,6 @@ ul.slides li img {
 				</select> 
 				<span id="locationCodeSpan"></span>
 				<c:if test='${userFullData.accountLv.lv == -1}'>
-					<hr />
 					<label>帳號狀態：</label>
 					<select name="selectedStatus" id="status" onblur="checkStatus()">
 						<option value="">請選擇要查詢的狀態</option>
@@ -216,19 +216,26 @@ ul.slides li img {
 						<option value="inactive">未啟用</option>
 						<option value="quit">已停用</option>
 					</select>
+					<label>帳號身分：</label>
+					<select name="selectedIdentity" id="identity" onblur="checkIdentity()">
+						<option value="">請選擇要查詢的身分</option>
+						<c:forEach items="${identityList}" var="userType">
+							<option value="${userType.lv}" label="${userType.levelName}" />
+						</c:forEach>
+					</select>
 					<span id="statusSpan"></span>
+					<span id="identitySpan"></span>
 				</c:if>
 				<hr />
 			</fieldset>
 			<div align="center">
 				<a href="WebUserMain">
-				<input type="button" id="back" name="back" value="返回">
+				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
-				<input type="button" id="search" name="select" value="執行查詢"> 
-				<input type="reset" name="reset" value="重設條件"
-					onclick="clearMessage()">
+				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+				<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 				<c:if test="${userFullData.accountLv.lv == -1}" >
-					<a href="WebUserAddForm"><input type="button" id="adminAdd" name="adminAdd" value="新增帳號"></a>
+					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:green">add</i></button></a>
 				</c:if>
 			</div>
 			<hr />
@@ -236,7 +243,7 @@ ul.slides li img {
 		<div align="center">
 			<span id="searchSpan"></span>
 		</div>
-		<div id="dataContainer"></div>
+		<div align="center" id="dataContainer"></div>
 		<script
 			src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 		<script
@@ -245,6 +252,7 @@ ul.slides li img {
 			$("#search").click(function() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
+				var account = document.getElementById("userAccount").value.trim();
 				var accountObjValue = document.getElementById("account").value.trim();
 				var nicknameObjValue = document.getElementById("nickname").value.trim();
 				var fervorObj = document.getElementsByClassName("fervor");
@@ -257,6 +265,7 @@ ul.slides li img {
 				
 				var locationCodeObjValue = document.getElementById("locationCode").value;
 				var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+				var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
 				
 				if (checkForm()) {
 					if (accountObjValue == "" && accountObjValue.length == 0) {
@@ -281,10 +290,13 @@ ul.slides li img {
 						if (selectedStatus == "" || selectedStatus.length == 0) {
 							counter++;
 						}
-						if (counter == 5){
+						if (selectedIdentity == "" || selectedIdentity.length == 0) {
+							counter++;
+						}
+						if (counter == 6){
 							selectAllUser();
 						} else {
-							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus);
+							selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 						} 
 					}
 				}
@@ -292,9 +304,24 @@ ul.slides li img {
 			
 			window.onload = function() {
 				selectAllUser();
+				/* 綁定刪除按鈕 */
+				$("#dataContainer").on("click", ".deleteBtn", function() {
+					alert(this.id);
+					
+				});
+				/* 綁定啟用按鈕 */
+				$("#dataContainer").on("click", ".activeBtn", function() {
+					alert(this.id);
+					
+				});
+				/* 綁定停用按鈕 */
+				$("#dataContainer").on("click", ".quitBtn", function() {
+					alert(this.id);
+					
+				});
 			};
 			
-			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus) {
+			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity) {
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
@@ -313,7 +340,8 @@ ul.slides li img {
 						'selectedNickname':nicknameObjValue,
 						'selectedFervor':fervorObjValue,
 						'selectedLocationCode':locationCodeObjValue,
-						'selectedStatus':selectedStatus
+						'selectedStatus':selectedStatus,
+						'selectedIdentity':selectedIdentity
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -334,8 +362,12 @@ ul.slides li img {
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
+											+ "<th>項次</th>"
+											+ "<th>刪除</th>"
+											+ "<th>其他</th>"
+											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -343,16 +375,18 @@ ul.slides li img {
 											+ "</tr>";
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
+											+ "<th>項次</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
 											+ "</tr>";
 								} else {
 									content += "<tr>"
+											+ "<th>項次</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "</tr>";
@@ -361,13 +395,35 @@ ul.slides li img {
 								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
-									content += "<tr>";
+									content += "<tr>"
+											+ "<td>"
+											+ (dataIndex + 1)
+											+ "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
+										content += (userData.account != document.getElementById("userAccount").value)
+													? "<td>"
+													+ "<button type='button' class='deleteBtn' style='background-color:#ffc107'><i class='material-icons' style='font-size:24px;color:red'>delete_forever</i></button>"
+													+ "</td>"
+													: "<td></td>";			
+										content += "<td>";
+										content += (userData.status == 'active') 
+												? "<button type='button' class='quitBtn' id='quitBtn" + userData.account + "' style='background-color:#ffc107'>" 
+												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+												+ "</button>"
+												: "<button type='button' class='activeBtn' id='actBtn" + userData.account + "' style='background-color:#ffc107'>" 
+												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+												+ "</button>"
+										content += "</td>"
+												+ "<td>"
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
 												+ userData.account 
+												+ "'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
 												+ "</a>"
+												+ "</td>"
+												+ "<td>"
+												+ userData.account 
 												+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
@@ -472,8 +528,12 @@ ul.slides li img {
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
+											+ "<th>項次</th>"
+											+ "<th>刪除</th>"
+											+ "<th>其他</th>"
+											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
@@ -481,16 +541,18 @@ ul.slides li img {
 											+ "</tr>";
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
+											+ "<th>項次</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "<th>帳號身分</th>"
 											+ "</tr>";
 								} else {
 									content += "<tr>"
+											+ "<th>項次</th>"
 											+ "<th>帳號名稱</th>"
-											+ "<th>稱呼名稱</th>"
+											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "</tr>";
@@ -499,13 +561,37 @@ ul.slides li img {
 								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
-									content += "<tr>";
+									content += "<tr>"
+											+ "<td>"
+											+ (dataIndex + 1)
+											+ "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>" 
-												+ userData.account 
+										content += (userData.account != document.getElementById("userAccount").value)
+													? "<td>"
+													+ "<button type='button' class='deleteBtn' id='delBtn" + userData.account + "' style='background-color:#ffc107'>"
+													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+													+ "</button>"
+													+ "</td>"
+													: "<td></td>";		
+										content += "<td>";
+										content += (userData.status == 'active') 
+													? "<button type='button' class='quitBtn' id='quitBtn" + userData.account + "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+													+ "</button>"
+													: "<button type='button' class='activeBtn' id='actBtn" + userData.account + "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+													+ "</button>"									
+										content += "</td>"
+												+ "<td>"
+												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
+												+ "<button type='button' style='background-color:#ffc107'>"
+												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+												+ "</button>"
 												+ "</a>"
+												+ "</td>"
+												+ "<td>"
+												+ userData.account 
 												+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";

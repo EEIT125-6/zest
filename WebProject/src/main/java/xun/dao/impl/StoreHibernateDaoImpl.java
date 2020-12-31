@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import xun.dao.StoreDao;
 import xun.model.BoardBean;
-import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
+import xun.model.ProductInfoBean;
 
 
 @Repository

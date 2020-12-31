@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 // for Test By Mimicker0903
-import xun.AOP.LogAspect;
+//import xun.AOP.LogAspect;
 
 @Configuration
 @EnableWebMvc
@@ -19,7 +19,12 @@ import xun.AOP.LogAspect;
 @ComponentScan({
 	"config", 
 	"webUser",
-	"xun"})
+	"xun",
+	"model",
+	"service",
+	"dao",
+	"controller",
+	"board"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
@@ -52,6 +57,12 @@ public class WebAppConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/image/**")
 				.addResourceLocations("/WEB-INF/views/images/"); 
 		registry.addResourceHandler("/Images/**")
-				.addResourceLocations("/Images/"); 
+				.addResourceLocations("/Images/");
+		// By mp4056
+		registry.addResourceHandler("/productInfo/images/**")
+		.addResourceLocations("/WEB-INF/views/images/productInfo/images/");
+		// By Brandon-Chen1122
+		registry.addResourceHandler("/star/**")
+		.addResourceLocations("/WEB-INF/views/orange/images/");
 	}
 }

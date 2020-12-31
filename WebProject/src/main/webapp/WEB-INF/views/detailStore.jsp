@@ -177,7 +177,9 @@
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span style="font-size: 140%">餐廳服務</span>
+		<a href="<c:url value='/booking/${stname1}'/> ">	
+			<span style="font-size: 140%">餐廳服務</span>
+		</a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
@@ -189,15 +191,96 @@
         </div>
         <hr>
         <div id="div1" class="ddiv">
-<!--             <span style="font-size: 140%">hi</span> -->
-            <div>
-             <c:forEach var="row" items="${Comments}">
-             	${row.name} 
-             	${row.date}
-             	<br>
-             </c:forEach>
-            </div>
-        </div>
+            <span style="font-size: 140%">
+            	<div class="box1" style="text-align:center; margin:auto " >
+            		<div class="d1" style="text-align:left ;">評分總人數:</div>
+            		<br>
+			        <div class="d2">
+			            <h3>給予評價</h3>
+			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <br>
+			            <label id = "startPcs"></label>
+			        </div>
+			        <div id="d1"></div>
+			        <div class="d3">
+			        	<div class="container">
+			        		<div class="row">
+			        			<div class="s2">
+			        			</div>
+		        				<div class="s3">
+			                    	<h3></h3>        
+			                  	</div>
+		        			</div>
+		        		</div>
+		        	</div>
+		        </div>
+		        <br>
+			    <div class="box2" style="text-align:center ;margin: auto;">
+			       <form id="form1" method="get" action="<c:url value='/pack'/>">
+			       		<fieldset>
+			       			<legend>留言</legend>
+			       			<input type="hidden" name="storeId" value="${id}">
+			       			<div class="st1">
+						       <label class="t1" for="name">名字:</label>
+						       <input type="text" id="name" name="name" ><br>
+						    </div>
+						    <div class="st1">
+						        <label for="star" class="t1"></label>
+						        <input type="hidden" id="star" name="star" ><br>
+						    </div>
+						    <div class="st1">
+							    <label class="t1" for="pwd1">留言:</label>
+							    <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
+							</div>
+							<div class="sub">
+						        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
+						        <input type="reset" value="清除"> 
+						    </div>
+			       		</fieldset>
+			       </form>
+			    </div>
+			    <br />
+			    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			    <script >
+			    	$(".i").mousedown(function() {
+			    		let starts = $(this).attr("id").split("img")[1];
+			    		$("#star").val(starts);
+			    	});
+			    	
+			    	$(".i").mouseenter(function() {
+			    		$(this).attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).prevAll().attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).nextAll().attr("src","<c:url value='/star/s1.png'/>");
+			    		let starts = $(this).attr("id").split("img")[1];
+			    	});
+			    </script>
+            </span>
+            <table id="detail" border="1" class="tb1 container">
+            	<thead>
+            		<tr>
+            			<th>名字</th>
+			    		<th>日期</th>
+			    		<th>評分</th>
+			    		<th>內容</th>
+            		</tr>
+            	</thead>
+            	<tbody>
+            		<c:forEach var="row" items="${Comments}">
+            			<tr>
+				    		<td>${row.name} </td>
+				    		<td>${row.date}</td>
+				    		<td>${row.star}</td>
+				    		<td>${row.context}</td>
+				    	</tr>
+            		</c:forEach>
+            	</tbody>
+            </table>
+          </div>
+          
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> hello</span>
         </div>
@@ -230,15 +313,16 @@
 <%-- 				             		<c:if test="${row1.product_picture != null}"> --%>
 <%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
 <%-- 				             		</c:if> --%>
-				             		
-							<form action="updateProductpage" method="post" style="display:inline">
+<%-- 				             		<c:url value='/updateProductpage'/> --%>
+							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
 							</form>
 							
 							<span>|</span>
-							<form action="deleteProductpage" method="post" style="display:inline">
+<%-- 							<c:url value='/deleteProductpage'/> --%>
+							<form action="<c:url value='/deleteProductpage'/>" method="post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
@@ -253,6 +337,43 @@
         </div>
     </div>
         <script>
+        function doInsert(){
+			var storeId = $('input[name="storeId"]').val();
+			var comment = $('textarea[name="comment"]').val();
+			var name = $('input[name="name"]').val();
+			var star = $("#star").val();
+			var map = {};
+			map['storeId'] = storeId;
+			map['comment'] = comment;
+			map['name'] = name;
+			map['star'] = star;
+			map['photo'] = '';
+        	$.ajax({
+        		  url:'<c:url value="/insertboard"/>',
+        		  type:'POST',
+        		  data:map,
+        		  success:function(res){
+        				console.log(res);
+        				if(typeof res.boardBean !== 'undefined'){
+        					var tr = $('<tr>');
+        					tr.append($('<td>').text(res.boardBean.name));
+        					tr.append($('<td>').text(new Date(res.boardBean.date).toLocaleString()));
+        					tr.append($('<td>').text(res.boardBean.star));
+        					tr.append($('<td>').text(res.boardBean.context));
+        					$('#detail').find('tbody').append(tr);
+            				alert('新增成功');
+            				$('#name').val("");
+            				$('#comment').val("");
+            				$('.i').attr("src","<c:url value='/star/s1.png'/>")
+        				}else{
+            				alert('新增異常');
+        				}
+        	      },error:function(err){
+        				console.log(err);
+        				alert('新增失敗');
+        		  }
+        		});
+        }
         $("#sp1").click(function(){
             $(".ddiv").css("display","none")
             $("#div1").css("display","inline")

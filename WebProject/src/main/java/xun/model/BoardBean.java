@@ -37,27 +37,32 @@ public class BoardBean {
 		
 	}
 	
-	
-	public BoardBean(String pname,Integer pstars,Date pdate,String pcontext,String pphoto) {
-		
+	public BoardBean(Integer boardid, String pname,Integer pstars,Date pdate,String pcontext,String pphoto, StoreBean storebean) {
+		this.boardid = boardid;
 		this.name = pname;
 		this.star = pstars;
 		this.date = pdate;
 		this.context = pcontext;
 		this.photo=pphoto;
-		
+		this.storebean=storebean;
 	}
 	
+	public Integer getBoardid() {
+		return boardid;
+	}
+	public void setBoardid(Integer boardid) {
+		this.boardid = boardid;
+	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getStars() {
+	public Integer getStar() {
 		return star;
 	}
-	public void setStars(Integer stars) {
+	public void setStar(Integer stars) {
 		this.star = stars;
 	}
 	public Date getDate() {
@@ -78,23 +83,4 @@ public class BoardBean {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-//	@Override
-//	public String toString() {
-//		StringBuilder builder = new StringBuilder();
-//		builder.append("BoardBean [name=");
-//		builder.append(name);
-//		builder.append(", star=");
-//		builder.append(star);
-//		builder.append(", date=");
-//		builder.append(date);
-//		builder.append(", context=");
-//		builder.append(context);
-//		builder.append(", photo=");
-//		builder.append(photo);
-//		builder.append(", storebean=");
-//		builder.append(storebean);
-//		builder.append("]");
-//		return builder.toString();
-//	}
-	
 }

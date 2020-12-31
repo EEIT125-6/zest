@@ -155,9 +155,9 @@
 						<div id="dataContainer"></div>
 					</fieldset>
 					<div align="center">
-						<input type="submit" name="update" value="修改其他資料">
-						<a href="controller/WebUserModifyPassword"><input type="button" name="update" value="修改密碼"></a>
-						<a href="WebUserMain"><input type="button" name="select" value="返回主畫面"></a>
+						<button type="submit" name="update" style="font-size:18px" >修改其他資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
+						<a href="controller/WebUserModifyPassword"><button type="button" name="update" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">settings</i></button></a>
+						<a href="WebUserMain"><button type="button" name="select" style="font-size:18px" >返回主畫面 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
 				</form>

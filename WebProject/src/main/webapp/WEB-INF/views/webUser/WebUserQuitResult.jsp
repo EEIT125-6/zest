@@ -152,9 +152,6 @@
                 	if (document.getElementById("pPage").innerHTML == "") {
                 		document.getElementById("pPage").innerHTML = "首頁";
                 		directPage = "/WebProject";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserRegisterForm") {
-                		document.getElementById("pPage").innerHTML = "註冊";
-                		directPage = "WebUserRegisterForm";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
                 		directPage = "WebUserMain";

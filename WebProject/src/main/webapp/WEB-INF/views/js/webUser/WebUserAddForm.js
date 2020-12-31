@@ -339,6 +339,9 @@ function checkEmail() {
 	} else if(emailObjValue.indexOf("@") == -1 || emailObjValue.split("@").length > 2 || emailObjValue.indexOf(" ") != -1) {
 		emailStr = "信箱資訊格式錯誤";
 		emailIsOk = false;
+	} else if(emailObjValue.indexOf("@") == emailObjValue.length - 1 || emailObjValue.lastIndexOf(".") == emailObjValue.length - 1) {
+		emailStr = "信箱資訊格式錯誤";
+		emailIsOk = false;
 	} else {
 		emailStr = "信箱資訊已填寫完成";
 		emailIsOk = true;
@@ -525,7 +528,10 @@ function checkAddr2() {
 
 function changeVisibility() {
 	document.getElementById("password").type = (document.getElementById("password").type == "password") ? "text" : "password";
-	document.getElementById("visibility_switch").value = (document.getElementById("visibility_switch").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼"; 
+	document.getElementById("visibility_switch").innerHTML 
+		= (document.getElementById("visibility_switch").textContent == "顯示密碼 visibility") 
+		? "隱藏密碼 "+"<i class='material-icons' style='font-size:18px;color:green'>visibility_off</i>" 
+		: "顯示密碼 "+"<i class='material-icons' style='font-size:18px;color:red'>visibility</i>"; 
 }
 
 function clearMessage() {

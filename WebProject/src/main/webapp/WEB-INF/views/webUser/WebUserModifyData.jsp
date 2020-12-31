@@ -171,7 +171,7 @@
 						<label>稱呼方式：</label>
 						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
 							placeholder="請輸入想要的稱呼" value="${selfData.nickname}" />
-						<input type="button" name="update" id="checkNicknameUsed" value="檢查稱呼">
+						<button type="button" name="update" id="checkNicknameUsed" style="font-size:18px" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<input type="hidden" name="originalFervor" id="originalFervor" value="${selfData.fervor}">
@@ -193,14 +193,14 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${selfData.email}" />
-						<input type="button" name="update" id="checkEmailUsed" value="檢查信箱">
+						<button type="button" name="update" id="checkEmailUsed" style="font-size:18px" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<div id="emailSendSpace">
 							<label>信箱驗證：</label>
 							<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
 							    placeholder="請輸入E-Mail中所收到的驗證碼" />
-							<input type="button" name="update" id="sendCheckCode" value="傳送驗證碼">
+							<button type="button" style="font-size:18px" name="update" id="sendCheckSpace" >傳送驗證碼 <i class="material-icons" style="font-size:18px;color:green">mail</i></button>
 							<span id="emailCheckCodeSpan"></span>
 							<br />
 							<input type="hidden" name="inputCheckCode" id="checkCode" value="" />
@@ -210,7 +210,7 @@
 						<label>聯絡電話：</label>
 						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" value="${selfData.phone}" />
-						<input type="button" name="update" id="checkPhoneUsed" value="檢查電話">
+						<button type="button" name="update" id="checkPhoneUsed" style="font-size:18px" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 					    <hr />
 					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${selfData.getEmail.willingCode}">
@@ -267,9 +267,9 @@
 					    <span id="updatedSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain"><input type="button" name="update" value="取消/返回"></a>
-						<input type="button" name="update" id="updateConfirm" value="資料修改完畢">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
+                		<a href="WebUserMain"><button type="button" name="update" style="font-size:18px" >取消/返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button type="button" name="update" id="updateConfirm" style="font-size:18px" >資料修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>
@@ -288,13 +288,9 @@
                 		}	
                 	}
                 	function doUpdate() {
-                		let oldFirstName = document.getElementById("originalFirstName").value.trim();
                 		let newFirstName = document.getElementById("updatedFirstName").value.trim();
-                		let oldLastName = document.getElementById("originalLastName").value.trim();
                 		let newLastName = document.getElementById("updatedLastName").value.trim();
-                		let oldNickname = document.getElementById("originalNickname").value.trim();
                 		let newNickname = document.getElementById("updatedNickname").value.trim();
-                		let oldFervor = document.getElementById("originalFervor").value.trim();
                 		let fervorObj = document.getElementsByClassName("updatedFervor");
                 		let newFervor = "";
                 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
@@ -303,22 +299,14 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let oldEmail = document.getElementById("originalEmail").value.trim();
                 		let newEmail = document.getElementById("updatedEmail").value.trim();
                 		let emailCheckCode = document.getElementById("emailCheckCode").value.trim();
-                		let oldPhone = document.getElementById("originalPhone").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
-                		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
-                		let getEmailObj = document.getElementsByClassName("updatedGetEmail");
                 		let newGetEmail =(document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
                 		newGetEmail = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
-                		let oldLocationCode = document.getElementById("originalLocationCode").value.trim();
                 		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
-                		let oldAddr0 = document.getElementById("originalAddr0").value.trim();
                 		let newAddr0 = document.getElementById("updatedAddr0").value.trim();
-                		let oldAddr1 = document.getElementById("originalAddr1").value.trim();
                 		let newAddr1 = document.getElementById("updatedAddr1").value.trim();
-                		let oldAddr2 = document.getElementById("originalAddr2").value.trim();
                 		let newAddr2 = document.getElementById("updatedAddr2").value.trim();
                 		
                 		let updateSpan = document.getElementById("updatedSpan");
@@ -337,28 +325,17 @@
 							type:"POST",
 							url:"<c:url value='/webUser/controller/WebUserModifyData' />",
 							data:{
-				            	'oldFirstName':oldFirstName,
 				            	'newFirstName':newFirstName,
-				            	'oldLastName':oldLastName,
 								'newLastName':newLastName,
-								'oldNickname':oldNickname,
 								'newNickname':newNickname,
-								'oldFervor':oldFervor,
 								'newFervor':newFervor,
-								'oldEmail':oldEmail,
 								'newEmail':newEmail,
 								'inputCheckCode':emailCheckCode,
-								'oldPhone':oldPhone,
 								'newPhone':newPhone,
-								'oldGetEmail':oldGetEmail,
 								'newGetEmail':newGetEmail,
-								'oldLocationCode':oldLocationCode,
 								'newLocationCode':newLocationCode,
-								'oldAddr0':oldAddr0,
 								'newAddr0':newAddr0,
-								'oldAddr1':oldAddr1,
 								'newAddr1':newAddr1,
-								'oldAddr2':oldAddr2,
 								'newAddr2':newAddr2
 				            },
 				            dataType:"json",

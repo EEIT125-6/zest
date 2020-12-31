@@ -39,11 +39,18 @@
 			</c:if>
 			<!-- 			<img src="Images/PLZPLZ-removebg-preview.png" -->
 			<!-- 				class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> -->
-			<i class="fas fa-shopping-cart"
-				style="font-size: 25px; color: yellow"> </i> 
-			購物車 | 
+			<i class="fas fa-shopping-cart" style="font-size: 25px; color: yellow"></i>
+			<a href="${pageContext.request.contextPath}/controller/checkMemberStatus"> 
+			購物車 |
+			</a> 
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
-			確認訂位
+			<a href="${pageContext.request.contextPath}/booking/Page1">
+			確認訂位 |
+			</a>
+			<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i>
+			<a href="${pageContext.request.contextPath}/orange/ShowComment">
+			查詢留言 |
+			</a>
 		</p>
 	</div>
 

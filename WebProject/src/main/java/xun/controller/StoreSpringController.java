@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 
-import xun.model.BoardBean;
 import xun.model.ProductInfoBean;
+import xun.model.BoardBean;
 import xun.model.StoreBean;
 import xun.service.StoreService;
 import xun.service.impl.StoreServiceImpl;
@@ -33,7 +33,6 @@ import xun.service.impl.StoreServiceImpl;
 @Controller
 @SessionAttributes({"Results","Comments","Products","id","stname1"})
 public class StoreSpringController {
-	
 	
 	ServletContext context;	
 	

@@ -161,35 +161,28 @@
 								<c:out value = "*" />
 							</c:forEach>
 						</c:if>
-						<input type="button" name="showPassword" id="showPassword" value="顯示密碼">
+						<button type="button" style="font-size:18px" id="showPassword" onclick="showOldPassword()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<input type="hidden" name="originalPassword" id="originalPassword" value="${userFullData.password}">
                 		<hr />
 						<label>帳號新密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>確認新密碼：</label> 
 						<input type="password" name="confirmPassword" id="confirmPassword" size="40" maxlength="20" onblur="checkConfirmPassword()"
 							placeholder="請輸入密碼，8~20個字" required="required" />
-						<input type="button" name="visibility_switch_confirm" id="visibility_switch_confirm" value="顯示密碼" onclick="changeConfirmVisibility()">
+						<button type="button" style="font-size:18px" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="confirmPasswordSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain"><input type="button" name="update" value="取消"></a>
-						<input type="submit" name="update" value="密碼修改完畢">
-						<input type="reset" name="reset" value="重設" onclick="clearMessage()">
+                		<a href="WebUserMain"><button type="button" name="update" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button type="submit" name="update" style="font-size:18px" >密碼修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
                 </form>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyPassword.js"></script>
-                <script>
-					$("#showPassword").click(function () {
-				        document.getElementById("originalPassword").type = (document.getElementById("originalPassword").type == "hidden") ? "text" : "hidden";
-				    	document.getElementById("showPassword").value = (document.getElementById("showPassword").value == "顯示密碼") ? "隱藏密碼" : "顯示密碼";
-				    });
-				</script>
             </div>
             
 <!-- -------------------------------------------------------------------- -->

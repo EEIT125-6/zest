@@ -11,6 +11,7 @@ function checkForm() {
 	let searchSpan = document.getElementById("searchSpan");
 	let userLv = document.getElementById("userLv").value.trim();
 	let statusObjValue = (userLv == -1) ? document.getElementById("status").value : "";
+	let identityObjValue = (userLv == -1) ? document.getElementById("identity").value : "";
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
 	if (choice) {
@@ -39,7 +40,10 @@ function checkForm() {
 				if (statusObjValue == "" || statusObjValue.length == 0) {
 					counter++;
 				}
-				if (counter == 5){
+				if (identityObjValue == "" || identityObjValue.length == 0) {
+					counter++;
+				}
+				if (counter == 6){
 					alert("您沒有選擇任何一項，將使用預設搜尋");
 				} else {
 					searchSpan.innerHTML = "";
@@ -204,6 +208,36 @@ function checkStatus() {
 	}
 }
 
+function checkIdentity() {
+	let identityObjValue = document.getElementById("identity").value;
+	let identitySpan = document.getElementById("identitySpan");
+	
+	let identityIsOk = true;
+	let identityStr;
+	
+	if (identityObjValue == "" || identityObjValue.length == 0) {
+		identityStr = "";
+		identityIsOk = true;
+	} else {
+		identityStr = "帳號身分已選擇完畢";
+		identityIsOk = true;
+	}
+	if (!identityIsOk) {
+		identitySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + identityStr;
+		identitySpan.style.color = "red";
+		identitySpan.style.fontStyle = "italic";
+	}
+	if (identityIsOk) {
+		if (identityObjValue == "" || identityObjValue.length == 0) {
+			identitySpan.innerHTML = "";
+		} else {
+			identitySpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + identityStr;
+			identitySpan.style.color = "black";
+			identitySpan.style.fontStyle = "normal";
+		}
+	}
+}
+
 function clearMessage() {
 	document.getElementById("accountSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
@@ -211,5 +245,6 @@ function clearMessage() {
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	if (document.getElementById("userLv").value == -1) {
 		document.getElementById("statusSpan").innerHTML = "";
+		document.getElementById("identitySpan").innerHTML = "";
 	}
 }

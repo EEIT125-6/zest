@@ -75,4 +75,7 @@ public interface WebUserService {
 	
 	/* 執行重設 -1->異常、0->失敗、1->成功 */
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException;
+	
+	/* 檢查有多少可登入的管理員帳號(回傳整數或0) */
+	public Integer checkAdminAccess() throws SQLException;
 }
