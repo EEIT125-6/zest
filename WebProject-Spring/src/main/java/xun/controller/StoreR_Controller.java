@@ -106,7 +106,7 @@ public class StoreR_Controller {
 //			@PathVariable("sclass") String sclass
 			@RequestParam String sclass,
 			@RequestParam String stname,
-			@RequestParam Integer limit,
+			@RequestParam(value = "priceLimit" , required = false) Integer priceLimit,
 			@RequestParam Integer offset,
 			@RequestParam Integer stopload
 			) {
@@ -114,11 +114,19 @@ public class StoreR_Controller {
 		List<StoreBean> list = new ArrayList<StoreBean>();
 		System.out.println("sclass  R"+sclass);
 		System.out.println("stname  R"+stname);
+		System.out.println("PPPPPPPPPP  :"+priceLimit);
 		if (stname.isEmpty()) {
-			list = ss.getClassstore(sclass);			
+			list = ss.getClassstore(sclass);
+			if(priceLimit!=null) {
+				System.out.println("有近來");
+				list= ss.getStoreByClassAndPrice(sclass, priceLimit);
+				System.out.println(list);
+			}
 		}else {
-			list = ss.getNamestore(stname);			
+			list = ss.getNamestore(stname);
+			
 		}
+		System.out.println("lastList"+list);
 		
 		Integer off3 = offset+3;
 		if(off3>list.size()) {
@@ -135,7 +143,6 @@ public class StoreR_Controller {
 //		System.out.println(sa);
 //		Map<String, String> map= new HashMap<String,String>();
 //		map.put("sa", sa);
-		System.out.println(list);
 		return list;
 	}
 	

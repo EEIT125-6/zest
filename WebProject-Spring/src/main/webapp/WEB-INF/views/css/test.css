@@ -7,7 +7,7 @@
   top: 0;
   width: 100%;
   z-index: 1111;
-  background: #fff;
+  background: #000;
   overflow-x: hidden;
 }
 
@@ -26,7 +26,7 @@
 .circle {
   width: 8vmax;
   height: 8vmax;
-  border-right: 4px solid #000;
+/*   border-right: 4px solid #000; */
   border-radius: 50%;
   -webkit-animation: spinRight 800ms linear infinite;
   animation: spinRight 800ms linear infinite;

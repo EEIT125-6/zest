@@ -38,6 +38,8 @@ public interface StoreDao {
 	
 	List<ProductInfoBean> getProductInfoBeans(Integer stid);
 	
+	List<StoreBean> getStorebyClassandPrice(String sclass , Integer price);
+	
 	Integer setStorePrice(Integer price,Integer id);
 	
 }

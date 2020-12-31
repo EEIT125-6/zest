@@ -36,6 +36,8 @@ public interface StoreService {
 	
 	List<ProductInfoBean> getProductInfoBeans(Integer stid);
 	
+	List<StoreBean> getStoreByClassAndPrice(String sclass,Integer price);
+	
 	StoreBean get(Integer id);
 	
 	Integer setStorePrice(Integer price,Integer id);

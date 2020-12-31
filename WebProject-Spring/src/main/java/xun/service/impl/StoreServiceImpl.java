@@ -316,5 +316,11 @@ public class StoreServiceImpl implements StoreService {
 	public Integer setStorePrice(Integer price, Integer id) {
 		return dao.setStorePrice(price, id);
 	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getStoreByClassAndPrice(String sclass, Integer price) {
+		return dao.getStorebyClassandPrice(sclass, price);
+	}
 	
 }

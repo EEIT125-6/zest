@@ -1,7 +1,5 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
 	request.setCharacterEncoding("UTF-8");
@@ -10,7 +8,7 @@
 	response.setContentType("text/html;charset=UTF-8");
 %>
 
-<sql:setDataSource var="ds" dataSource="jdbc/zest" />
+<%-- <sql:setDataSource var="ds" dataSource="jdbc/zest" /> --%>
 
 <%-- <c:set var="ss" value="${param.sclass}" /> --%>
 <%-- <sql:query dataSource="${ds}" var="rs"> --%>
@@ -41,8 +39,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
+ 	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
 
 <title>橙皮</title>
@@ -380,19 +378,19 @@ a.mobile-show {
                 
                 
 				<br>
-           		  	<input type="radio" id="d1" name="dollar" >
-  					<label for="d1"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+           		  	<input type="radio" id="d1" name="dollar" value='1' >
+  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>   
-                   	<input type="radio" id="d2" name="dollar" >
+                   	<input type="radio" id="d2" name="dollar" value='2'>
   					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d3" name="dollar" >
+                   	<input type="radio" id="d3" name="dollar" value='3'>
   					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d4" name="dollar" >
+                   	<input type="radio" id="d4" name="dollar" value='4'>
   					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d5" name="dollar" >
+                   	<input type="radio" id="d5" name="dollar" value='5'>
   					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
                 <hr>
@@ -502,6 +500,7 @@ a.mobile-show {
 			
 			var flag = 0;
 			var stopload = 0;
+			var priceLimit = "";
 				$.ajax({
 						
 						type:"GET",
@@ -510,7 +509,7 @@ a.mobile-show {
 						data:{
 							'sclass':"${sclass}",
 							'stname':"${stname}",
-							'limit':3,
+							'priceLimit':priceLimit,
 							'offset':flag,
 							'stopload':stopload
 						},
@@ -573,12 +572,26 @@ a.mobile-show {
 // 							alert(err.Message);
 // 						}
 				})
+				
+				
+				$('input[name="dollar"]').click(function(){
+					priceLimit = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+// 					alert($(this).val())
 
+				});
+				
+				
 				$(window).scroll(function(){
 
 // 					$.delay(3000);
 					
-					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+
+// 					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+	//上下兩個方法皆有BUG 有可能會重複前三筆資料 
+					if($(this).scrollTop() >= ($(document).height() - $(window).height())*0.8){
 						
 						$.ajax({
 							
@@ -587,7 +600,7 @@ a.mobile-show {
 							data:{
 								'sclass':"${sclass}",
 								'stname':"${stname}",
-								'limit':3,
+								'priceLimit':priceLimit,
 								'offset':flag,
 								'stopload':stopload
 							},

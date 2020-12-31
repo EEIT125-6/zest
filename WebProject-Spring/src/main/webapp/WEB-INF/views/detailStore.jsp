@@ -43,6 +43,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
      <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
+     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
 <!--     <link rel="stylesheet" -->
     <title>橙皮  </title>
@@ -365,6 +366,7 @@ a.mobile-show {
 								    <div class="card" style="background:#f28633;">
 								    <c:if test="${row1.product_picture != null}">
 								    	<div class="imgBx">
+<%-- 				             				<img src="${pageContext.request.contextPath}/images/${row1.product_picture}" style="border-radius: 7 px;"/> --%>
 				             				<img src="${pageContext.request.contextPath}/${row1.product_picture}" style="border-radius: 7 px;"/>
 				             			</div>	
 				             		</c:if>
