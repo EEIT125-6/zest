@@ -65,12 +65,17 @@ public class ShoppingCartController {
 	
 	@GetMapping(value = "/itemremove") // 移除個人購物車中選定項目
 	@SuppressWarnings("unchecked")
-	public String itemRemover(@PathVariable(value = "id") int id, HttpSession session) {
+	public String itemRemover(@RequestParam (value="id") String id, HttpSession session) {
 		System.out.println(id);
-		List<CartItemBean> list = (List<CartItemBean>) session.getAttribute("cart");
+		List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
 		int index = isExisting(id, session);
-		list.remove(index);
-		session.setAttribute("cart", list);
+		if(index>=0) {
+			list.remove(index);
+			
+		}else {
+			return "cart/cart";
+		}
+		session.setAttribute("products", list);
 		return "cart/cart";
 	}
 
@@ -102,10 +107,10 @@ public class ShoppingCartController {
 	}
 
 	@SuppressWarnings("unchecked") // 檢查選擇商品是否存在於購物車內
-	private static int isExisting(Integer inputid, HttpSession session) { 
-		List<CartItemBean> list = (List<CartItemBean>) session.getAttribute("cart");
+	private static Integer isExisting(String inputid, HttpSession session) { 
+		List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getProduct_Info().getProduct_id() == inputid) {
+			if (list.get(i).getProduct_id() == Integer.parseInt(inputid)) {
 				return i;
 			}
 		}

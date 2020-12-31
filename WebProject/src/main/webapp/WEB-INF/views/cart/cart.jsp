@@ -26,6 +26,17 @@ response.setCharacterEncoding("UTF-8");
   box-sizing: border-box;
 }
 
+.continueShopping {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #f44336;
+}
+
+.continueShopping:hover {
+  background-color: #f44336;
+  color: white;
+}
+
 body {
   background: #105469;
   font-family: 'Open Sans', sans-serif;
@@ -222,7 +233,7 @@ ul.slides li img {
 					<c:set var="total" value="${total+product.product_price}"></c:set>
 					<tr>
 						<td align="center"><a
-							href="${pageContext.request.contextPath }/controller?action=itemremove&id=${product.product_id}"
+							href="<c:url value="/controller/itemremove?id=${product.product_id}"/>"
 							onclick="return confirm('是否確定?')">刪除項目</a></td>
 						<td>${product.product_id}</td>
 						<td>${product.product_shop}</td>
@@ -249,7 +260,7 @@ ul.slides li img {
 				</tr>
 			</table>
 			<br>
-			<button type="button">
+			<button type="button" class="continueShopping">
 				<a href="${pageContext.request.contextPath}/controller/mallRedirector">繼續購物</a>
 			</button>
 			<button type="button">

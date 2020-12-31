@@ -284,7 +284,7 @@ ul.slides li img {
 				<td>${product.product_price}</td>
 				<td class="addtocart" style="margin-top:66px;display:block;text-align:center;"><a
 <%-- 					href="${pageContext.request.contextPath}/controller/itemadd/id=${product.product_id}"}><span>加入購物車</span></a></td> --%>
-					href="<c:url value="/controller/itemadd?id=${product.product_id}" />"}><span>加入購物車</span></a></td>
+					href="<c:url value="/controller/itemadd?id=${product.product_id}" />"><span>加入購物車</span></a></td>
 			</tr>
 			</tr>
 		</c:forEach>

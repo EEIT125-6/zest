@@ -12,7 +12,7 @@ public interface CartService {
 
 //	String addProduct(Integer addItem); // 選定項目加入至購物車中
 //
-//	String removeProduct(Integer removeItem); // 選定項目從購物車中移除
+//	String remove(Integer removeItem); // 選定項目從購物車中移除
 
 	List<CartItemBean> getCartList(); // 取得目前所有的購物車列表
 	
