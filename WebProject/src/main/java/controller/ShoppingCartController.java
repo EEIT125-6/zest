@@ -79,18 +79,25 @@ public class ShoppingCartController {
 	@SuppressWarnings("unchecked")
 	public String itemAdder(@RequestParam (value = "id") String id, HttpSession session) {
 		System.out.println("id="+id);
-		if (session.getAttribute("cart") == null) {
+		if (session.getAttribute("products") == null) {
 			List<ProductInfoBean> list = new ArrayList<ProductInfoBean>();
 			System.out.println("HelloWorld");
-			list.add(new ProductInfoBean(this.service.find(id), 1)); // 稍後定義尋找購物車內特定商品方法
+			list.add(this.service.find(id).get(0)); // 尋找商城內特定商品方法
 			System.out.println("this.service.find(id)="+this.service.find(id));
-			session.setAttribute("product", list);
+			session.setAttribute("products", list);
 		} else {
-			List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("cart");
-			list.add(new ProductInfoBean(this.service.find(id), 1));
-			session.setAttribute("cart", list);
+			List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
+			System.out.println(session.getAttribute("products"));
+			for(ProductInfoBean p : list) {
+				if(p.getProduct_id() == Integer.parseInt(id)) {
+					return "cart/cart";
+				}
+			}
+			list.add(this.service.find(id).get(0));
+			System.out.println("AAAAAAAAAAAAAAAAAAAAA" + list);
+			session.setAttribute("products", list);
 		}
-		return "product/mall";
+		return "cart/cart";
 
 	}
 

@@ -218,7 +218,7 @@ ul.slides li img {
 				</tr>
 				<c:set var="total" value="0"></c:set>
 				<c:set var="quant" value="0"></c:set>
-				<c:forEach var="product" items="${product}">
+				<c:forEach var="product" items="${products}">
 					<c:set var="total" value="${total+product.product_price}"></c:set>
 					<tr>
 						<td align="center"><a
@@ -239,11 +239,6 @@ ul.slides li img {
 								<option value="3">
 								<option value="4">
 								<option value="5">
-								<option value="6">
-								<option value="7">
-								<option value="8">
-								<option value="9">
-								<option value="10">
 							</datalist></td>
 						<td id="result" class="re">0</td>
 					</tr>
