@@ -47,21 +47,21 @@ public class UserInfoController {
 	
 	/* Web相關資訊 */
 	/* 目前使用的IP */
-	final String ipAddress = "http://10.31.25.130";
+	final static String ipAddress = "http://10.31.25.130";
 	/* 目前使用的port */
-	final String ipPort = "8080";
+	final static String ipPort = "8080";
 	/* 網站專案名稱 */
-	final String projectName = "WebProject";
+	final static String projectName = "WebProject";
 	
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
-	final String mailHost = "smtp.gmail.com";
+	final static String mailHost = "smtp.gmail.com";
 	/* TLS用port，不啟用TLS則需參考Email服務商的說明 */
-	final Integer mailPort = 587;
+	final static Integer mailPort = 587;
 	/* 寄件者email帳號 */
-	final String mailUser = "projectzesteeit1256@gmail.com";
+	final static String mailUser = "projectzesteeit1256@gmail.com";
 	/* 寄件者密碼或應用程式密碼 */
-	final String mailPassword = "EEIT1256PZest";
+	final static String mailPassword = "EEIT1256PZest";
 	
 	/* 執行註冊流程的相關檢查，並交由Ajax回傳 */
 	@PostMapping(value="/webUser/controller/UserInfoController", produces="application/json; charset=UTF-8")
@@ -484,7 +484,7 @@ public class UserInfoController {
 	}
 	
 	/* 寄送Email */
-	public Boolean doSendEmail(String account, String email, String checkCode, String mode) 
+	public static Boolean doSendEmail(String account, String email, String checkCode, String mode) 
 			throws Exception {
 		Boolean sendResult = false;
 		
@@ -499,6 +499,20 @@ public class UserInfoController {
 						+ "您即將完成本服務的註冊流程，請複製下方的驗證碼以完成帳戶的啟用"
 						+ "<br /><br />" 
 						+ checkCode;
+		} else if (mode.equals("personalQuit")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "您不久前執行了停用本服務的操作，我們感到遺憾！"
+						+ "<br /><br />"
+						+ "如果這個操作您不知情，請透過本網站提供的方法聯繫我方處理，謝謝！";
+		} else if (mode.equals("adminQuit")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "不久前您因故違反了執行本服務的相關條款，因此即日起您的帳號將暫時遭到停權！"
+						+ "<br /><br />"
+						+ "如果您對這個決定有任何不同的觀點想要申訴，請透過本網站提供的方法聯繫我方處理，謝謝！";
 		} else if (mode.equals("forget")) {
 			mailContext = "親愛的 " + account + " ！<br /><br />" 
 						+ "請按下方的連結以重設您的帳號資訊"

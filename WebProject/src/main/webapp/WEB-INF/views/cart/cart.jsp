@@ -17,6 +17,58 @@ response.setCharacterEncoding("UTF-8");
 <title>CartPage</title>
 <!-- 購物車選購頁面-->
 <style>
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.continueShopping {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #f44336;
+}
+
+.continueShopping:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+body {
+  background: #105469;
+  font-family: 'Open Sans', sans-serif;
+}
+table {
+  background: #012B39;
+  border-radius: 0.25em;
+  border-collapse: collapse;
+  margin: 1em;
+}
+th {
+  border-bottom: 1px solid #364043;
+  color: #E2B842;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+td {
+  color: #fff;
+  font-weight: 400;
+  padding: 0.65em 1em;
+}
+.disabled td {
+  color: #4F5F64;
+}
+tbody tr {
+  transition: background 0.25s ease;
+}
+tbody tr:hover {
+  background: #014055;
+}
 .classimg {
 	transition: 0.2s;
 	width: 80px
@@ -164,7 +216,7 @@ ul.slides li img {
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
 		<form>
-			<table cellpadding="2" cellspacing="2" border="1">
+			<table cellpadding="2" cellspacing="2" border="1" align="center">
 				<tr>
 					<th>清除</th>
 					<th>商品編號</th>
@@ -177,17 +229,17 @@ ul.slides li img {
 				</tr>
 				<c:set var="total" value="0"></c:set>
 				<c:set var="quant" value="0"></c:set>
-				<c:forEach var="product" items="${myproduct}">
+				<c:forEach var="product" items="${products}">
 					<c:set var="total" value="${total+product.product_price}"></c:set>
 					<tr>
 						<td align="center"><a
-							href="${pageContext.request.contextPath }/controller?action=itemremove&id=${product.product_id}"
+							href="<c:url value="/controller/itemremove?id=${product.product_id}"/>"
 							onclick="return confirm('是否確定?')">刪除項目</a></td>
 						<td>${product.product_id}</td>
 						<td>${product.product_shop}</td>
 						<td>${product.product_name}</td>
 						<td><img
-							src="${pageContext.request.contextPath }/productInfo/images/${product.product_picture}.jpg"
+							src="<c:url value='/images/${product.product_picture}'/> "
 							width="120px"></td>
 						<td id="aa">${product.product_price}</td>
 						<td><input list="quantities" name="quantity" class="qu"
@@ -198,11 +250,6 @@ ul.slides li img {
 								<option value="3">
 								<option value="4">
 								<option value="5">
-								<option value="6">
-								<option value="7">
-								<option value="8">
-								<option value="9">
-								<option value="10">
 							</datalist></td>
 						<td id="result" class="re">0</td>
 					</tr>
@@ -213,8 +260,8 @@ ul.slides li img {
 				</tr>
 			</table>
 			<br>
-			<button type="button">
-				<a href="${pageContext.request.contextPath}/controller?action=mallRedirector">繼續購物</a>
+			<button type="button" class="continueShopping">
+				<a href="${pageContext.request.contextPath}/controller/mallRedirector">繼續購物</a>
 			</button>
 			<button type="button">
 				<a href="">結帳</a>

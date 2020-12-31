@@ -30,11 +30,13 @@ public class CartServiceImpl implements CartService {
 		return DAO.getCartList();
 	}
 
+	
 	@Override
 	@Transactional
-	public CartItemBean getCartByUser(String inputId) {
+	@SuppressWarnings("unchecked")
+	public List<CartItemBean> getCartByUser(String inputId) {
 		System.out.println("ServiceLayerIdCheck="+inputId);
-		return DAO.getCartByUser(inputId);
+		return (List<CartItemBean>) DAO.getCartByUser(inputId);
 	}
 
 	@Override
@@ -44,6 +46,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
+	@Transactional
 	public List<ProductInfoBean> getProductList() {
 		return DAO.getProductList();
 	}
@@ -62,7 +65,8 @@ public class CartServiceImpl implements CartService {
 
 
 	@Override
-	public List <CartItemBean> find(int id) {
+	public List <ProductInfoBean> find(String id) {
+		System.out.println("Service則安低能");
 		return DAO.find(id);
 	}
 

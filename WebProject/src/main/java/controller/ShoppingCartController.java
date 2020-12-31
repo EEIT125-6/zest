@@ -1,31 +1,25 @@
 package controller;
 
 import java.sql.SQLException;
+
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 import model.CartItemBean;
 import xun.model.ProductInfoBean;
 import webUser.model.WebUserData;
 import service.CartService;
-import javax.swing.JOptionPane;
+
 
 @Controller
 @RequestMapping("/controller")
@@ -36,8 +30,7 @@ public class ShoppingCartController {
 	CartService service;;
 	SessionFactory session;
 
-	@GetMapping("/checkMemberStatus")
-//	@ModelAttribute("/checkMemberStatus") // 使用者按下購物車立刻在session中檢查會員身分
+	@GetMapping("/checkMemberStatus")// 使用者按下購物車立刻在session中檢查會員身分 
 	public String checkMemberStatus(Model model) {
 		WebUserData usdt = (WebUserData) model.getAttribute("userFullData");
 		String inputAccount = (usdt == null) ? "" : usdt.getUserId();
@@ -48,12 +41,10 @@ public class ShoppingCartController {
 			e.printStackTrace();
 		}
 		if (checkMemberStatusResult == 1) {
-			return myCartRedirector(model);
+			return myCartRedirector();
 		} else if (checkMemberStatusResult == 0) {
-//			JOptionPane.showInputDialog(null,"請登入後才能開始購物喔", JOptionPane.WARNING_MESSAGE);
 			return "/webUser/WebUserLogin";
 		} else {
-//			JOptionPane.showInputDialog(null,"系統錯誤，請重新再操作一次喔", JOptionPane.ERROR_MESSAGE);
 			return "Index1";
 		}
 	}
@@ -66,55 +57,60 @@ public class ShoppingCartController {
 		return "product/mall"; // webappconfig中已導入 prefix suffix (.jsp)
 	}
 
-	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/myCartRedirector") // 跳轉至個人購物車 V
-	public String myCartRedirector(Model model) {
-		System.out.println("Model="+model);
-		WebUserData usdt = (WebUserData) model.getAttribute("userFullData");
-		System.out.println("======checkpoint1======");
-		String inputId = usdt.getUserId();
-		System.out.println("inputId="+inputId);
-		System.out.println("======checkpoint2======");
-		List<CartItemBean> list = (List<CartItemBean>) service.getCartByUser(inputId);
-		System.out.println("======checkpoint3======");
-		model.addAttribute("myproduct", list);
-		System.out.println("======checkpoint4======");
+	public String myCartRedirector() {		
 		return "cart/cart"; // webappconfig中已導入 prefix suffix (.jsp)
 	}
 
 	
 	@GetMapping(value = "/itemremove") // 移除個人購物車中選定項目
 	@SuppressWarnings("unchecked")
-	public String itemRemover(@PathVariable(value = "id") int id, HttpSession session) {
-		List<CartItemBean> list = (List<CartItemBean>) session.getAttribute("cart");
+	public String itemRemover(@RequestParam (value="id") String id, HttpSession session) {
+		System.out.println(id);
+		List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
 		int index = isExisting(id, session);
-		list.remove(index);
-		session.setAttribute("cart", list);
+		if(index>=0) {
+			list.remove(index);
+			
+		}else {
+			return "cart/cart";
+		}
+		session.setAttribute("products", list);
 		return "cart/cart";
 	}
 
 	
 	@GetMapping(value = "/itemadd") // 加入選定項目進入購物車
 	@SuppressWarnings("unchecked")
-	public String itemAdder(@PathVariable(value = "id") int id, HttpSession session) {
-		if (session.getAttribute("cart") == null) {
-			List<CartItemBean> list = new ArrayList<CartItemBean>();
-			list.add(new CartItemBean(this.service.find(id), 1)); // 稍後定義尋找購物車內特定商品方法
-			session.setAttribute("cart", list);
+	public String itemAdder(@RequestParam (value = "id") String id, HttpSession session) {
+		System.out.println("id="+id);
+		if (session.getAttribute("products") == null) {
+			List<ProductInfoBean> list = new ArrayList<ProductInfoBean>();
+			System.out.println("HelloWorld");
+			list.add(this.service.find(id).get(0)); // 尋找商城內特定商品方法
+			System.out.println("this.service.find(id)="+this.service.find(id));
+			session.setAttribute("products", list);
 		} else {
-			List<CartItemBean> list = (List<CartItemBean>) session.getAttribute("cart");
-			list.add(new CartItemBean(this.service.find(id), 1));
-			session.setAttribute("cart", list);
+			List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
+			System.out.println(session.getAttribute("products"));
+			for(ProductInfoBean p : list) {
+				if(p.getProduct_id() == Integer.parseInt(id)) {
+					return "cart/cart";
+				}
+			}
+			list.add(this.service.find(id).get(0));
+			System.out.println("AAAAAAAAAAAAAAAAAAAAA" + list);
+			session.setAttribute("products", list);
 		}
-		return "product/mall";
+		return "cart/cart";
 
 	}
 
 	@SuppressWarnings("unchecked") // 檢查選擇商品是否存在於購物車內
-	private static int isExisting(Integer inputid, HttpSession session) { 
-		List<CartItemBean> list = (List<CartItemBean>) session.getAttribute("cart");
+	private static Integer isExisting(String inputid, HttpSession session) { 
+		List<ProductInfoBean> list = (List<ProductInfoBean>) session.getAttribute("products");
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getProduct_id() == inputid) {
+			if (list.get(i).getProduct_id() == Integer.parseInt(inputid)) {
 				return i;
 			}
 		}

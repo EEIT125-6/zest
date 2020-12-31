@@ -333,18 +333,21 @@ function checkNickname() {
 		nicknameStr = "稱呼修改完畢";
 		nicknameIsOk = true;
 	}
-	if (nicknameIsOk) {
-		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
-		nicknameSpan.style.color = "black";
-		nicknameSpan.style.fontStyle = "normal";
+	if (!nicknameIsOk) {
+		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+		nicknameSpan.style.color = "red";
+		nicknameSpan.style.fontStyle = "italic";
+		document.getElementById("checkNicknameUsed").style = "display:none";
 		return true;
 	} else {
 		if (nicknameObjValue == oldNicknameObjValue) {
 			nicknameSpan.innerHTML = "";
+			document.getElementById("checkNicknameUsed").style = "display:none";
 		} else {
-			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-			nicknameSpan.style.color = "red";
-			nicknameSpan.style.fontStyle = "italic";
+			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+			nicknameSpan.style.color = "black";
+			nicknameSpan.style.fontStyle = "normal";
+			document.getElementById("checkNicknameUsed").style = "display:inline";
 		}
 		return false;
 	} 
@@ -501,6 +504,9 @@ function checkEmail() {
 		emailStr = "信箱資訊不可為空";
 		emailIsOk = false;
 	} else if(emailObjValue.indexOf("@") == -1 || emailObjValue.split("@").length > 2 || emailObjValue.indexOf(" ") != -1) {
+		emailStr = "信箱資訊格式錯誤";
+		emailIsOk = false;
+	} else if(emailObjValue.indexOf("@") == emailObjValue.length - 1 || emailObjValue.lastIndexOf(".") == emailObjValue.length - 1) {
 		emailStr = "信箱資訊格式錯誤";
 		emailIsOk = false;
 	} else if (emailObjValue == oldEmailObjValue) {

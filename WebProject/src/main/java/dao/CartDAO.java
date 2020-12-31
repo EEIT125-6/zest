@@ -2,12 +2,9 @@ package dao;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import org.springframework.ui.Model;
-
 import model.CartItemBean;
 import xun.model.ProductInfoBean;
-import webUser.model.WebUserData;
+
 
 public interface CartDAO {
 	
@@ -25,5 +22,5 @@ public interface CartDAO {
 //	
 //	String removeProduct(Integer removeItem); // 選定項目從購物車中移除
 
-	List<CartItemBean> find(int id); //購物車內特定項目id搜尋
+	List<ProductInfoBean> find(String id); //購物車內特定項目id搜尋
 }

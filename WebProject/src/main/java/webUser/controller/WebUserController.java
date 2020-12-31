@@ -364,16 +364,21 @@ public class WebUserController {
 				if (runQuit) {
 					/* 執行停用 */
 					deleteResult = wus.quitWebUserData(quitUserData);
+					/* 寄送Email */
+					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit");
 				}
 			} catch (SQLException sqlE) {
 				String quitMessageTmp = sqlE.getMessage();
+				quitMessage = quitMessageTmp.split(":")[1];
+			} catch (Exception e) {
+				String quitMessageTmp = e.getMessage();
 				quitMessage = quitMessageTmp.split(":")[1];
 			}
 		}
 		
 		/* 成功變更 */
 		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";
+			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";		
 			/* 清空SessionAttribute */
 			sessionStatus.setComplete();
 			redirectPage = "/";
@@ -454,7 +459,8 @@ public class WebUserController {
 		String oldPassword = userData.getPassword();
 		
 		/* 預防性後端檢查 */
-		updateResultMessage = doCheckUpdatePasswordInput(userData, password, confirmPassword);
+		String tmpMessage = doCheckUpdatePasswordInput(userData, password, confirmPassword);
+		updateResultMessage = (tmpMessage.equals("?")) ? "" : tmpMessage;
 		
 		/* 成功才執行 */
 		if (updateResultMessage.equals("")) {
@@ -640,7 +646,7 @@ public class WebUserController {
 		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData);
+			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
 		}
 		
 		/* 追加檢查checkCode */
@@ -940,7 +946,7 @@ public class WebUserController {
 			switch(mode) {
 				case "quit":
 					status = "quit";
-					Integer quitUserLv = userData.getAccountLv().getLv();
+					Integer quitUserLv = Integer.parseInt(userId)/1000000 + 1;
 					Boolean runQuit = true;
 					/* 調用服務裡的方法 */
 					try {
@@ -953,10 +959,18 @@ public class WebUserController {
 						}
 						/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
 						if (runQuit) {
+							/* 取得使用者個人資料 */
+							WebUserData banedUserData = wus.getWebUserData(account);
+							/* 執行停用 */
 							operateResult = wus.adminChangeWebUserData(userId, status);
+							/* 寄送Email */
+							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit");
 						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
+					} catch (Exception e) {
+						String quitMessageTmp = e.getMessage();
+						operateMessage = quitMessageTmp.split(":")[1];
 					}
 					break;
 				case "delete":
@@ -1127,9 +1141,8 @@ public class WebUserController {
 	/* 執行管理員修改 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, String> doAdminUpdateInsertWebUser(
+	public @ResponseBody Map<String, String> doAdminUpdateWebUser(
 			Model model,
-			@RequestParam(value = "userId", required = false, defaultValue="") String updatedUserId,
 			@RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword,
 			@RequestParam(value = "newFirstName", required = false, defaultValue="") String newFirstName,
 			@RequestParam(value = "newLastName", required = false, defaultValue="") String newLastName,
@@ -1146,7 +1159,7 @@ public class WebUserController {
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
 		
 		/* 宣告參數 */
-		Map<String, String> resultMap = new HashMap<>();
+		Map<String, String> map = new HashMap<>();
 		String resultMessage = "";
 		Integer updateResult = -1;
 		/* 更新用的同型物件 */
@@ -1154,10 +1167,157 @@ public class WebUserController {
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData managedUserData = (WebUserData) model.getAttribute("managedUserData");
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
+		/* 從session取出陣列來繼續完成設定 */
+		List<FoodFervor> fervorList = (List<FoodFervor>) model.getAttribute("fervorList");
+		List<UserWilling> willingList = (List<UserWilling>) model.getAttribute("willingList");
+		List<CityInfo> cityInfoList = (List<CityInfo>) model.getAttribute("cityInfoList");
+		List<Gender> genderList = (List<Gender>) model.getAttribute("genderList");
 		
+		String fervorTemp = "";
+		for (FoodFervor fervorItem: fervorList) {
+			for (String fervor: newFervor.split(",")) {
+				if (fervor.equals(fervorItem.getFervorCode().toString())) {
+					if (!fervorTemp.equals("")) {
+						fervorTemp += ",";
+					}
+					fervorTemp += fervorItem.getFervorItem();
+				}
+			}
+		}
+		String fervor = fervorTemp;
 		
-		return resultMap;
+		UserWilling willingOption = new UserWilling();
+		for (UserWilling willingValue: willingList) {
+			if (willingValue.getWillingCode().equals(newGetEmail)) {
+				willingOption = willingValue;
+			}
+		}
+		
+		CityInfo locationInfo = new CityInfo();
+		for (CityInfo locationValue: cityInfoList) {
+			if (locationValue.getCityCode() == newLocationCode) {
+				locationInfo = locationValue;
+			}
+		}
+		
+		Gender gender = new Gender();
+		for (Gender genderValue: genderList) {
+			if (genderValue.getGenderCode().equals(newGender)) {
+				gender = genderValue;
+			}
+		}
+		System.out.println("newGender is "+newGender);
+		
+		/* 檢查JavaBean物件 */
+		if (userData == null) {
+			resultMessage = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			resultMessage = "身分驗證失敗，請登入後重試一次！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			resultMessage = "本帳號無法使用此功能";
+		} else if (userData.getAccountLv().getLv() != -1) {
+			resultMessage = "本帳號無法使用此功能";
+		} else if (managedUserData.getAccountLv().getLv() != Integer.parseInt(managedUserData.getUserId().substring(0, 1)) - 1) {
+			resultMessage = "欲操作的帳號無法執行修改，請檢查帳號資料的完整性/正確性";
+		} else if (managedUserData.getStatus().equals("quit") || managedUserData.getStatus().equals("inactive")) {
+			resultMessage = "欲操作的帳號無法執行修改，請先恢復帳號的權限!";
+		} 
+		
+		if (resultMessage.equals("")) {
+			updatedUserData = new WebUserData(
+				managedUserData.getUserId(), 
+				managedUserData.getAccount(), 
+				newPassword, 
+				newFirstName, 
+				newLastName, 
+				newNickname,
+				newBirth,
+				fervor,
+				newEmail,
+				newPhone,
+				managedUserData.getJoinDate(),
+				newAddr0,
+				newAddr1,
+				newAddr2,
+				managedUserData.getZest(),
+				managedUserData.getVersion() + 1,
+				managedUserData.getStatus(),
+				managedUserData.getIconUrl(),
+				managedUserData.getAccountLv(),
+				gender,
+				willingOption,
+				locationInfo);
+		}
+		
+		Integer count = 0;
+		/* 預防性後端檢查 */
+		if (resultMessage.equals("")) {
+			String tmpMessage = doCheckUpdateDataInput(updatedUserData, managedUserData).split(",")[1];
+			resultMessage = (tmpMessage.equals("?")) ? "" : tmpMessage;
+			count = Integer.parseInt(doCheckUpdateDataInput(updatedUserData, managedUserData).split(",")[0]);
+		}
+		
+		/* 檢查密碼 */
+		if (resultMessage.equals("") || resultMessage.equals("沒有輸入任何有效的修改內容，請重新操作")) {
+			String resultTmp = doCheckPassword(newPassword);
+			resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newPassword.equals(managedUserData.getPassword())) {
+				count++;
+			}
+		}
+		
+		/* 檢查性別 */
+		if (resultMessage.equals("")) {
+			String resultTmp = doCheckGender(gender.getGenderCode());
+			resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (gender.getGenderCode().equals(managedUserData.getGender().getGenderCode())) {
+				count++;
+			}
+		}
+		
+		/* 檢查生日 */
+		if (resultMessage.equals("")) {
+			String resultTmp = doCheckBirth(newBirth);
+			resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			if (newBirth.equals(managedUserData.getBirth())) {
+				count++;
+			}
+		}
+		
+		/* 結算 */
+		resultMessage = (count == 14) ? "沒有輸入任何有效的修改內容，請重新操作" : resultMessage;
+		
+		/* 檢查完畢 */
+		if (resultMessage.equals("")) {
+			
+			/* 調用服務裡的方法 */
+			try {
+				updateResult = wus.updateWebUserData(updatedUserData);
+			} catch (SQLException sqlE) {
+				resultMessage = sqlE.getMessage();
+			}
+		}
+		
+		if (!resultMessage.equals("")) {
+			if (resultMessage.indexOf(":") != -1) {	
+				resultMessage = resultMessage.split(":")[1];
+			}
+		} 
+		
+		/* 修改成功 */
+		if (updateResult == 1) {
+			resultMessage = "修改成功";
+			/* 更新設定值 */
+			model.addAttribute("managedUserData", updatedUserData);
+		} else if (updateResult != 1 && resultMessage.equals("")) {
+			resultMessage = "修改失敗";
+		}
+		
+		map.put("resultCode", updateResult.toString());
+		map.put("resultMessage", resultMessage);
+		return map;
 	}
 	
 	/* 前往顯示註冊資料畫面 */
@@ -1318,35 +1478,16 @@ public class WebUserController {
 		
 		/* 生理性別 */
 		if (inputIsOk) {
-			switch(genderCode) {
-				case "M":
-				case "W":
-				case "N":
-					break;
-				default:
-					submitMessage = "生理性別設定異常";
-					inputIsOk = false;
-					break;
-			}
+			String resultTmp = doCheckGender(genderCode);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 西元生日 */
 		if (inputIsOk) {
-			if (birth == Date.valueOf(LocalDate.now())) {
-				submitMessage = "生日異常";
-				inputIsOk = false;
-			} else if (birth == Date.valueOf("1800-01-01")) {
-				submitMessage = "生日異常";
-				inputIsOk = false;
-			} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
-				submitMessage = "生日異常";
-				inputIsOk = false;
-			} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(18, ChronoUnit.YEARS)))) {
-				submitMessage = "未滿18歲，無法申辦本服務";
-				inputIsOk = false;
-			} else {
-				inputIsOk = true;
-			}
+			String resultTmp = doCheckBirth(birth);
+			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查偏好食物 */
@@ -1643,8 +1784,9 @@ public class WebUserController {
 			}
 		}
 		
+		updateResultMessage = (updateResultMessage.equals("")) ? "?" : updateResultMessage;
 		/* 結算有效變動項目 */
-		return (count == 11) ? "沒有輸入任何有效的修改內容，請重新操作" : updateResultMessage;
+		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
 	
 	public String doCheckSelectUserDataInput(String selectedParameters, WebUserData userData) {
@@ -1944,6 +2086,45 @@ public class WebUserController {
 		return message + "," + inputIsOk.toString();
 	}
 	
+	/* 統一檢查生理性別方法 */
+	public String doCheckGender(String genderCode) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		switch(genderCode) {
+			case "M":
+			case "W":
+			case "N":
+				break;
+			default:
+				message = "生理性別設定異常";
+				inputIsOk = false;
+				break;
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查生日方法 */
+	public String doCheckBirth(Date birth) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		if (birth == Date.valueOf(LocalDate.now())) {
+			message = "生日異常";
+			inputIsOk = false;
+		} else if (birth == Date.valueOf("1800-01-01")) {
+			message = "生日異常";
+			inputIsOk = false;
+		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
+			message = "生日異常";
+			inputIsOk = false;
+		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(18, ChronoUnit.YEARS)))) {
+			message = "未滿18歲，無法申辦本服務";
+			inputIsOk = false;
+		} else {
+			inputIsOk = true;
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
 	/* 統一檢查偏好食物方法 */
 	public String doCheckFervor(String fervor) {
 		Boolean inputIsOk = true;
@@ -1969,6 +2150,9 @@ public class WebUserController {
 			message = "信箱資訊不可為空白";
 			inputIsOk = false;
 		} else if (email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
+			message = "信箱資訊格式錯誤";
+			inputIsOk = false;
+		} else if (email.indexOf("@") == email.length() - 1 || email.lastIndexOf(".") == email.length() - 1) {
 			message = "信箱資訊格式錯誤";
 			inputIsOk = false;
 		} else {

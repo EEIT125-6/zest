@@ -1,7 +1,10 @@
 package model;
 
 import java.io.Serializable;
+
 import java.time.OffsetDateTime;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -97,7 +100,7 @@ public class CartItemBean implements Serializable {
 		this.purchase_Trans = purchase_Trans;
 	}
 	
-	public CartItemBean() {
+	public CartItemBean(List<ProductInfoBean> list, int id) {
 		super();
 	}
 	
