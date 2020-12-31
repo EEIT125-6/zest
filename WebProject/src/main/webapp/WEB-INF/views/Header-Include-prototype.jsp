@@ -43,14 +43,18 @@
 			<a href="${pageContext.request.contextPath}/controller/checkMemberStatus"> 
 			購物車 |
 			</a> 
+			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/booking/Page1">
 			確認訂位 |
 			</a>
+			</c:if>
+			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/orange/ShowComment">
 			查詢留言 |
 			</a>
+			</c:if>
 		</p>
 	</div>
 

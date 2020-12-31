@@ -306,20 +306,92 @@ ul.slides li img {
 				selectAllUser();
 				/* 綁定刪除按鈕 */
 				$("#dataContainer").on("click", ".deleteBtn", function() {
-					alert(this.id);
-					
+					let selectedDelBtnInfo = this.id.substring(6);
+					var userId = selectedDelBtnInfo.split("_")[0];
+					var account = selectedDelBtnInfo.split("_")[1];
+					var status = selectedDelBtnInfo.split("_")[2];
+					var mode = 'delete';
+					lastCheck(userId, account, status, mode);
 				});
 				/* 綁定啟用按鈕 */
 				$("#dataContainer").on("click", ".activeBtn", function() {
-					alert(this.id);
-					
+					let selectedActBtnInfo = this.id.substring(6);
+					var userId = selectedActBtnInfo.split("_")[0];
+					var account = selectedActBtnInfo.split("_")[1];
+					var status = selectedActBtnInfo.split("_")[2];
+					var mode = 'active';
+					lastCheck(userId, account, status, mode);
 				});
 				/* 綁定停用按鈕 */
 				$("#dataContainer").on("click", ".quitBtn", function() {
-					alert(this.id);
-					
+					let selectedQutBtnInfo = this.id.substring(6);
+					var userId = selectedQutBtnInfo.split("_")[0];
+					var account = selectedQutBtnInfo.split("_")[1];
+					var status = selectedQutBtnInfo.split("_")[2];
+					var mode = 'quit';
+					lastCheck(userId, account, status, mode);
 				});
 			};
+			
+			function lastCheck(userId, account, status, mode) {
+				let choice=confirm("是否要執行特定的操作？");
+				if (choice) {
+					let operateResultSpan = document.getElementById("searchSpan");
+					let operateResultStr = "...處理中，請稍後";
+					let operateResultIsOk = true;
+					
+					operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+						+ operateResultStr;
+					operateResultSpan.style.color = "black";
+					operateResultSpan.style.fontStyle = "normal";
+					
+					$.ajax({
+						type : "POST",
+						url : "<c:url value='/webUser/ManageWebUser/" + mode + "' />",
+						data : {
+							'userId':userId,
+							'account':account,
+							'status':status
+						},
+						dataType : "json",
+						success : function(resultObj) {
+							if (resultObj.resultCode == 1) {
+								operateResultStr = resultObj.resultMessage;
+								operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+										+ operateResultStr;
+								operateResultSpan.style.color = "black";
+								operateResultSpan.style.fontStyle = "normal";
+								/* 顯示彈窗訊息 */
+								alert(resultObj.resultMessage);
+								/* 重新以Ajax寫出表格 */
+								selectAllUser();
+							} else if (resultObj.resultCode == 0) {
+								operateResultStr = resultObj.resultMessage;
+								operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+								operateResultSpan.style.color = "red";
+								operateResultSpan.style.fontStyle = "italic";
+								/* 顯示彈窗異常訊息 */
+								alert(resultObj.resultMessage);
+							} else if (resultObj.resultCode == -1) {
+								operateResultStr = resultObj.resultMessage;
+								operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+								operateResultSpan.style.color = "red";
+								operateResultSpan.style.fontStyle = "italic";
+								/* 顯示彈窗異常訊息 */
+								alert(resultObj.resultMessage);
+							}
+						},
+						error : function(err) {
+							operateResultStr = "發生錯誤，無法執行指定的操作！";
+							operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+							operateResultSpan.style.color = "red";
+							operateResultSpan.style.fontStyle = "italic";
+							/* 顯示彈窗異常訊息 */
+							alert(resultObj.resultMessage);
+						}
+					});
+				}
+			}
 			
 			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity) {
 				let searchSpan = document.getElementById("searchSpan");
@@ -403,15 +475,35 @@ ul.slides li img {
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
 													? "<td>"
-													+ "<button type='button' class='deleteBtn' style='background-color:#ffc107'><i class='material-icons' style='font-size:24px;color:red'>delete_forever</i></button>"
+													+ "<button type='button' class='deleteBtn' id='delBtn" 
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status 
+													+ "' style='background-color:#ffc107'>"
+													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+													+ "</button>"
 													+ "</td>"
-													: "<td></td>";			
+													: "<td></td>";				
 										content += "<td>";
 										content += (userData.status == 'active') 
-												? "<button type='button' class='quitBtn' id='quitBtn" + userData.account + "' style='background-color:#ffc107'>" 
+												? "<button type='button' class='quitBtn' id='quitBtn" 
+												+ userData.userId 
+												+ "_" 
+												+ userData.account 
+												+ "_" 
+												+ userData.status 
+												+ "' style='background-color:#ffc107'>" 
 												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 												+ "</button>"
-												: "<button type='button' class='activeBtn' id='actBtn" + userData.account + "' style='background-color:#ffc107'>" 
+												: "<button type='button' class='activeBtn' id='actBtn" 
+												+ userData.userId 
+												+ "_" 
+												+ userData.account 
+												+ "_" 
+												+ userData.status
+												+ "' style='background-color:#ffc107'>" 
 												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 												+ "</button>"
 										content += "</td>"
@@ -569,17 +661,35 @@ ul.slides li img {
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
 													? "<td>"
-													+ "<button type='button' class='deleteBtn' id='delBtn" + userData.account + "' style='background-color:#ffc107'>"
+													+ "<button type='button' class='deleteBtn' id='delBtn" 
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status 
+													+ "' style='background-color:#ffc107'>"
 													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
 													+ "</button>"
 													+ "</td>"
-													: "<td></td>";		
+													: "<td></td>";				
 										content += "<td>";
 										content += (userData.status == 'active') 
-													? "<button type='button' class='quitBtn' id='quitBtn" + userData.account + "' style='background-color:#ffc107'>" 
+													? "<button type='button' class='quitBtn' id='qutBtn" 
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status 
+													+ "' style='background-color:#ffc107'>" 
 													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 													+ "</button>"
-													: "<button type='button' class='activeBtn' id='actBtn" + userData.account + "' style='background-color:#ffc107'>" 
+													: "<button type='button' class='activeBtn' id='actBtn" 
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status 
+													+ "' style='background-color:#ffc107'>" 
 													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 													+ "</button>"									
 										content += "</td>"

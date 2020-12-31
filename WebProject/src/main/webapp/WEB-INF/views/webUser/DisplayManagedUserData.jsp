@@ -301,16 +301,7 @@
 							<hr />
 					</fieldset>
 					<div align="center">
-						<c:choose>
-							<c:when test="${managedUserData.status=='inactive' || managedUserData.status=='quit'}">
-								<button type="button" style="font-size:18px" id="activeAccount" >恢復/啟用帳號 <i class="material-icons" style="font-size:18px;color:green">lock_open</i></button>
-							</c:when>
-							<c:when test="${managedUserData.status=='active'}">
-								<button type="button" style="font-size:18px" id="quitAccount" >停用帳號 <i class="material-icons" style="font-size:18px;color:red">lock</i></button>
-							</c:when>
-						</c:choose>
 						<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
-						<button type="button" style="font-size:18px" id="deleteAccount" >刪除帳號 <i class="material-icons" style="font-size:18px;color:red">delete_forever</i></button>
 						<button type="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 						<a href="WebUserSearchForm"><button type="button" style="font-size:18px" >返回上一頁 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<hr />
@@ -480,81 +471,6 @@
 				            	phoneSpan.style.fontStyle = "italic";
 				            }
 						});
-					}
-					
-					$("#activeAccount").click(function () {
-						var mode = "active";
-						lastCheck(mode);
-				    });
-					$("#quitAccount").click(function () {
-						var mode = "quit";
-						lastCheck(mode);
-				    });
-					$("#deleteAccount").click(function () {
-						var mode = "delete";
-						lastCheck(mode);
-				    });
-					
-					function lastCheck(mode) {
-						let choice=confirm("是否要執行特定的操作？");
-						if (choice) {
-							let userId = document.getElementById("userId").value;
-							let account = document.getElementById("account").value;
-							let status = document.getElementById("status").value;
-							
-							let operateResultSpan = document.getElementById("operateResult");
-							let operateResultStr = "...處理中，請稍後";
-							let operateResultIsOk = true;
-							
-							operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
-								+ operateResultStr;
-							operateResultSpan.style.color = "black";
-							operateResultSpan.style.fontStyle = "normal";
-							
-							$.ajax({
-								type : "POST",
-								url : "<c:url value='/webUser/ManageWebUser/" + mode + "' />",
-								data : {
-									'userId':userId,
-									'account':account,
-									'status':status
-								},
-								dataType : "json",
-								success : function(resultObj) {
-									if (resultObj.resultCode == 1) {
-										operateResultStr = resultObj.resultMessage;
-										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-												+ operateResultStr;
-										operateResultSpan.style.color = "black";
-										operateResultSpan.style.fontStyle = "normal";
-										/* 顯示彈窗異常訊息 */
-										alert(resultObj.resultMessage);
-									} else if (resultObj.resultCode == 0) {
-										operateResultStr = resultObj.resultMessage;
-										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-										operateResultSpan.style.color = "red";
-										operateResultSpan.style.fontStyle = "italic";
-										/* 顯示彈窗異常訊息 */
-										alert(resultObj.resultMessage);
-									} else if (resultObj.resultCode == -1) {
-										operateResultStr = resultObj.resultMessage;
-										operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-										operateResultSpan.style.color = "red";
-										operateResultSpan.style.fontStyle = "italic";
-										/* 顯示彈窗異常訊息 */
-										alert(resultObj.resultMessage);
-									}
-								},
-								error : function(err) {
-									operateResultStr = "發生錯誤，無法執行指定的操作！";
-									operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-									operateResultSpan.style.color = "red";
-									operateResultSpan.style.fontStyle = "italic";
-									/* 顯示彈窗異常訊息 */
-									alert(resultObj.resultMessage);
-								}
-							});
-						}
 					}
 					
 					$("#updateAccount").click(function() {
