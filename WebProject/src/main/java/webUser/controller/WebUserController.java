@@ -49,8 +49,7 @@ import webUser.service.WillingService;
 		"reg_webUser",
 		"userFullData",
 		"managedUserData",
-		"selfData"
-		})
+		"selfData"})
 @Controller
 @RequestMapping("/webUser")
 public class WebUserController {
@@ -711,51 +710,51 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
-	/* 回傳所有有效使用者的資料 */
-	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
-		
-		/* 參數宣告 */
-		Map<String, Object> map = new HashMap<>();
-		Integer getResult = -1;
-		String getResultMessage = "";
-		
-		/* 產生資料陣列 */
-		List<WebUserData> userDataList = new ArrayList<>();
-		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-		
-		/* 檢查身分 */
-		if (userData == null) {
-			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
-		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
-			getResultMessage = "本帳號無法使用此功能！";
-		}
-		
-		if (getResultMessage.equals("")) {
-			/* 調用服務裡的方法 */
-			try {
-				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
-			} catch (SQLException sqlE) {
-				String getDataMessageTmp = sqlE.getMessage();
-				getResultMessage = getDataMessageTmp.split(":")[1];
-			}
-		}
-		
-		if (userDataList != null) {
-			getResult = 1;
-			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
-		} else if (getResultMessage.equals("")) {
-			getResult = 0;
-			getResultMessage = "無法查詢到任何有效的使用者資料";
-		}
-		
-		map.put("resultCode", getResult.toString());
-		map.put("resultMessage", getResultMessage);
-		map.put("userDataList", userDataList);
-		return map;
-	}
+//	/* 回傳所有有效使用者的資料 */
+//	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
+//	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
+//		
+//		/* 參數宣告 */
+//		Map<String, Object> map = new HashMap<>();
+//		Integer getResult = -1;
+//		String getResultMessage = "";
+//		
+//		/* 產生資料陣列 */
+//		List<WebUserData> userDataList = new ArrayList<>();
+//		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+//		
+//		/* 檢查身分 */
+//		if (userData == null) {
+//			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
+//		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
+//			getResultMessage = "本帳號無法使用此功能！";
+//		}
+//		
+//		if (getResultMessage.equals("")) {
+//			/* 調用服務裡的方法 */
+//			try {
+//				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
+//			} catch (SQLException sqlE) {
+//				String getDataMessageTmp = sqlE.getMessage();
+//				getResultMessage = getDataMessageTmp.split(":")[1];
+//			}
+//		}
+//		
+//		if (userDataList != null) {
+//			getResult = 1;
+//			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
+//		} else if (getResultMessage.equals("")) {
+//			getResult = 0;
+//			getResultMessage = "無法查詢到任何有效的使用者資料";
+//		}
+//		
+//		map.put("resultCode", getResult.toString());
+//		map.put("resultMessage", getResultMessage);
+//		map.put("userDataList", userDataList);
+//		return map;
+//	}
 	
-	/* 回傳所有有效使用者的資料 */
+	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
@@ -766,8 +765,6 @@ public class WebUserController {
 			@RequestParam(value = "selectedLocationCode", defaultValue = "0") Integer selectedLocationCode,
 			@RequestParam(value = "selectedStatus", defaultValue = "?") String selectedStatus,
 			@RequestParam(value = "selectedIdentity", defaultValue = "-2") Integer selectedIdentity) {
-		
-		System.out.println(selectedIdentity);
 		
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
@@ -832,7 +829,7 @@ public class WebUserController {
 		if (getResultMessage.equals("")) {
 			/* 調用服務裡的方法 */
 			try {
-				userDataList = wus.getOtherWebUserData(selectedParameters);
+				userDataList = wus.getSelectedWebUserData(selectedParameters);
 			} catch (SQLException sqlE) {
 				String getDataMessageTmp = sqlE.getMessage();
 				getResultMessage = getDataMessageTmp.split(":")[1];
@@ -1208,7 +1205,6 @@ public class WebUserController {
 				gender = genderValue;
 			}
 		}
-		System.out.println("newGender is "+newGender);
 		
 		/* 檢查JavaBean物件 */
 		if (userData == null) {

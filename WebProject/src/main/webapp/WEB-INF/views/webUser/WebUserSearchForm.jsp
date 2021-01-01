@@ -13,10 +13,11 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <html lang="en">
 <head>
 <%@include file="../Link_Meta-Include.jsp"%>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
+<!-- Google Icon -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- dataTables用css -->
+<!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">	 -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
 .classimg {
@@ -243,12 +244,85 @@ ul.slides li img {
 		<div align="center">
 			<span id="searchSpan"></span>
 		</div>
+		
+<!-- 		<div align="center" id="dataTableContainer"> -->
+<!-- 			<table id="userDataTable" class="display"> -->
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<!-- 						<th>項次</th> -->
+<%-- 						<c:if test="${userFullData.accountLv.lv == -1}"> --%>
+<!-- 							<th>刪除</th> -->
+<!-- 							<th>其他</th> -->
+<!-- 							<th>查看</th> -->
+<%-- 						</c:if> --%>
+<!-- 						<th>帳號名稱</th> -->
+<!-- 						<th>稱呼</th> -->
+<!-- 						<th>偏好食物</th> -->
+<!-- 						<th>居住區域</th> -->
+<%-- 						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}"> --%>
+<!-- 							<th>帳號身分</th> -->
+<%-- 						</c:if> --%>
+<%-- 						<c:if test="${userFullData.accountLv.lv == -1}"> --%>
+<!-- 							<th>帳號狀態</th> -->
+<%-- 						</c:if> --%>
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 			</table> -->
+<!-- 		</div> -->
+		
 		<div align="center" id="dataContainer"></div>
-		<script
-			src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
+		<!-- 引用本地jQuery -->
+		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+		<!-- 引用dataTables.js -->
+		<!-- 		<script src ="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
+		<!-- 引用本頁檢查用js -->
+		<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
+			window.onload = function() {
+				/* 載入後先執行一次預設查詢 */
+				selectAllUser();
+				/* 綁定刪除按鈕 */
+				$("#dataContainer").on("click", ".deleteBtn", function() {
+					let selectedDelBtnInfo = this.id.substring(6);
+					var userId = selectedDelBtnInfo.split("_")[0];
+					var account = selectedDelBtnInfo.split("_")[1];
+					var status = selectedDelBtnInfo.split("_")[2];
+					var mode = 'delete';
+					lastCheck(userId, account, status, mode);
+				});
+				/* 綁定啟用按鈕 */
+				$("#dataContainer").on("click", ".activeBtn", function() {
+					let selectedActBtnInfo = this.id.substring(6);
+					var userId = selectedActBtnInfo.split("_")[0];
+					var account = selectedActBtnInfo.split("_")[1];
+					var status = selectedActBtnInfo.split("_")[2];
+					var mode = 'active';
+					lastCheck(userId, account, status, mode);
+				});
+				/* 綁定停用按鈕 */
+				$("#dataContainer").on("click", ".quitBtn", function() {
+					let selectedQutBtnInfo = this.id.substring(6);
+					var userId = selectedQutBtnInfo.split("_")[0];
+					var account = selectedQutBtnInfo.split("_")[1];
+					var status = selectedQutBtnInfo.split("_")[2];
+					var mode = 'quit';
+					lastCheck(userId, account, status, mode);
+				});
+				/* dataTable測試區 */
+	//				let table = $("#userDataTable").DataTable({
+	//					processing: false, //關閉預設"顯示處理中"的效果
+	//					searching: false, //關閉內建搜尋
+	//					serverSide: true, //啟用ServerSide模式
+	//					order: [[0, "asc"]], //預設排序(由第0個資料行、升覓排序)
+	//					orderMulti: false, //關閉多欄位排序
+	//					deferLoading: 0 //初始化時不自動執行aJax
+	//					ajax: {
+	//						method: "POST",
+						
+	//					}
+	//				});
+			};
+		
 			$("#search").click(function() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
@@ -301,37 +375,6 @@ ul.slides li img {
 					}
 				}
 	    	});
-			
-			window.onload = function() {
-				selectAllUser();
-				/* 綁定刪除按鈕 */
-				$("#dataContainer").on("click", ".deleteBtn", function() {
-					let selectedDelBtnInfo = this.id.substring(6);
-					var userId = selectedDelBtnInfo.split("_")[0];
-					var account = selectedDelBtnInfo.split("_")[1];
-					var status = selectedDelBtnInfo.split("_")[2];
-					var mode = 'delete';
-					lastCheck(userId, account, status, mode);
-				});
-				/* 綁定啟用按鈕 */
-				$("#dataContainer").on("click", ".activeBtn", function() {
-					let selectedActBtnInfo = this.id.substring(6);
-					var userId = selectedActBtnInfo.split("_")[0];
-					var account = selectedActBtnInfo.split("_")[1];
-					var status = selectedActBtnInfo.split("_")[2];
-					var mode = 'active';
-					lastCheck(userId, account, status, mode);
-				});
-				/* 綁定停用按鈕 */
-				$("#dataContainer").on("click", ".quitBtn", function() {
-					let selectedQutBtnInfo = this.id.substring(6);
-					var userId = selectedQutBtnInfo.split("_")[0];
-					var account = selectedQutBtnInfo.split("_")[1];
-					var status = selectedQutBtnInfo.split("_")[2];
-					var mode = 'quit';
-					lastCheck(userId, account, status, mode);
-				});
-			};
 			
 			function lastCheck(userId, account, status, mode) {
 				let choice=confirm("是否要執行特定的操作？");
@@ -436,7 +479,7 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>刪除</th>"
-											+ "<th>其他</th>"
+											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
@@ -487,25 +530,37 @@ ul.slides li img {
 													+ "</td>"
 													: "<td></td>";				
 										content += "<td>";
-										content += (userData.status == 'active') 
-												? "<button type='button' class='quitBtn' id='quitBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status 
-												+ "' style='background-color:#ffc107'>" 
-												+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-												+ "</button>"
-												: "<button type='button' class='activeBtn' id='actBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status
-												+ "' style='background-color:#ffc107'>" 
-												+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-												+ "</button>"
+										if (userData.status == 'active') {
+											content += "<button type='button' class='quitBtn' id='qutBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status 
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+														+ "</button>";
+										} else if (userData.status == 'quit') {
+											content += "<button type='button' class='activeBtn' id='actBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+														+ "</button>"
+										} else if (userData.status == 'inactive') {
+											content += "<button type='button' class='activeBtn' id='actBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
+														+ "</button>"
+										}
 										content += "</td>"
 												+ "<td>"
 												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
@@ -600,7 +655,7 @@ ul.slides li img {
 
 				$.ajax({
 					type : "POST",
-					url : "<c:url value='/webUser/controller/WebUserSearchForm/All' />",
+					url : "<c:url value='/webUser/controller/WebUserSearchForm' />",
 					dataType : "json",
 					success : function(resultObj) {
 						if (resultObj.resultCode == 1) {
@@ -622,7 +677,7 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>刪除</th>"
-											+ "<th>其他</th>"
+											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
@@ -673,25 +728,37 @@ ul.slides li img {
 													+ "</td>"
 													: "<td></td>";				
 										content += "<td>";
-										content += (userData.status == 'active') 
-													? "<button type='button' class='quitBtn' id='qutBtn" 
-													+ userData.userId 
-													+ "_" 
-													+ userData.account 
-													+ "_" 
-													+ userData.status 
-													+ "' style='background-color:#ffc107'>" 
-													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-													+ "</button>"
-													: "<button type='button' class='activeBtn' id='actBtn" 
-													+ userData.userId 
-													+ "_" 
-													+ userData.account 
-													+ "_" 
-													+ userData.status 
-													+ "' style='background-color:#ffc107'>" 
-													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-													+ "</button>"									
+										if (userData.status == 'active') {
+											content += "<button type='button' class='quitBtn' id='qutBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status 
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+														+ "</button>";
+										} else if (userData.status == 'quit') {
+											content += "<button type='button' class='activeBtn' id='actBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+														+ "</button>"
+										} else if (userData.status == 'inactive') {
+											content += "<button type='button' class='activeBtn' id='actBtn" 
+														+ userData.userId 
+														+ "_" 
+														+ userData.account 
+														+ "_" 
+														+ userData.status
+														+ "' style='background-color:#ffc107'>" 
+														+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
+														+ "</button>"
+										}									
 										content += "</td>"
 												+ "<td>"
 												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"

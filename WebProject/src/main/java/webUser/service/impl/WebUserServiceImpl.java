@@ -133,13 +133,8 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
-		return webUserDAO.getOtherWebUserData(selectedParameters);
-	}
-
-	@Override
-	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
-		return webUserDAO.getAllWebUserData(lv, status);
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
+		return webUserDAO.getSelectedWebUserData(selectedParameters);
 	}
 
 	@Override

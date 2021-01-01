@@ -53,10 +53,7 @@ public interface WebUserService {
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;
 	
 	/* 取得查詢的使用者資料 */
-	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException;
-	
-	/* 取得所有使用者資料 */
-	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException;
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;

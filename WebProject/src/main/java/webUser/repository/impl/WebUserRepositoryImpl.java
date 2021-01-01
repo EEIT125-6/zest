@@ -232,7 +232,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WebUserData> getOtherWebUserData(String selectedParameters) throws SQLException {
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM WebUserData AS wu WHERE ");
 
@@ -309,32 +309,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		return getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList();
 	}
-
-	/* 取得使用者個人資料 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<WebUserData> getAllWebUserData(Integer lv, String status) throws SQLException {
-		/* HQL */
-		String hql = ""; 
-		switch(lv) {
-			case -1:
-				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv >= :lv";
-				break;
-			case 0:
-				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = :lv AND wu.status = " + "'" + status + "'";
-				break;
-			case 1:
-				hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = "+ "'" + status + "'";
-				break;
-		}
-		int testLv = lv;
-		/* 取得當前Session，執行HQL以取得陣列 */
-		return getSession()
-				.createQuery(hql)
-				.setParameter("lv", testLv)
-				.getResultList();
-	}
-
+	
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	@Override
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
