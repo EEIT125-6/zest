@@ -153,8 +153,25 @@
                 	<fieldset>
                 		<legend>以下為您可變更的資料：</legend>
                 		<span id="updatedResultSpan"></span>
-						<hr />
 						<input type="hidden" name="account" id="account" value="${selfData.account}">
+                		<span id="updatedResultSpan"></span>
+                		<hr />
+                		<label>帳號圖示：</label>
+                		<c:if test="${selfData.iconUrl == ''}" >
+                			<img src='${pageContext.request.contextPath}/image/webUser/default/ncu_scens.jpg"+"' width='200' height='200' title='這是系統預設的帳號圖示'>
+                		</c:if>
+                		<c:if test="${selfData.iconUrl != ''}" >
+                			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
+                		</c:if>
+                		<label>圖示預覽：</label>
+                		<img id="picPreview" src="#" width="200" height="200" alt="這是預覽的帳號圖示" title="這是預覽的帳號圖示">
+                		<hr />
+                		<label>圖示檔案：</label>
+                		<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${selfData.iconUrl}">
+						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
+                		<input type="hidden" name="newIconUrl" id="newIconUrl">
+                		<span id="picSpan"></span>
+                		<hr />
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
@@ -276,9 +293,19 @@
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
                 <script>
-                	$(document).ready(function() {
+                	$(document).ready(function () {
                 		document.getElementById("emailSendSpace").style = "display:none";
+                		$("#iconUrl").change(function () {
+                			if (this.files && this.files[0]) {
+                				var picReader = new FileReader();
+                				picReader.onload = function (e) {
+                					$('#picPreview').attr('src', e.target.result);
+                				};
+                				picReader.readAsDataURL(this.files[0]);
+                			}
+                		});
                 	});
+                	
                 	$("#updateConfirm").click(function() {
                 		checkUpdate();
                 	});

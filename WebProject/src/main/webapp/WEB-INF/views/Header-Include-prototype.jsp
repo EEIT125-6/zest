@@ -42,6 +42,9 @@
 						<i class="fas fa-chess-bishop" style="font-size: 25px; color: yellow"></i>
 					</c:if>
  				</c:if>
+ 				<c:if test="${userFullData.iconUrl != ''}">
+ 					<img src="<c:url value='${userFullData.iconUrl}' />" width="25" height="25" >
+ 				</c:if>
 				<c:out value="${userFullData.account}" /> |
 				</a>
 			</c:if>

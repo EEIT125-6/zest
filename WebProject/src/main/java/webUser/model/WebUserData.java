@@ -56,7 +56,7 @@ public class WebUserData implements Serializable{
 	private Integer version;
 	@Column(nullable = true , unique = false , columnDefinition="varchar(8) default 'inactive' ")
 	private String status;
-	@Column(nullable = false , unique = true , columnDefinition="varchar(255) ")
+	@Column(nullable = true , unique = true , columnDefinition="varchar(255) ")
 	private String iconUrl;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
