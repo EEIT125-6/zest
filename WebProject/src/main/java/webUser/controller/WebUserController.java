@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+<<<<<<< Updated upstream
+=======
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+>>>>>>> Stashed changes
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
@@ -545,9 +549,47 @@ public class WebUserController {
 		return "webUser/WebUserModifyData";
 	}
 	
+<<<<<<< Updated upstream
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserModifyData")
+=======
+	/* 執行使用者圖像修改 */
+	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doUpdateWebUserIcon(
+			Model model,
+			@RequestParam(value = "pic") CommonsMultipartFile picFile) {
+		
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		if (userData == null) {
+			message = "使用者未登入！請登入後再進行本操作";
+		} else if (userData.getStatus() == "quit" || userData.getStatus() == "inactive") {
+			message = "使用者無權進行本動作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
+			message = "使用者驗證失敗！";
+		}
+		
+		/* 取出上傳檔案的檔名 */
+		String realFileName = picFile.getOriginalFilename();
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = userData.getIconUrl();
+		/* 取得使用者ID */
+		String userId = userData.getUserId();
+		/* 組成新圖示的相對路徑 */
+		String newIconUrl = "/image/webUser/" + userId + "/" + realFileName;
+		
+		return null;
+	}
+	
+	/* 執行密碼以外的資料修改 */
+	@SuppressWarnings("unchecked")
+	@PostMapping(value = "/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
+>>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -710,6 +752,7 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
+<<<<<<< Updated upstream
 //	/* 回傳所有有效使用者的資料 */
 //	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
 //	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
@@ -757,6 +800,11 @@ public class WebUserController {
 	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
+=======
+	/* 回傳符合條件使用者的資料 */
+	@SuppressWarnings("unchecked")
+	@PostMapping(value = "/controller/WebUserSearchForm", produces = "application/json; charset=UTF-8")
+>>>>>>> Stashed changes
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
 			Model model,
 			@RequestParam(value = "selectedAccount", defaultValue = "?") String selectedAccount,
@@ -904,7 +952,11 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
+<<<<<<< Updated upstream
 	@PostMapping("/ManageWebUser/{mode}")
+=======
+	@PostMapping(value = "/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
+>>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
@@ -1057,7 +1109,11 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
+<<<<<<< Updated upstream
 	@PostMapping(value = "/controller/WebUserAddForm", produces="application/json; charset=UTF-8")
+=======
+	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
+>>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,

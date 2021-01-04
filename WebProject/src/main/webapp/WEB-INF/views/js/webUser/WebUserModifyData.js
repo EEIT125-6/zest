@@ -556,7 +556,12 @@ function checkAddr2() {
 }
 
 function clearMessage() {
+<<<<<<< Updated upstream
 	document.getElementById("passwordSpan").innerHTML = "";
+=======
+	document.getElementById("picSpan").innerHTML = "";
+	document.getElementById("picPreview").src = "";
+>>>>>>> Stashed changes
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";

@@ -155,11 +155,17 @@
 				<c:if test="${userFullData.account.length() == 0}">
 					<c:redirect url="WebUserLogin" />
 				</c:if>
+<<<<<<< Updated upstream
 				<form method="post">
 					<fieldset>
 						<legend>以下為所點選的使用者帳號：</legend>
 						<input type="hidden" name="userId" id="userId" value="${managedUserData.userId}" />
 						<hr />
+=======
+				<form method="post" enctype="multipart/form-data">
+					<fieldset>
+						<legend>以下為所點選的使用者帳號：</legend>
+>>>>>>> Stashed changes
 						<label>帳號圖示：</label>
                 		<c:if test="${managedUserData.iconUrl == ''}" >
                 			<img src="<c:url value='/image/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
@@ -173,8 +179,19 @@
                 		<label>圖示檔案：</label>
 						<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${managedUserData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
+<<<<<<< Updated upstream
                 		<span id="picSpan"></span>
 						<hr />
+=======
+                		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
+                		<span id="picSpan"></span>
+						<hr />
+					</fieldset>
+				</form>
+				<form method="post">
+					<fieldset>
+						<input type="hidden" name="userId" id="userId" value="${managedUserData.userId}" />
+>>>>>>> Stashed changes
 						<label>帳號名稱：</label>
 						<input type="hidden" name="account" id="account" value="${managedUserData.account}" />
 						<c:out value="${managedUserData.account}" />
@@ -327,16 +344,61 @@
 				<script src="<c:url value='/js/webUser/DisplayManagedUserData.js' />"></script>
 				<script>
 					$(document).ready(function () {
+<<<<<<< Updated upstream
 						$("#iconUrl").change(function () {
                 			if (this.files && this.files[0]) {
                 				var picReader = new FileReader();
+=======
+						document.getElementById("uploadPic").style = "display:none";
+						document.getElementById("picPreview").style = "display:none";
+						$("#iconUrl").change(function () {
+                			if (this.files && this.files[0]) {
+                				var picReader = new FileReader();
+                				document.getElementById("picPreview").style = "display:inline";
+>>>>>>> Stashed changes
                 				picReader.onload = function (e) {
                 					$('#picPreview').attr('src', e.target.result);
                 				};
                 				picReader.readAsDataURL(this.files[0]);
+<<<<<<< Updated upstream
                 			}
                 		});
 					}
+=======
+                				var pName = this.files[0].name;
+                				var oldPNameTmp = (document.getElementById("oldIconUrl").value.trim() == '') ? '' : document.getElementById("oldIconUrl").value;
+                				var oldPName = (oldPNameTmp == '') ? '' : oldPNameTmp.split("/")[oldPNameTmp.split("/").length - 1];
+                				var picSpan = document.getElementById("picSpan");
+                				var picStr = "";
+                				
+               					picStr = "圖片已設定完畢";
+               					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+			            		picSpan.style.color = "black";
+			            		picSpan.style.fontStyle = "normal";
+			            		document.getElementById("uploadPic").style = "display:inline";
+                			}
+                		});
+					});
+					
+					$("#uploadPic").click(function() {
+                		picUpload();
+                	});
+					function picUpload() {
+						let choice=confirm("是否確定要上傳指定的圖片？");
+                		if (choice == true) {
+                			var picIsOk = true;
+                			var picForm = new FormData();
+                			picForm.append("pic", pic);
+                			
+                			alert(picForm);
+                			
+                			picStr = "...處理中，請稍後";
+           					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + picStr;
+		            		picSpan.style.color = "black";
+		            		picSpan.style.fontStyle = "normal";
+                		}
+                	}
+>>>>>>> Stashed changes
 					
 					$("#checkNicknameUsed").click(function() {
 				        checkUpdateNickname();

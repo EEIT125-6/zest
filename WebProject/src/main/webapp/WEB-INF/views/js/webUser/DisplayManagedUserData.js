@@ -786,6 +786,11 @@ function changeVisibility() {
 }
 
 function clearMessage() {
+<<<<<<< Updated upstream
+=======
+	document.getElementById("picSpan").innerHTML = "";
+	document.getElementById("picPreview").src = "";
+>>>>>>> Stashed changes
 	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";

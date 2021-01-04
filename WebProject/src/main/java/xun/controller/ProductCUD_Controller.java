@@ -64,7 +64,11 @@ public class ProductCUD_Controller {
 		System.out.println(productInfoBean.getStorebean());
 //		處理圖片
 		if(!file.isEmpty()) {
+<<<<<<< Updated upstream
 		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+=======
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+>>>>>>> Stashed changes
 		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 		String FileFormat = FileName.split("\\.")[1];
@@ -80,7 +84,11 @@ public class ProductCUD_Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+<<<<<<< Updated upstream
 		productInfoBean.setProduct_picture("Images\\"+FileName);
+=======
+		productInfoBean.setProduct_picture("../productInfo/images/"+FileName);
+>>>>>>> Stashed changes
 		
 //		執行新增
 		ps.save(productInfoBean);
@@ -154,7 +162,13 @@ public class ProductCUD_Controller {
 			ps.updateProduct(productInfoBean);
 			
 			}else {
+<<<<<<< Updated upstream
 			String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+=======
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+//			C:\JavaMVCWorkspace\WebProject\src\main\webapp\WEB-INF\views\images\productInfo\images
+
+>>>>>>> Stashed changes
 			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
@@ -171,7 +185,11 @@ public class ProductCUD_Controller {
 				e.printStackTrace();
 			}
 //		執行更新
+<<<<<<< Updated upstream
 			productInfoBean.setProduct_picture("Images\\"+FileName);
+=======
+			productInfoBean.setProduct_picture("../productInfo/images/"+FileName);
+>>>>>>> Stashed changes
 			ps.updateProduct(productInfoBean);
 //			System.out.println(productInfoBean);
 		}
@@ -236,7 +254,11 @@ public class ProductCUD_Controller {
 			System.out.println(storeprice);
 			System.out.println("+++++++++++"+productsprice);
 		}else {
+<<<<<<< Updated upstream
 			storeprice=productsprice.get((productsprice.size()/2)+1);
+=======
+			storeprice=productsprice.get((productsprice.size()/2));
+>>>>>>> Stashed changes
 			System.out.println(storeprice);
 			System.out.println("-----------"+productsprice);
 		}
