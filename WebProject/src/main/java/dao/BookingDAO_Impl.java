@@ -75,10 +75,10 @@ public class BookingDAO_Impl implements BookingDAO {
 	@Override
 	public boolean checkBooking(String bookingNo) {
 		
-		String hql ="from BookingBean b where b.bookingNo = '" + bookingNo + "'";
+		String hql ="from BookingBean b where b.bookingNo = :bookingNo";
 		Session session = factory.getCurrentSession();
 		Query<BookingBean> query = session.createQuery(hql);
-		List <BookingBean> list=query.getResultList();
+		List <BookingBean> list=query.setParameter("bookingNo", bookingNo).getResultList();
 		if (list.size()==0) {
 			return false;
 		}
