@@ -14,16 +14,39 @@
 			style="float: left; height: 70px;"></a>
 		<p
 			style="text-align: right; font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;; float: right">
-			<br> <i class="fas fa-user"
-				style="font-size: 25px; color: yellow"></i>
+			<br> 
 			<c:if test="${userFullData.account == null}">
-			<a href="${pageContext.request.contextPath}/webUser/WebUserLogin">
-			登入 | 
-			</a>
+			<i class="fas fa-user" style="font-size: 25px; color: yellow"></i>
+				<a href="${pageContext.request.contextPath}/webUser/WebUserLogin">
+				登入 | 
+				</a>
 			</c:if>
 			<c:if test="${userFullData.account != null}">
-			<a href="${pageContext.request.contextPath}/webUser/WebUserMain">
-			<c:out value="${userFullData.account}" /> |</a>
+				<a href="${pageContext.request.contextPath}/webUser/WebUserMain">
+				<c:if test="${userFullData.iconUrl == ''}">
+					<c:if test="${userFullData.accountLv.lv == -1}">
+						<i class="fas fa-chess-rook" style="font-size: 25px; color: yellow"></i>
+					</c:if>
+					<c:if test="${userFullData.accountLv.lv == 0}">
+						<c:if test="${userFullData.gender.genderCode == 'M'}">
+							<i class="fas fa-chess-king" style="font-size: 25px; color: yellow"></i>
+						</c:if>
+						<c:if test="${userFullData.gender.genderCode == 'N'}">
+							<i class="fas fa-chess" style="font-size: 25px; color: yellow"></i>
+						</c:if>
+						<c:if test="${userFullData.gender.genderCode == 'W'}">
+							<i class="fas fa-chess-queen" style="font-size: 25px; color: yellow"></i>
+						</c:if>
+					</c:if>
+					<c:if test="${userFullData.accountLv.lv == 1}">
+						<i class="fas fa-chess-bishop" style="font-size: 25px; color: yellow"></i>
+					</c:if>
+ 				</c:if>
+ 				<c:if test="${userFullData.iconUrl != ''}">
+ 					<img src="<c:url value='${userFullData.iconUrl}' />" width="25" height="25" >
+ 				</c:if>
+				<c:out value="${userFullData.account}" /> |
+				</a>
 			</c:if>
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user-plus" style="font-size: 25px; color: yellow"></i>
