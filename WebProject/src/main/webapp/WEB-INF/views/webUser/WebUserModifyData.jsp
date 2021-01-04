@@ -149,18 +149,6 @@
 				<c:if test="${empty userFullData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-<<<<<<< Updated upstream
-                <form method="post">
-                	<fieldset>
-                		<legend>以下為您可變更的資料：</legend>
-                		<span id="updatedResultSpan"></span>
-						<input type="hidden" name="account" id="account" value="${selfData.account}">
-                		<span id="updatedResultSpan"></span>
-                		<hr />
-                		<label>帳號圖示：</label>
-                		<c:if test="${selfData.iconUrl == ''}" >
-                			<img src='${pageContext.request.contextPath}/image/webUser/default/ncu_scens.jpg"+"' width='200' height='200' title='這是系統預設的帳號圖示'>
-=======
 				<form method="post" enctype="multipart/form-data">
 					<fieldset>
 						<legend>以下為您可變更的資料：</legend>
@@ -168,7 +156,6 @@
 						<label>帳號圖示：</label>
                 		<c:if test="${selfData.iconUrl == ''}" >
                 			<img src="<c:url value='/image/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
->>>>>>> Stashed changes
                 		</c:if>
                 		<c:if test="${selfData.iconUrl != ''}" >
                 			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
@@ -179,11 +166,9 @@
                 		<label>圖示檔案：</label>
                 		<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${selfData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
-<<<<<<< Updated upstream
                 		<input type="hidden" name="newIconUrl" id="newIconUrl">
                 		<span id="picSpan"></span>
                 		<hr />
-=======
                 		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
                 		<span id="picSpan"></span>
                 		<hr />
@@ -193,7 +178,6 @@
                 	<fieldset>
                 		<span id="updatedResultSpan"></span>
 						<input type="hidden" name="account" id="account" value="${selfData.account}">
->>>>>>> Stashed changes
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
@@ -315,44 +299,32 @@
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
                 <script>
-                	$(document).ready(function () {
-                		document.getElementById("emailSendSpace").style = "display:none";
-<<<<<<< Updated upstream
-                		$("#iconUrl").change(function () {
-                			if (this.files && this.files[0]) {
-                				var picReader = new FileReader();
-=======
-                		document.getElementById("uploadPic").style = "display:none";
-                		document.getElementById("picPreview").style = "display:none";
-                		$("#iconUrl").change(function () {
-                			if (this.files && this.files[0]) {
-                				var picReader = new FileReader();
-                				document.getElementById("picPreview").style = "display:inline";
->>>>>>> Stashed changes
-                				picReader.onload = function (e) {
-                					$('#picPreview').attr('src', e.target.result);
-                				};
-                				picReader.readAsDataURL(this.files[0]);
-<<<<<<< Updated upstream
-=======
-                				var pName = this.files[0].name;
-                				var oldPNameTmp = (document.getElementById("oldIconUrl").value.trim() == '') ? '' : document.getElementById("oldIconUrl").value;
-                				var oldPName = (oldPNameTmp == '') ? '' : oldPNameTmp.split("/")[oldPNameTmp.split("/").length - 1];
-                				var picSpan = document.getElementById("picSpan");
-                				var picStr = "";
-                				
-               					picStr = "圖片已設定完畢";
-               					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+	                $(document).ready(function () {
+						document.getElementById("uploadPic").style = "display:none";
+						document.getElementById("picPreview").style = "display:none";
+						$("#iconUrl").change(function () {
+	            			if (this.files && this.files[0]) {
+	            				var picReader = new FileReader();
+	            				document.getElementById("picPreview").style = "display:inline";
+	            				picReader.onload = function (e) {
+	            					$('#picPreview').attr('src', e.target.result);
+	            				};
+	            				picReader.readAsDataURL(this.files[0]);
+	            				var pName = this.files[0].name;
+	            				var oldPNameTmp = (document.getElementById("oldIconUrl").value.trim() == '') ? '' : document.getElementById("oldIconUrl").value;
+	            				var oldPName = (oldPNameTmp == '') ? '' : oldPNameTmp.split("/")[oldPNameTmp.split("/").length - 1];
+	            				var picSpan = document.getElementById("picSpan");
+	            				var picStr = "";
+	            				
+	           					picStr = "圖片已設定完畢";
+	           					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
 			            		picSpan.style.color = "black";
 			            		picSpan.style.fontStyle = "normal";
 			            		document.getElementById("uploadPic").style = "display:inline";
->>>>>>> Stashed changes
-                			}
-                		});
-                	});
+	            			}
+	            		});
+					});
                 	
-<<<<<<< Updated upstream
-=======
                 	$("#uploadPic").click(function() {
                 		picUpload();
                 	});
@@ -388,7 +360,6 @@
                 		}
                 	}
                 	
->>>>>>> Stashed changes
                 	$("#updateConfirm").click(function() {
                 		checkUpdate();
                 	});

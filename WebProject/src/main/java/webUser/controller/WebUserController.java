@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-<<<<<<< Updated upstream
-=======
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
->>>>>>> Stashed changes
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
@@ -90,7 +87,10 @@ public class WebUserController {
 	
 	/* Default Account List */
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
-
+	
+	/* Default Project Physical Address */
+	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
 	public String doCreateRegisterForm(Model model) {
@@ -549,11 +549,6 @@ public class WebUserController {
 		return "webUser/WebUserModifyData";
 	}
 	
-<<<<<<< Updated upstream
-	/* 執行密碼以外的資料修改 */
-	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserModifyData")
-=======
 	/* 執行使用者圖像修改 */
 	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserIcon(
@@ -589,7 +584,6 @@ public class WebUserController {
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
->>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -752,59 +746,9 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
-<<<<<<< Updated upstream
-//	/* 回傳所有有效使用者的資料 */
-//	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
-//	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
-//		
-//		/* 參數宣告 */
-//		Map<String, Object> map = new HashMap<>();
-//		Integer getResult = -1;
-//		String getResultMessage = "";
-//		
-//		/* 產生資料陣列 */
-//		List<WebUserData> userDataList = new ArrayList<>();
-//		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-//		
-//		/* 檢查身分 */
-//		if (userData == null) {
-//			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
-//		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
-//			getResultMessage = "本帳號無法使用此功能！";
-//		}
-//		
-//		if (getResultMessage.equals("")) {
-//			/* 調用服務裡的方法 */
-//			try {
-//				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
-//			} catch (SQLException sqlE) {
-//				String getDataMessageTmp = sqlE.getMessage();
-//				getResultMessage = getDataMessageTmp.split(":")[1];
-//			}
-//		}
-//		
-//		if (userDataList != null) {
-//			getResult = 1;
-//			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
-//		} else if (getResultMessage.equals("")) {
-//			getResult = 0;
-//			getResultMessage = "無法查詢到任何有效的使用者資料";
-//		}
-//		
-//		map.put("resultCode", getResult.toString());
-//		map.put("resultMessage", getResultMessage);
-//		map.put("userDataList", userDataList);
-//		return map;
-//	}
-	
 	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
-=======
-	/* 回傳符合條件使用者的資料 */
-	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserSearchForm", produces = "application/json; charset=UTF-8")
->>>>>>> Stashed changes
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
 			Model model,
 			@RequestParam(value = "selectedAccount", defaultValue = "?") String selectedAccount,
@@ -952,11 +896,7 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
-<<<<<<< Updated upstream
-	@PostMapping("/ManageWebUser/{mode}")
-=======
 	@PostMapping(value = "/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
->>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
@@ -1109,11 +1049,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
-<<<<<<< Updated upstream
-	@PostMapping(value = "/controller/WebUserAddForm", produces="application/json; charset=UTF-8")
-=======
 	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
->>>>>>> Stashed changes
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -2515,5 +2451,46 @@ public class WebUserController {
 		map.put("reg_webUser", reg_webUser);
 		map.put("submitMessage", submitMessage);
 		return map;
+	}
+	
+	/* 圖像檔案處理 */
+	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl) {
+		/* 變數宣告 */
+		Map<String, String> map = new HashMap<>();
+		String oldIconPath = defaultAddress + oldIconUrl;
+		String newIconPath = (newIconUrl.equals("")) ? "" : defaultAddress + newIconUrl;
+		
+		/* 如果原本沒有圖檔，就直接新建檔案 */
+		if (oldIconPath.equals("")) {
+			
+		/* 如果原本有圖檔，就需要先刪除後再新增 */	
+		} else {
+			
+		}
+		return null;
+	}
+	
+	/* 刪除舊檔案 */
+	public Boolean doDeleteOldIcon(String oldIconPath) throws Exception{
+		Boolean delResult = false;
+		/* 確認使用者目錄是否已建立 */
+		
+		/* 確認該路徑是否有檔案存在 */
+		
+		/* 執行刪除 */
+		
+		return delResult;
+	}
+	
+	/* 建立新檔案 */
+	public Boolean doCreateNewIcon(String newIconPath) throws Exception{
+		Boolean delResult = false;
+		/* 檢查使用者目錄是否已建立 */
+		
+		/* 檢查目錄下是否已有該檔案 */
+		
+		/* 執行新增 */
+		
+		return delResult;
 	}
 }

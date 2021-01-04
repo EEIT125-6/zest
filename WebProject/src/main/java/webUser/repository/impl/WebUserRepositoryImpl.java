@@ -228,8 +228,6 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取出資料，理論上陣列中只會有一筆資料 */
 		return (list.size() == 1) ? list.get(0) : null;
 	}
-<<<<<<< Updated upstream
-=======
 	
 	/* 取得使用者個人資料 */
 	@SuppressWarnings("unchecked")
@@ -243,7 +241,6 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取出資料，理論上陣列中只會有一筆資料 */
 		return (list.size() == 1) ? list.get(0) : null;
 	}
->>>>>>> Stashed changes
 
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")

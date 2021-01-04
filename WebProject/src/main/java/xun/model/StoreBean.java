@@ -1,28 +1,22 @@
 package xun.model;
 
-<<<<<<< Updated upstream
-=======
 import javax.persistence.CascadeType;
->>>>>>> Stashed changes
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-<<<<<<< Updated upstream
-=======
+
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
->>>>>>> Stashed changes
+
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
 
-<<<<<<< Updated upstream
-=======
 import webUser.model.WebUserData;
 
->>>>>>> Stashed changes
 @Entity
 @Table(name = "Store")
 public class StoreBean {
@@ -39,12 +33,11 @@ public class StoreBean {
 	String tel;
 	String bannerurl;
 	String photourl;
-<<<<<<< Updated upstream
-=======
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")
 	private WebUserData webUserData;
->>>>>>> Stashed changes
+
 	@Transient	
 	MultipartFile stfile;
 	
@@ -73,8 +66,6 @@ public class StoreBean {
 		this.id = id;
 	}
 	
-<<<<<<< Updated upstream
-=======
 	public StoreBean(Integer id, String stname, String sclass, String saddress, Integer price, String stitd,
 			String stitddt, String tel, String bannerurl, String photourl, WebUserData webUserData) {
 		super();
@@ -91,7 +82,6 @@ public class StoreBean {
 		this.webUserData = webUserData;
 	}
 
->>>>>>> Stashed changes
 	public StoreBean(Integer id, String stname, String bannerurl,
 			String photourl) {
 		super();
@@ -221,8 +211,6 @@ public class StoreBean {
 		this.photourl = photourl;
 	}
 
-<<<<<<< Updated upstream
-=======
 	public WebUserData getWebUserData() {
 		return webUserData;
 	}
@@ -231,7 +219,6 @@ public class StoreBean {
 		this.webUserData = webUserData;
 	}
 
->>>>>>> Stashed changes
 	@Override
 	public String toString() {
 		return "StoreBean [id=" + id + ", stname=" + stname + ", sclass=" + sclass + ", saddress=" + saddress
