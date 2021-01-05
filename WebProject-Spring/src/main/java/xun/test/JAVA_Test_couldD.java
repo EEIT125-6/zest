@@ -1,4 +1,4 @@
-package xun.controller;
+package xun.test;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

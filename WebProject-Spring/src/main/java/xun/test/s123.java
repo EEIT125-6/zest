@@ -1,4 +1,4 @@
-package xun.controller;
+package xun.test;
 
 import java.util.ArrayList;
 import java.util.List;

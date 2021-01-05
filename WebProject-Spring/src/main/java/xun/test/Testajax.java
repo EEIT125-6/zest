@@ -1,4 +1,4 @@
-package xun.controller;
+package xun.test;
 
 public class Testajax {
 	public static void main(String[] args) {

@@ -42,7 +42,8 @@ public class RootAppConfig {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		/* 掃描的package暫時留空，有需要時請填入 */
 		factory.setPackagesToScan(new String[] { 
-				"xun"
+				"xun",
+				"dashborad"
 				});
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());

@@ -18,7 +18,8 @@ import xun.AOP.LogAspect;
 /* 掃描的package暫時留空，有需要時請填入 */
 @ComponentScan({
 	"config",
-	"xun"
+	"xun",
+	"dashborad"
 })
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean

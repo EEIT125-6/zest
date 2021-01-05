@@ -28,6 +28,7 @@
 			<a class="search-bar-icon" href="#"><i class="fas fa-search" style="font-size: 25px; color: yellow"></i>
 				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">搜尋餐廳</span>
 			</a>
+			<a href="<c:url value='/dashborad_order'/>">Dash</a>
 		</p>
 	</div>
 
