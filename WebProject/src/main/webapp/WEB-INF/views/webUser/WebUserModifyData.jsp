@@ -288,13 +288,9 @@
                 		}	
                 	}
                 	function doUpdate() {
-                		let oldFirstName = document.getElementById("originalFirstName").value.trim();
                 		let newFirstName = document.getElementById("updatedFirstName").value.trim();
-                		let oldLastName = document.getElementById("originalLastName").value.trim();
                 		let newLastName = document.getElementById("updatedLastName").value.trim();
-                		let oldNickname = document.getElementById("originalNickname").value.trim();
                 		let newNickname = document.getElementById("updatedNickname").value.trim();
-                		let oldFervor = document.getElementById("originalFervor").value.trim();
                 		let fervorObj = document.getElementsByClassName("updatedFervor");
                 		let newFervor = "";
                 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
@@ -303,22 +299,14 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let oldEmail = document.getElementById("originalEmail").value.trim();
                 		let newEmail = document.getElementById("updatedEmail").value.trim();
                 		let emailCheckCode = document.getElementById("emailCheckCode").value.trim();
-                		let oldPhone = document.getElementById("originalPhone").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
-                		let oldGetEmail = document.getElementById("originalGetEmail").value.trim();
-                		let getEmailObj = document.getElementsByClassName("updatedGetEmail");
                 		let newGetEmail =(document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
                 		newGetEmail = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
-                		let oldLocationCode = document.getElementById("originalLocationCode").value.trim();
                 		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
-                		let oldAddr0 = document.getElementById("originalAddr0").value.trim();
                 		let newAddr0 = document.getElementById("updatedAddr0").value.trim();
-                		let oldAddr1 = document.getElementById("originalAddr1").value.trim();
                 		let newAddr1 = document.getElementById("updatedAddr1").value.trim();
-                		let oldAddr2 = document.getElementById("originalAddr2").value.trim();
                 		let newAddr2 = document.getElementById("updatedAddr2").value.trim();
                 		
                 		let updateSpan = document.getElementById("updatedSpan");
@@ -337,28 +325,17 @@
 							type:"POST",
 							url:"<c:url value='/webUser/controller/WebUserModifyData' />",
 							data:{
-				            	'oldFirstName':oldFirstName,
 				            	'newFirstName':newFirstName,
-				            	'oldLastName':oldLastName,
 								'newLastName':newLastName,
-								'oldNickname':oldNickname,
 								'newNickname':newNickname,
-								'oldFervor':oldFervor,
 								'newFervor':newFervor,
-								'oldEmail':oldEmail,
 								'newEmail':newEmail,
 								'inputCheckCode':emailCheckCode,
-								'oldPhone':oldPhone,
 								'newPhone':newPhone,
-								'oldGetEmail':oldGetEmail,
 								'newGetEmail':newGetEmail,
-								'oldLocationCode':oldLocationCode,
 								'newLocationCode':newLocationCode,
-								'oldAddr0':oldAddr0,
 								'newAddr0':newAddr0,
-								'oldAddr1':oldAddr1,
 								'newAddr1':newAddr1,
-								'oldAddr2':oldAddr2,
 								'newAddr2':newAddr2
 				            },
 				            dataType:"json",

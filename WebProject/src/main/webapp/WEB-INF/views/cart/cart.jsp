@@ -239,11 +239,10 @@ ul.slides li img {
 						<td>${product.product_shop}</td>
 						<td>${product.product_name}</td>
 						<td><img
-							src="${pageContext.request.contextPath }/productInfo/images/${product.product_picture}.jpg"
+							src="<c:url value='/images/${product.product_picture}'/> "
 							width="120px"></td>
 						<td id="aa">${product.product_price}</td>
 						<td><input list="quantities" name="quantity" class="qu"> <datalist id="quantities">
-								<option value="0">
 								<option value="1">
 								<option value="2">
 								<option value="3">
@@ -262,8 +261,8 @@ ul.slides li img {
 			<button type="button" class="continueShopping">
 				<a href="${pageContext.request.contextPath}/controller/mallRedirector">繼續購物</a>
 			</button>
-			<button type="button">
-				<a href="">結帳</a>
+			<button type="button" class="checkOut">
+				<a href="${pageContext.request.contextPath}/controller/checkout"> 結帳</a>
 			</button>
 		</form>
 

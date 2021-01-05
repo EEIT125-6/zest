@@ -23,7 +23,8 @@ import org.springframework.web.servlet.view.JstlView;
 	"model",
 	"service",
 	"dao",
-	"controller"})
+	"controller",
+	"board"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
@@ -60,5 +61,8 @@ public class WebAppConfig implements WebMvcConfigurer {
 		// By mp4056
 		registry.addResourceHandler("/productInfo/images/**")
 		.addResourceLocations("/WEB-INF/views/images/productInfo/images/");
+		// By Brandon-Chen1122
+		registry.addResourceHandler("/star/**")
+		.addResourceLocations("/WEB-INF/views/orange/images/");
 	}
 }

@@ -302,6 +302,9 @@ function checkEmail() {
 	} else if(emailObjValue.indexOf("@") == -1 || emailObjValue.split("@").length > 2 || emailObjValue.indexOf(" ") != -1) {
 		emailStr = "信箱資訊格式錯誤";
 		emailIsOk = false;
+	} else if(emailObjValue.indexOf("@") == emailObjValue.length - 1 || emailObjValue.lastIndexOf(".") == emailObjValue.length - 1) {
+		emailStr = "信箱資訊格式錯誤";
+		emailIsOk = false;
 	} else if (emailObjValue == oldEmailObjValue) {
 		emailStr = "信箱資訊已填寫完成";
 		emailIsOk = true;

@@ -120,6 +120,24 @@ span.price {
   }
 }
 </style>
+<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(".qu").onload(function() {
+				var ProdPrice = parseInt($(this).parent().prev().text());
+				var SelVal = $(this).val();
+				var Result = ProdPrice * SelVal;
+				var total = 0;
+				$(this).parent().next().html(Result);
+				$(".re").each(function() {
+					total += parseInt($(this).text());
+					console.log($(this).text())
+				})
+
+				$("#tot").html(total);
+
+			})
+		</script>
 </head>
 <body>
 
@@ -127,7 +145,7 @@ span.price {
 <div class="row">
   <div class="col-75">
     <div class="container">
-      <form action="資訊串接綠界金流">
+      <form action="資訊串接綠界金流" class="qu">
       
         <div class="row">
           <div class="col-50">
@@ -168,7 +186,7 @@ span.price {
           
         </div>
         <label>
-          <input type="checkbox" checked="checked" name="sameadr"> 郵寄地址同帳單地址
+          <input type="checkbox" checked="checked" name="sameadr"> 商品郵寄地址同帳單地址
         </label>
         <input type="submit" value="繼續結帳(將導向至綠界金流支付頁面)" class="btn">
       </form>
@@ -178,11 +196,14 @@ span.price {
     <div class="container">
       <h4>您的購物車項目 <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i><b><c:out value="${fn:length(products)}"/><c:out value="個商品"/></b></span></h4>
       <c:forEach var="product" items="${products}">
-      <p><span>${product.product_name}</span><span class="price"><c:out value="NT$"/>${product.product_price}</span></p>
+      <p><span>${product.product_name}<c:out value=" x"/></span><span class="price"><c:out value="NT$"/>${product.product_price}</span></p>
       <hr>
       </c:forEach>
-      <p>總計<span class="price" style="color:black"><b>$30</b></span></p>
+      <p>總計<span id="tot" class="price" style="color:black"><b></b></span></p>
     </div>
+    <button type="button" class="dropOrder">
+				<a href="<c:url value="/controller/mallRedirector"/>"onclick ="return confirm('是否確定? 您即將返回購物商城')">放棄訂單</a>
+	</button>
   </div>
 </div>
 
