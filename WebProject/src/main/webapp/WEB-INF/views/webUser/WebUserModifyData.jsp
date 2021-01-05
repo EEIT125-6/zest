@@ -155,7 +155,7 @@
 						<hr />
 						<label>帳號圖示：</label>
                 		<c:if test="${selfData.iconUrl == ''}" >
-                			<img src="<c:url value='/image/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
+                			<img src="<c:url value='/images/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
                 		</c:if>
                 		<c:if test="${selfData.iconUrl != ''}" >
                 			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
@@ -345,7 +345,19 @@
 								contentType : false,
 								processData : false,
 								success:function(resultObj) {
-								
+									if (resultObj.resultCode == "true") {
+										picStr = resultObj.resultMessage;
+										alert(picStr);
+										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+										picSpan.style.color = "green";
+										picSpan.style.fontStyle = "normal";
+									} else {
+										picStr = resultObj.resultMessage;
+										alert(picStr);
+										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+										picSpan.style.color = "red";
+										picSpan.style.fontStyle = "italic";
+									}
 								},
 								error:function(err) {
 									picStr = "發生錯誤，無法上傳";

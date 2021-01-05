@@ -103,8 +103,4 @@ public class ProductInfoBean {
 				+ product_shop + ", product_price=" + product_price + ", product_picture=" + product_picture
 				+ ", product_quantity=" + product_quantity + ", storebean=" + storebean + "]";
 	}
-
-	
-	
-	
 }

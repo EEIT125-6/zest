@@ -559,8 +559,7 @@ public class WebUserController {
 	
 	/* 執行使用者圖像修改 */
 	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, String> doUpdateWebUserIcon(
-			Model model,
+	public @ResponseBody Map<String, String> doUpdateWebUserIcon(Model model,
 			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) {
 		
 		/* 宣告參數 */
@@ -569,6 +568,8 @@ public class WebUserController {
 		Boolean updateIconUrlResult = false;
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 更新用物件 */
+		WebUserData updatedData = userData;
 		
 		if (userData == null) {
 			message = "使用者未登入！請登入後再進行本操作";
@@ -577,6 +578,7 @@ public class WebUserController {
 		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
 			message = "使用者驗證失敗！";
 		}
+		
 		if (picFile == null) {
 			message = "未上傳任何檔案！";
 		}
@@ -588,30 +590,69 @@ public class WebUserController {
 		/* 取得使用者ID */
 		String userId = userData.getUserId();
 		/* 組成新圖示的相對路徑 */
-		String newIconUrl = "/image/webUser/" + userId + "/" + realFileName;
+		String newIconUrl = "/images/webUser/" + userId + "/" + realFileName;
 		
 		if (message.equals("")) {
 			/* 執行圖片更新 */
 			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			/* 圖片更新成功 */
 			if (map.get("resultCode").equals("true")) {
 				/* 更新DB上的資料 */
-				
+				/* 調用服務裡的方法 */
+				try {
+					updatedData.setIconUrl(newIconUrl);
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
+					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+				} catch (SQLException sqlE) {
+					String getDataMessageTmp = sqlE.getMessage();
+					message = getDataMessageTmp.split(":")[1];
+				}
 				/* 更新圖片、更新DB都成功 */
 				if (updateIconUrlResult) {
-					/* 刪除暫存檔 */
-					
+					if (!oldUrl.equals("")) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							updateIconUrlResult = deletedOldPic.delete();
+						}
+						message = (updateIconUrlResult) ? message : "圖示更新成功但移除暫存檔案失敗";
+					}
+					map.put("resultCode", updateIconUrlResult.toString());
 				/* 更新圖片成功但更新DB失敗 */
 				} else {
 					/* 刪除新增的圖檔 */
-					
+					String newFilePath = defaultAddress + newIconUrl;
+					File deletedNewPic = new File(newFilePath);
+					Boolean killNewPic = deletedNewPic.delete();
 					/* 重新命名舊圖檔 */
-					
+					if (killNewPic) {
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
 				}
+				message = (message.equals("")) ? "圖示已順利更新完成！" : message;
 			} else {
-				
+				message = map.get("resultMessage");
 			}
+			map.put("resultMessage", message);
+			return map;
+		} else {
+			map.put("resultCode", updateIconUrlResult.toString());
+			map.put("resultMessage", message);
 		}
-		return null;
+		return map;
 	}
 	
 	/* 執行密碼以外的資料修改 */
@@ -1158,6 +1199,112 @@ public class WebUserController {
 		resultMap.put("resultMessage", resultMessage);
 		
 		return resultMap;
+	}
+	
+	/* 執行管理員修改圖示 */
+	@PostMapping(value = "/controller/WebUserAdminModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doAdminUpdateWebUserIcon(Model model,
+			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) 
+	{
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean updateIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		WebUserData managedUserData = (WebUserData) model.getAttribute("managedUserData");
+		/* 更新用物件 */
+		WebUserData updatedData = managedUserData;
+		
+		/* 檢查JavaBean物件 */
+		if (userData == null) {
+			message = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			message = "身分驗證失敗，請登入後重試一次！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			message = "本帳號無法使用此功能";
+		} else if (userData.getAccountLv().getLv() != -1) {
+			message = "本帳號無法使用此功能";
+		} else if (managedUserData.getAccountLv().getLv() != Integer.parseInt(managedUserData.getUserId().substring(0, 1)) - 1) {
+			message = "欲操作的帳號無法執行修改，請檢查帳號資料的完整性/正確性";
+		} else if (managedUserData.getStatus().equals("quit") || managedUserData.getStatus().equals("inactive")) {
+			message = "欲操作的帳號無法執行修改，請先恢復帳號的權限!";
+		} 
+		
+		if (picFile == null) {
+			message = "未上傳任何檔案！";
+		}
+		
+		/* 取出上傳檔案的檔名 */
+		String realFileName = picFile.getOriginalFilename();
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = managedUserData.getIconUrl();
+		/* 取得使用者ID */
+		String userId = managedUserData.getUserId();
+		/* 組成新圖示的相對路徑 */
+		String newIconUrl = "/images/webUser/" + userId + "/" + realFileName;
+		
+		if (message.equals("")) {
+			/* 執行圖片更新 */
+			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			/* 圖片更新成功 */
+			if (map.get("resultCode").equals("true")) {
+				/* 更新DB上的資料 */
+				/* 調用服務裡的方法 */
+				try {
+					updatedData.setIconUrl(newIconUrl);
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
+					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+				} catch (SQLException sqlE) {
+					String getDataMessageTmp = sqlE.getMessage();
+					message = getDataMessageTmp.split(":")[1];
+				}
+				/* 更新圖片、更新DB都成功 */
+				if (updateIconUrlResult) {
+					if (!oldUrl.equals("")) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							updateIconUrlResult = deletedOldPic.delete();
+						}
+						message = (updateIconUrlResult) ? message : "圖示更新成功但移除暫存檔案失敗";
+					}
+					map.put("resultCode", updateIconUrlResult.toString());
+				/* 更新圖片成功但更新DB失敗 */
+				} else {
+					/* 刪除新增的圖檔 */
+					String newFilePath = defaultAddress + newIconUrl;
+					File deletedNewPic = new File(newFilePath);
+					Boolean killNewPic = deletedNewPic.delete();
+					/* 重新命名舊圖檔 */
+					if (killNewPic) {
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
+				}
+				message = (message.equals("")) ? "圖示已順利更新完成！" : message;
+			} else {
+				message = map.get("resultMessage");
+			}
+			map.put("resultMessage", message);
+			return map;
+		} else {
+			map.put("resultCode", updateIconUrlResult.toString());
+			map.put("resultMessage", message);
+		}
+		return map;
 	}
 	
 	/* 執行管理員修改 */
@@ -2502,6 +2649,10 @@ public class WebUserController {
 			} catch (Exception e) {
 				message = e.getMessage();
 			}
+			
+			if (message.equals("") && !creResult) {
+				message = "無法新增圖檔！";
+			}
 		/* 如果原本有圖檔，就需要先刪除後再新增 */	
 		} else {
 			try {
@@ -2517,6 +2668,13 @@ public class WebUserController {
 				} catch (Exception e) {
 					message = e.getMessage();
 				}
+			/* 失敗 */
+			} else {
+				message = "無法刪除舊有檔案！";
+			}
+			
+			if (message.equals("") && !creResult) {
+				message = "無法新增圖檔！";
 			}
 		}
 		map.put("resultCode", creResult.toString());
@@ -2558,7 +2716,14 @@ public class WebUserController {
 				String tempFileName = picFile.getName();
 				String finalTempFileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")) + "_tmp" + tempFileName.substring(tempFileName.lastIndexOf("."));
 				/* 刪除前先建立備份檔 */
-				FileUtils.moveFile(picFile, new File(finalTempFileName));
+				/* 檢查備份檔是否存在 */
+				File tmpOldPic = new File(finalTempFileName);
+				/* 存在則先刪除舊有的 */
+				if (tmpOldPic.exists()) {
+					tmpOldPic.delete();
+				}
+				/* 複製檔案 */
+				FileUtils.copyFile(picFile, tmpOldPic);
 				/* 再執行刪除 */
 				picDelResult = picFile.delete();
 			}
@@ -2620,6 +2785,7 @@ public class WebUserController {
 			while((length = is.read(buffer)) != -1) {
 				fos.write(buffer, 0, length);
 			}
+			writeResult = true;
 		} catch(IOException ioE) {
 			throw new Exception(ioE.getMessage());
 		}

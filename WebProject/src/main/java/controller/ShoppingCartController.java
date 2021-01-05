@@ -82,7 +82,12 @@ public class ShoppingCartController {
 	@GetMapping(value="/checkout") //導向至購物車結帳頁面
 	public String checkOuter(HttpSession session) {
 		System.out.println("checkOutInitialized");
+		List<ProductInfoBean>list = (List<ProductInfoBean>)session.getAttribute("products");
+		if(list==null) {
+			return "product/mall";
+		}else {
 		return "checkout/checkout";
+		}
 	}
 	
 	@GetMapping(value = "/itemadd") // 加入選定項目進入購物車
