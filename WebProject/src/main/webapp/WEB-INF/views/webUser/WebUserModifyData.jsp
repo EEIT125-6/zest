@@ -167,8 +167,6 @@
                 		<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${selfData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
                 		<input type="hidden" name="newIconUrl" id="newIconUrl">
-                		<span id="picSpan"></span>
-                		<hr />
                 		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
                 		<span id="picSpan"></span>
                 		<hr />

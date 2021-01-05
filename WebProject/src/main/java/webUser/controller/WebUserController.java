@@ -1,5 +1,9 @@
 package webUser.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -12,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +94,7 @@ public class WebUserController {
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 	
 	/* Default Project Physical Address */
-	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
@@ -553,11 +558,12 @@ public class WebUserController {
 	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserIcon(
 			Model model,
-			@RequestParam(value = "pic") CommonsMultipartFile picFile) {
+			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) {
 		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String message = "";
+		Boolean updateIconUrlResult = false;
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
@@ -567,6 +573,9 @@ public class WebUserController {
 			message = "使用者無權進行本動作！";
 		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
 			message = "使用者驗證失敗！";
+		}
+		if (picFile == null) {
+			message = "未上傳任何檔案！";
 		}
 		
 		/* 取出上傳檔案的檔名 */
@@ -578,6 +587,27 @@ public class WebUserController {
 		/* 組成新圖示的相對路徑 */
 		String newIconUrl = "/image/webUser/" + userId + "/" + realFileName;
 		
+		if (message.equals("")) {
+			/* 執行圖片更新 */
+			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			if (map.get("resultCode").equals("true")) {
+				/* 更新DB上的資料 */
+				
+				/* 更新圖片、更新DB都成功 */
+				if (updateIconUrlResult) {
+					/* 刪除暫存檔 */
+					
+				/* 更新圖片成功但更新DB失敗 */
+				} else {
+					/* 刪除新增的圖檔 */
+					
+					/* 重新命名舊圖檔 */
+					
+				}
+			} else {
+				
+			}
+		}
 		return null;
 	}
 	
@@ -2454,43 +2484,140 @@ public class WebUserController {
 	}
 	
 	/* 圖像檔案處理 */
-	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl) {
+	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
 		/* 變數宣告 */
 		Map<String, String> map = new HashMap<>();
-		String oldIconPath = defaultAddress + oldIconUrl;
-		String newIconPath = (newIconUrl.equals("")) ? "" : defaultAddress + newIconUrl;
-		
+		String oldIconPath = (oldIconUrl.equals("")) ? "" : defaultAddress + oldIconUrl;
+		String newIconPath = defaultAddress + newIconUrl;
+		String message = "";
+		Boolean delResult = false;
+		Boolean creResult = false;
 		/* 如果原本沒有圖檔，就直接新建檔案 */
 		if (oldIconPath.equals("")) {
-			
+			try {
+				creResult = doCreateNewIcon(newIconPath, pic);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
 		/* 如果原本有圖檔，就需要先刪除後再新增 */	
 		} else {
+			try {
+				delResult = doDeleteOldIcon(oldIconPath);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
 			
+			/* 成功才繼續 */
+			if (delResult) {
+				try {
+					creResult = doCreateNewIcon(newIconPath, pic);
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+			}
 		}
-		return null;
+		map.put("resultCode", creResult.toString());
+		map.put("resultMessage", message);
+		return map;
 	}
 	
 	/* 刪除舊檔案 */
 	public Boolean doDeleteOldIcon(String oldIconPath) throws Exception{
+		/* 參數宣告 */
 		Boolean delResult = false;
+		Boolean userDirExist = false;
+		Boolean picDelResult = false;
+		/* 使用者目錄 */
+		String userDirPath = oldIconPath.substring(0,oldIconPath.lastIndexOf("/"));
 		/* 確認使用者目錄是否已建立 */
-		
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
 		/* 確認該路徑是否有檔案存在 */
-		
-		/* 執行刪除 */
-		
+		if (userDirExist) {
+			File picFile = new File(oldIconPath);
+			if (!picFile.exists()) {
+				delResult = false;
+			/* 有才執行刪除 */
+			} else {
+				String tempFileName = picFile.getName();
+				/* 刪除前先建立備份檔 */
+				FileUtils.moveFile(picFile, new File(picFile.getName()+"_tmp"));
+				/* 再執行刪除 */
+				picDelResult = picFile.delete();
+			}
+		}
+		delResult = (picDelResult) ? true : delResult;
 		return delResult;
 	}
 	
 	/* 建立新檔案 */
-	public Boolean doCreateNewIcon(String newIconPath) throws Exception{
-		Boolean delResult = false;
-		/* 檢查使用者目錄是否已建立 */
-		
+	public Boolean doCreateNewIcon(String newIconPath, CommonsMultipartFile pic) throws Exception{
+		/* 參數宣告 */
+		Boolean creResult = false;
+		Boolean userDirExist = false;
+		Boolean picCreResult = false;
+		/* 使用者目錄 */
+		String userDirPath = newIconPath.substring(0,newIconPath.lastIndexOf("/"));
+		/* 確認使用者目錄是否已建立 */
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
 		/* 檢查目錄下是否已有該檔案 */
-		
-		/* 執行新增 */
-		
-		return delResult;
+		if (userDirExist) {
+			File picFile = new File(newIconPath);
+			/* 有則先刪再建 */
+			if (picFile.exists()) {
+				/* 先刪除 */
+				picCreResult = picFile.delete();
+				/* 再建立 */
+				picCreResult = (picCreResult) ? doWritePicIntoFile(picFile, pic) : picCreResult;
+			/* 沒有就直接執行新增 */
+			} else {
+				picCreResult = doWritePicIntoFile(picFile, pic);
+			}
+		}
+		creResult = (picCreResult) ? true : creResult;
+		return creResult;
+	}
+	
+	/* 寫入新檔案 */
+	public Boolean doWritePicIntoFile(File picFile, CommonsMultipartFile pic) throws Exception{
+		Boolean writeResult = false;
+		/* 使用CommonsMultipartFile的getInputStream()取得InputStream */
+		try (InputStream is = pic.getInputStream();
+			FileOutputStream fos = new FileOutputStream(picFile)) 
+		{
+			byte[] buffer = new byte[1024]; 
+			int length = -1;
+			while((length = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, length);
+			}
+		} catch(IOException ioE) {
+			throw new Exception(ioE.getMessage());
+		}
+		return writeResult;
 	}
 }

@@ -4,18 +4,6 @@
 <div class="container-fluid  header"
 	style="height: 100px; border-bottom: 3px solid #e76f51; height: 90px; padding-top: 5px; background-color: #003049">
 	<div class="container">
-<<<<<<< Updated upstream
-		<a href="${pageContext.request.contextPath}/"> <!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
-			<%-- 		 <c:set var = "logo" value = "/Images/LOGO1-removebg-preview.png"/> --%>
-			<c:set var="logo" value="LOGO1-removebg-preview.png" /> <%-- 		<img src="photo/<c:out value = "${logo }"/>" --%>
-			
-<!-- 			<img src="Images/LOGO1-removebg-preview.png" -->
-			<img src="${pageContext.request.contextPath}/Images/LOGO1-removebg-preview.png"
-			<%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
-			style="float: left; height: 70px;"></a>
-		<p
-			style="text-align: right; font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;; float: right">
-=======
 		<!--<img src="Images/LOGO1-removebg-preview.png" -->
 		<%--<c:set var = "logo" value = "/Images/LOGO1-removebg-preview.png"/> --%>
 		<!--<img src="photo/<c:out value = "${logo }"/>" -->
@@ -26,7 +14,6 @@
 				style="float: left; height: 70px;"></a>
 			<%-- 		<img src="${pageContext.request.contextPath}/xun/photo/${logo}" --%>
 			<p style="text-align: right; font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650; float: right">
->>>>>>> Stashed changes
 			<br> 
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user" style="font-size: 25px; color: yellow"></i>
@@ -125,13 +112,8 @@
 <%-- 					href="${pageContext.request.contextPath}/webUser/WebUserLogoutManual.jsp"> --%>
 <!-- 					登出 |</a> -->
 <%-- 			</c:if> --%>
-<<<<<<< Updated upstream
-<!-- 			<!--    <img src="Images/PLZPLZ-removebg-preview.png" --> -->
-<!-- 			<!--     class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> --> -->
-=======
 <!-- 			<!--    <img src="Images/PLZPLZ-removebg-preview.png" -->
 <!-- 			<!--     class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> -->
->>>>>>> Stashed changes
 <!-- 			<i class="fas fa-shopping-cart" -->
 <!-- 				style="font-size: 25px; color: yellow"></i> <a -->
 <%-- 				href="${pageContext.request.contextPath}/product/index.jsp"> --%>

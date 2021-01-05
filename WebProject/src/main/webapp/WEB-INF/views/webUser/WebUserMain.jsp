@@ -166,8 +166,6 @@
 						</div>
                 	</fieldset>
                 </form>
-<<<<<<< Updated upstream
-=======
                 <c:if test="${userFullData.accountLv.lv == 1}" >
 	                <form action="#" method="post">
 	                	<fieldset>
@@ -178,7 +176,6 @@
 	                	</fieldset>
 	                </form>
        			</c:if>
->>>>>>> Stashed changes
                 <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
