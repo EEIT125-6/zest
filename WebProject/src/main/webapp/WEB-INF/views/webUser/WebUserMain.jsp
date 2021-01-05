@@ -166,6 +166,16 @@
 						</div>
                 	</fieldset>
                 </form>
+                <c:if test="${userFullData.accountLv.lv == 1}" >
+	                <form action="#" method="post">
+	                	<fieldset>
+	                		<div align="center">
+                				<button type="submit" id="AddShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
+                				<hr />
+	                		</div>
+	                	</fieldset>
+	                </form>
+       			</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">

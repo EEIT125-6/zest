@@ -27,6 +27,11 @@ public class DisplayController {
 		
 	}
 	
+	@GetMapping("/booking/updateResult")
+	public String fail() {
+		return "booking/updateResult";
+	}
+	
 	@GetMapping("/booking/Index1")
 	public String home() {
 		return "booking/Index1";

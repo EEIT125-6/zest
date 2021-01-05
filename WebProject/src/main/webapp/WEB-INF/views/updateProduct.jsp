@@ -70,7 +70,7 @@ body {
                 <br>
                 <c:if test="${productInfoBean.product_picture !=null }">
                 <label>目前的商品圖片:
-                	<img  src="${productInfoBean.product_picture}" style="width:50px;height:50px">
+                	<img  src="${pageContext.request.contextPath}/123/${productInfoBean.product_picture}" style="width:50px;height:50px">
                 </label>
                 </c:if>
                 <label>商品照片:

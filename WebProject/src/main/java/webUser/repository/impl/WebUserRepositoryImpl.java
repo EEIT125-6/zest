@@ -228,6 +228,19 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取出資料，理論上陣列中只會有一筆資料 */
 		return (list.size() == 1) ? list.get(0) : null;
 	}
+	
+	/* 取得使用者個人資料 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public WebUserData getWebUserDataById(String userId) throws SQLException {
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.userId = :userId";
+		/* 取得當前Session，執行HQL以取得陣列 */
+		List<WebUserData> list = getSession().createQuery(hql).setParameter("userId", userId)
+				.getResultList();
+		/* 取出資料，理論上陣列中只會有一筆資料 */
+		return (list.size() == 1) ? list.get(0) : null;
+	}
 
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")

@@ -22,6 +22,7 @@ public class BoardBean {
 	private Date date;
 	private String context;
 	private String photo;
+	private Integer status;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "Store_Id")
 	private StoreBean storebean;
@@ -45,6 +46,19 @@ public class BoardBean {
 		this.context = pcontext;
 		this.photo=pphoto;
 		this.storebean=storebean;
+	}
+	
+	public BoardBean(Integer boardid, String name, Integer star, Date date, String context, String photo,
+			Integer status, StoreBean storebean) {
+		super();
+		this.boardid = boardid;
+		this.name = name;
+		this.star = star;
+		this.date = date;
+		this.context = context;
+		this.photo = photo;
+		this.status = status;
+		this.storebean = storebean;
 	}
 	
 	public Integer getBoardid() {
@@ -82,5 +96,11 @@ public class BoardBean {
 	}
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

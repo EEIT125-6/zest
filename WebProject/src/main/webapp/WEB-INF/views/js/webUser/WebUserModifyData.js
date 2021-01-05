@@ -556,7 +556,8 @@ function checkAddr2() {
 }
 
 function clearMessage() {
-	document.getElementById("passwordSpan").innerHTML = "";
+	document.getElementById("picSpan").innerHTML = "";
+	document.getElementById("picPreview").src = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";

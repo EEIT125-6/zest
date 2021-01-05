@@ -149,16 +149,13 @@
 				<c:if test="${empty userFullData}">
 					<c:redirect url="WebUserLogin.jsp" />
 				</c:if>
-                <form method="post">
-                	<fieldset>
-                		<legend>以下為您可變更的資料：</legend>
-                		<span id="updatedResultSpan"></span>
-						<input type="hidden" name="account" id="account" value="${selfData.account}">
-                		<span id="updatedResultSpan"></span>
-                		<hr />
-                		<label>帳號圖示：</label>
+				<form method="post" enctype="multipart/form-data">
+					<fieldset>
+						<legend>以下為您可變更的資料：</legend>
+						<hr />
+						<label>帳號圖示：</label>
                 		<c:if test="${selfData.iconUrl == ''}" >
-                			<img src='${pageContext.request.contextPath}/image/webUser/default/ncu_scens.jpg"+"' width='200' height='200' title='這是系統預設的帳號圖示'>
+                			<img src="<c:url value='/image/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
                 		</c:if>
                 		<c:if test="${selfData.iconUrl != ''}" >
                 			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
@@ -170,8 +167,15 @@
                 		<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${selfData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
                 		<input type="hidden" name="newIconUrl" id="newIconUrl">
+                		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
                 		<span id="picSpan"></span>
                 		<hr />
+					</fieldset>
+				</form>
+                <form method="post">
+                	<fieldset>
+                		<span id="updatedResultSpan"></span>
+						<input type="hidden" name="account" id="account" value="${selfData.account}">
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
 						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
@@ -293,18 +297,66 @@
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
                 <script>
-                	$(document).ready(function () {
-                		document.getElementById("emailSendSpace").style = "display:none";
-                		$("#iconUrl").change(function () {
-                			if (this.files && this.files[0]) {
-                				var picReader = new FileReader();
-                				picReader.onload = function (e) {
-                					$('#picPreview').attr('src', e.target.result);
-                				};
-                				picReader.readAsDataURL(this.files[0]);
-                			}
-                		});
+	                $(document).ready(function () {
+						document.getElementById("uploadPic").style = "display:none";
+						document.getElementById("picPreview").style = "display:none";
+						$("#iconUrl").change(function () {
+	            			if (this.files && this.files[0]) {
+	            				var picReader = new FileReader();
+	            				document.getElementById("picPreview").style = "display:inline";
+	            				picReader.onload = function (e) {
+	            					$('#picPreview').attr('src', e.target.result);
+	            				};
+	            				picReader.readAsDataURL(this.files[0]);
+	            				var pName = this.files[0].name;
+	            				var oldPNameTmp = (document.getElementById("oldIconUrl").value.trim() == '') ? '' : document.getElementById("oldIconUrl").value;
+	            				var oldPName = (oldPNameTmp == '') ? '' : oldPNameTmp.split("/")[oldPNameTmp.split("/").length - 1];
+	            				var picSpan = document.getElementById("picSpan");
+	            				var picStr = "";
+	            				
+	           					picStr = "圖片已設定完畢";
+	           					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+			            		picSpan.style.color = "black";
+			            		picSpan.style.fontStyle = "normal";
+			            		document.getElementById("uploadPic").style = "display:inline";
+	            			}
+	            		});
+					});
+                	
+                	$("#uploadPic").click(function() {
+                		picUpload();
                 	});
+                	function picUpload() {
+                		let choice=confirm("是否確定要上傳指定的圖片？");
+                		if (choice == true) {
+                			var picForm = new FormData();
+                			var pic = $("#iconUrl")[0].files[0];
+                			picForm.append("pic", pic);
+                			
+                			picStr = "...處理中，請稍後";
+           					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + picStr;
+		            		picSpan.style.color = "black";
+		            		picSpan.style.fontStyle = "normal";
+		            		
+		            		$.ajax({
+		            			type:"POST",
+					            url:"<c:url value='/webUser/controller/WebUserModifyIcon' />",
+								data : picForm,
+								contentType : false,
+								processData : false,
+								success:function(resultObj) {
+								
+								},
+								error:function(err) {
+									picStr = "發生錯誤，無法上傳";
+									alert(picStr);
+									picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+									picSpan.style.color = "red";
+									picSpan.style.fontStyle = "italic";
+								}
+		            		});
+                		}
+                	}
                 	
                 	$("#updateConfirm").click(function() {
                 		checkUpdate();

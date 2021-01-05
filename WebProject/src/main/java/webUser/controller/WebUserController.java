@@ -1,5 +1,9 @@
 package webUser.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -12,6 +16,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
@@ -86,7 +95,10 @@ public class WebUserController {
 	
 	/* Default Account List */
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
-
+	
+	/* Default Project Physical Address */
+	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
 	public String doCreateRegisterForm(Model model) {
@@ -545,9 +557,66 @@ public class WebUserController {
 		return "webUser/WebUserModifyData";
 	}
 	
+	/* 執行使用者圖像修改 */
+	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doUpdateWebUserIcon(
+			Model model,
+			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) {
+		
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean updateIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		
+		if (userData == null) {
+			message = "使用者未登入！請登入後再進行本操作";
+		} else if (userData.getStatus() == "quit" || userData.getStatus() == "inactive") {
+			message = "使用者無權進行本動作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
+			message = "使用者驗證失敗！";
+		}
+		if (picFile == null) {
+			message = "未上傳任何檔案！";
+		}
+		
+		/* 取出上傳檔案的檔名 */
+		String realFileName = picFile.getOriginalFilename();
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = userData.getIconUrl();
+		/* 取得使用者ID */
+		String userId = userData.getUserId();
+		/* 組成新圖示的相對路徑 */
+		String newIconUrl = "/image/webUser/" + userId + "/" + realFileName;
+		
+		if (message.equals("")) {
+			/* 執行圖片更新 */
+			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			if (map.get("resultCode").equals("true")) {
+				/* 更新DB上的資料 */
+				
+				/* 更新圖片、更新DB都成功 */
+				if (updateIconUrlResult) {
+					/* 刪除暫存檔 */
+					
+				/* 更新圖片成功但更新DB失敗 */
+				} else {
+					/* 刪除新增的圖檔 */
+					
+					/* 重新命名舊圖檔 */
+					
+				}
+			} else {
+				
+			}
+		}
+		return null;
+	}
+	
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserModifyData")
+	@PostMapping(value = "/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -710,50 +779,6 @@ public class WebUserController {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
-//	/* 回傳所有有效使用者的資料 */
-//	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
-//	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
-//		
-//		/* 參數宣告 */
-//		Map<String, Object> map = new HashMap<>();
-//		Integer getResult = -1;
-//		String getResultMessage = "";
-//		
-//		/* 產生資料陣列 */
-//		List<WebUserData> userDataList = new ArrayList<>();
-//		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-//		
-//		/* 檢查身分 */
-//		if (userData == null) {
-//			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
-//		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
-//			getResultMessage = "本帳號無法使用此功能！";
-//		}
-//		
-//		if (getResultMessage.equals("")) {
-//			/* 調用服務裡的方法 */
-//			try {
-//				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
-//			} catch (SQLException sqlE) {
-//				String getDataMessageTmp = sqlE.getMessage();
-//				getResultMessage = getDataMessageTmp.split(":")[1];
-//			}
-//		}
-//		
-//		if (userDataList != null) {
-//			getResult = 1;
-//			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
-//		} else if (getResultMessage.equals("")) {
-//			getResult = 0;
-//			getResultMessage = "無法查詢到任何有效的使用者資料";
-//		}
-//		
-//		map.put("resultCode", getResult.toString());
-//		map.put("resultMessage", getResultMessage);
-//		map.put("userDataList", userDataList);
-//		return map;
-//	}
-	
 	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
@@ -904,7 +929,7 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
-	@PostMapping("/ManageWebUser/{mode}")
+	@PostMapping(value = "/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
@@ -1057,7 +1082,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
-	@PostMapping(value = "/controller/WebUserAddForm", produces="application/json; charset=UTF-8")
+	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -2459,5 +2484,145 @@ public class WebUserController {
 		map.put("reg_webUser", reg_webUser);
 		map.put("submitMessage", submitMessage);
 		return map;
+	}
+	
+	/* 圖像檔案處理 */
+	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
+		/* 變數宣告 */
+		Map<String, String> map = new HashMap<>();
+		String oldIconPath = (oldIconUrl.equals("")) ? "" : defaultAddress + oldIconUrl;
+		String newIconPath = defaultAddress + newIconUrl;
+		String message = "";
+		Boolean delResult = false;
+		Boolean creResult = false;
+		/* 如果原本沒有圖檔，就直接新建檔案 */
+		if (oldIconPath.equals("")) {
+			try {
+				creResult = doCreateNewIcon(newIconPath, pic);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+		/* 如果原本有圖檔，就需要先刪除後再新增 */	
+		} else {
+			try {
+				delResult = doDeleteOldIcon(oldIconPath);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+			
+			/* 成功才繼續 */
+			if (delResult) {
+				try {
+					creResult = doCreateNewIcon(newIconPath, pic);
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+			}
+		}
+		map.put("resultCode", creResult.toString());
+		map.put("resultMessage", message);
+		return map;
+	}
+	
+	/* 刪除舊檔案 */
+	public Boolean doDeleteOldIcon(String oldIconPath) throws Exception{
+		/* 參數宣告 */
+		Boolean delResult = false;
+		Boolean userDirExist = false;
+		Boolean picDelResult = false;
+		/* 使用者目錄 */
+		String userDirPath = oldIconPath.substring(0,oldIconPath.lastIndexOf("/"));
+		/* 確認使用者目錄是否已建立 */
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
+		/* 確認該路徑是否有檔案存在 */
+		if (userDirExist) {
+			File picFile = new File(oldIconPath);
+			if (!picFile.exists()) {
+				delResult = false;
+			/* 有才執行刪除 */
+			} else {
+				/* 產生暫存檔檔名 */
+				String tempFileName = picFile.getName();
+				String finalTempFileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")) + "_tmp" + tempFileName.substring(tempFileName.lastIndexOf("."));
+				/* 刪除前先建立備份檔 */
+				FileUtils.moveFile(picFile, new File(finalTempFileName));
+				/* 再執行刪除 */
+				picDelResult = picFile.delete();
+			}
+		}
+		delResult = (picDelResult) ? true : delResult;
+		return delResult;
+	}
+	
+	/* 建立新檔案 */
+	public Boolean doCreateNewIcon(String newIconPath, CommonsMultipartFile pic) throws Exception{
+		/* 參數宣告 */
+		Boolean creResult = false;
+		Boolean userDirExist = false;
+		Boolean picCreResult = false;
+		/* 使用者目錄 */
+		String userDirPath = newIconPath.substring(0,newIconPath.lastIndexOf("/"));
+		/* 確認使用者目錄是否已建立 */
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
+		/* 檢查目錄下是否已有該檔案 */
+		if (userDirExist) {
+			File picFile = new File(newIconPath);
+			/* 有則先刪再建 */
+			if (picFile.exists()) {
+				/* 先刪除 */
+				picCreResult = picFile.delete();
+				/* 再建立 */
+				picCreResult = (picCreResult) ? doWritePicIntoFile(picFile, pic) : picCreResult;
+			/* 沒有就直接執行新增 */
+			} else {
+				picCreResult = doWritePicIntoFile(picFile, pic);
+			}
+		}
+		creResult = (picCreResult) ? true : creResult;
+		return creResult;
+	}
+	
+	/* 寫入新檔案 */
+	public Boolean doWritePicIntoFile(File picFile, CommonsMultipartFile pic) throws Exception{
+		Boolean writeResult = false;
+		/* 使用CommonsMultipartFile的getInputStream()取得InputStream */
+		try (InputStream is = pic.getInputStream();
+			FileOutputStream fos = new FileOutputStream(picFile)) 
+		{
+			byte[] buffer = new byte[1024]; 
+			int length = -1;
+			while((length = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, length);
+			}
+		} catch(IOException ioE) {
+			throw new Exception(ioE.getMessage());
+		}
+		return writeResult;
 	}
 }

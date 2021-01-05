@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import model.BookingBean;
 import service.BookingService;
 
@@ -150,7 +152,8 @@ public class BookingController {
 			@RequestParam(value="phone") String phone,
 			@RequestParam(value="mail") String mail,
 			@RequestParam(value="needs") String needs,
-			@RequestParam(value="purpose") String purpose
+			@RequestParam(value="purpose") String purpose,
+			RedirectAttributes ra
 		) {
 		if(checkCancelBooking(bookingdate)==true) {
 			
@@ -165,9 +168,8 @@ public class BookingController {
 			}
 			return "redirect:/booking/Page1";
 		}
-		return "redirect:/booking/Page1";
-		
-		
+		ra.addFlashAttribute("line","已過取消期限");
+		return "redirect:/booking/Page1";	
 	}
 	//改
 	@PostMapping(value="/confirmUpd",params = "confirmUpd")
@@ -207,9 +209,6 @@ public class BookingController {
 	public String good2() {
 		return "booking/cancelResult";
 	}
-	
-	
-	
 }
 
 

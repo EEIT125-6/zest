@@ -64,26 +64,26 @@ public class ProductCUD_Controller {
 		System.out.println(productInfoBean.getStorebean());
 //		處理圖片
 		if(!file.isEmpty()) {
-		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
-		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
-		String FileFormat = FileName.split("\\.")[1];
+			String FileFormat = FileName.split("\\.")[1];
 
-		FileName = productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = productInfoBean.getProduct_name()+"."+FileFormat;
 //		File productphoto = new File(context.getRealPath("/")+FileName);
-		File productphoto = new File(fakePath+FileName);
+			File productphoto = new File(fakePath+FileName);
 		
-		try {
-			file.transferTo(productphoto);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		productInfoBean.setProduct_picture("Images\\"+FileName);
+			try {
+				file.transferTo(productphoto);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			productInfoBean.setProduct_picture("Images\\"+FileName);
 		
 //		執行新增
-		ps.save(productInfoBean);
+			ps.save(productInfoBean);
 		}else {
 			ps.save(productInfoBean);
 		}
@@ -154,7 +154,8 @@ public class ProductCUD_Controller {
 			ps.updateProduct(productInfoBean);
 			
 			}else {
-			String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+//			C:\JavaMVCWorkspace\WebProject\src\main\webapp\WEB-INF\views\images\productInfo\images
 			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
@@ -172,6 +173,7 @@ public class ProductCUD_Controller {
 			}
 //		執行更新
 			productInfoBean.setProduct_picture("Images\\"+FileName);
+			
 			ps.updateProduct(productInfoBean);
 //			System.out.println(productInfoBean);
 		}
@@ -237,6 +239,7 @@ public class ProductCUD_Controller {
 			System.out.println("+++++++++++"+productsprice);
 		}else {
 			storeprice=productsprice.get((productsprice.size()/2)+1);
+			
 			System.out.println(storeprice);
 			System.out.println("-----------"+productsprice);
 		}
@@ -255,6 +258,4 @@ public class ProductCUD_Controller {
 		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
 		System.out.println("成功修改STORE_PRICE是1:"+Result);
 	}
-
-	
 }

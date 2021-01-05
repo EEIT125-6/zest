@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -165,6 +166,12 @@
 <label class="aa">
 <input type="submit" value="查詢訂位" name="select" id="select" >
 </label>
+<label class="aa">
+<c:if test="${line!=null}">
+<c:out value="${line }"/>
+</c:if> 
+</label>
+
 </center>
 <!-- <label class="aa">
 <input type="submit" value="取消訂位" name="cancel" id="cancel" >

@@ -131,6 +131,11 @@ public class WebUserServiceImpl implements WebUserService {
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
 		return webUserDAO.getWebUserData(inputAccount);
 	}
+	
+	@Override
+	public WebUserData getWebUserDataById(String userId) throws SQLException {
+		return webUserDAO.getWebUserDataById(userId);
+	}
 
 	@Override
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {

@@ -58,6 +58,9 @@ public interface WebUserRepository {
 	/* 取得使用者個人資料 */
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;
 	
+	/* 取得使用者個人資料 */
+	public WebUserData getWebUserDataById(String userId) throws SQLException;
+	
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
