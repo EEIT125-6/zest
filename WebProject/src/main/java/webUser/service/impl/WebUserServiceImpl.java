@@ -148,6 +148,11 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
+	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
+		return webUserDAO.updateWebUserIconUrl(updatedUserData);
+	}
+	
+	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
 		return webUserDAO.updateWebUserData(updatedUserData);
 	}

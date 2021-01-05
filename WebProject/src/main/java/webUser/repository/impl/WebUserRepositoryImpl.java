@@ -187,8 +187,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("email", email).setParameter("phone", phone)
 				.setParameter("birth", birth).getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getEmail().equals(email) && listTerm.getPhone().equals(phone) && listTerm.getBirth().equals(birth)) {
+					return listTerm;
+				}
+			}
+		} 
+		return null;
 		/* 設定值 */
-		return (list.size() == 1) ? list.get(0) : null;
+//		return (list.size() == 1) ? list.get(0) : null;
 	}
 
 	/* 驗證使用者資料 */
@@ -200,8 +209,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("account", account)
 				.setParameter("email", email).setParameter("phone", phone).setParameter("birth", birth).getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getAccount().equals(account) && listTerm.getEmail().equals(email) && listTerm.getPhone().equals(phone) && listTerm.getBirth().equals(birth)) {
+					return listTerm;
+				}
+			}
+		} 
+		return null;
 		/* 設定值 */
-		return (list.size() == 1) ? list.get(0) : null;
+//		return (list.size() == 1) ? list.get(0) : null;
 	}
 
 	/* 驗證使用者資料 */
@@ -215,8 +233,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("account", account)
 				.setParameter("password", password).setParameter("email", email).setParameter("phone", phone)
 				.setParameter("birth", birth).getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getAccount().equals(account) && listTerm.getPassword().equals(password) && listTerm.getEmail().equals(email) && listTerm.getPhone().equals(phone) && listTerm.getBirth().equals(birth)) {
+					return listTerm;
+				}
+			}
+		} 
+		return null;
 		/* 設定值 */
-		return (list.size() == 1) ? list.get(0) : null;
+//		return (list.size() == 1) ? list.get(0) : null;
 	}
 
 	/* 驗證使用者資料 */
@@ -229,21 +256,41 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("password", password)
 				.setParameter("email", email).setParameter("phone", phone).setParameter("birth", birth).getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getPassword().equals(password) && listTerm.getEmail().equals(email) && listTerm.getPhone().equals(phone) && listTerm.getBirth().equals(birth)) {
+					return listTerm;
+				}
+			}
+		} 
+		return null;
 		/* 設定值 */
-		return (list.size() == 1) ? list.get(0) : null;
+//		return (list.size() == 1) ? list.get(0) : null;
 	}
 
 	/* 檢查密碼 -1->異常、0->錯誤、1->正確 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer checkResetPassword(String inputUserId, String inputPassword) throws SQLException {
+		Integer result = 0;
 		/* HQL */
 		String hql = "FROM WebUserData AS wu WHERE wu.userId = :inputUserId AND wu.password = :inputPassword";
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("inputUserId", inputUserId)
 				.setParameter("inputPassword", inputPassword).getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getUserId().equals(inputUserId) && listTerm.getPassword().equals(inputPassword)) {
+					result = 1;
+					break;
+				}
+			}
+		}
+		return result;
 		/* 由size()判結果 */
-		return (list.size() > 0) ? 1 : 0;
+//		return (list.size() > 0) ? 1 : 0;
 	}
 
 	/* 產生新增使用者所需的ID */
@@ -280,8 +327,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		/* 取得當前Session，執行HQL以取得陣列 */
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("inputAccount", inputAccount)
 				.getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getAccount().equals(inputAccount)) {
+					return listTerm;
+				}
+			}
+		}
+		return null;
 		/* 取出資料，理論上陣列中只會有一筆資料 */
-		return (list.size() == 1) ? list.get(0) : null;
+//		return (list.size() == 1) ? list.get(0) : null;
 	}
 	
 	/* 取得使用者個人資料 */
@@ -389,7 +445,17 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return quitResult;
 	}
 	
-	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
+	/* 更新使用者圖示資料 0->失敗、1->成功 */
+	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = 0;
+		/* 取得當前Session以執行變更 */
+		getSession().saveOrUpdate(updatedUserData);
+		updateResult++;
+		return updateResult;
+	}
+	
+	/* 更新使用者資料 0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
 		/* 變數宣告 */

@@ -162,7 +162,7 @@
 						<hr />
 						<label>帳號圖示：</label>
                 		<c:if test="${managedUserData.iconUrl == ''}" >
-                			<img src="<c:url value='/image/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
+                			<img src="<c:url value='/images/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
                 		</c:if>
                 		<c:if test="${managedUserData.iconUrl != ''}" >
                 			<img src="<c:url value='${managedUserData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
@@ -360,19 +360,47 @@
 					$("#uploadPic").click(function() {
                 		picUpload();
                 	});
-					function picUpload() {
-						let choice=confirm("是否確定要上傳指定的圖片？");
+                	function picUpload() {
+                		let choice=confirm("是否確定要上傳指定的圖片？");
                 		if (choice == true) {
-                			var picIsOk = true;
                 			var picForm = new FormData();
+                			var pic = $("#iconUrl")[0].files[0];
                 			picForm.append("pic", pic);
-                			
-                			alert(picForm);
                 			
                 			picStr = "...處理中，請稍後";
            					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + picStr;
 		            		picSpan.style.color = "black";
 		            		picSpan.style.fontStyle = "normal";
+		            		
+		            		$.ajax({
+		            			type:"POST",
+					            url:"<c:url value='/webUser/controller/WebUserAdminModifyIcon' />",
+								data : picForm,
+								contentType : false,
+								processData : false,
+								success:function(resultObj) {
+									if (resultObj.resultCode == "true") {
+										picStr = resultObj.resultMessage;
+										alert(picStr);
+										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+										picSpan.style.color = "green";
+										picSpan.style.fontStyle = "normal";
+									} else {
+										picStr = resultObj.resultMessage;
+										alert(picStr);
+										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+										picSpan.style.color = "red";
+										picSpan.style.fontStyle = "italic";
+									}
+								},
+								error:function(err) {
+									picStr = "發生錯誤，無法上傳";
+									alert(picStr);
+									picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+									picSpan.style.color = "red";
+									picSpan.style.fontStyle = "italic";
+								}
+		            		});
                 		}
                 	}
 					

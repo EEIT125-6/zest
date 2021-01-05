@@ -61,6 +61,9 @@ public interface WebUserService {
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
 	
+	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
+	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
+	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
 	
