@@ -202,7 +202,7 @@ span.price {
       <p>總計<span id="tot" class="price" style="color:black"><b></b></span></p>
     </div>
     <button type="button" class="dropOrder">
-				<a href="<c:url value="/controller/mallRedirector"/>"onclick ="return confirm('是否確定? 您即將返回購物商城')">放棄訂單</a>
+				<a href="<c:url value="/controller/mallRedirector"/>"onclick ="return confirm('是否確定? 您即將返回購物商城')">繼續購物</a>
 	</button>
   </div>
 </div>

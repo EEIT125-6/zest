@@ -261,14 +261,23 @@ ul.slides li img {
 			<button type="button" class="continueShopping">
 				<a href="${pageContext.request.contextPath}/controller/mallRedirector">繼續購物</a>
 			</button>
-			<button type="button" class="checkOut">
-				<a href="${pageContext.request.contextPath}/controller/checkout"> 結帳</a>
-			</button>
+			<button type="button" class="checkOut"	onclick="checkCart()"> 結帳</button>
 		</form>
 
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script>
+		var K = document.getElementById('tot').innerHTML;
+			function checkCart(){
+				var K = document.getElementById('tot').innerHTML;
+				if (K>0){
+					window.confirm('是否結帳');
+					window.location = "<c:url value='/controller/checkout'/>;";
+				}else{
+					window.alert('您的購物車為空，請繼續購物後再結帳');
+					window.location = "<c:url value='/controller/mallRedirector' />;"
+				}
+			}
 			$(".qu").change(function() {
 				var ProdPrice = parseInt($(this).parent().prev().text());
 				var SelVal = $(this).val();

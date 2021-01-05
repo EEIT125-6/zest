@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import webUser.model.WebUserData;
 import xun.model.ProductInfoBean;
 //import org.springframework.data.annotation.Transient;
 
@@ -24,12 +23,14 @@ public class CartItemBean implements Serializable {
 	private static final long serialVersionUID = 1L;	
 	
 	@Id
+	@Column
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId", columnDefinition = ("char(7)"))
-	private WebUserData product_User;//購買人資訊
+	private String product_User;//購買人資訊
+	@Column
 	@ManyToOne
 	@JoinColumn(name="ProductInfo",columnDefinition=("nvarchar(50)"))
-	private ProductInfoBean product_Info;//產品資訊
+	ProductInfoBean product_Info;//產品資訊
 	@Column(name="PurchaseQuantity", columnDefinition=("nvarchar(50)"))
 	private String product_Quantity;//購買數量
 	@Column(name="PurchaseTime",columnDefinition=("TIMESTAMP WITH TIME ZONE"))
@@ -39,7 +40,7 @@ public class CartItemBean implements Serializable {
 	@Column(name="PurchaseTrans", columnDefinition=("nvarchar(10)"))
 	private String purchase_Trans; //運送狀態
 	
-	public CartItemBean(WebUserData product_User, ProductInfoBean product_Info, String product_Quantity,
+	public CartItemBean(String product_User, ProductInfoBean product_Info, String product_Quantity,
 			OffsetDateTime purchase_Time, Boolean purchase_Payment, String purchase_Trans) {
 		super();
 		this.product_User = product_User;
@@ -51,11 +52,11 @@ public class CartItemBean implements Serializable {
 	}
 
 	@Transient
-	public WebUserData getProduct_User() {
+	public String getProduct_User() {
 		return product_User;
 	}
 	@Transient
-	public void setProduct_User(WebUserData product_User) {
+	public void setProduct_User(String product_User) {
 		this.product_User = product_User;
 	}
 	@Transient
@@ -102,7 +103,10 @@ public class CartItemBean implements Serializable {
 	public CartItemBean(List<ProductInfoBean> list, int id) {
 		super();
 	}
-}
+	
+	
+
+	}
 	
 	
 
