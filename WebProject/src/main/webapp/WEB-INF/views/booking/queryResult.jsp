@@ -156,7 +156,12 @@
 	<table  cellspacing="1" cellpadding="1" border="1" width="500px">
 			<tr bgcolor="#F2F4FB">
 				<td>訂單編號:</td>
+				<c:if test="${booking.status == 1}">
 				<td><a href=<c:url value='/booking/DisplayController?key=${booking.bookingNo}'/>>${booking.bookingNo}</a></td>
+				</c:if>
+				<c:if test="${booking.status == 0}">
+				<td>${booking.bookingNo}</td>
+				</c:if>
 			</tr>
 			<tr bgcolor="#FFFFE1">
 				<td>訂位狀態:</td>

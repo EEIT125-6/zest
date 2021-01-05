@@ -225,8 +225,4 @@ public class StoreBean {
 				+ ", price=" + price + ", stitd=" + stitd + ", stitddt=" + stitddt + ", tel=" + tel + ", bannerurl="
 				+ bannerurl + ", photourl=" + photourl + ", stfile=" + stfile + "]";
 	}
-	
-	
-	
-	
 }

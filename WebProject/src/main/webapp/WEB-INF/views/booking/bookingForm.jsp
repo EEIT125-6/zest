@@ -210,8 +210,9 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         weekHeader:"週"
         };
       $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
-      $("#datepicker1").datepicker({dateFormat:"yy-mm-dd"});
-
+      $("#datepicker1").datepicker({
+    	  minDate: new Date(),
+    	  dateFormat:'yy-mm-dd'});
       });
   </script>
 </head>

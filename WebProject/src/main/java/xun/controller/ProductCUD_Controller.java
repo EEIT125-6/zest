@@ -258,6 +258,4 @@ public class ProductCUD_Controller {
 		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
 		System.out.println("成功修改STORE_PRICE是1:"+Result);
 	}
-
-	
 }

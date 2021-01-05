@@ -21,11 +21,9 @@
         weekHeader:"週"
         };
       $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
-      $("#datepicker1").datepicker({dateFormat:"yy-mm-dd" });
-      
-		document.getElementById("cancel").onclick=function() {
-			window.alert("aaa");
-	}
+      $("#datepicker1").datepicker({
+    	  minDate: new Date(),
+    	  dateFormat:'yy-mm-dd' });
       });
   </script>
       <style>
@@ -162,89 +160,6 @@
             background:#e5e5e5
         } 
     </style>
-
- <script>
- /* 
-		document.getElementById("cancel").onclick=function() {
-			window.alert("aaa");
-	}
- 			var dateTime=new Date();
-			dateTime=dateTime.setDate(dateTime.getDate()+1);
-			dateTime=new Date(dateTime); //當天日期加一天
-			alert(dateTime);
-			var bookingdate = document.getElementByName("bookingdate").value.trim();
-			alert(bookingdate);
-			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
-				alert("已超過取消訂位的時限！");
-				
-			} else {
-				window.alert("發生錯誤。。");
-			}		  */
-		
-// 		function dateCheck() {
-
-
-// 			$.ajax({
-// 						type : "POST",
-// 						url : "/WebProject-Spring/controller/BookingController",
-// 						async : false,
-// 						data : {
-// 							'bookingdate' : bookingdate
-// 						},
-// 						dataType : "json",
-// 						success : function(result) {
-// 							if (resultSpace[0] == '1') {
-// 								loginStr = "登入成功！";
-// 								loginIsOk = true;
-// 								/* 顯示彈窗訊息 */
-// 								alert(loginStr);
-// 							} else if (resultSpace[0] == '0') {
-// 								loginStr = "密碼錯誤！";
-// 								loginIsOk = false;
-// 								/* 顯示彈窗訊息 */
-// 								alert(loginStr);
-// 							} else if (resultSpace[0] == '-1') {
-// 								loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
-// 								loginIsOk = false;
-// 								/* 顯示彈窗訊息 */
-// 								alert(loginStr);
-// 							} else if (resultSpace[0] == '-2') {
-// 								loginStr = "帳號錯誤！";
-// 								loginIsOk = false;
-// 								/* 顯示彈窗訊息 */
-// 								alert(loginStr);
-// 							} else if (resultSpace[0] == '-3') {
-// 								loginStr = "檢查途中遭遇錯誤！";
-// 								loginIsOk = false;
-// 								/* 顯示彈窗訊息 */
-// 								alert(resultSpace[1]);
-// 							}
-// 							if (!loginIsOk) {
-// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 										+ loginStr;
-// 								loginSpan.style.color = "red";
-// 								loginSpan.style.fontStyle = "italic";
-// 							} else {
-// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-// 										+ loginStr;
-// 								loginSpan.style.color = "black";
-// 								loginSpan.style.fontStyle = "normal";
-// 								/* 刷新 */
-// 								location.reload(true);
-// 							}
-// 						},
-// 						error : function(err) {
-// 							loginStr = "發生錯誤，無法刪改訂位";
-// 							loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 									+ loginStr;
-// 							loginSpan.style.color = "red";
-// 							loginSpan.style.fontStyle = "italic";
-// 							/* 顯示彈窗訊息 */
-// 							alert(loginStr);
-// 						}
-// 					});
-//		}
-	</script>
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
@@ -253,12 +168,12 @@
 <center>
 <h2>訂位紀錄 : </h2>
 <p>請選擇欲修改之項目</p>
-<form action="<c:url value='/booking/confirmUpd'/>" method="post">
+<form name="form1" action="<c:url value='/booking/confirmUpd'/>" method="post" onSubmit="return egg();" >
 <input type="hidden" name="finalDecision" value="" > 
 <input type="hidden" name="purpose" value="${bean.purpose}">
 <input type="hidden" name="status" value="${bean.status}">
 <c:if test="${bean.status == 0}">
-	<c:redirect url='../updateResult.jsp'/>	
+	<c:redirect url='updateResult'/>	
 </c:if>
 <input type="hidden" name="user_id" value="${bean.user_id}">
 <table  cellspacing="1" cellpadding="1" border="1" width="500px">
@@ -306,12 +221,25 @@
 
 </table>
 <label class="aa">
-	<input type="button" value="確認修改" name='confirmUpd' > 
+	<input type="submit" value="確認修改" name='confirmUpd' > 
 </label>
 <label class="aa">
-	<input type="button" value="刪除此筆訂位" name='cancel' id="cancel">
+	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel">
 </label>
-</form>        
+</form>
+<script type="text/javascript">
+	function egg() {
+			var dateTime=new Date();
+			dateTime=dateTime.setDate(dateTime.getDate()+1);
+			dateTime=new Date(dateTime); //當天日期加一天
+			var bookingdate = document.forms["form1"].bookingdate.value;
+			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
+				alert("已超過修改/取消訂位的時限！");
+				return false;
+			} 
+			return true;
+} 
+</script>        
 </center> 
   <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>
