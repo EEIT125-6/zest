@@ -242,8 +242,7 @@ ul.slides li img {
 							src="${pageContext.request.contextPath }/productInfo/images/${product.product_picture}.jpg"
 							width="120px"></td>
 						<td id="aa">${product.product_price}</td>
-						<td><input list="quantities" name="quantity" class="qu"
-							value="0"> <datalist id="quantities">
+						<td><input list="quantities" name="quantity" class="qu"> <datalist id="quantities">
 								<option value="0">
 								<option value="1">
 								<option value="2">

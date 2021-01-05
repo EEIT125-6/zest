@@ -58,7 +58,7 @@ public class ShoppingCartController {
 	}
 
 	@GetMapping(value = "/myCartRedirector") // 跳轉至個人購物車 V
-	public String myCartRedirector() {		
+	public String myCartRedirector() {	
 		return "cart/cart"; // webappconfig中已導入 prefix suffix (.jsp)
 	}
 
@@ -71,12 +71,17 @@ public class ShoppingCartController {
 		int index = isExisting(id, session);
 		if(index>=0) {
 			list.remove(index);
-			
 		}else {
 			return "cart/cart";
 		}
 		session.setAttribute("products", list);
 		return "cart/cart";
+	}
+	
+	@GetMapping(value="/checkout") //導向至購物車結帳頁面
+	public String checkOuter(HttpSession session) {
+		System.out.println("checkOutInitialized");
+		return "checkout/checkout";
 	}
 
 	
@@ -101,7 +106,7 @@ public class ShoppingCartController {
 			list.add(this.service.find(id).get(0));
 			System.out.println("AAAAAAAAAAAAAAAAAAAAA" + list);
 			session.setAttribute("products", list);
-		}
+			}
 		return "cart/cart";
 
 	}
