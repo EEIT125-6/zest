@@ -174,9 +174,44 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 			}
 		} 
 		return result;
-//		/* 由size()判結果 */
+		/* 由size()判結果 */
 //		return (list.size() > 0) ? 1 : 0;
 	}
+	
+	/* 執行簽到 -1->異常、0->錯誤、1->正確 */
+	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
+		/* 變數宣告 */
+		Integer updateResult = 0;
+		/* 取得當前Session以執行變更 */
+		getSession().saveOrUpdate(userData);
+		updateResult++;
+		return updateResult;
+	}
+	
+	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException {
+		Integer result = 0;
+		/* HQL */
+		String hql = "FROM WebUserData AS wu WHERE wu.userId = :inputUserId AND wu.signIn = :today";
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		List<WebUserData> list = getSession().createQuery(hql).setParameter("inputUserId", inputUserId).setParameter("today", today)
+				.getResultList();
+		/* 因為SQL Server預設定序對大小寫不敏感，所以需要補判 */
+		if (list.size() > 0) {
+			for (WebUserData listTerm: list) {
+				if (listTerm.getUserId().equals(inputUserId) && listTerm.getSignIn().equals(today)) {
+					result = 1;
+				}
+			}
+		}
+		return result;
+		/* 由size()判結果 */
+//		return (list.size() > 0) ? 1 : 0;
+	}
+	
+	
 
 	/* 驗證使用者資料 */
 	@SuppressWarnings("unchecked")

@@ -126,7 +126,17 @@ public class WebUserServiceImpl implements WebUserService {
 		
 		return checkLoginResult;
 	}
-
+	
+	@Override
+	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException {
+		return webUserDAO.checkWebUserSignIn(inputUserId, today);
+	}
+	
+	@Override
+	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
+		return webUserDAO.runWebUserSignIn(userData);
+	}
+	
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
 		return webUserDAO.getWebUserData(inputAccount);
