@@ -15,6 +15,5 @@ public interface BoardDao {
 
 	int updateBoard(BoardBean bb); 
 
-	int deleteBoard(Integer id);
-
+//	int deleteBoard(Integer id);
 }

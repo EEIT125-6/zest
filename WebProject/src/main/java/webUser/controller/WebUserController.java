@@ -2554,9 +2554,11 @@ public class WebUserController {
 				delResult = false;
 			/* 有才執行刪除 */
 			} else {
+				/* 產生暫存檔檔名 */
 				String tempFileName = picFile.getName();
+				String finalTempFileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")) + "_tmp" + tempFileName.substring(tempFileName.lastIndexOf("."));
 				/* 刪除前先建立備份檔 */
-				FileUtils.moveFile(picFile, new File(picFile.getName()+"_tmp"));
+				FileUtils.moveFile(picFile, new File(finalTempFileName));
 				/* 再執行刪除 */
 				picDelResult = picFile.delete();
 			}

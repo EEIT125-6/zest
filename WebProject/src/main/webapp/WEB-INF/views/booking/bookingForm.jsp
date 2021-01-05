@@ -120,7 +120,9 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         }
         fieldset{
             width: 500px;
-            border: 2px solid orange;
+/*             border: 2px solid orange; */
+         
+            border:8px #FFD382 groove;
             border-radius: 1%;
             margin: 0 auto;
         }
@@ -133,7 +135,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         .st1{
             width: 450px;
             border-bottom: dashed gray;
-            margin: 30px;
+            margin: 25px;
             padding-bottom:10px;
         }
         .st2{
@@ -213,6 +215,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
       $("#datepicker1").datepicker({
     	  minDate: new Date(),
     	  dateFormat:'yy-mm-dd'});
+
       });
   </script>
 </head>
@@ -236,11 +239,15 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         <div class="st1">
             <label for="" class="st3">時間:</label>
             <select name="time">
-                <option value="12">12:00</option>
-                <option value="13">13:00</option>
-                <option value="17">17:00</option>
-                <option value="18">18:00</option>
-                <option value="19">19:00</option>
+            	<option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
             </select>
         </div>
         <div class="st1">
@@ -251,6 +258,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
                 <option value="3">3人</option>
                 <option value="4">4人</option>
                 <option value="5">5人</option>
+                <option value="6">6人</option>
             </select>
         </div>
         <div class="st1">
@@ -263,21 +271,21 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         </div>
         <div class="st1">
             <label for="" class="st3">e-mail:</label>
-            <input type="email" id="email" name="mail" >
+            <input type="email" id="email" name="mail" placeholder="請輸入email">
         </div>
         <div class="st1">
             <label for="" class="st3">用餐目的:</label>
-            <select name="purpose">
-                <option value="normal">一般聚餐</option>
-                <option value="bday">生日慶祝</option>
-                <option value="date">浪漫約會</option>
-                <option value="family">家人聚餐</option>
-                <option value="business">商務聚餐</option>
+            <select name="purpose" >
+                <option value="一般用餐">一般用餐</option>
+                <option value="生日慶祝">生日慶祝</option>
+                <option value="浪漫約會">浪漫約會</option>
+                <option value="家人聚餐">家人聚餐</option>
+                <option value="商務聚餐">商務聚餐</option>
             </select>
         </div>
         <div class="st1">
             <label for="cm"  class="st3">特殊需求:</label> 
-            <textarea name="needs" id="cm" cols="40" rows="5"></textarea>
+            <textarea name="needs" id="cm" cols="40" rows="5" placeholder="（如有會過敏的食物請在此填入）"></textarea>
         </div>
         <div class="st2">
             <a href="javascript:history.back()"><input type="button" name="back" value="上一步"></a>

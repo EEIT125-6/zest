@@ -24,7 +24,14 @@
       $("#datepicker1").datepicker({
     	  minDate: new Date(),
     	  dateFormat:'yy-mm-dd' });
+      
+      
+/*       document.getElementById("cancel").onclick=function() {
+			window.alert("aaa");
+	} */
+       
       });
+ 
   </script>
       <style>
          .classimg{
@@ -149,17 +156,101 @@
 		    background:#0099CC;
 		}
        .aa{
-            font-size:34px;
+            font-size:20px;
             color:#000;
             padding:10px;
             /* border:2px solid #e5e5e5; */
             vertical-align:middle;
-            margin-top:20px;
+            margin:20px;
         }
         .aa:hover{
-            background:#e5e5e5
+            background:#e5e5e5;
+            font-size:28px;
         } 
     </style>
+
+ <script>
+ /* 
+		document.getElementById("cancel").onclick=function() {
+			window.alert("aaa");
+	}
+ 			var dateTime=new Date();
+			dateTime=dateTime.setDate(dateTime.getDate()+1);
+			dateTime=new Date(dateTime); //當天日期加一天
+			alert(dateTime);
+			var bookingdate = document.getElementByName("bookingdate").value.trim();
+			alert(bookingdate);
+			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
+				alert("已超過取消訂位的時限！");
+				
+			} else {
+				window.alert("發生錯誤。。");
+			}		  */
+		
+// 		function dateCheck() {
+
+
+// 			$.ajax({
+// 						type : "POST",
+// 						url : "/WebProject-Spring/controller/BookingController",
+// 						async : false,
+// 						data : {
+// 							'bookingdate' : bookingdate
+// 						},
+// 						dataType : "json",
+// 						success : function(result) {
+// 							if (resultSpace[0] == '1') {
+// 								loginStr = "登入成功！";
+// 								loginIsOk = true;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '0') {
+// 								loginStr = "密碼錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-1') {
+// 								loginStr = "該帳號已棄用！請重新註冊或聯絡網站管理員";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-2') {
+// 								loginStr = "帳號錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(loginStr);
+// 							} else if (resultSpace[0] == '-3') {
+// 								loginStr = "檢查途中遭遇錯誤！";
+// 								loginIsOk = false;
+// 								/* 顯示彈窗訊息 */
+// 								alert(resultSpace[1]);
+// 							}
+// 							if (!loginIsOk) {
+// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 										+ loginStr;
+// 								loginSpan.style.color = "red";
+// 								loginSpan.style.fontStyle = "italic";
+// 							} else {
+// 								loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+// 										+ loginStr;
+// 								loginSpan.style.color = "black";
+// 								loginSpan.style.fontStyle = "normal";
+// 								/* 刷新 */
+// 								location.reload(true);
+// 							}
+// 						},
+// 						error : function(err) {
+// 							loginStr = "發生錯誤，無法刪改訂位";
+// 							loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 									+ loginStr;
+// 							loginSpan.style.color = "red";
+// 							loginSpan.style.fontStyle = "italic";
+// 							/* 顯示彈窗訊息 */
+// 							alert(loginStr);
+// 						}
+// 					});
+//		}
+	</script>
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
@@ -176,7 +267,7 @@
 	<c:redirect url='updateResult'/>	
 </c:if>
 <input type="hidden" name="user_id" value="${bean.user_id}">
-<table  cellspacing="1" cellpadding="1" border="1" width="500px">
+<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
 <tr bgcolor="#FFFFE1">
     <td>訂單編號:</td>
     <td>${bean.bookingNo}</td>
@@ -221,10 +312,10 @@
 
 </table>
 <label class="aa">
-	<input type="submit" value="確認修改" name='confirmUpd' > 
+	<input type="submit" value="確認修改" name='confirmUpd' style="border-radius: 3px; border: none; outline: none;"> 
 </label>
 <label class="aa">
-	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel">
+	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel" style="border-radius: 3px; border: none; outline: none;">
 </label>
 </form>
 <script type="text/javascript">

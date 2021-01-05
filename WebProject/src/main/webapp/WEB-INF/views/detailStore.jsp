@@ -31,12 +31,9 @@
 	<c:set var = "stitddt" value = "${row.stitddt }"/>
 	<c:set var = "tel" value = "${row.tel }"/>
 	<c:set var = "bannerurl" value = "${row.bannerurl }"/>
-<<<<<<< Updated upstream
-=======
 	<c:if test = "${userFullData.account != null}" >
 		<c:set var = "userId" value = "${row.webUserData.userId}"/>
 	</c:if>
->>>>>>> Stashed changes
 </c:forEach>
 
 
@@ -117,29 +114,20 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
-<<<<<<< Updated upstream
-            	<%if(true){ %>
-=======
             <c:if test="${userFullData.userId == userId && userId != null}">
 <%--             	<%if(true){ %> --%>
->>>>>>> Stashed changes
-		<c:url value="/Update" var="EDITURL">
+			<c:url value="/Update" var="EDITURL">
 <%-- 			<c:param name="stname" value="${stname1}" /> --%>
 			<c:param name="id" value="${id}" />	
-		</c:url>
+			</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
-		<c:url value="/Insert" var="CEATEURL">
-		</c:url> 
+			<c:url value="/Insert" var="CEATEURL">
+			</c:url> 
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
-<<<<<<< Updated upstream
-
-			<form action="DeleteStore" method="post" style="display:inline">
-=======
 <%-- 		<c:url value = '/DeleteStore'/> --%>
 			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
->>>>>>> Stashed changes
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
@@ -180,12 +168,8 @@
 <%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
 <!-- 				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
 <!-- 			</form> -->
-<<<<<<< Updated upstream
-	<%} %>
-=======
 <%-- 	<%} %> --%>
 		</c:if>
->>>>>>> Stashed changes
 	<br>
 	
     <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
@@ -214,18 +198,11 @@
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">
             	<div class="box1" style="text-align:center; margin:auto " >
-            		<div class="d1" style="text-align:left ;">評分總人數:</div>
-            		<br>
-			        <div class="d2">
-			            <h3>給予評價</h3>
-			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <br>
-			            <label id = "startPcs"></label>
-			        </div>
+            		<div style="text-align: right;">
+						<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i> 
+						<a href="${pageContext.request.contextPath}/orange/ShowComment">查詢留言 </a>
+					</div>
+					<br>
 			        <div id="d1"></div>
 			        <div class="d3">
 			        	<div class="container">
@@ -247,15 +224,26 @@
 			       			<input type="hidden" name="storeId" value="${id}">
 			       			<div class="st1">
 						       <label class="t1" for="name">名字:</label>
-						       <input type="text" id="name" name="name" ><br>
+						       <input readonly type="text" id="name" name="name" value="${userFullData.nickname}"><br>
 						    </div>
 						    <div class="st1">
 						        <label for="star" class="t1"></label>
 						        <input type="hidden" id="star" name="star" ><br>
 						    </div>
+						    
+					 <div class="d2">
+			            <span>評價:  </span>
+			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <br>
+			            <label id = "startPcs"></label>
+			        </div>
 						    <div class="st1">
 							    <label class="t1" for="pwd1">留言:</label>
-							    <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
+							    <textarea name="comment" id="comment" cols="33" rows="5" ></textarea><br>
 							</div>
 							<div class="sub">
 						        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
@@ -265,7 +253,7 @@
 			       </form>
 			    </div>
 			    <br />
-			    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			    <script src="js/jquery-3.5.1.min.js"></script>
 			    <script >
 			    	$(".i").mousedown(function() {
 			    		let starts = $(this).attr("id").split("img")[1];
@@ -314,11 +302,7 @@
 								    <div class="card" style="background:#f28633;">
 								    <c:if test="${row1.product_picture != null}">
 								    	<div class="imgBx">
-<<<<<<< Updated upstream
-				             				<img src="${pageContext.request.contextPath}/${row1.product_picture}" style="border-radius: 7 px;"/>
-=======
 				             				<img src="${pageContext.request.contextPath}/123/${row1.product_picture}" style="border-radius: 7 px;"/>
->>>>>>> Stashed changes
 				             			</div>	
 				             		</c:if>
 				             		<c:if test="${row1.product_picture == null }">
@@ -339,10 +323,8 @@
 <%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
 <%-- 				             		</c:if> --%>
 <%-- 				             		<c:url value='/updateProductpage'/> --%>
-<<<<<<< Updated upstream
-=======
-<c:if test="${userFullData.userId == userId && userId != null}">
->>>>>>> Stashed changes
+
+							<c:if test="${userFullData.userId == userId && userId != null}">
 							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
@@ -356,10 +338,7 @@
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
 							</form>
-<<<<<<< Updated upstream
-=======
-</c:if>
->>>>>>> Stashed changes
+						</c:if>
 				             		<br>
 			             </div>
 		            </c:forEach>
