@@ -233,11 +233,13 @@ public class ProductCUD_Controller {
 		Collections.sort(productsprice);
 		Integer storeprice=null;
 		if(productsprice.size()%2 !=0) {
-			storeprice=productsprice.get((productsprice.size()+1)/2);
+			storeprice=productsprice.get((productsprice.size()+1)/2-1);
 			System.out.println(storeprice);
 			System.out.println("+++++++++++"+productsprice);
+		}else if(productsprice.size()==0){
+			storeprice=0;
 		}else {
-			storeprice=productsprice.get((productsprice.size()/2)+1);
+			storeprice=productsprice.get((productsprice.size()/2));
 			System.out.println(storeprice);
 			System.out.println("-----------"+productsprice);
 		}

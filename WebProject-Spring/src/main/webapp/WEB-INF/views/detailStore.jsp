@@ -279,7 +279,7 @@ a.mobile-show {
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
 
-			<form action="DeleteStore" method="post" style="display:inline">
+			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">

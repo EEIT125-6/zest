@@ -148,6 +148,7 @@
 #gotop :hover{
     background:#0099CC;
 }
+
 .search-area {
   position: fixed;
   left: 0;

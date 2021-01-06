@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+//import webUser.model.WebUserData;
 import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
@@ -84,6 +85,14 @@ public class StoreCUD_Controller {
 		if (result.hasErrors()) {
 			return "Insert";
 		}
+		
+////		寫入商家主人資訊
+//		WebUserData userFullData = (WebUserData) model.getAttribute("userFullData");
+////		WebUserData wud = new WebUserData();
+////		wud = ws.getWebUserDataById(userFullData);
+//		storeBean.setWebUserData(userFullData);
+		
+		
 //		新增
 		ss.save(storeBean);
 //		將新登入的商家的ID取出 並送到查詢詳細商家的Controller 做印出
