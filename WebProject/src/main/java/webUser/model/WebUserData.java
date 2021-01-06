@@ -24,9 +24,9 @@ public class WebUserData implements Serializable{
 	@Id
 	@Column(nullable = false , unique = true , columnDefinition="char(7)")
 	private String userId;
-	@Column(nullable = false , unique = true , columnDefinition="varchar(20)")
+	@Column(nullable = false , unique = true , columnDefinition="varchar(30)")
 	private String account;
-	@Column(nullable = false , unique = false , columnDefinition="varchar(20)")
+	@Column(nullable = false , unique = false , columnDefinition="varchar(30)")
 	private String password;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(3)")
 	private String firstName;
@@ -56,8 +56,10 @@ public class WebUserData implements Serializable{
 	private Integer version;
 	@Column(nullable = true , unique = false , columnDefinition="varchar(8) default 'inactive' ")
 	private String status;
-	@Column(nullable = true , unique = true , columnDefinition="varchar(255) ")
+	@Column(nullable = true , unique = false , columnDefinition="varchar(255) ")
 	private String iconUrl;
+	@Column(nullable = true, unique = false, columnDefinition="date")
+	private Date signIn;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "lv")
@@ -83,7 +85,7 @@ public class WebUserData implements Serializable{
 	/* 帶參數建構子 */
 	public WebUserData(String userId, String account, String password, String firstName, String lastName,
 			String nickname, Date birth, String fervor, String email, String phone, Date joinDate, String addr0,
-			String addr1, String addr2, BigDecimal zest, Integer version, String status, String iconUrl,
+			String addr1, String addr2, BigDecimal zest, Integer version, String status, String iconUrl, Date signIn,
 			UserIdentity accountLv, Gender gender, UserWilling getEmail,
 			CityInfo locationInfo) {
 		super();
@@ -105,6 +107,7 @@ public class WebUserData implements Serializable{
 		this.version = version;
 		this.status = status;
 		this.iconUrl = iconUrl;
+		this.signIn = signIn;
 		this.accountLv = accountLv;
 		this.gender = gender;
 		this.getEmail = getEmail;
@@ -254,6 +257,14 @@ public class WebUserData implements Serializable{
 
 	public void setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
+	}
+	
+	public Date getSignIn() {
+		return signIn;
+	}
+	
+	public void setSignIn(Date signIn) {
+		this.signIn = signIn;
 	}
 
 	public UserIdentity getAccountLv() {

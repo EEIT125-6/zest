@@ -506,7 +506,7 @@ public class UserInfoController {
 						+ "您不久前執行了停用本服務的操作，我們感到遺憾！"
 						+ "<br /><br />"
 						+ "如果這個操作您不知情，請透過本網站提供的方法聯繫我方處理，謝謝！"
-						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\"></a>";
+						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\">橙皮官方網站</a>";
 		} else if (mode.equals("adminQuit")) {
 			mailContext = "親愛的 "
 						+ account 
@@ -514,7 +514,7 @@ public class UserInfoController {
 						+ "不久前您因故違反了執行本服務的相關條款，因此即日起您的帳號將暫時遭到停權！"
 						+ "<br /><br />"
 						+ "如果您對這個決定有任何不同的觀點想要申訴，請透過本網站提供的方法聯繫我方處理，謝謝！"
-						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\"></a>";
+						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\">橙皮官方網站</a>";
 		} else if (mode.equals("forget")) {
 			mailContext = "親愛的 " + account + " ！<br /><br />" 
 						+ "請按下方的連結以重設您的帳號資訊"

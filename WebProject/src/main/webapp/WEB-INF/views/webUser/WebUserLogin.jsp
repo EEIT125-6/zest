@@ -228,8 +228,12 @@
 										if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
+						            		let loginSucMsg = resultObj.resultMessage;
+						            		if (resultObj.signInMessage != "") {
+						            			loginSucMsg += "\n" + resultObj.signInMessage;
+						            		} 
 						            		/* 顯示彈窗訊息 */
-						            		alert(resultObj.resultMessage);
+						            		alert(loginSucMsg);
 										} else if (resultObj.resultCode == 0) {
 											loginStr = "帳號或密碼錯誤！";
 						            		loginIsOk = false;

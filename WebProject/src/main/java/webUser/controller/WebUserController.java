@@ -99,6 +99,12 @@ public class WebUserController {
 	/* Default Project Physical Address */
 	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
+	/* 簽到用生日時顯示字串 */
+	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";
+	
+	/* 簽到用生日當月時顯示字串 */
+	final String birthMonth = "這個月對您是特別的一個月，今日登入讓您獲得了 1 枚橙幣！";
+	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
 	public String doCreateRegisterForm(Model model) {
@@ -292,6 +298,7 @@ public class WebUserController {
 		String inputCheckResult = "";
 		Integer accountCheckResult = -3;
 		String loginMessage = "";
+		String signInMessage = "";
 		
 		WebUserData userFullData = new WebUserData();
 		
@@ -304,6 +311,41 @@ public class WebUserController {
 				accountCheckResult = wus.checkWebUserLogin(account, password);
 				/* 存取使用者個人資料 */
 				userFullData = wus.getWebUserData(account);
+				if (userFullData != null) {
+					/* 檢查簽到 */
+					Integer checkSignInResult = wus.checkWebUserSignIn(userFullData.getUserId(), Date.valueOf(today)) ;
+					/* 0代表未簽到，1代表已簽到 */
+					if (checkSignInResult == 0) {
+						/* 設定簽到日 */
+						userFullData.setSignIn(Date.valueOf(today));
+						/* 同月份時每次登入加1幣 */
+						/* 生日時每次登入額外加9幣 */
+						if ((String.valueOf(today)).split("-")[1].equals((String.valueOf(userFullData.getBirth())).split("-")[1])) {
+							userFullData.setZest(userFullData.getZest().add(new BigDecimal("1")));
+							if ((String.valueOf(today)).split("-")[2].equals((String.valueOf(userFullData.getBirth())).split("-")[2])) {
+								userFullData.setZest(userFullData.getZest().add(new BigDecimal("9")));
+								signInMessage = birthday;
+							} else {		
+								signInMessage = birthMonth;
+							}
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								userFullData.setSignIn(null);
+								if (signInMessage.equals(birthday)) {
+									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("10")));
+								} else if (signInMessage.equals(birthMonth)) {
+									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("1")));
+								}
+							}
+						}
+					} else {
+						signInMessage = "您今日已經簽到過了！";
+					}
+				}
 			} catch (SQLException sqlE) {
 				String loginMessageTmp = sqlE.getMessage();
 				loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
@@ -318,6 +360,7 @@ public class WebUserController {
 		
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
+		map.put("signInMessage", signInMessage);
 		return map;
 	}
 	
@@ -747,6 +790,7 @@ public class WebUserController {
 					selfData.getVersion() + 1,
 					selfData.getStatus(),
 					selfData.getIconUrl(),
+					selfData.getSignIn(),
 					selfData.getAccountLv(),
 					selfData.getGender(),
 					willingOption,
@@ -1413,6 +1457,7 @@ public class WebUserController {
 				managedUserData.getVersion() + 1,
 				managedUserData.getStatus(),
 				managedUserData.getIconUrl(),
+				managedUserData.getSignIn(),
 				managedUserData.getAccountLv(),
 				gender,
 				willingOption,
@@ -2553,6 +2598,7 @@ public class WebUserController {
 				0, 
 				"inactive", 
 				"",
+				null,
 				new UserIdentity(), 
 				new Gender(), 
 				new UserWilling(), 
