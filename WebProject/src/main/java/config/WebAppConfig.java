@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
+@EnableAspectJAutoProxy
 /* 掃描的package */
 @ComponentScan({
 	"config", 
@@ -24,7 +25,8 @@ import org.springframework.web.servlet.view.JstlView;
 	"service",
 	"dao",
 	"controller",
-	"board"})
+	"board",
+	"dashborad"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
