@@ -197,25 +197,14 @@
         <hr>
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">
-            	<div class="box1" style="text-align:center; margin:auto " >
-            		<div style="text-align: right;">
-						<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i> 
-						<a href="${pageContext.request.contextPath}/orange/ShowComment">查詢留言 </a>
-					</div>
-					<br>
-			        <div id="d1"></div>
-			        <div class="d3">
-			        	<div class="container">
-			        		<div class="row">
-			        			<div class="s2">
-			        			</div>
-		        				<div class="s3">
-			                    	<h3></h3>        
-			                  	</div>
-		        			</div>
-		        		</div>
-		        	</div>
-		        </div>
+            	<c:if test="${userFullData.account != null}">
+	            	<div class="box1" style="text-align:center; margin:auto " >
+	            		<div style="text-align: right;">
+							<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i> 
+							<a href="${pageContext.request.contextPath}/orange/ShowComment">查詢留言 </a>
+						</div>
+			        </div>
+		        </c:if>
 		        <br>
 			    <div class="box2" style="text-align:center ;margin: auto;">
 			       <form id="form1" method="get" action="<c:url value='/pack'/>">

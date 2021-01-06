@@ -150,7 +150,8 @@ response.setContentType("text/html;charset=UTF-8");
 </form>
 </center>   
   <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+ <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:150px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
     
 </body>
 </html>
