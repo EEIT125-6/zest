@@ -18,36 +18,36 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 @EnableTransactionManagement
 public class RootAppConfig {
+	public static final String dbAccount = "scott";
+	public static final String dbPassword = "tiger";
+	public static final String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+	public static final String sqlType = "sqlserver";
+	public static final String sqlUrl = "localhost";
+//	public static final String sqlUrl = "10.31.25.130";
+//	public static final String sqlPort = "1433";
+	public static final String dbName = "WebProject";
+	
 	@Bean
 	public DataSource msSQLDataSource() {
 		ComboPooledDataSource ds = new ComboPooledDataSource();
-//		ds.setUser("scott");
-//		ds.setPassword("tiger");
-		
-		ds.setUser("sa");
-		ds.setPassword("sa123456");
+		ds.setUser(dbAccount);
+		ds.setPassword(dbPassword);
 		try {
-			ds.setDriverClass("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			ds.setDriverClass(dbDriver);
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}
-//		ds.setJdbcUrl("jdbc:sqlserver://127.0.0.1:1433;DatabaseName=WebProject");
-//		ds.setJdbcUrl("jdbc:sqlserver://10.31.25.130:1433;DatabaseName=WebProject");
-		ds.setJdbcUrl("jdbc:sqlserver://localhost;DatabaseName=DemoLab");
+		ds.setJdbcUrl("jdbc:"+sqlType+"://"+sqlUrl+";DatabaseName="+dbName);
 		ds.setInitialPoolSize(4);
 		ds.setMaxPoolSize(8);
-		ds.setMaxIdleTime(3500); //12-13
 		return ds;
 	}
 
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-		/* 掃描的package暫時留空，有需要時請填入 */
-		factory.setPackagesToScan(new String[] { 
-				"xun",
-				"board"
-				});
+		/* 掃描的package */
+		factory.setPackagesToScan(new String[] { "xun", "webUser", "controller", "dao", "service", "board", "model" });
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;
@@ -68,8 +68,8 @@ public class RootAppConfig {
 		properties.put("hibernate.format_sql", Boolean.TRUE);
 		properties.put("default_batch_fetch_size", 10);
 		properties.put("hibernate.hbm2ddl.auto", "update");
-		properties.put("hibernate.transaction.coordinator_class","jdbc"); //12-13 原本的例子 有特別填寫個 所以補上  這個內容似乎只有jdbc 和 JBossAS  
-		properties.put("hibernate.bytecode.use_reflection_optimizer","false"); //12-13 映射優化 取消
+		properties.put("hibernate.transaction.coordinator_class","jdbc"); // By Mimicker0903-12-13 原本的例子 有特別填寫個 所以補上
+		properties.put("hibernate.bytecode.use_reflection_optimizer","false"); // By Mimicker0903-12-13 映射優化 取消
 		return properties;
 	}
 }

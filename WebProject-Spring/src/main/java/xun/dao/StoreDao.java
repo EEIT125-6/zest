@@ -3,8 +3,8 @@ package xun.dao;
 import java.util.List;
 
 import xun.model.BoardBean;
-import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
+import xun.model.ProductInfoBean;
 
 public interface StoreDao {
 
@@ -37,5 +37,7 @@ public interface StoreDao {
 	List<BoardBean> getComment(Integer stid);
 	
 	List<ProductInfoBean> getProductInfoBeans(Integer stid);
+	
+	Integer setStorePrice(Integer price,Integer id);
 	
 }

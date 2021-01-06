@@ -44,7 +44,7 @@ public class StoreIndexHomeController {
 	
 	
 	//顯示圖片用    基本上用不到!
-	@GetMapping("/photo/{path}.{sbma}")
+	@GetMapping("/Images12421/{path}.{sbma}")
 	public ResponseEntity<byte[]>  getPhoto(
 			@PathVariable("path") String path,
 			@PathVariable("sbma") String sbma

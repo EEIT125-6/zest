@@ -1,5 +1,7 @@
  package board.dao;
 
+import java.util.List;
+
 //import java.util.List;
 
 import xun.model.BoardBean;
@@ -15,6 +17,11 @@ public interface BoardDao {
 
 	int updateBoard(BoardBean bb); 
 
-	int deleteBoard(Integer id);
+//	int deleteBoard(Integer id);
+	
+	List<BoardBean> getAllcomment();
 
+	List<BoardBean> getMember(String acount);
 }
+
+

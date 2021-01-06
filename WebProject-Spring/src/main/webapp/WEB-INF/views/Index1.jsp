@@ -179,8 +179,9 @@
             </div>
 
 <!-- -------------------------------------------------------------- -->
+
             <div class="container"  style="margin-top: 20px;">
-            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
+            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">分類找餐廳 Restaurant category</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">
    <c:url value="StoreGetClassstore" var="riceURL">
    <c:param name="sclass" value="中式"/>
@@ -234,7 +235,7 @@
 <%-- <sql:query dataSource="${ds}" var="rsbanner"> --%>
 <!--          select top(4) bannerurl,stname,id  from Store  ORDER BY NEWID() -->
 <%-- </sql:query> --%>
-		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Recommended carousel</div>
+		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">美食跑馬燈 Recommended carousel</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;">
                 	    <div id="wrapper1" class="wrapper">
         <ul class="slides">
@@ -262,7 +263,6 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../js/jquery-3.5.1.min.js"></script>
     <script>
          $(function(){
             let slideNum=0;

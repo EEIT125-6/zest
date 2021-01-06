@@ -1,11 +1,14 @@
 package xun.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import xun.dao.ProductDao;
+import xun.model.StoreBean;
 import xun.model.ProductInfoBean;
 
 @Repository
@@ -29,7 +32,7 @@ public class ProductDaoImpl implements ProductDao{
 		String hql = "Update ProductInfoBean set product_name = :name"
 				+ ",product_shop = :shop ,product_price = :price"
 				+ ",product_picture = :pictureurl,product_quantity = :quantity"
-				+ ",storebean = :storebean WHERE product_id = :id";
+				+ " WHERE product_id = :id";
 		Session session = factory.getCurrentSession();
 		
 		result = session.createQuery(hql)
@@ -38,7 +41,6 @@ public class ProductDaoImpl implements ProductDao{
 				.setParameter("price", pi.getProduct_price())
 				.setParameter("pictureurl", pi.getProduct_picture())
 				.setParameter("quantity", pi.getProduct_quantity())
-				.setParameter("storebean", pi.getStorebean())
 				.setParameter("id", pi.getProduct_id())
 				.executeUpdate();
 		return result;
@@ -54,6 +56,32 @@ public class ProductDaoImpl implements ProductDao{
 				.setParameter("id", pi.getProduct_id())
 				.executeUpdate();
 		return result;
+	}
+
+	@Override
+	public ProductInfoBean get(Integer productid) {
+		
+		return  factory.getCurrentSession().get(ProductInfoBean.class,productid);
+	}
+
+	@Override
+	public Integer deleteALLProduct(StoreBean sb) {
+		String hql = "DELETE ProductInfoBean pib WHERE pib.storebean = :storebean";
+		Session session = factory.getCurrentSession();
+		Integer result = session.createQuery(hql)
+				.setParameter("storebean", sb)
+				.executeUpdate();
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProductInfoBean> getStoreProduct(StoreBean sb) {
+		String hql = "FROM ProductInfoBean pib WHERE pib.storebean = :storebean";
+		List<ProductInfoBean> list = factory.getCurrentSession().createQuery(hql) 
+				.setParameter("storebean", sb)
+				.getResultList();
+		return list;
 	}
 
 }

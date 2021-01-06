@@ -21,18 +21,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import webUser.model.WebUserData;
+import webUser.service.WebUserService;
+
 import xun.model.StoreBean;
+import xun.service.ProductService;
 import xun.service.StoreService;
 import xun.validators.StoreInsertVaildators;
 
 @Controller
-@SessionAttributes({"id","restname"})
+@SessionAttributes({"id","restname","userFullData"})
 public class StoreCUD_Controller {
 
 	
 	@Autowired
 	StoreService ss;
 	
+	@Autowired
+	ProductService ps;
+	
+	@Autowired
+	WebUserService ws;
 	
 	@GetMapping("/Insert")
 	public String InsertPage(
@@ -68,6 +77,13 @@ public class StoreCUD_Controller {
 		if (result.hasErrors()) {
 			return "Insert";
 		}
+
+//		寫入商家主人資訊
+		WebUserData userFullData = (WebUserData) model.getAttribute("userFullData");
+//		WebUserData wud = new WebUserData();
+//		wud = ws.getWebUserDataById(userFullData);
+		storeBean.setWebUserData(userFullData);
+
 //		新增
 		ss.save(storeBean);
 //		將新登入的商家的ID取出 並送到查詢詳細商家的Controller 做印出
@@ -139,6 +155,7 @@ public class StoreCUD_Controller {
 			Model model,
 			@ModelAttribute("storeBean") StoreBean storeBean
 			) {
+		ps.deleteALLProduct(storeBean);
 		ss.deleteStore(storeBean);
 		return "exDeleteStore";
 	}
@@ -165,11 +182,11 @@ public class StoreCUD_Controller {
 			HttpServletRequest request
 			) {
 		MultipartFile file2 = file;
-		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
 //		String fakePath = "C:\\ProjectGithub\\";
 		
 		String filePath = request.getSession().getServletContext().getRealPath("");
-		String FileName = file.getOriginalFilename();
+		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 		String fakeFilePath =fakePath+FileName;
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
@@ -215,9 +232,9 @@ public class StoreCUD_Controller {
 			) {
 		MultipartFile file2 = file;
 		String filePath = request.getSession().getServletContext().getRealPath("");
-		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
 		
-		String FileName = file.getOriginalFilename();
+		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 		
 		String fakeFilePath =fakePath+FileName;
 		

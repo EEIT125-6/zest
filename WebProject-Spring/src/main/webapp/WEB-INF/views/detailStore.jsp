@@ -31,6 +31,9 @@
 	<c:set var = "stitddt" value = "${row.stitddt }"/>
 	<c:set var = "tel" value = "${row.tel }"/>
 	<c:set var = "bannerurl" value = "${row.bannerurl }"/>
+	<c:if test = "${userFullData.account != null}" >
+		<c:set var = "userId" value = "${row.webUserData.userId}"/>
+	</c:if>
 </c:forEach>
 
 
@@ -42,8 +45,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-    
+     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
+<!--     <link rel="stylesheet" -->
     <title>橙皮  </title>
     <style>
         body{
@@ -72,75 +76,6 @@
             margin: 0;
             margin-left:5px ;
        }
-       
-       .box1{
-       			text-align:center;
-       }
-       
-       .box2{
-       
-       }
-       .uploadImage{
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    width: 90px;
-    height: 90px;
-    background: url("../點選上傳.png") no-repeat;
-    background-size: cover;
-    text-align: center;
-    cursor: pointer;
-}
-.uploadImage p{
-    position: absolute;
-    left:0;right:0;
-    bottom: 10px;
-    font-size: 14px;
-    color: #999999;
-}
-.uploadImage input#file{
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
-.preview{
-    position: relative;
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 10px;
-    width: 90px;
-    height: 90px;
-    background: #E1E6ED;
-    text-align: center;
-}
-.preview img{
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-}
-.preview img[src=""]{
-    opacity:0;
-    filter: Alpha(0); /* 相容IE8-9 */
-}
-.preview img:not([src]){
-    opacity:0;
-    filter: Alpha(0); /* 相容IE8-9 */
-}
-.preview .word{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    line-height: 90px;
-    font-size: 14px;
-    color: #999999;
-    z-index: 0;
-}
-
- 
-       
 
 #gotop {
     position:fixed;
@@ -177,34 +112,35 @@
 <!--             </div> -->
 
 <!-- -------------------------------------------------------------- -->
-            <div class="container-fluid photo" style="background-image: url('${bannerurl}');background-size:100% 100%">
+            <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
-            	<%if(true){ %>
-		<c:url value="Update" var="EDITURL">
+            <c:if test="${userFullData.userId == userId && userId != null}">
+<%--             	<%if(true){ %> --%>
+			<c:url value="/Update" var="EDITURL">
 <%-- 			<c:param name="stname" value="${stname1}" /> --%>
 			<c:param name="id" value="${id}" />	
-		</c:url>
+			</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
-		<c:url value="Insert" var="CEATEURL">
-		</c:url> 
+			<c:url value="/Insert" var="CEATEURL">
+			</c:url> 
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
-
-			<form action="DeleteStore" method="post" style="display:inline">
+<%-- 		<c:url value = '/DeleteStore'/> --%>
+			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
 			<span>|</span>
-		<c:url value="UpdatePhoto" var="photoURL">
+		<c:url value="/UpdatePhoto" var="photoURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"></c:param>
 		<c:param name="photo" value="photo"></c:param>
 		</c:url>
 			<a href="${photoURL}">修改店家photo</a>
 			<span>|</span>
-		<c:url value="UpdateBanner" var="bannerURL">
+		<c:url value="/UpdateBanner" var="bannerURL">
 		<c:param name="stname" value="${stname1}"></c:param>
 		<c:param name="id" value="${id}"/>
 		<c:param name="banner" value="banner"></c:param>
@@ -212,26 +148,28 @@
 			<a href="${bannerURL}">修改店家banner</a>
 			
 			<span>|</span>
-			<form action="InsertProduct" method="GET" style="display:inline">
+<%-- 			<c:url value="/InsertProduct"/> --%>
+			<form action="${pageContext.request.contextPath}/InsertProduct" method="GET" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
 			
-			<span>|</span>
-			<form action="#" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
+<!-- 			<span>|</span> -->
+<!-- 			<form action="#" method="post" style="display:inline"> -->
+<%-- 				<input type="hidden" name="id" value="${id}"> --%>
+<%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
+<!-- 				<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
+<!-- 			</form> -->
 			
-			<span>|</span>
-			<form action="#" method="post" style="display:inline">
-				<input type="hidden" name="id" value="${id}">
-				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
-			</form>
-	<%} %>
+<!-- 			<span>|</span> -->
+<!-- 			<form action="#" method="post" style="display:inline"> -->
+<%-- 				<input type="hidden" name="id" value="${id}"> --%>
+<%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
+<!-- 				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
+<!-- 			</form> -->
+<%-- 	<%} %> --%>
+		</c:if>
 	<br>
 	
     <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
@@ -244,7 +182,9 @@
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
-		<span style="font-size: 140%">餐廳服務</span>
+		<a href="<c:url value='/booking/${stname1}'/> ">	
+			<span style="font-size: 140%">餐廳服務</span>
+		</a>
 	</div>
 	
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px">
@@ -256,236 +196,154 @@
         </div>
         <hr>
         <div id="div1" class="ddiv">
-            <span style="font-size: 140%">  
-            
-     <div class="box1" style="text-align:center ;margin: auto;" > 
-       
-       
-
-                
-        <div class="d1" style="text-align:left ;">評分總人數:</div>
-        <br>
-        <div class="d2">
-            <h3>給予評價</h3>
-            <img id="img1" class="i" src="star/s1.png" height="25px"、 width="25px"/>
-            <img id="img2" class="i" src="star/s1.png" height="25px"、 width="25px"/>
-            <img id="img3" class="i" src="star/s1.png" height="25px"、 width="25px"/>
-            <img id="img4" class="i" src="star/s1.png" height="25px"、 width="25px"/>
-            <img id="img5" class="i" src="star/s1.png" height="25px"、 width="25px"/>
-            <br>
-            <label id = "startPcs"></label>
-        </div>
-<!--                    <span id="score" style="color : blue;font-size:200%;"></span> -->
-            <div id="d1"></div>
-        
-        <div class="d3"> 
-            <div class="container">
-                <div class="row">
-<!--                   <div class="s1"> -->
-<!--                     <img  src="star/Mstar.png" height="110px"、width="110px"> -->
-<!--                 </div> -->
-                  <div class="s2">
-
-                  </div>
-                  <div class="s3">
-                    <h3></h3>        
-                  </div>
-                </div>
-              </div>
-         
-            
-        </div>
-    </div>
-    <br>
-    <div class="box2" style="text-align:center ;margin: auto;">
-       <form id="form1" method="get" action="<c:url value='/pack'/>">
-		<input type="hidden" name="storeId" value="${id}">
-   <fieldset>
-        <legend>留言</legend>
-        
-    <div class="st1">
-        <label class="t1" for="name">名字:</label>
-       <input type="text" id="name" name="name" ><br>
-    </div>
-    <div class="st1">
-        <label for="star" class="t1"></label>
-        <input type="hidden" id="star" name="star" ><br>
-    </div>
-    
-<!--     圖片欄位 -->
-
-     <!--  <div class="st1">
-        <label class="t1" for="photo">照片:</label>
-        <input type="text" id="photo" name="photo" ><br>
-    </div> -->  
-    
-<!--     上傳圖片 -->
-    
-<!--    <div> -->
-<!-- 		 <form action="/somewhere/to/upload" enctype="multipart/form-data"> -->
-		
-<!-- 		   <input type="file" onchange="readURL(this)" targetID="preview_progressbarTW_img" accept="image/gif, image/jpeg, image/png"/ > -->
-<!-- 		<div> -->
-<!-- 		   <img id="preview_progressbarTW_img" src="#"  height="200px"  wight="200px"/> -->
-<!-- 		</div> -->
-<!-- 		</form> -->
-<!--     </div><br> -->
-
-
-
-<!-- 上傳圖片(2) -->
-
-<!-- <div class="pic"> -->
-<!--     <div class="uploadImage"> -->
-<!--         <input type="file" value="上傳檔案" id="file" accept="image/png, image/jpeg, image/gif, image/jpg" multiple/> -->
-<!--         <p>點選上傳</p> -->
-<!--     </div> -->
-<!--     <div class="preview"> -->
-<!--         <img src="" id="look1"> -->
-<!--         <p class="word">圖片1</p> -->
-<!--     </div> -->
-<!--     <div class="preview"> -->
-<!--         <img src="" id="look2"> -->
-<!--         <p class="word">圖片2</p> -->
-<!--     </div> -->
-<!-- </div> -->
-
-
-    
-<div class="st1">
-    <label class="t1" for="pwd1">留言:</label>
-    <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
-</div>
-
-    <div class="sub">
-        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
-        <input type="reset" value="清除"> 
-    </div>
-</fieldset>
-   
-</form>
-    </div>
-    <br>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  
-
-    
-    <script >  
-           
-        $(".i").mousedown(function(){
-            let starts = $(this).attr("id").split("img")[1];
-//             $('#startPcs').html("給你"+starts+"顆星");
-			$("#star").val(starts);
-        })
-         
-        $(".i").mouseenter(function(){
-            $(this).attr("src","star/s3.png");
-            $(this).prevAll().attr("src","star/s3.png");
-            $(this).nextAll().attr("src","star/s1.png")
-            let starts = $(this).attr("id").split("img")[1]
-//             $('#startPcs').html("打分中..."+starts+"顆星")
-        });
-        
-        
-        
-        
-        
-//    上傳圖片(2)     
-
-// var hasUploadedOne = false;// 已上傳過1張圖片
-// var hasUploadedTwo = false;// 已上傳過2張圖片
-
-// //獲取到預覽框
-// var imgObjPreview1 = document.getElementById("look1");
-// var imgObjPreview2 = document.getElementById("look2");
-
-// document.getElementById('file').onchange = function() {
-//     // 若還沒完成2張圖片的上傳
-//     if(!hasUploadedTwo){
-//         //獲取到file的檔案
-//         var docObj = this;
-
-//         //獲取到檔名和型別（非IE，可一次上傳1張或多張）
-//         if(docObj.files && docObj.files[0]) {
-//             // 一次上傳了>=2張圖片（只有前兩張會真的上傳上去）
-//             if(docObj.files.length >= 2){
-//                 imgObjPreview1.src = window.URL.createObjectURL(docObj.files[0]);
-//                 imgObjPreview2.src = window.URL.createObjectURL(docObj.files[1]);
-//                 hasUploadedTwo = true;
-//             }
-//             //一次只上傳了1張照片
-//             else{
-//                 // 這是上傳的第一張照片
-//                 if(!hasUploadedOne){
-//                     imgObjPreview1.src = window.URL.createObjectURL(docObj.files[0]);
-//                     hasUploadedOne = true;
-//                 }
-//                 // 這是上傳的第二張照片
-//                 else{
-//                     imgObjPreview2.src = window.URL.createObjectURL(docObj.files[0]);
-//                     hasUploadedTwo = true;
-//                 }
-//             }
-
-//         }
-//         //IE（只能一次上傳1張）
-//         else {
-//             //使用濾鏡
-//             docObj.select();
-//             var imgSrc = document.selection.createRange().text;
-//             // 這是上傳的第一張照片
-//             if(!hasUploadedOne){
-//                 imgObjPreview1.src = imgSrc;
-//                 hasUploadedOne = true;
-//             }
-//             // 這是上傳的第二張照片
-//             else{
-//                 imgObjPreview2.src = imgSrc;
-//                 hasUploadedTwo = true;
-//             }
-//             document.selection.empty();
-//         }
-//         return true;
-//     }
-// }
-
-        
-        
-    </script></span>
-	    <table id="detail" border="1" class="tb1 container">
-		    <thead>
-		    	<tr>
-		    		<th>名子</th>
-		    		<th>日期</th>
-		    		<th>評分</th>
-		    		<th>內容</th>
-		    	</tr>	
-		    </thead>
-		    <tbody>
-		    	<c:forEach var="row" items="${Comments}">
-			    	<tr>
-			    		<td>${row.name} </td>
-			    		<td>${row.date}</td>
-			    		<td>${row.star}</td>
-			    		<td>${row.context}</td>
-			    	</tr>
-	             </c:forEach>
-		    </tbody>
-	    </table>
-            
-        </div>
+            <span style="font-size: 140%">
+            	<div class="box1" style="text-align:center; margin:auto " >
+            		<div style="text-align: right;">
+						<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i> 
+						
+						
+						<a href="<c:url value="/ShowComment" />">查詢留言 </a>
+					</div>
+					<br>
+			        <div id="d1"></div>
+			        <div class="d3">
+			        	<div class="container">
+			        		<div class="row">
+			        			<div class="s2">
+			        			</div>
+		        				<div class="s3">
+			                    	<h3></h3>        
+			                  	</div>
+		        			</div>
+		        		</div>
+		        	</div>
+		        </div>
+		        <br>
+			    <div class="box2" style="text-align:center ;margin: auto;">
+			       <form id="form1" method="get" action="<c:url value='/pack'/>">
+			       		<fieldset>
+			       			<legend>留言</legend>
+			       			<input type="hidden" name="storeId" value="${id}">
+			       			<div class="st1">
+						       <label class="t1" for="name">名字:</label>
+						       <input readonly type="text" id="name" name="name" value="${userFullData.nickname}"><br>
+						    </div>
+						    <div class="st1">
+						        <label for="star" class="t1"></label>
+						        <input type="hidden" id="star" name="star" ><br>
+						    </div>
+						    
+					 <div class="d2">
+			            <span>評價:  </span>
+			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <br>
+			            <label id = "startPcs"></label>
+			        </div>
+						    <div class="st1">
+							    <label class="t1" for="pwd1">留言:</label>
+							    <textarea name="comment" id="comment" cols="33" rows="5" ></textarea><br>
+							</div>
+							<div class="sub">
+						        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
+						        <input type="reset" value="清除"> 
+						    </div>
+			       		</fieldset>
+			       </form>
+			    </div>
+			    <br />
+			    <script src="js/jquery-3.5.1.min.js"></script>
+			    <script >
+			    	$(".i").mousedown(function() {
+			    		let starts = $(this).attr("id").split("img")[1];
+			    		$("#star").val(starts);
+			    	});
+			    	
+			    	$(".i").mouseenter(function() {
+			    		$(this).attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).prevAll().attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).nextAll().attr("src","<c:url value='/star/s1.png'/>");
+			    		let starts = $(this).attr("id").split("img")[1];
+			    	});
+			    </script>
+            </span>
+            <table id="detail" border="1" class="tb1 container">
+            	<thead>
+            		<tr>
+            			<th>名字</th>
+			    		<th>日期</th>
+			    		<th>評分</th>
+			    		<th>內容</th>
+            		</tr>
+            	</thead>
+            	<tbody>
+            		<c:forEach var="row" items="${Comments}">
+            			<tr>
+				    		<td>${row.name} </td>
+				    		<td>${row.date}</td>
+				    		<td>${row.star}</td>
+				    		<td>${row.context}</td>
+				    	</tr>
+            		</c:forEach>
+            	</tbody>
+            </table>
+          </div>
+          
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> hello</span>
         </div>
         <div id="div3" style="display:none;" class="ddiv">
 <!--              <span style="font-size: 140%">ho </span> -->
-			<div>
-				<c:forEach var="row1" items="${Products}">
-             		${row1.product_name} 
-             		${row1.product_price}
-             		${row1.product_quantity}
-             		<br>
-	            </c:forEach>
+			<div class="row"  style="padding:10px">
+					<c:forEach var="row1" items="${Products}">
+						<div class="col-sm-4">
+<!-- 					       style="background: url('Images/LOGO1-removebg-preview.png')" -->
+								    <div class="card" style="background:#f28633;">
+								    <c:if test="${row1.product_picture != null}">
+								    	<div class="imgBx">
+				             				<img src="${pageContext.request.contextPath}/123/${row1.product_picture}" style="border-radius: 7 px;"/>
+				             			</div>	
+				             		</c:if>
+				             		<c:if test="${row1.product_picture == null }">
+								        <div class="imgBx" >
+				    	         			<img src="${pageContext.request.contextPath}/Images/LOGO1-removebg-preview.png" style="border-radius: 7 px;"/>
+								        </div>
+				             		</c:if>
+								        <div class="contentBx">
+								            <h3>${row1.product_name} </h3>
+								            <h2 class="price">$${row1.product_price}</h2>
+								            <a href="#" class="buy">Buy Now</a>
+								        </div>
+								    </div>
+<%-- 				             		${row1.product_name}  --%>
+<%-- 				             		${row1.product_price} --%>
+<%-- 				             		${row1.product_quantity} --%>
+<%-- 				             		<c:if test="${row1.product_picture != null}"> --%>
+<%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
+<%-- 				             		</c:if> --%>
+<%-- 				             		<c:url value='/updateProductpage'/> --%>
+
+							<c:if test="${userFullData.userId == userId && userId != null}">
+							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline">
+								<input type="hidden" name="id" value="${id}">
+								<input type="hidden" name="productid" value="${row1.product_id}">
+								<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+							</form>
+							
+							<span>|</span>
+<%-- 							<c:url value='/deleteProductpage'/> --%>
+							<form action="<c:url value='/deleteProductpage'/>" method="post" style="display:inline">
+								<input type="hidden" name="id" value="${id}">
+								<input type="hidden" name="productid" value="${row1.product_id}">
+								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+							</form>
+						</c:if>
+				             		<br>
+			             </div>
+		            </c:forEach>
 			</div>
         </div>
         <div id="div4" style="display:none;" class="ddiv">
@@ -507,7 +365,6 @@
         	$.ajax({
         		  url:'<c:url value="/insertboard"/>',
         		  type:'POST',
-        		  //data:$('#form1').serialize(),
         		  data:map,
         		  success:function(res){
         				console.log(res);
@@ -521,7 +378,7 @@
             				alert('新增成功');
             				$('#name').val("");
             				$('#comment').val("");
-            				$('.i').attr("src","star/s1.png")
+            				$('.i').attr("src","<c:url value='/star/s1.png'/>")
         				}else{
             				alert('新增異常');
         				}
@@ -706,8 +563,3 @@ $(function() {
         
 </body>
 </html>
-
-
-<script>
-
-</script>

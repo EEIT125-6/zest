@@ -1,13 +1,21 @@
 package xun.model;
 
+import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import webUser.model.WebUserData;
 
 @Entity
 @Table(name = "Store")
@@ -25,6 +33,11 @@ public class StoreBean {
 	String tel;
 	String bannerurl;
 	String photourl;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "userId")
+	private WebUserData webUserData;
+
 	@Transient	
 	MultipartFile stfile;
 	
@@ -53,6 +66,22 @@ public class StoreBean {
 		this.id = id;
 	}
 	
+	public StoreBean(Integer id, String stname, String sclass, String saddress, Integer price, String stitd,
+			String stitddt, String tel, String bannerurl, String photourl, WebUserData webUserData) {
+		super();
+		this.id = id;
+		this.stname = stname;
+		this.sclass = sclass;
+		this.saddress = saddress;
+		this.price = price;
+		this.stitd = stitd;
+		this.stitddt = stitddt;
+		this.tel = tel;
+		this.bannerurl = bannerurl;
+		this.photourl = photourl;
+		this.webUserData = webUserData;
+	}
+
 	public StoreBean(Integer id, String stname, String bannerurl,
 			String photourl) {
 		super();
@@ -182,14 +211,18 @@ public class StoreBean {
 		this.photourl = photourl;
 	}
 
+	public WebUserData getWebUserData() {
+		return webUserData;
+	}
+
+	public void setWebUserData(WebUserData webUserData) {
+		this.webUserData = webUserData;
+	}
+
 	@Override
 	public String toString() {
 		return "StoreBean [id=" + id + ", stname=" + stname + ", sclass=" + sclass + ", saddress=" + saddress
 				+ ", price=" + price + ", stitd=" + stitd + ", stitddt=" + stitddt + ", tel=" + tel + ", bannerurl="
 				+ bannerurl + ", photourl=" + photourl + ", stfile=" + stfile + "]";
 	}
-	
-	
-	
-	
 }

@@ -140,7 +140,7 @@
             </div>
 <script>
 	setTimeout(function(){
-		window.location.href="show"
+		window.location.href="<c:url value='/ShowComment' />"
 	}
 	,5000);
 </script>
