@@ -149,7 +149,7 @@ setTimeout(function(){
   
 <center>            
 <h2>訂位完成！</h2>
-5秒後將自動轉跳回訂位頁面
+5秒後將自動轉跳回首頁
 <%-- <a href="<c:url value='bookingForm.jsp'/>"></a> --%>
 <form action="<c:url value='/'/>" >
 <input type="submit" name="back" value="返回" style="margin-top:20px;">

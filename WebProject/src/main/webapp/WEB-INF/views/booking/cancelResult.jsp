@@ -143,7 +143,7 @@ response.setContentType("text/html;charset=UTF-8");
 </div>  
 <%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
 <form action="<c:url value='/booking/Page1'/>" method="get" >
-<input type="submit" name="back" value="返回" style="margin-bottom:70px">
+<input type="submit" name="back" value="返回" style="border-radius: 3px; border: none; outline: none;margin:50px;">
 </form>
   
 </center>

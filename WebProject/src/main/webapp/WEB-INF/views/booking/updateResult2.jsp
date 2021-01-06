@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -7,7 +6,8 @@ response.setContentType("text/html;charset=UTF-8");
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file = "../Link_Meta-Include.jsp" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <title>訂單修改完成！</title>
     <style>
          .classimg{
@@ -144,8 +144,8 @@ response.setContentType("text/html;charset=UTF-8");
 <div class="h1" style="margin-top: 20px;">             
 <h2>訂單修改完成！</h2>
 </div>
-<%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
-<form action="<c:url value='/booking/Page1'/>" method="get" >
+
+<form action="<c:url value='/booking/Page1'/>" >
 <input type="submit" name="back" value="返回" style="margin-bottom:70px">
 </form>
 </center>   
