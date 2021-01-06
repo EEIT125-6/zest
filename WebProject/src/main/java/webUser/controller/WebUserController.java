@@ -96,7 +96,8 @@ public class WebUserController {
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 	
 	/* Default Project Physical Address */
-	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
