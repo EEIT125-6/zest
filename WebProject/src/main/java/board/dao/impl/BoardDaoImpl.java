@@ -1,5 +1,8 @@
 package board.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
@@ -77,4 +80,22 @@ public class BoardDaoImpl implements BoardDao {
 //		result++;
 //		return result;
 //	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardBean> getAllcomment(){
+		List<BoardBean> list = new ArrayList<>();
+		Session session = factory.getCurrentSession();
+		String HQL = "FROM BoardBean WHERE status = 0";
+		list=session.createQuery(HQL).getResultList();
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardBean> getMember(String acount){
+		List<BoardBean> list = new ArrayList<>();
+		Session session = factory.getCurrentSession();
+		String HQL = "FROM BoardBean WHERE status = 0 and name=:acount";
+		list=session.createQuery(HQL).setParameter("acount", acount).getResultList();
+		return list;
+	}
 }

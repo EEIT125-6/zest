@@ -55,6 +55,7 @@ body {
 	            	${productInfoBean.product_shop}          
 	            	<br>
 	            </label>
+	            <br>
                 <label>商品名稱:
 					<form:input path="product_name"/>
 					<form:errors path="product_name" cssClass="error"/>
@@ -66,6 +67,9 @@ body {
                 <br>
                 <label>商品照片:
 					<input type="file" name="photo"/>
+					<br>
+<!-- 						  <img id="blah" src="" alt="圖片預覽" width="100%;" height="100% "  /> -->
+						  <img id="blah" src="" alt="" width="100%;" height="100% "  />
                 </label>
                 <br>
                 <label>商品庫存:
@@ -85,4 +89,22 @@ body {
 <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:85px">
 	<%@include file="Footer-Include-prototype.jsp"%>
 </body>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		function readURL(input) {
+			  if (input.files && input.files[0]) {
+			    var reader = new FileReader();
+			    
+			    reader.onload = function(e) {
+			      $('#blah').attr('src', e.target.result);
+			    }
+			    
+			    reader.readAsDataURL(input.files[0]); // convert to base64 string
+			  }
+			}
+
+			$("#imgInp").change(function() {
+			  readURL(this);
+			});
+	</script>
 </html>

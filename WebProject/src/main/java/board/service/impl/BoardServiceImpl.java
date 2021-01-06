@@ -1,5 +1,7 @@
 package board.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +41,14 @@ public class BoardServiceImpl implements BoardService {
 	public BoardBean getBoardByName(String name) {
 		return  dao.getBoardByName(name);
 	}
-	
-//	@Override
-//	public int deleteBoard(Integer id) {
-//		return dao.deleteBoard(id);
-//		
-//	}
+
+	@Override
+	public List<BoardBean> getAllcomment() {
+		return dao.getAllcomment();
+	}
+
+	@Override
+	public List<BoardBean> getMember(String acount) {
+		return dao.getMember(acount);
+	}
 }

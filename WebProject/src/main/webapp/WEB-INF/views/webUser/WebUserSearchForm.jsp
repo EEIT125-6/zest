@@ -15,8 +15,6 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <%@include file="../Link_Meta-Include.jsp"%>
 <!-- Google Icon -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- dataTables用css -->
-<!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">	 -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
@@ -245,36 +243,9 @@ ul.slides li img {
 			<span id="searchSpan"></span>
 		</div>
 		
-<!-- 		<div align="center" id="dataTableContainer"> -->
-<!-- 			<table id="userDataTable" class="display"> -->
-<!-- 				<thead> -->
-<!-- 					<tr> -->
-<!-- 						<th>項次</th> -->
-<%-- 						<c:if test="${userFullData.accountLv.lv == -1}"> --%>
-<!-- 							<th>刪除</th> -->
-<!-- 							<th>其他</th> -->
-<!-- 							<th>查看</th> -->
-<%-- 						</c:if> --%>
-<!-- 						<th>帳號名稱</th> -->
-<!-- 						<th>稱呼</th> -->
-<!-- 						<th>偏好食物</th> -->
-<!-- 						<th>居住區域</th> -->
-<%-- 						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}"> --%>
-<!-- 							<th>帳號身分</th> -->
-<%-- 						</c:if> --%>
-<%-- 						<c:if test="${userFullData.accountLv.lv == -1}"> --%>
-<!-- 							<th>帳號狀態</th> -->
-<%-- 						</c:if> --%>
-<!-- 					</tr> -->
-<!-- 				</thead> -->
-<!-- 			</table> -->
-<!-- 		</div> -->
-		
 		<div align="center" id="dataContainer"></div>
 		<!-- 引用本地jQuery -->
 		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
-		<!-- 引用dataTables.js -->
-		<!-- 		<script src ="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
 		<!-- 引用本頁檢查用js -->
 		<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
@@ -308,19 +279,6 @@ ul.slides li img {
 					var mode = 'quit';
 					lastCheck(userId, account, status, mode);
 				});
-				/* dataTable測試區 */
-	//				let table = $("#userDataTable").DataTable({
-	//					processing: false, //關閉預設"顯示處理中"的效果
-	//					searching: false, //關閉內建搜尋
-	//					serverSide: true, //啟用ServerSide模式
-	//					order: [[0, "asc"]], //預設排序(由第0個資料行、升覓排序)
-	//					orderMulti: false, //關閉多欄位排序
-	//					deferLoading: 0 //初始化時不自動執行aJax
-	//					ajax: {
-	//						method: "POST",
-						
-	//					}
-	//				});
 			};
 		
 			$("#search").click(function() {
