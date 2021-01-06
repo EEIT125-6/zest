@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%@include file = "../Link_Meta-Include.jsp" %>
+	<%@include file = "Link_Meta-Include.jsp" %>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
     <title>進行註冊</title>
@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.password != null}">
@@ -287,7 +287,7 @@
 					<div align="center">
 						<button type="submit" style="font-size:18px" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
 						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-						<a href="<c:url value='/webUser/WebUserLogin' /> "><button type="button" name="login" style="font-size:18px" >前往登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<a href="<c:url value='/WebUserLogin' /> "><button type="button" name="login" style="font-size:18px" >前往登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
 				</form>
@@ -626,6 +626,6 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            <%@include file = "Footer-Include-prototype.jsp" %>
 </body>
 </html>

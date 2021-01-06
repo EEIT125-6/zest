@@ -17,7 +17,7 @@
 			<br> 
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user" style="font-size: 25px; color: yellow"></i>
-				<a href="${pageContext.request.contextPath}/webUser/WebUserLogin">
+				<a href="${pageContext.request.contextPath}/WebUserLogin">
 				登入 | 
 				</a>
 			</c:if>
@@ -50,7 +50,7 @@
 			</c:if>
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user-plus" style="font-size: 25px; color: yellow"></i>
-			<a href="${pageContext.request.contextPath}/webUser/WebUserRegisterForm">
+			<a href="${pageContext.request.contextPath}/WebUserRegisterForm">
 			註冊 |
 			</a>
 			</c:if>

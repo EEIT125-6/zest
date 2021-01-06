@@ -151,7 +151,7 @@
                 	<p>${updateResultMessage}</p>
                 </c:if>
                 <script>
-                	let redirectPage = "WebUserLogin";
+                	let redirectPage = "../WebUserLogin";
                 	setTimeout(function () {
 	                	   window.location.href = redirectPage;
                	  	}

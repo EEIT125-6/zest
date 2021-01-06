@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 
@@ -24,7 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -60,7 +60,6 @@ import webUser.service.WillingService;
 		"managedUserData",
 		"selfData"})
 @Controller
-@RequestMapping("/webUser")
 public class WebUserController {
 	/* ServletContext */
 	@Autowired
@@ -100,8 +99,7 @@ public class WebUserController {
 	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
-	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";
-	
+	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
 	/* 簽到用生日當月時顯示字串 */
 	final String birthMonth = "這個月對您是特別的一個月，今日登入讓您獲得了 1 枚橙幣！";
 	
@@ -127,11 +125,11 @@ public class WebUserController {
 		model.addAttribute("cityInfoList", cityInfoList);
 		
 		/* 前往註冊畫面 */
-		return "webUser/WebUserRegisterForm";
+		return "WebUserRegisterForm";
 	}
 
 	/* 執行註冊資料檢查 */
-	@PostMapping(value = "/controller/WebUserRegisterForm")
+	@PostMapping(value = "/webUser/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -177,7 +175,7 @@ public class WebUserController {
 				fervorValue,
 				cityCode);
 		
-		WebUserData reg_webUser = (WebUserData)map.get("reg_webUser");
+		WebUserData reg_webUser = (WebUserData) map.get("reg_webUser");
 		submitMessage = (String) map.get("submitMessage");
 		
 		/* 追加檢查checkCode */
@@ -195,12 +193,12 @@ public class WebUserController {
 			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
 			/* 返回註冊畫面 */
-			return "redirect:/webUser/WebUserRegisterForm";			
+			return "redirect:/WebUserRegisterForm";			
 		}
 	}
 
 	/* 執行使用者資料送出 */
-	@PostMapping(value = "/controller/DisplayWebUserInfo/confirm")
+	@PostMapping(value = "/webUser/controller/DisplayWebUserInfo/confirm")
 	public String doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
@@ -217,7 +215,7 @@ public class WebUserController {
 		
 		/* 宣告欲回傳的參數 */
 		Integer insertResult = -1;
-		String insertResultPage = "webUser/WebUserRegisterForm";
+		String insertResultPage = "WebUserRegisterForm";
 		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
 		insertResultMessage = doCheckRegisterInput(
@@ -256,7 +254,7 @@ public class WebUserController {
 				insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
-				insertResultPage = "webUser/WebUserLogin";
+				insertResultPage = "WebUserLogin";
 			} 
 			
 			/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
@@ -269,24 +267,24 @@ public class WebUserController {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
 			/* 返回註冊畫面 */
-			destinationUrl = "redirect:/webUser/WebUserRegisterForm";
+			destinationUrl = "redirect:/WebUserRegisterForm";
 		}		
 		
 		return destinationUrl;
 	}
 	
 	/* 取消註冊 */
-	@GetMapping(value = "/controller/DisplayWebUserInfo/undo")
+	@GetMapping(value = "/webUser/controller/DisplayWebUserInfo/undo")
 	public String doRegisterUndo(
 			SessionStatus sessionStatus) {
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 返回註冊畫面 */
-		return "redirect:/webUser/WebUserRegisterForm";
+		return "redirect:/WebUserRegisterForm";
 	}
 	
 	/* 執行登入檢查 */
-	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			@RequestParam(value = "account", defaultValue="") String account,
@@ -365,11 +363,12 @@ public class WebUserController {
 	}
 	
 	/* 執行登出 */
-	@GetMapping(value = "/controller/WebUserMain/Logout")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Logout")
 	public String doLogOut(
 			Model model,
 			RedirectAttributes redirectAttributes,
-			SessionStatus sessionStatus) {
+			SessionStatus sessionStatus,
+			HttpSession session) {
 		
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
@@ -378,6 +377,8 @@ public class WebUserController {
 		
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
+		/* 無效httpSession */
+		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
 		/* 前往登出畫面 */
@@ -385,7 +386,7 @@ public class WebUserController {
 	}
 	
 	/* 執行帳號停用 */
-	@PostMapping(value = "/controller/WebUserMain/Quit")
+	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
 	public String doPersonalQuit(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -447,7 +448,7 @@ public class WebUserController {
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
-	@PostMapping(value = "/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doDisplaySelfData(
 			Model model) {
 		
@@ -483,19 +484,19 @@ public class WebUserController {
 	}
 	
 	/* 準備顯示個人資料畫面 */
-	@GetMapping(value = "/controller/WebUserMain/Modify")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Modify")
 	public String doDisplayOwnUserData() {
 		return "redirect:/webUser/DisplayWebUserData";
 	}
 	
 	/* 準備顯示修改密碼畫面 */
-	@GetMapping(value = "/controller/WebUserModifyPassword")
+	@GetMapping(value = "/webUser/controller/WebUserModifyPassword")
 	public String doWebUserModifyPassword() {
 		return "redirect:/webUser/WebUserModifyPassword";
 	}
 	
 	/* 執行修改密碼 */
-	@PostMapping(value = "/controller/WebUserModifyPassword")
+	@PostMapping(value = "/webUser/controller/WebUserModifyPassword")
 	public String doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
@@ -559,7 +560,7 @@ public class WebUserController {
 	}
 	
 	/* 準備前往修改其他資料畫面 */
-	@PostMapping(value = "/WebUserModifyData")
+	@PostMapping(value = "/webUser/WebUserModifyData")
 	public String doCreateWebUserModifyData(
 			Model model) {			
 		
@@ -592,7 +593,7 @@ public class WebUserController {
 		}
 		
 		if (!getResultMessage.equals("")) {
-			return "redirect:/webUser/WebUserLogin";
+			return "redirect:/WebUserLogin";
 		}
 		
 		/* 設定入Model中 */
@@ -601,7 +602,7 @@ public class WebUserController {
 	}
 	
 	/* 執行使用者圖像修改 */
-	@PostMapping(value = "/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserIcon(Model model,
 			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) {
 		
@@ -700,7 +701,7 @@ public class WebUserController {
 	
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -841,7 +842,7 @@ public class WebUserController {
 	}
 	
 	/* 前往搜尋畫面 */
-	@GetMapping(value = "/WebUserSearchForm")
+	@GetMapping(value = "/webUser/WebUserSearchForm")
 	public String doCreateWebUserSearchForm(Model model) 
 	{
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -859,14 +860,14 @@ public class WebUserController {
 	}
 	
 	/* 準備顯示搜尋畫面 */
-	@GetMapping(value = "/controller/WebUserMain/Search")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Search")
 	public String doDisplaySearchPage() {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
 	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
 			Model model,
 			@RequestParam(value = "selectedAccount", defaultValue = "?") String selectedAccount,
@@ -961,7 +962,7 @@ public class WebUserController {
 	} 
 	
 	/* 根據帳號顯示對應資料 */
-	@GetMapping("/ManageWebUser/{account}")
+	@GetMapping("/webUser/ManageWebUser/{account}")
 	public String doCreateDisplayManagedUserData(
 			Model model,
 			@PathVariable(value = "account") String account) {
@@ -1014,7 +1015,7 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
-	@PostMapping(value = "/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
@@ -1115,7 +1116,7 @@ public class WebUserController {
 	}
 	
 	/* 執行密碼重設 */
-	@PostMapping(value = "/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doResetWebUserPassword(
 			@RequestParam(value = "inputUserId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "inputPassword", required = false, defaultValue = "") String password) {
@@ -1145,7 +1146,7 @@ public class WebUserController {
 	}
 	
 	/* 傳送管理員後台新增表單所必需的資料 */
-	@GetMapping(value = "/WebUserAddForm")
+	@GetMapping(value = "/webUser/WebUserAddForm")
 	public String doCreateManagedUserRegisterForm(Model model) {
 		
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -1167,7 +1168,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
-	@PostMapping(value = "/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -1246,7 +1247,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員修改圖示 */
-	@PostMapping(value = "/controller/WebUserAdminModifyIcon", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserAdminModifyIcon", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminUpdateWebUserIcon(Model model,
 			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) 
 	{
@@ -1353,7 +1354,7 @@ public class WebUserController {
 	
 	/* 執行管理員修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminUpdateWebUser(
 			Model model,
 			@RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword,
@@ -1534,13 +1535,13 @@ public class WebUserController {
 	}
 	
 	/* 前往顯示註冊資料畫面 */
-	@GetMapping(value = "/DisplayWebUserInfo")
+	@GetMapping(value = "/webUser/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {
 		return "webUser/DisplayWebUserInfo";
 	}
 	
 	/* 前往註冊結束畫面 */
-	@GetMapping(value = "/WebUserRegisterResult")
+	@GetMapping(value = "/webUser/WebUserRegisterResult")
 	public String doGoRegisterResult() {
 		return "webUser/WebUserRegisterResult";
 	}
@@ -1548,65 +1549,65 @@ public class WebUserController {
 	/* 前往登入畫面 */
 	@GetMapping(value = "/WebUserLogin")
 	public String doGoLogin() {
-		return "webUser/WebUserLogin";
+		return "WebUserLogin";
 	}
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
 	public String doGoForget() {		
-		return "webUser/WebUserForgetForm";
+		return "WebUserForgetForm";
 	}
 	
 	/* 前往登入主畫面 */
-	@GetMapping(value = "/WebUserMain")
+	@GetMapping(value = "/webUser/WebUserMain")
 	public String doGoWebUserMain() {
 		return "webUser/WebUserMain";
 	}
 	
 	/* 前往登出畫面 */
-	@GetMapping(value = "WebUserLogoutResult")
+	@GetMapping(value = "/webUser/WebUserLogoutResult")
 	public String doGoLogOut() {
 		return "webUser/WebUserLogoutResult";
 	}
 	
 	/* 前往停用結束畫面 */
-	@GetMapping(value = "WebUserQuitResult")
+	@GetMapping(value = "/webUser/WebUserQuitResult")
 	public String doGoQuitResult() {
 		return "webUser/WebUserQuitResult";
 	}
 	
 	/* 前往顯示個人資料畫面 */
-	@GetMapping(value = "DisplayWebUserData")
+	@GetMapping(value = "/webUser/DisplayWebUserData")
 	public String doGoDisplayWebUserData() {
 		return "webUser/DisplayWebUserData";
 	}
 	
 	/* 前往修改個人密碼畫面 */
-	@GetMapping(value = "WebUserModifyPassword")
+	@GetMapping(value = "/webUser/WebUserModifyPassword")
 	public String doGoWebUserModifyPassword() {
 		return "webUser/WebUserModifyPassword";
 	}
 	
 	/* 前往個人修改結束畫面 */
-	@GetMapping(value = "WebUserChangeResult")
+	@GetMapping(value = "/webUser/WebUserChangeResult")
 	public String doGoWebUserChangeResult() {
 		return "webUser/WebUserChangeResult";
 	}
 	
 	/* 前往管理員用顯示個人資料畫面 */
-	@GetMapping(value = "DisplayManagedUserData")
+	@GetMapping(value = "/webUser/DisplayManagedUserData")
 	public String doGoDisplayManagedWebUserData() {
 		return "webUser/DisplayManagedUserData";
 	}
 	
 	/* 無輸入任何帳號則返回登入 */
-	@GetMapping("/ManageWebUser")
+	@GetMapping("/webUser/ManageWebUser")
 	public String doGoBackToLogin() {
 		return "webUser/WebUserLogin";
 	}
 	
 	/* 前往重設密碼 */
-	@GetMapping("/WebUserResetPassword")
+	@GetMapping("/webUser/WebUserResetPassword")
 	public String doGoResetPassword() {
 		return "webUser/WebUserResetPassword";
 	}

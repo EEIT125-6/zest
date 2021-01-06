@@ -3,6 +3,7 @@ package xun.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +47,11 @@ public class StoreCUD_Controller {
 	@GetMapping("/Insert")
 	public String InsertPage(
 			Model model
-			) {
+//			,@RequestParam(value = "userId",required = false) String userId
+			) throws SQLException {
 		StoreBean storeBean = new StoreBean();
+//		WebUserData user = ws.getWebUserDataById(userId);
+//		storeBean.setWebUserData(user);
 		model.addAttribute("storeBean", storeBean);
 		return "Insert";
 	}

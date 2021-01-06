@@ -80,7 +80,8 @@ public class ProductCUD_Controller {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			productInfoBean.setProduct_picture("Images\\"+FileName);
+			
+			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
 		
 //		執行新增
 			ps.save(productInfoBean);
@@ -172,7 +173,7 @@ public class ProductCUD_Controller {
 				e.printStackTrace();
 			}
 //		執行更新
-			productInfoBean.setProduct_picture("Images\\"+FileName);
+			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
 			
 			ps.updateProduct(productInfoBean);
 //			System.out.println(productInfoBean);
@@ -234,11 +235,13 @@ public class ProductCUD_Controller {
 		Collections.sort(productsprice);
 		Integer storeprice=null;
 		if(productsprice.size()%2 !=0) {
-			storeprice=productsprice.get((productsprice.size()+1)/2);
+			storeprice=productsprice.get((productsprice.size()+1)/2-1);
 			System.out.println(storeprice);
 			System.out.println("+++++++++++"+productsprice);
+		}else if(productsprice.size()==0){
+			storeprice=0;
 		}else {
-			storeprice=productsprice.get((productsprice.size()/2)+1);
+			storeprice=productsprice.get((productsprice.size()/2));
 			
 			System.out.println(storeprice);
 			System.out.println("-----------"+productsprice);

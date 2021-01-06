@@ -153,7 +153,7 @@
 					<c:redirect url="WebUserMain" />
 				</c:if>
 				<c:if test="${userFullData.account.length() == 0}">
-					<c:redirect url="WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
 				<form method="post">
 					<fieldset>

@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   	<%@include file = "../Link_Meta-Include.jsp" %>
+   	<%@include file = "Link_Meta-Include.jsp" %>
    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css"> 
     <title>進行登入</title>
@@ -143,7 +143,7 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
             	<c:if test="${userFullData.password != null}">
@@ -178,9 +178,9 @@
 						</span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="<c:url value='/webUser/WebUserForgetForm' /> "><button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button></a>
+                		<a href="<c:url value='/WebUserForgetForm' /> "><button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button></a>
 						<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<a href="<c:url value='/webUser/WebUserRegisterForm' /> "><button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<a href="<c:url value='/WebUserRegisterForm' /> "><button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
@@ -284,6 +284,6 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            <%@include file = "Footer-Include-prototype.jsp" %>
 </body>
 </html>
