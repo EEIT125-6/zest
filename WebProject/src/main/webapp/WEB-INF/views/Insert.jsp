@@ -76,6 +76,9 @@
                 <legend>新增店家</legend>
 <%--                 <input type="hidden" name="id" value="${id}"> --%>
                 <form:form action="InsertStore" method="POST" modelAttribute="storeBean">
+<%--                 ${storeBean.webUserData.userId} --%>
+<%--                 <form:hidden path="webUserData"/> --%>
+                <br>
                 <label>商店名稱:
 <!--                     <input type="text" id="name" name="stname" value="" onblur="checkname();" > -->
 					<form:input path="stname"/>

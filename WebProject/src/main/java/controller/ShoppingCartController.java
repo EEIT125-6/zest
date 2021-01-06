@@ -43,7 +43,7 @@ public class ShoppingCartController {
 		if (checkMemberStatusResult == 1) {
 			return myCartRedirector();
 		} else if (checkMemberStatusResult == 0) {
-			return "/webUser/WebUserLogin";
+			return "/WebUserLogin";
 		} else {
 			return "Index1";
 		}

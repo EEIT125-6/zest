@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${userId == null}">
-					<c:redirect url="WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
                 <form action="/WebProject/webUser/WebUserServlet" method="post">
                 	<fieldset>
@@ -169,7 +169,7 @@
 						<span id="resetSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserLogin"><button type="button" name="update" style="font-size:18px" >取消/返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+                		<a href="<c:url value='/WebUserLogin'/> "><button type="button" name="update" style="font-size:18px" >取消/返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 						<button type="button" id="sendReset" name="update" style="font-size:18px" >密碼重設完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
 						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>

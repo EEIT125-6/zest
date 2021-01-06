@@ -167,7 +167,7 @@ ul.slides li img {
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
 		<c:if test="${userFullData.password == null}">
-			<c:redirect url="WebUserLogin" />
+			<c:redirect url="/WebUserLogin" />
 		</c:if>
 		<form method="post" >
 			<fieldset>

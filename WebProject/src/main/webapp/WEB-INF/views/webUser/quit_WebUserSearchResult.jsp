@@ -150,10 +150,10 @@
                 <script>
                 	if (document.getElementById("pPage").innerHTML == "") {
                 		document.getElementById("pPage").innerHTML = "登入";
-                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain.jsp") {
+                	} else if (document.getElementById("pPage").innerHTML == "WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
                 	}
-                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "WebUserLogin.jsp" : "WebUserMain.jsp";
+                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "../WebUserLogin" : "WebUserMain";
                 	setTimeout(function () {
 	                	   window.location.href = redirectPage;
                	  	}

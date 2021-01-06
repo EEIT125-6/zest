@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${empty userFullData}">
-					<c:redirect url="WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
 				<form action="<c:url value='/webUser/WebUserModifyData' />" method="post">
 					<fieldset>

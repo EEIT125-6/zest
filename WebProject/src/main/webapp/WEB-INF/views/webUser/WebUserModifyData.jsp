@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${empty userFullData}">
-					<c:redirect url="WebUserLogin.jsp" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
 				<form method="post" enctype="multipart/form-data">
 					<fieldset>

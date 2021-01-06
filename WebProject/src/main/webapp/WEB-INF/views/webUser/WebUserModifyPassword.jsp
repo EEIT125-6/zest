@@ -149,7 +149,7 @@
                 <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
 					scope="session" />
 				<c:if test="${userFullData.password == null}">
-					<c:redirect url="WebUserLogin.jsp" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserModifyPassword' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>

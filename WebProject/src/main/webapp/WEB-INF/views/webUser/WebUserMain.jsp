@@ -146,7 +146,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${userFullData.password == null}">
-					<c:redirect url="/webUser/WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserMain/Modify' />" method="get" onSubmit="return checkForm();">
                 	<fieldset>
@@ -167,10 +167,11 @@
                 	</fieldset>
                 </form>
                 <c:if test="${userFullData.accountLv.lv == 1}" >
-	                <form action="#" method="post">
+	                <form action="<c:url value='/Insert' />" method="GET">
 	                	<fieldset>
 	                		<div align="center">
-                				<button type="submit" id="AddShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
+<%-- 	                			<input type="hidden" id="userId" name="userId" value="${userFullData.userId}" /> --%>
+                				<button type="submit" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 				<hr />
 	                		</div>
 	                	</fieldset>
