@@ -298,22 +298,22 @@ a.mobile-show {
 <%@include file = "Header-Include.jsp" %>
             <div class="container-fluid photo">
                 <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
+<!--                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  > -->
+<!--                       <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;"> -->
                       	
-                        <input type ="text" id="srchid" name="nsrch" size="57"  placeholder="搜尋餐廳"
-                        style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" >
+<!--                         <input type ="text" id="srchid" name="nsrch" size="57"  placeholder="搜尋餐廳" -->
+<!--                         style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" > -->
                         
                         	
-                        <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px
-                         ;float:right">
-                        	<img src="Images/searchbut.jpg" >  
-                        </button>
-                      </fieldset>  
+<!--                         <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px -->
+<!--                          ;float:right"> -->
+<!--                         	<img src="Images/searchbut.jpg" >   -->
+<!--                         </button> -->
+<!--                       </fieldset>   -->
                        
                         
                       
-                    </form>
+<!--                     </form> -->
             </div>
 
 <!-- -------------------------------------------------------------- -->

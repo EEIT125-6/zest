@@ -3,7 +3,7 @@
         <div class="sidebar" data-image="../assets/img/sidebar-5.jpg" data-color = "orange">
             <div class="sidebar-wrapper">
                 <div class="logo">
-                    <a href="http://www.creative-tim.com" class="simple-text">
+                    <a href="<c:url value='/'/>" class="simple-text">
                         	橙皮 Zest
                     </a>
                 </div>
