@@ -1,5 +1,7 @@
 /.settings/  
 /target/
+/WebProject/.settings/  
+/WebProject//target/
 
 # built application files  
 *.apk  
