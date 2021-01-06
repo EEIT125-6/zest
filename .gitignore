@@ -1,0 +1,6 @@
+/.classpath/
+/.project/
+WebProject/.settings/*
+WebProject/target/*
+
+
