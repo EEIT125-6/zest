@@ -156,15 +156,16 @@
 		    background:#0099CC;
 		}
        .aa{
-            font-size:34px;
+            font-size:20px;
             color:#000;
             padding:10px;
             /* border:2px solid #e5e5e5; */
             vertical-align:middle;
-            margin-top:20px;
+            margin:20px;
         }
         .aa:hover{
-            background:#e5e5e5
+            background:#e5e5e5;
+            font-size:28px;
         } 
     </style>
 
@@ -266,7 +267,7 @@
 	<c:redirect url='updateResult'/>	
 </c:if>
 <input type="hidden" name="user_id" value="${bean.user_id}">
-<table  cellspacing="1" cellpadding="1" border="1" width="500px">
+<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
 <tr bgcolor="#FFFFE1">
     <td>訂單編號:</td>
     <td>${bean.bookingNo}</td>
@@ -311,10 +312,10 @@
 
 </table>
 <label class="aa">
-	<input type="submit" value="確認修改" name='confirmUpd' > 
+	<input type="submit" value="確認修改" name='confirmUpd' style="border-radius: 3px; border: none; outline: none;"> 
 </label>
 <label class="aa">
-	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel">
+	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel" style="border-radius: 3px; border: none; outline: none;">
 </label>
 </form>
 <script type="text/javascript">

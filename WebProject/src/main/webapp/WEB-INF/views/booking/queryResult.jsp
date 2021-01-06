@@ -153,7 +153,11 @@
 	</c:if>
 	<c:if test='${not empty booking}'>
 	<c:forEach var='booking' varStatus='bk' items='${booking}'>
-	<table  cellspacing="1" cellpadding="1" border="1" width="500px">
+	<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
+      <tr style="visibility: hidden;">
+      	<td width="200px">
+      	<td width="300px">
+      </tr>			
 			<tr bgcolor="#F2F4FB">
 				<td>訂單編號:</td>
 				<c:if test="${booking.status == 1}">
@@ -211,12 +215,11 @@
 
 		</c:forEach>
 	</c:if>
-<p/>
 </table>
 
 <%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
-<form action="<c:url value='/booking/Page1'/>" method="post" >
-<input type="submit" name="back" value="返回" style="margin-top:20px;">
+<form action="<c:url value='/booking/Page1'/>" >
+<input type="submit" name="back" value="返回" style="margin:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
 </form> 
 </center> 
   <!-- -------------------------------------------------------------- -->

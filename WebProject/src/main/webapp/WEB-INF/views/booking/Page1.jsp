@@ -5,7 +5,7 @@
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
-<title>test</title>
+<title>訂位查詢</title>
 <style>
         .aa{
             font-size:34px;
