@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
@@ -39,10 +38,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
+<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
 
 <title>橙皮</title>
@@ -135,26 +133,172 @@ body {
 		#gotop :hover{
 		    background:#0099CC;
 		}
+		
+.search-area {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5555;
+  background-color: #051922;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 
+span.close-btn {
+  position: absolute;
+  right: 0%;
+  color: #fff;
+  top: 5%;
+  cursor: pointer;
+}
+
+.search-area {
+  height: 100%;
+}
+
+.search-area div {
+  height: 100%;
+}
+
+.search-bar {
+  height: 100%;
+  display: table;
+  width: 100%;
+}
+
+a.mobile-show {
+  display: none;
+}
+
+.search-area .search-bar div.search-bar-tablecell {
+  display: table-cell;
+  vertical-align: middle;
+  height: auto;
+}
+
+.search-bar-tablecell input {
+  border: none;
+  padding: 15px;
+  width: 60%;
+  background-color: transparent;
+  border-bottom: 1px solid #F28123;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] {
+  border: none;
+  background-color: #F28123;
+  padding: 15px 30px;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.search-bar-tablecell input::-webkit-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input:-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] i {
+  margin-left: 5px;
+}
+
+.search-area {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.search-area.search-active {
+  visibility: visible;
+  opacity: 1;
+  z-index: 999;
+}
+
+.search-bar-tablecell h3 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+}
 </style>
 </head>
 <body>
-		<%@include file ="Header-Include-prototype.jsp" %>
-            <div class="container-fluid " style="margin-top:10px">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳"
-                        style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" >
-                        <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px
-                         ;float:right;height: 36px">
-                        	<img src="Images/searchbut.jpg" >  
-                        </button>
-                      </fieldset>
-                    </form>
-            	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    </script>
+<!--PreLoader Ends-->    
+
+<!-- search area -->
+		<div class="search-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<span class="close-btn"><i class="fas fa-window-close"></i></span>
+						<div class="search-bar">
+							<div class="search-bar-tablecell">
+								<form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
+									<h3>搜尋商家名稱:</h3>
+									<input type="text" name="nsrch" placeholder="搜尋商家">
+									<button type="submit">搜尋 <i class="fas fa-search"></i></button>
+							    </form>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- end search arewa -->
+		<%@include file ="Header-Include.jsp" %>
+<!--             <div class="container-fluid " style="margin-top:10px"> -->
+<!--                 <img src="images/backbar2-1.jpg"> -->
+<!--                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  > -->
+<!--                       <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;"> -->
+<!--                         <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳" -->
+<!--                         style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" > -->
+<!--                         <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px -->
+<!--                          ;float:right;height: 36px"> -->
+<!--                         	<img src="Images/searchbut.jpg" >   -->
+<!--                         </button> -->
+<!--                       </fieldset> -->
+<!--                     </form> -->
+<!--             	</div> -->
+<!--             </div> -->
+            <div class="container-fluid" style="padding: 0%;background: url('Images/hero-bg.jpg');height:540px;padding-top: 220px;background-size:100%">
             </div>
 	<div class="container" style="margin-top:10px">
+	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
 	<div class="jumbotron row"
 		style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
 		<c:url value="StoreGetClassstore" var="riceURL">
@@ -218,25 +362,29 @@ body {
 	</div>
 	<div class="row">
 	<div class="col-sm-3 ">
-	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:20px; ">
+<!-- 	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:20px; "> -->
+	 <div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
+<!-- 	 <div class="container" style="text-align: right;margin:15px auto;width:80%; "> -->
         <!-- 用container -->
         <form action="############################" method="post" >
             <fieldset style="width: auto;margin:1px auto;">
-                <legend>進階查詢</legend>
+                <legend>篩選條件</legend>
+                
+                
 				<br>
-           		  	<input type="radio" id="d1" name="dollar" >
-  					<label for="d1"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+           		  	<input type="radio" id="d1" name="dollar" value='1' >
+  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>   
-                   	<input type="radio" id="d2" name="dollar" >
+                   	<input type="radio" id="d2" name="dollar" value='2'>
   					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d3" name="dollar" >
+                   	<input type="radio" id="d3" name="dollar" value='3'>
   					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d4" name="dollar" >
+                   	<input type="radio" id="d4" name="dollar" value='4'>
   					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
-                   	<input type="radio" id="d5" name="dollar" >
+                   	<input type="radio" id="d5" name="dollar" value='5'>
   					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
   				<br>
                 <hr>
@@ -252,8 +400,8 @@ body {
  
             </fieldset>
             <div style="text-align: center;">
-                <input type="submit" value="查詢">
-                <input type="reset" value="清除">
+<!--                 <input type="submit" value="查詢"> -->
+<!--                 <input type="reset" value="清除"> -->
             </div>
         </form>
     </div>
@@ -297,7 +445,8 @@ body {
       
       
 		<div class="test1" style="margin-bottom:50px;">
-			<div id="ajax"></div>
+			<div id="ajax" ></div>
+			<div id="lazyload" class="circle container" style="margin-top:25px;" ></div>
 <%-- 		<c:forEach var="row" items="${Results}"> --%>
 
 <%-- 				<c:url value="StoreGetFullstore" var="GOURL"> --%>
@@ -328,13 +477,24 @@ body {
 <%-- 		</c:forEach> --%>
 		</div>
 <!-- 		----------------AJAX 大餅   START----------------------------- -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 		<script type="text/javascript">
 		var context = "";
 		$(document).ready(function(){
-		
+			$("#lazyload").hide();
+			
+	         // search form
+	        $(".search-bar-icon").on("click", function(){
+	            $(".search-area").addClass("search-active");
+	        });
+
+	        $(".close-btn").on("click", function() {
+	            $(".search-area").removeClass("search-active");
+	        });		
+			
 			var flag = 0;
-				
+			var stopload = 0;
+			var priceLimit = "";
 				$.ajax({
 						
 						type:"GET",
@@ -343,8 +503,9 @@ body {
 						data:{
 							'sclass':"${sclass}",
 							'stname':"${stname}",
-							'limit':3,
-							'offset':flag
+							'priceLimit':priceLimit,
+							'offset':flag,
+							'stopload':stopload
 						},
 						datatype:'json',
 // 						datatype:'html',
@@ -405,10 +566,26 @@ body {
 // 							alert(err.Message);
 // 						}
 				})
+				
+				
+				$('input[name="dollar"]').click(function(){
+					priceLimit = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+// 					alert($(this).val())
 
+				});
+				
+				
 				$(window).scroll(function(){
+
+// 					$.delay(3000);
 					
+
 					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+	//上下兩個方法皆有BUG 有可能會重複前三筆資料 
+// 					if($(this).scrollTop() >= ($(document).height() - $(window).height())*0.8){
 						
 						$.ajax({
 							
@@ -417,8 +594,9 @@ body {
 							data:{
 								'sclass':"${sclass}",
 								'stname':"${stname}",
-								'limit':3,
-								'offset':flag
+								'priceLimit':priceLimit,
+								'offset':flag,
+								'stopload':stopload
 							},
 							datatype:'json',
 							success:function (data){
@@ -447,9 +625,20 @@ body {
 										        	"</div>"+
 										    "</div>"+
 										"</a>" ;
+
 							}
 								flag += 3;
-								$("#ajax").html(context);
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+								}
+// 								setTimeout("$('#ajax').show()", 30000);
+								setTimeout("$('#ajax').html(context);", 1000 )
+// 								$(".circle").fadeOut(1000);
+// 								$(".circle").fadeIn("1000");
+// 								$("#ajax").html(context);
 								
 					
 							}

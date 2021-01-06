@@ -18,8 +18,9 @@
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user" style="font-size: 25px; color: yellow"></i>
 				<a href="${pageContext.request.contextPath}/WebUserLogin">
-				登入 | 
+				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">登入</span> 
 				</a>
+				<span>|</span> 
 			</c:if>
 			<c:if test="${userFullData.account != null}">
 				<a href="${pageContext.request.contextPath}/webUser/WebUserMain">
@@ -51,33 +52,45 @@
 			<c:if test="${userFullData.account == null}">
 			<i class="fas fa-user-plus" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/WebUserRegisterForm">
-			註冊 |
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">註冊</span>
+			 <span>|</span>
 			</a>
 			</c:if>
 			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-door-open" style="font-size: 25px;color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout">
-			登出 |
+			登出
 			</a>
+<span>			 |</span>
 			</c:if>
 			<!-- 			<img src="Images/PLZPLZ-removebg-preview.png" -->
 			<!-- 				class="shopcar" style="height: 40px; margin: 0; margin-left: 5px;"> -->
 			<i class="fas fa-shopping-cart" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/controller/checkMemberStatus"> 
-			購物車 |
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">購物車</span> 
 			</a> 
+			<span>|</span>
 			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/booking/Page1">
-			確認訂位 |
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">確認訂位</span> 
 			</a>
+			<span>|</span>
 			</c:if>
 			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/orange/ShowComment">
-			查詢留言 |
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">查詢留言</span> 
 			</a>
+			<span>|</span>
 			</c:if>
+			<a class="search-bar-icon" href="#"><i class="fas fa-search" style="font-size: 25px; color: yellow"></i>
+				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">搜尋餐廳</span>
+			</a>
+			<span>|</span>
+			<a href="<c:url value='/dashborad_order'/>">
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">後台</span>
+			</a>			
 		</p>
 	</div>
 
