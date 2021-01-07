@@ -1,5 +1,7 @@
 package board.service;
 
+import java.util.List;
+
 import xun.model.BoardBean;
 
 public interface BoardService {
@@ -12,4 +14,8 @@ public interface BoardService {
 	int updateBoard(BoardBean bb); 
 
 //	int deleteBoard(Integer id);
+	
+	List<BoardBean> getAllcomment();
+	
+	List<BoardBean> getMember(String acount);
 }

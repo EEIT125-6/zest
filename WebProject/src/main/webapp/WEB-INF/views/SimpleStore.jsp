@@ -574,7 +574,66 @@ a.mobile-show {
 					context="";
 					$("#ajax").html("")
 // 					alert($(this).val())
+// -------------------------------------
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'offset':flag,
+								'stopload':stopload
+							},
+							datatype:'json',
+							success:function (data){
+								for(var i = 0; i < data.length;i++){
+// 								alert("sa");	
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+							       				 "<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+//				 							                ${row.stname }
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+//				 							                ${row.saddress }
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+//				 							                ${row.sclass}<br>
+											                data[i].sclass+"<br>"+
+//				 							                ${row.stitd}	
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
 
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+								}
+// 								setTimeout("$('#ajax').show()", 30000);
+								setTimeout("$('#ajax').html(context);", 1000 )
+// 								$(".circle").fadeOut(1000);
+// 								$(".circle").fadeIn("1000");
+// 								$("#ajax").html(context);
+								
+					
+							}
+					})
+// -------------------------------------
 				});
 				
 				
@@ -583,7 +642,7 @@ a.mobile-show {
 // 					$.delay(3000);
 					
 
-					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+					if($(window).scrollTop() >= $(document).height() - $(window).height() &&  flag>0){
 	//上下兩個方法皆有BUG 有可能會重複前三筆資料 
 // 					if($(this).scrollTop() >= ($(document).height() - $(window).height())*0.8){
 						
@@ -639,7 +698,10 @@ a.mobile-show {
 // 								$(".circle").fadeOut(1000);
 // 								$(".circle").fadeIn("1000");
 // 								$("#ajax").html(context);
-								
+// 								console.log(flag);
+// 								console.log(stopload);
+// 								console.log(${stname});
+// 								console.log(priceLimit);
 					
 							}
 					})

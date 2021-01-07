@@ -79,6 +79,7 @@ public class StoreCUD_Controller {
 			return "Insert";
 		}
 		if (result.hasErrors()) {
+			System.out.println("Result是有錯誤的 應該要返回");
 			return "Insert";
 		}
 
@@ -125,7 +126,9 @@ public class StoreCUD_Controller {
 			result.rejectValue("stname", "","商家名稱重複");
 			return "Update";
 		}
+		System.out.println(result+"目前的錯誤!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		if (result.hasErrors()) {
+			System.out.println("Result是有錯誤的 應該要返回");
 			return "Update";
 		}
 //		修改

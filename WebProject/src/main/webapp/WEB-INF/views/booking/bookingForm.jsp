@@ -130,7 +130,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
             font-size: xx-large;
             /* text-align: center; */
             margin-left: 50px;
-
         }
         .st1{
             width: 450px;
@@ -200,7 +199,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
  				return true;  
  			}
  		};
-
     $(document).ready(function(){
       $.datepicker.regional['zh-TW']={
         dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
@@ -215,7 +213,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
       $("#datepicker1").datepicker({
     	  minDate: new Date(),
     	  dateFormat:'yy-mm-dd'});
-
       });
   </script>
 </head>

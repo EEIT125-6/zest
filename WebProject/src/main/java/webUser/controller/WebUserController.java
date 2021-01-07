@@ -96,7 +96,8 @@ public class WebUserController {
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 	
 	/* Default Project Physical Address */
-	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
@@ -338,6 +339,16 @@ public class WebUserController {
 								} else if (signInMessage.equals(birthMonth)) {
 									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("1")));
 								}
+							}
+						/* 沒優惠的一樣給簽到 */
+						} else {
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								userFullData.setSignIn(null);
 							}
 						}
 					} else {

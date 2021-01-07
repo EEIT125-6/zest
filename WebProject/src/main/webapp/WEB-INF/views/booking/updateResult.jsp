@@ -188,8 +188,6 @@
 			}		  */
 		
 // 		function dateCheck() {
-
-
 // 			$.ajax({
 // 						type : "POST",
 // 						url : "/WebProject-Spring/controller/BookingController",
