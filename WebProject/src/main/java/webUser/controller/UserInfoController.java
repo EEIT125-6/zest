@@ -520,6 +520,22 @@ public class UserInfoController {
 						+ "請按下方的連結以重設您的帳號資訊"
 						+ "<br /><br /><a href=\"" + checkCode + "\">重設密碼連結請點我</a>"
 						+ "<br /><br />本連結將定時失效，請盡速使用";
+		} else if (mode.equals("adminActivate")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "不久前您申請了帳號恢復服務！目前已經處理完成。您即刻起便可以重新使用本網站的相關服務"
+						+ "<br /><br />"
+						+ "如果您有其他需要告知的事項，請透過本網站提供的方法聯繫我方處理，謝謝！"
+						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\">橙皮官方網站</a>";
+		} else if (mode.equals("adminReactive")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "不久前您申請的 店家/管理員 帳號已經由管理員審核完畢並啟用。您即刻起便可以重新使用本網站的相關服務"
+						+ "<br /><br />"
+						+ "如果您有其他需要告知的事項，請透過本網站提供的方法聯繫我方處理，謝謝！"
+						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\">橙皮官方網站</a>";
 		}
 		
 		Properties props = new Properties();
@@ -553,6 +569,10 @@ public class UserInfoController {
 				message.setSubject("您的橙皮帳號已遭管理員停用");
 			} else if (mode.equals("forget")) {
 				message.setSubject("您的橙皮重設連結在此");
+			} else if (mode.equals("adminActivate")) {
+				message.setSubject("您的橙皮帳號已由管理員啟用");
+			} else if (mode.equals("adminReactive")) {
+				message.setSubject("您的橙皮帳號已由管理員重新啟用");
 			}
 			/* 設定email內容與編碼 */
 			message.setContent(mailContext, "text/html; Charset=UTF-8");
