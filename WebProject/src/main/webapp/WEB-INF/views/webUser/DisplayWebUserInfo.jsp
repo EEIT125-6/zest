@@ -166,7 +166,7 @@
 							</c:forEach>
 						</c:if>
 						<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
-						<input type="hidden" name="password" id="password" value="${reg_webUser.password}">
+						<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
 						<hr />
 						<label>中文姓氏：</label>
 						<c:out value="${reg_webUser.firstName}" />

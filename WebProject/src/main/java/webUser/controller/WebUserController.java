@@ -96,13 +96,15 @@ public class WebUserController {
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 	
 	/* Default Project Physical Address */
-//  final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
-	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
 	/* 簽到用生日當月時顯示字串 */
 	final String birthMonth = "這個月對您是特別的一個月，今日登入讓您獲得了 1 枚橙幣！";
+	/* 其他簽到時顯示的字串 */
+	final String normalSignIn = "您今天已經簽到完成";
 	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
@@ -311,7 +313,11 @@ public class WebUserController {
 				/* 存取使用者個人資料 */
 				userFullData = wus.getWebUserData(account);
 				if (userFullData != null) {
-					/* 檢查簽到 */
+					/* 取出上次簽到日備用 */
+					Date oldSignIn = userFullData.getSignIn();
+					/* 取出當前橙幣 */
+					BigDecimal oldZest = userFullData.getZest();
+					/* 檢查簽到備用 */
 					Integer checkSignInResult = wus.checkWebUserSignIn(userFullData.getUserId(), Date.valueOf(today)) ;
 					/* 0代表未簽到，1代表已簽到 */
 					if (checkSignInResult == 0) {
@@ -333,12 +339,26 @@ public class WebUserController {
 							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
 							/* 失敗後還原設定 */
 							if (runSingInResult != 1) {
-								userFullData.setSignIn(null);
+								/* 還原成上次簽到日 */
+								userFullData.setSignIn(oldSignIn);
+								/* 還原成原有的橙幣 */
 								if (signInMessage.equals(birthday)) {
-									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("10")));
+									userFullData.setZest(oldZest);
 								} else if (signInMessage.equals(birthMonth)) {
-									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("1")));
+									userFullData.setZest(oldZest);
 								}
+							}
+						/* 沒優惠的一樣給簽到 */
+						} else {
+							signInMessage = normalSignIn;
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								/* 還原成上次簽到日 */
+								userFullData.setSignIn(oldSignIn);
 							}
 						}
 					} else {
@@ -372,8 +392,8 @@ public class WebUserController {
 			HttpSession session) {
 		
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-		
-		String nickname = userData.getNickname();
+		/* 簡易防閒置的暫時處置 */
+		String nickname = (userData == null) ? "" : userData.getNickname();
 		String logoutMessage = "謝謝您的使用，" + nickname + "!";
 		
 		/* 清空SessionAttribute */
@@ -647,7 +667,7 @@ public class WebUserController {
 				try {
 					updatedData.setIconUrl(newIconUrl);
 					updatedData.setVersion(updatedData.getVersion() + 1);
-					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
+					/* 執行DB端更新 */
 					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
 				} catch (SQLException sqlE) {
 					String getDataMessageTmp = sqlE.getMessage();
@@ -697,6 +717,81 @@ public class WebUserController {
 			map.put("resultCode", updateIconUrlResult.toString());
 			map.put("resultMessage", message);
 		}
+		return map;
+	}
+	
+	/* 執行使用者圖像重設 */
+	@PostMapping(value = "/webUser/controller/WebUserResetIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doResetWebUserIcon(Model model) {
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean resetIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 更新用物件 */
+		WebUserData updatedData = userData;
+		
+		if (userData == null) {
+			message = "使用者未登入！請登入後再進行本操作";
+		} else if (userData.getStatus() == "quit" || userData.getStatus() == "inactive") {
+			message = "使用者無權進行本動作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
+			message = "使用者驗證失敗！";
+		}
+		
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = userData.getIconUrl();
+		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		
+		/* 非預設值才執行刪除舊檔 */
+		if (message.equals("") && !oldIconPath.equals("")) {
+			/* 執行圖片刪除 */
+			try {
+				resetIconUrlResult = doDeleteOldIcon(oldIconPath);
+				if (resetIconUrlResult) {
+					/* 更新DB上的資料 */
+					/* 調用服務裡的方法 */
+					updatedData.setIconUrl("");
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					/* 執行DB端更新 */
+					resetIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					/* 更新圖片、更新DB都成功 */
+					if (resetIconUrlResult) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							resetIconUrlResult = deletedOldPic.delete();
+						}
+						message = (resetIconUrlResult) ? message : "圖示還原成功但移除暫存檔案失敗";
+					/* 更新圖片成功但更新DB失敗 */
+					} else {
+						/* 重新命名舊圖檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
+					message = (message.equals("")) ? "圖示已順利還原完成！" : message;
+				}
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+		} else if (message.equals("") && oldIconPath.equals("")) {
+			message = "無法回復預設值！因為已經為預設圖示";
+		} 
+		/* 將資訊放入map，準備回傳 */
+		map.put("resultCode", resetIconUrlResult.toString());
+		map.put("resultMessage", message);
 		return map;
 	}
 	
@@ -1092,13 +1187,27 @@ public class WebUserController {
 					break;
 				case "active":
 					/* 重新啟用與初次啟用實質上是相同的操作 */
+					Boolean FirstTimeUse = (status.equals("inactive")) ? true : false;
 					status = (status.equals("inactive")) ? "active": status;
 					status = (status.equals("quit")) ? "active": status;
 					/* 調用服務裡的方法 */
 					try {
 						operateResult = wus.adminChangeWebUserData(userId, status);
+						/* 成功才寄送Email */
+						if (operateResult == 1) {
+							/* 由ID取得使用者資訊 */
+							WebUserData activedUserData = wus.getWebUserDataById(userId);
+							/* 設定屬於哪種情境 */
+							String adMinMode = (FirstTimeUse) ? "adminActivate" : "adminReActive";
+							/* 寄送Email */
+							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode);
+							operateResult = (sendResult) ? 1 : 0;
+						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
+					} catch (Exception e) {
+						String quitMessageTmp = e.getMessage();
+						operateMessage = quitMessageTmp.split(":")[1];
 					}
 					break;
 				default:
@@ -1352,6 +1461,89 @@ public class WebUserController {
 		}
 		return map;
 	}
+	
+	/* 執行管理員重設圖示 */
+	@PostMapping(value = "/webUser/controller/WebUserAdminResetModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doAdminResetWebUserIcon(Model model) {
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean resetIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		WebUserData managedUserData = (WebUserData) model.getAttribute("managedUserData");
+		/* 更新用物件 */
+		WebUserData updatedData = managedUserData;
+		
+		/* 檢查JavaBean物件 */
+		if (userData == null) {
+			message = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			message = "身分驗證失敗，請登入後重試一次！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			message = "本帳號無法使用此功能";
+		} else if (userData.getAccountLv().getLv() != -1) {
+			message = "本帳號無法使用此功能";
+		} else if (managedUserData.getAccountLv().getLv() != Integer.parseInt(managedUserData.getUserId().substring(0, 1)) - 1) {
+			message = "欲操作的帳號無法執行修改，請檢查帳號資料的完整性/正確性";
+		} else if (managedUserData.getStatus().equals("quit") || managedUserData.getStatus().equals("inactive")) {
+			message = "欲操作的帳號無法執行修改，請先恢復帳號的權限!";
+		}
+		
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = managedUserData.getIconUrl();
+		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		
+		/* 非預設值才執行刪除舊檔 */
+		if (message.equals("") && !oldIconPath.equals("")) {
+			/* 執行圖片刪除 */
+			try {
+				resetIconUrlResult = doDeleteOldIcon(oldIconPath);
+				if (resetIconUrlResult) {
+					/* 更新DB上的資料 */
+					/* 調用服務裡的方法 */
+					updatedData.setIconUrl("");
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					/* 執行DB端更新 */
+					resetIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					/* 更新圖片、更新DB都成功 */
+					if (resetIconUrlResult) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							resetIconUrlResult = deletedOldPic.delete();
+						}
+						message = (resetIconUrlResult) ? message : "圖示還原成功但移除暫存檔案失敗";
+					/* 更新圖片成功但更新DB失敗 */
+					} else {
+						/* 重新命名舊圖檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
+					message = (message.equals("")) ? "圖示已順利還原完成！" : message;
+				}
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+		} else if (message.equals("") && oldIconPath.equals("")) {
+			message = "無法回復預設值！因為已經為預設圖示";
+		}
+		/* 將資訊放入map，準備回傳 */
+		map.put("resultCode", resetIconUrlResult.toString());
+		map.put("resultMessage", message);
+		return map;
+	} 
 	
 	/* 執行管理員修改 */
 	@SuppressWarnings("unchecked")
@@ -2544,11 +2736,11 @@ public class WebUserController {
 			message = "驗證碼不可為空白";
 		} else if (checkCode == null || registerEmail == null) {
 			message = "未產生驗證碼";
-		} else if (!inputCheckCode.equals(checkCode)) {
+		} else if (!inputCheckCode.toUpperCase().equals(checkCode.toUpperCase())) {
 			message = "驗證碼檢查失敗";
 		} else if (!registerEmail.equals(email)) {
 			message = "email資訊不吻合";
-		} else if (!checkCode.matches("[0-9A-Z]{8}")) {
+		} else if (!checkCode.toUpperCase().matches("[0-9A-Z]{8}")) {
 			message = "驗證碼錯誤";
 		}
 		return message;
@@ -2766,7 +2958,7 @@ public class WebUserController {
 				/* 刪除前先建立備份檔 */
 				/* 檢查備份檔是否存在 */
 				File tmpOldPic = new File(finalTempFileName);
-				/* 存在則先刪除舊有的 */
+				/* 存在則先刪除舊有的暫存檔 */
 				if (tmpOldPic.exists()) {
 					tmpOldPic.delete();
 				}

@@ -74,11 +74,11 @@ body {
                 </label>
                 </c:if>
                 <label>商品照片:
-					<input type="file" name="file"/>
+					<input type="file" name="file" id="imgInp"/>
 					<form:hidden path="product_picture"/>
 					<br>
-<!-- 						  <img id="blah" src="" alt="圖片預覽" width="100%;" height="100% "  /> -->
-						  <img id="blah" src="" alt="" width="100%;" height="100% "  />
+						  <img id="blah" src="" alt="圖片預覽" width="100%;" height="100% "  />
+<!-- 						  <img id="blah" src="" alt="" width="100%;" height="100% "  /> -->
                 </label>
                 <br>
                 <label>商品庫存:

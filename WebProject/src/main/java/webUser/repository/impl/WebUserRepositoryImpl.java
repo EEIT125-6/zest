@@ -346,41 +346,9 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList();
 	}
 	
-	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
-	@Override
-	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
-		/* 變數宣告 */
-		Integer quitResult = 0;
-		/* 取得當前Session，接著執行變更 */
-		getSession().saveOrUpdate(quitUserData);
-		quitResult++;
-		return quitResult;
-	}
-	
-	/* 更新使用者圖示資料 0->失敗、1->成功 */
-	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
-		/* 變數宣告 */
-		Integer updateResult = 0;
-		/* 取得當前Session以執行變更 */
-		getSession().saveOrUpdate(updatedUserData);
-		updateResult++;
-		return updateResult;
-	}
-	
 	/* 更新使用者資料 0->失敗、1->成功 */
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
-		/* 變數宣告 */
-		Integer updateResult = 0;
-		/* 取得當前Session以執行變更 */
-		getSession().saveOrUpdate(updatedUserData);
-		updateResult++;
-		return updateResult;
-	}
-
-	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
-	@Override
-	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
 		/* 變數宣告 */
 		Integer updateResult = 0;
 		/* 取得當前Session以執行變更 */

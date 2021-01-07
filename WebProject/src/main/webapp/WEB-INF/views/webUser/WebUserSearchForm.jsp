@@ -167,6 +167,7 @@ ul.slides li img {
 		<c:if test="${userFullData.password == null}">
 			<c:redirect url="/WebUserLogin" />
 		</c:if>
+		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 		<form method="post" >
 			<fieldset>
 				<legend>搜尋選項</legend>
@@ -436,6 +437,7 @@ ul.slides li img {
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
@@ -449,6 +451,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -458,6 +461,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -471,7 +475,21 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<td>"
 											+ (dataIndex + 1)
-											+ "</td>";
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
+											
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									} else {
+										content += userData.iconUrl
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									}
+											
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
@@ -490,34 +508,34 @@ ul.slides li img {
 										content += "<td>";
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status 
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-														+ "</button>";
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status 
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+													+ "</button>";
 										} else if (userData.status == 'quit') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+													+ "</button>"
 										} else if (userData.status == 'inactive') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
+													+ "</button>"
 										}
 										content += "</td>"
 												+ "<td>"
@@ -634,6 +652,7 @@ ul.slides li img {
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
@@ -647,6 +666,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -656,6 +676,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -669,7 +690,20 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<td>"
 											+ (dataIndex + 1)
-											+ "</td>";
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
+										
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									} else {
+										content += userData.iconUrl
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									}
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
