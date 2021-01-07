@@ -70,12 +70,12 @@
 				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">搜尋餐廳</span>
 			</a>
 			<span>|</span>
-			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/booking/Page1">
-			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">確認訂位</span> 
+			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">查詢訂位</span> 
 			</a>
 			<span>|</span>
+			<c:if test="${userFullData.account != null}">
 			<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i>
 			<a href="${pageContext.request.contextPath}/orange/ShowComment">
 			<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">查詢留言</span> 

@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import model.BookingBean;
 import service.BookingService;
 import webUser.model.WebUserData;
 
-@SessionAttributes({"reg_booking","userFullData"})
+ 
 @Controller
 @RequestMapping("/booking")
 public class BookingController {
@@ -128,7 +127,6 @@ public class BookingController {
 		
 		BookingBean bookingData = (BookingBean)model.getAttribute("reg_booking");
 		
-		Boolean sendResult = false;
 		String mailObj = bookingData.getMail();
 		String mailContext = "";  
 		if (service.insertBooking(bookingData)>0) {
@@ -202,7 +200,6 @@ public class BookingController {
 			Transport.send(message);
 			/* 測試用訊息 */
 			System.out.println("信件已成功寄出給："+mailObj);
-			sendResult = true;
 		} catch (Exception e) {
 			;
 		}
@@ -216,7 +213,11 @@ public class BookingController {
 		return "/booking/Thanks";
 	}
 	@GetMapping("/Page1")
-	public String jump() {
+	public String jump(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		if (user_id == null) {
+			return "WebUserLogin";
+		}
 		return "/booking/Page1";
 	}
 
@@ -231,7 +232,6 @@ public class BookingController {
 	    model.getAttribute("booking");
 	    
 		return "booking/queryResult";
-		
 	}
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
@@ -257,7 +257,6 @@ public class BookingController {
 			System.out.println(count);	
 			if(count==1) {
 				//↓↓↓ 訂位已取消寄e-mail ↓↓↓
-				Boolean sendResult = false;
 				String mailObj = mail;
 				String mailContext = "";  
 				mailContext = "<h4>親愛的 "+ name 
@@ -311,7 +310,6 @@ public class BookingController {
 					Transport.send(message);
 					/* 測試用訊息 */
 					System.out.println("信件已成功寄出給："+mailObj);
-					sendResult = true;
 				} catch (Exception e) {
 					;
 				}	
@@ -329,96 +327,76 @@ public class BookingController {
 		
 	}
 	//改
-	@PostMapping(value="/confirmUpd",params = "confirmUpd")
-	public String update(Model model,
-			@RequestParam(value="bookingNo") String bookingNo,
-			@RequestParam(value="restaurant") String restaurant,
-			@RequestParam(value="bookingdate") String bookingdate,
-			@RequestParam(value="time") String time,
-			@RequestParam(value="number") Integer number,
-			@RequestParam(value="name") String name,
-			@RequestParam(value="phone") String phone,
-			@RequestParam(value="mail") String mail,
-			@RequestParam(value="needs") String needs,
-			@RequestParam(value="purpose") String purpose) {
-		
-		if(checkCancelBooking(bookingdate)==true) {
-		
-		int count=0;
-		WebUserData user_id=(WebUserData)model.getAttribute("userFullData");
-		BookingBean bean=new BookingBean(bookingNo,user_id, bookingdate,time,number,restaurant,name,phone,mail,purpose,needs,1);
-		count=service.updateBooking(bean);
-		System.out.println(count);
-		if(count==1) {
-			Boolean sendResult = false;
-			String mailObj = mail;
-			String mailContext = ""; 
-			
-			mailContext = "<b>親愛的 "+ name 
-					+ " 先生/女士 您好：<br /><br />" 
-					+ "感謝您使用 zest橙皮 訂桌系統，<br />" 
-					+ "↓↓↓訂位資料更新如下↓↓↓</b><br /><br />" 
-					+"(此信件為系統寄出，請勿回覆)" 
-					+ "<br /><br />" 
-					+"<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
-					+"<tr><td>訂單編號:</td><td>"+bookingNo
-					+"</td></tr><tr><td>餐廳名稱:</td><td>"+restaurant
-					+"</td></tr><tr><td>訂位日期:</td>"+bookingdate
-					+"</td></tr><tr><td>時間:</td><td>"+time
-					+"</td></tr><tr><td>人數:</td><td>"+number
-					+"</td></tr><tr><td>姓名:</td><td>"+name
-					+"</td></tr><tr><td>手機:</td><td>"+phone
-					+"</td></tr><tr><td>e-mail:</td><td>"+mail
-					+"</td></tr><tr><td>用餐目的:</td><td>"+purpose
-					+"</td></tr><tr><td>特殊需求:</td><td>"+needs
-					+"</td></tr></table>"
-					+ "<br /><br />" 
-					+ "==============【重要】用餐日前一天＆當天取消，不退還線上預訂之訂金==================<br /><br />" + 
-					"Q. 訂位如何取消我的訂位?<br />" + 
-					"A. 本網頁： 請「會員登入」→「查詢訂位」→「取消訂位」<br /><br />" + 
-					"Q. 訂位無法到達是否一定要取消？<br />" + 
-					"A. 為避免餐廳食材準備及營運上耗損，敬請您於用餐取消時限前(用餐前2天)務必取消訂位，可透過本網頁進行取消。<br /><br />" + 
-					"【重要】同一訂位帳號達三次「no show」，訂位系統將自動將此會員帳號列為『拒絕受理訂位』，未來訂位僅能透過電話訂位或現場排隊候位。";
-			
-			Properties props = new Properties();
-			/* SMTP設定 */
-			props.put("mail.smtp.auth", "true");
-			/* 啟用TLS */
-			props.put("mail.smtp.starttls.enable", "true");
-			/* 設定寄件者email */
-			props.put("mail.smtp.host", mailHost);
-			/* 設定寄件所需的port */
-			props.put("mail.smtp.port", mailPort);
-					
-			Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator(){
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(mailUser, mailPassword);
+	@PostMapping(value = "/confirmUpd", params = "confirmUpd")
+	public String update(Model model, @RequestParam(value = "bookingNo") String bookingNo,
+			@RequestParam(value = "restaurant") String restaurant,
+			@RequestParam(value = "bookingdate") String bookingdate, @RequestParam(value = "time") String time,
+			@RequestParam(value = "number") Integer number, @RequestParam(value = "name") String name,
+			@RequestParam(value = "phone") String phone, @RequestParam(value = "mail") String mail,
+			@RequestParam(value = "needs") String needs, @RequestParam(value = "purpose") String purpose) {
+
+		if (checkCancelBooking(bookingdate) == true) {
+
+			int count = 0;
+			WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+			BookingBean bean = new BookingBean(bookingNo, user_id, bookingdate, time, number, restaurant, name, phone,
+					mail, purpose, needs, 1);
+			count = service.updateBooking(bean);
+			System.out.println(count);
+			if (count == 1) {
+				String mailObj = mail;
+				String mailContext = "";
+
+				mailContext = "<b>親愛的 " + name + " 先生/女士 您好：<br /><br />" + "感謝您使用 zest橙皮 訂桌系統，<br />"
+						+ "↓↓↓訂位資料更新如下↓↓↓</b><br /><br />" + "(此信件為系統寄出，請勿回覆)" + "<br /><br />"
+						+ "<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
+						+ "<tr><td>訂單編號:</td><td>" + bookingNo + "</td></tr><tr><td>餐廳名稱:</td><td>" + restaurant
+						+ "</td></tr><tr><td>訂位日期:</td>" + bookingdate + "</td></tr><tr><td>時間:</td><td>" + time
+						+ "</td></tr><tr><td>人數:</td><td>" + number + "</td></tr><tr><td>姓名:</td><td>" + name
+						+ "</td></tr><tr><td>手機:</td><td>" + phone + "</td></tr><tr><td>e-mail:</td><td>" + mail
+						+ "</td></tr><tr><td>用餐目的:</td><td>" + purpose + "</td></tr><tr><td>特殊需求:</td><td>" + needs
+						+ "</td></tr></table>" + "<br /><br />"
+						+ "==============【重要】用餐日前一天＆當天取消，不退還線上預訂之訂金==================<br /><br />"
+						+ "Q. 訂位如何取消我的訂位?<br />" + "A. 本網頁： 請「會員登入」→「查詢訂位」→「取消訂位」<br /><br />"
+						+ "Q. 訂位無法到達是否一定要取消？<br />"
+						+ "A. 為避免餐廳食材準備及營運上耗損，敬請您於用餐取消時限前(用餐前2天)務必取消訂位，可透過本網頁進行取消。<br /><br />"
+						+ "【重要】同一訂位帳號達三次「no show」，訂位系統將自動將此會員帳號列為『拒絕受理訂位』，未來訂位僅能透過電話訂位或現場排隊候位。";
+
+				Properties props = new Properties();
+				/* SMTP設定 */
+				props.put("mail.smtp.auth", "true");
+				/* 啟用TLS */
+				props.put("mail.smtp.starttls.enable", "true");
+				/* 設定寄件者email */
+				props.put("mail.smtp.host", mailHost);
+				/* 設定寄件所需的port */
+				props.put("mail.smtp.port", mailPort);
+
+				Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(mailUser, mailPassword);
+					}
+				});
+				try {
+					Message message = new MimeMessage(mailSession);
+					message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailObj));
+					/* 設定email主旨 */
+					message.setSubject("【zest 橙皮 訂位資料更新通知！】");
+					/* 設定email內容與編碼 */
+					message.setContent(mailContext, "text/html; Charset=UTF-8");
+					/* 正式送出 */
+					Transport.send(message);
+					/* 測試用訊息 */
+					System.out.println("信件已成功寄出給：" + mailObj);
+				} catch (Exception e) {
+					;
 				}
-			});		
-			try {
-				Message message = new MimeMessage(mailSession);
-				message.setRecipients(
-						Message.RecipientType.TO
-						, InternetAddress.parse(mailObj));
-				/* 設定email主旨 */
-				message.setSubject("【zest 橙皮 訂位資料更新通知！】");
-				/* 設定email內容與編碼 */
-				message.setContent(mailContext, "text/html; Charset=UTF-8");
-				/* 正式送出 */
-				Transport.send(message);
-				/* 測試用訊息 */
-				System.out.println("信件已成功寄出給："+mailObj);
-				sendResult = true;
-			} catch (Exception e) {
-				;
-			}	
-			
-			return "redirect:/booking/updateResult2";
-		}
-		else {
-			System.out.println("訂位資料更新失敗！");
-		}
-		return "redirect:/booking/Page1";
+
+				return "redirect:/booking/updateResult2";
+			} else {
+				System.out.println("訂位資料更新失敗！");
+			}
+			return "redirect:/booking/Page1";
 		}
 		return "redirect:/booking/Page1";
 	}

@@ -159,6 +159,7 @@
                 				<c:out value="-店家" />
                 			</c:if>
             			</legend>
+            			<input type="hidden" id="password" name="password" value="${userFullData.password}" />
                 		<div align="center">
                 			<hr />
                 			<button type="submit" id="select" name="select" style="font-size:18px" >檢視/修改個人資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
@@ -170,29 +171,41 @@
 	                <form action="<c:url value='/Insert' />" method="GET">
 	                	<fieldset>
 	                		<div align="center">
-<%-- 	                			<input type="hidden" id="userId" name="userId" value="${userFullData.userId}" /> --%>
                 				<button type="submit" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 				<hr />
 	                		</div>
 	                	</fieldset>
 	                </form>
        			</c:if>
-                <form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
-                	<fieldset>
-                		<div align="center">
-                			<c:if test="${userFullData.accountLv.lv == 0}" >
-                				<button type="submit" id="select" name="select" style="font-size:18px" >搜索使用者 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
-                			</c:if>
-                			<c:if test="${userFullData.accountLv.lv == 1}" >
-                				<button type="submit" id="select" name="select" style="font-size:18px" >搜索客戶與同業 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
-                			</c:if>
-                			<c:if test="${userFullData.accountLv.lv == -1}" >
-                				<button type="submit" id="select" name="select" style="font-size:18px" >管理使用者 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
-                			</c:if>
-							<hr />
-						</div>
-                	</fieldset>
-                </form>
+       			<c:if test="${userFullData.accountLv.lv == 0}" >
+       				<form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return checkForm();">
+       					<fieldset>
+       						<div align="center">
+       							<button type="submit" id="select" name="select" style="font-size:18px" >搜索使用者 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+       						</div>
+       					</fieldset>
+       				</form>
+       			</c:if>
+       			<c:if test="${userFullData.accountLv.lv == -1}" >
+       				<form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return doubleCheck();">
+       					<fieldset>
+       						<div align="center">
+       							<button type="submit" id="select" name="select" style="font-size:18px" >管理使用者 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+       							<hr />
+       						</div>
+       					</fieldset>
+       				</form>
+       			</c:if>
+       			<c:if test="${userFullData.accountLv.lv == 1}" >
+       				<form action="<c:url value='/webUser/controller/WebUserMain/Search' />" method="get" onSubmit="return doubleCheck();">
+       					<fieldset>
+       						<div align="center">
+       							<button type="submit" id="select" name="select" style="font-size:18px" >搜索客戶與同業 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+       							<hr />
+       						</div>
+       					</fieldset>
+       				</form>
+       			</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserMain/Quit' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<div align="center">
@@ -221,6 +234,15 @@
 	                
                 	function quitAlert() {
                 		alert("請注意，本操作不可逆，您將無法再次以相同的帳號名稱、電子信箱來註冊本服務；如有其他疑問，請洽本站管理員");
+                	}
+                	
+                	function doubleCheck() {
+                		let highPrevPassword = prompt("如要繼續進行操作，請輸入您的密碼：", "");
+                		if (highPrevPassword != document.getElementById("password").value) {
+                			return false;
+                		} else {
+                			return true;
+                		}
                 	}
                 </script>
             </div>
