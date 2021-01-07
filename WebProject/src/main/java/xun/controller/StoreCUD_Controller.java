@@ -44,7 +44,7 @@ public class StoreCUD_Controller {
 	@Autowired
 	WebUserService ws;
 	
-	@GetMapping("/Insert")
+//	@GetMapping("/Insert")
 	public String InsertPage(
 			Model model
 //			,@RequestParam(value = "userId",required = false) String userId
@@ -56,7 +56,7 @@ public class StoreCUD_Controller {
 		return "Insert";
 	}
 	
-	@PostMapping("/InsertStore")
+//	@PostMapping("/InsertStore")
 	public String InsertStore(
 			@ModelAttribute("storeBean") StoreBean storeBean,
 			Model model,

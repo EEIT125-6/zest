@@ -379,10 +379,10 @@ function checkEmailCheckCode() {
 	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
 		emailCheckCodeStr = "驗證碼不可為空值";
 		emailCheckCodeIsOk = false;
-	} else if (checkCode != emailCheckCodeObjValue) {
+	} else if (checkCode.toUpperCase() != emailCheckCodeObjValue.toUpperCase()) {
 		emailCheckCodeStr = "聯絡信箱驗證碼錯誤";
 		emailCheckCodeIsOk = false;
-	} else if (checkCode == emailCheckCodeObjValue) {
+	} else if (checkCode.toUpperCase() == emailCheckCodeObjValue.toUpperCase()) {
 		emailCheckCodeStr = "聯絡信箱驗證成功";
 		emailCheckCodeIsOk = true;
 	} 
