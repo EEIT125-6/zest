@@ -296,7 +296,7 @@ a.mobile-show {
 		<c:param name="id" value="${id}"></c:param>
 		<c:param name="photo" value="photo"></c:param>
 		</c:url>
-			<a href="${photoURL}">修改店家photo</a>
+			<a href="${photoURL}">修改店家 封面的照片</a>
 			<span>|</span>
 		<c:url value="/UpdateBanner" var="bannerURL">
 		<c:param name="stname" value="${stname1}"></c:param>

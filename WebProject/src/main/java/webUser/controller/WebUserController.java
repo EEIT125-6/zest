@@ -340,6 +340,16 @@ public class WebUserController {
 									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("1")));
 								}
 							}
+						/* 沒優惠的一樣給簽到 */
+						} else {
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								userFullData.setSignIn(null);
+							}
 						}
 					} else {
 						signInMessage = "您今日已經簽到過了！";
