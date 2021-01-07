@@ -1,5 +1,9 @@
 package webUser.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -11,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,11 +25,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import webUser.model.CityInfo;
@@ -51,7 +60,6 @@ import webUser.service.WillingService;
 		"managedUserData",
 		"selfData"})
 @Controller
-@RequestMapping("/webUser")
 public class WebUserController {
 	/* ServletContext */
 	@Autowired
@@ -86,7 +94,16 @@ public class WebUserController {
 	
 	/* Default Account List */
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
-
+	
+	/* Default Project Physical Address */
+    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+	
+	/* 簽到用生日時顯示字串 */
+	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
+	/* 簽到用生日當月時顯示字串 */
+	final String birthMonth = "這個月對您是特別的一個月，今日登入讓您獲得了 1 枚橙幣！";
+	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
 	public String doCreateRegisterForm(Model model) {
@@ -109,11 +126,11 @@ public class WebUserController {
 		model.addAttribute("cityInfoList", cityInfoList);
 		
 		/* 前往註冊畫面 */
-		return "webUser/WebUserRegisterForm";
+		return "WebUserRegisterForm";
 	}
 
 	/* 執行註冊資料檢查 */
-	@PostMapping(value = "/controller/WebUserRegisterForm")
+	@PostMapping(value = "/webUser/controller/WebUserRegisterForm")
 	public String doRegisterSubmit(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -159,7 +176,7 @@ public class WebUserController {
 				fervorValue,
 				cityCode);
 		
-		WebUserData reg_webUser = (WebUserData)map.get("reg_webUser");
+		WebUserData reg_webUser = (WebUserData) map.get("reg_webUser");
 		submitMessage = (String) map.get("submitMessage");
 		
 		/* 追加檢查checkCode */
@@ -177,12 +194,12 @@ public class WebUserController {
 			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
 			/* 返回註冊畫面 */
-			return "redirect:/webUser/WebUserRegisterForm";			
+			return "redirect:/WebUserRegisterForm";			
 		}
 	}
 
 	/* 執行使用者資料送出 */
-	@PostMapping(value = "/controller/DisplayWebUserInfo/confirm")
+	@PostMapping(value = "/webUser/controller/DisplayWebUserInfo/confirm")
 	public String doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
@@ -199,7 +216,7 @@ public class WebUserController {
 		
 		/* 宣告欲回傳的參數 */
 		Integer insertResult = -1;
-		String insertResultPage = "webUser/WebUserRegisterForm";
+		String insertResultPage = "WebUserRegisterForm";
 		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
 		insertResultMessage = doCheckRegisterInput(
@@ -238,7 +255,7 @@ public class WebUserController {
 				insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
-				insertResultPage = "webUser/WebUserLogin";
+				insertResultPage = "WebUserLogin";
 			} 
 			
 			/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
@@ -251,24 +268,24 @@ public class WebUserController {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
 			/* 返回註冊畫面 */
-			destinationUrl = "redirect:/webUser/WebUserRegisterForm";
+			destinationUrl = "redirect:/WebUserRegisterForm";
 		}		
 		
 		return destinationUrl;
 	}
 	
 	/* 取消註冊 */
-	@GetMapping(value = "/controller/DisplayWebUserInfo/undo")
+	@GetMapping(value = "/webUser/controller/DisplayWebUserInfo/undo")
 	public String doRegisterUndo(
 			SessionStatus sessionStatus) {
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 返回註冊畫面 */
-		return "redirect:/webUser/WebUserRegisterForm";
+		return "redirect:/WebUserRegisterForm";
 	}
 	
 	/* 執行登入檢查 */
-	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			@RequestParam(value = "account", defaultValue="") String account,
@@ -280,6 +297,7 @@ public class WebUserController {
 		String inputCheckResult = "";
 		Integer accountCheckResult = -3;
 		String loginMessage = "";
+		String signInMessage = "";
 		
 		WebUserData userFullData = new WebUserData();
 		
@@ -292,6 +310,51 @@ public class WebUserController {
 				accountCheckResult = wus.checkWebUserLogin(account, password);
 				/* 存取使用者個人資料 */
 				userFullData = wus.getWebUserData(account);
+				if (userFullData != null) {
+					/* 檢查簽到 */
+					Integer checkSignInResult = wus.checkWebUserSignIn(userFullData.getUserId(), Date.valueOf(today)) ;
+					/* 0代表未簽到，1代表已簽到 */
+					if (checkSignInResult == 0) {
+						/* 設定簽到日 */
+						userFullData.setSignIn(Date.valueOf(today));
+						/* 同月份時每次登入加1幣 */
+						/* 生日時每次登入額外加9幣 */
+						if ((String.valueOf(today)).split("-")[1].equals((String.valueOf(userFullData.getBirth())).split("-")[1])) {
+							userFullData.setZest(userFullData.getZest().add(new BigDecimal("1")));
+							if ((String.valueOf(today)).split("-")[2].equals((String.valueOf(userFullData.getBirth())).split("-")[2])) {
+								userFullData.setZest(userFullData.getZest().add(new BigDecimal("9")));
+								signInMessage = birthday;
+							} else {		
+								signInMessage = birthMonth;
+							}
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								userFullData.setSignIn(null);
+								if (signInMessage.equals(birthday)) {
+									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("10")));
+								} else if (signInMessage.equals(birthMonth)) {
+									userFullData.setZest(userFullData.getZest().subtract(new BigDecimal("1")));
+								}
+							}
+						/* 沒優惠的一樣給簽到 */
+						} else {
+							/* 執行簽到 */
+							Integer runSingInResult = wus.runWebUserSignIn(userFullData);
+							/* 執行簽到失敗時 */
+							signInMessage = (runSingInResult != 1) ? "" : signInMessage;
+							/* 失敗後還原設定 */
+							if (runSingInResult != 1) {
+								userFullData.setSignIn(null);
+							}
+						}
+					} else {
+						signInMessage = "您今日已經簽到過了！";
+					}
+				}
 			} catch (SQLException sqlE) {
 				String loginMessageTmp = sqlE.getMessage();
 				loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
@@ -306,15 +369,17 @@ public class WebUserController {
 		
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
+		map.put("signInMessage", signInMessage);
 		return map;
 	}
 	
 	/* 執行登出 */
-	@GetMapping(value = "/controller/WebUserMain/Logout")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Logout")
 	public String doLogOut(
 			Model model,
 			RedirectAttributes redirectAttributes,
-			SessionStatus sessionStatus) {
+			SessionStatus sessionStatus,
+			HttpSession session) {
 		
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
@@ -323,6 +388,8 @@ public class WebUserController {
 		
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
+		/* 無效httpSession */
+		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
 		/* 前往登出畫面 */
@@ -330,7 +397,7 @@ public class WebUserController {
 	}
 	
 	/* 執行帳號停用 */
-	@PostMapping(value = "/controller/WebUserMain/Quit")
+	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
 	public String doPersonalQuit(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -392,7 +459,7 @@ public class WebUserController {
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
-	@PostMapping(value = "/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/DisplaySelfData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doDisplaySelfData(
 			Model model) {
 		
@@ -428,19 +495,19 @@ public class WebUserController {
 	}
 	
 	/* 準備顯示個人資料畫面 */
-	@GetMapping(value = "/controller/WebUserMain/Modify")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Modify")
 	public String doDisplayOwnUserData() {
 		return "redirect:/webUser/DisplayWebUserData";
 	}
 	
 	/* 準備顯示修改密碼畫面 */
-	@GetMapping(value = "/controller/WebUserModifyPassword")
+	@GetMapping(value = "/webUser/controller/WebUserModifyPassword")
 	public String doWebUserModifyPassword() {
 		return "redirect:/webUser/WebUserModifyPassword";
 	}
 	
 	/* 執行修改密碼 */
-	@PostMapping(value = "/controller/WebUserModifyPassword")
+	@PostMapping(value = "/webUser/controller/WebUserModifyPassword")
 	public String doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
@@ -504,7 +571,7 @@ public class WebUserController {
 	}
 	
 	/* 準備前往修改其他資料畫面 */
-	@PostMapping(value = "/WebUserModifyData")
+	@PostMapping(value = "/webUser/WebUserModifyData")
 	public String doCreateWebUserModifyData(
 			Model model) {			
 		
@@ -537,7 +604,7 @@ public class WebUserController {
 		}
 		
 		if (!getResultMessage.equals("")) {
-			return "redirect:/webUser/WebUserLogin";
+			return "redirect:/WebUserLogin";
 		}
 		
 		/* 設定入Model中 */
@@ -545,9 +612,107 @@ public class WebUserController {
 		return "webUser/WebUserModifyData";
 	}
 	
+	/* 執行使用者圖像修改 */
+	@PostMapping(value = "/webUser/controller/WebUserModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doUpdateWebUserIcon(Model model,
+			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) {
+		
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean updateIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		/* 更新用物件 */
+		WebUserData updatedData = userData;
+		
+		if (userData == null) {
+			message = "使用者未登入！請登入後再進行本操作";
+		} else if (userData.getStatus() == "quit" || userData.getStatus() == "inactive") {
+			message = "使用者無權進行本動作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0,1)) - 1) {
+			message = "使用者驗證失敗！";
+		}
+		
+		if (picFile == null) {
+			message = "未上傳任何檔案！";
+		}
+		
+		/* 取出上傳檔案的檔名 */
+		String realFileName = picFile.getOriginalFilename();
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = userData.getIconUrl();
+		/* 取得使用者ID */
+		String userId = userData.getUserId();
+		/* 組成新圖示的相對路徑 */
+		String newIconUrl = "/images/webUser/" + userId + "/" + realFileName;
+		
+		if (message.equals("")) {
+			/* 執行圖片更新 */
+			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			/* 圖片更新成功 */
+			if (map.get("resultCode").equals("true")) {
+				/* 更新DB上的資料 */
+				/* 調用服務裡的方法 */
+				try {
+					updatedData.setIconUrl(newIconUrl);
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
+					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+				} catch (SQLException sqlE) {
+					String getDataMessageTmp = sqlE.getMessage();
+					message = getDataMessageTmp.split(":")[1];
+				}
+				/* 更新圖片、更新DB都成功 */
+				if (updateIconUrlResult) {
+					if (!oldUrl.equals("")) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							updateIconUrlResult = deletedOldPic.delete();
+						}
+						message = (updateIconUrlResult) ? message : "圖示更新成功但移除暫存檔案失敗";
+					}
+					map.put("resultCode", updateIconUrlResult.toString());
+				/* 更新圖片成功但更新DB失敗 */
+				} else {
+					/* 刪除新增的圖檔 */
+					String newFilePath = defaultAddress + newIconUrl;
+					File deletedNewPic = new File(newFilePath);
+					Boolean killNewPic = deletedNewPic.delete();
+					/* 重新命名舊圖檔 */
+					if (killNewPic) {
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
+				}
+				message = (message.equals("")) ? "圖示已順利更新完成！" : message;
+			} else {
+				message = map.get("resultMessage");
+			}
+			map.put("resultMessage", message);
+			return map;
+		} else {
+			map.put("resultCode", updateIconUrlResult.toString());
+			map.put("resultMessage", message);
+		}
+		return map;
+	}
+	
 	/* 執行密碼以外的資料修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserModifyData")
+	@PostMapping(value = "/webUser/controller/WebUserModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doUpdateWebUserData(
 			Model model,
 			RedirectAttributes redirectAttributes,
@@ -637,6 +802,7 @@ public class WebUserController {
 					selfData.getVersion() + 1,
 					selfData.getStatus(),
 					selfData.getIconUrl(),
+					selfData.getSignIn(),
 					selfData.getAccountLv(),
 					selfData.getGender(),
 					willingOption,
@@ -687,7 +853,7 @@ public class WebUserController {
 	}
 	
 	/* 前往搜尋畫面 */
-	@GetMapping(value = "/WebUserSearchForm")
+	@GetMapping(value = "/webUser/WebUserSearchForm")
 	public String doCreateWebUserSearchForm(Model model) 
 	{
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -705,58 +871,14 @@ public class WebUserController {
 	}
 	
 	/* 準備顯示搜尋畫面 */
-	@GetMapping(value = "/controller/WebUserMain/Search")
+	@GetMapping(value = "/webUser/controller/WebUserMain/Search")
 	public String doDisplaySearchPage() {
 		return "redirect:/webUser/WebUserSearchForm";
 	}
 	
-//	/* 回傳所有有效使用者的資料 */
-//	@PostMapping(value = "/controller/WebUserSearchForm/All", produces="application/json; charset=UTF-8")
-//	public @ResponseBody Map<String, Object> doSelectWebUserAllData(Model model) {
-//		
-//		/* 參數宣告 */
-//		Map<String, Object> map = new HashMap<>();
-//		Integer getResult = -1;
-//		String getResultMessage = "";
-//		
-//		/* 產生資料陣列 */
-//		List<WebUserData> userDataList = new ArrayList<>();
-//		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-//		
-//		/* 檢查身分 */
-//		if (userData == null) {
-//			getResultMessage = "無法使用本功能，請確定您已經登入本系統！";
-//		} else if (userData.getStatus().equals("inactive") || userData.getStatus().equals("quit")) {
-//			getResultMessage = "本帳號無法使用此功能！";
-//		}
-//		
-//		if (getResultMessage.equals("")) {
-//			/* 調用服務裡的方法 */
-//			try {
-//				userDataList = wus.getAllWebUserData(userData.getAccountLv().getLv(), userData.getStatus());
-//			} catch (SQLException sqlE) {
-//				String getDataMessageTmp = sqlE.getMessage();
-//				getResultMessage = getDataMessageTmp.split(":")[1];
-//			}
-//		}
-//		
-//		if (userDataList != null) {
-//			getResult = 1;
-//			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
-//		} else if (getResultMessage.equals("")) {
-//			getResult = 0;
-//			getResultMessage = "無法查詢到任何有效的使用者資料";
-//		}
-//		
-//		map.put("resultCode", getResult.toString());
-//		map.put("resultMessage", getResultMessage);
-//		map.put("userDataList", userDataList);
-//		return map;
-//	}
-	
 	/* 回傳符合條件使用者的資料 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserSearchForm", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> doSelectWebUserData(
 			Model model,
 			@RequestParam(value = "selectedAccount", defaultValue = "?") String selectedAccount,
@@ -851,7 +973,7 @@ public class WebUserController {
 	} 
 	
 	/* 根據帳號顯示對應資料 */
-	@GetMapping("/ManageWebUser/{account}")
+	@GetMapping("/webUser/ManageWebUser/{account}")
 	public String doCreateDisplayManagedUserData(
 			Model model,
 			@PathVariable(value = "account") String account) {
@@ -904,7 +1026,7 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
-	@PostMapping("/ManageWebUser/{mode}")
+	@PostMapping(value = "/webUser/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
@@ -1005,7 +1127,7 @@ public class WebUserController {
 	}
 	
 	/* 執行密碼重設 */
-	@PostMapping(value = "/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doResetWebUserPassword(
 			@RequestParam(value = "inputUserId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "inputPassword", required = false, defaultValue = "") String password) {
@@ -1035,7 +1157,7 @@ public class WebUserController {
 	}
 	
 	/* 傳送管理員後台新增表單所必需的資料 */
-	@GetMapping(value = "/WebUserAddForm")
+	@GetMapping(value = "/webUser/WebUserAddForm")
 	public String doCreateManagedUserRegisterForm(Model model) {
 		
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -1057,7 +1179,7 @@ public class WebUserController {
 	}
 	
 	/* 執行管理員新增 */
-	@PostMapping(value = "/controller/WebUserAddForm", produces="application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserAddForm", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminInsertWebUser(
 			Model model,
 			@RequestParam(value = "userLv", defaultValue = "0") Integer lv,
@@ -1135,9 +1257,115 @@ public class WebUserController {
 		return resultMap;
 	}
 	
+	/* 執行管理員修改圖示 */
+	@PostMapping(value = "/webUser/controller/WebUserAdminModifyIcon", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doAdminUpdateWebUserIcon(Model model,
+			@RequestParam(value = "pic", required = false) CommonsMultipartFile picFile) 
+	{
+		/* 宣告參數 */
+		Map<String, String> map = new HashMap<>();
+		String message = "";
+		Boolean updateIconUrlResult = false;
+		/* 取出sessionAttribute裡的使用者資料物件 */
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		WebUserData managedUserData = (WebUserData) model.getAttribute("managedUserData");
+		/* 更新用物件 */
+		WebUserData updatedData = managedUserData;
+		
+		/* 檢查JavaBean物件 */
+		if (userData == null) {
+			message = "未登入系統，請登入後再進行操作！";
+		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+			message = "身分驗證失敗，請登入後重試一次！";
+		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+			message = "本帳號無法使用此功能";
+		} else if (userData.getAccountLv().getLv() != -1) {
+			message = "本帳號無法使用此功能";
+		} else if (managedUserData.getAccountLv().getLv() != Integer.parseInt(managedUserData.getUserId().substring(0, 1)) - 1) {
+			message = "欲操作的帳號無法執行修改，請檢查帳號資料的完整性/正確性";
+		} else if (managedUserData.getStatus().equals("quit") || managedUserData.getStatus().equals("inactive")) {
+			message = "欲操作的帳號無法執行修改，請先恢復帳號的權限!";
+		} 
+		
+		if (picFile == null) {
+			message = "未上傳任何檔案！";
+		}
+		
+		/* 取出上傳檔案的檔名 */
+		String realFileName = picFile.getOriginalFilename();
+		/* 取出原有圖示的相對路徑 */
+		String oldUrl = managedUserData.getIconUrl();
+		/* 取得使用者ID */
+		String userId = managedUserData.getUserId();
+		/* 組成新圖示的相對路徑 */
+		String newIconUrl = "/images/webUser/" + userId + "/" + realFileName;
+		
+		if (message.equals("")) {
+			/* 執行圖片更新 */
+			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			/* 圖片更新成功 */
+			if (map.get("resultCode").equals("true")) {
+				/* 更新DB上的資料 */
+				/* 調用服務裡的方法 */
+				try {
+					updatedData.setIconUrl(newIconUrl);
+					updatedData.setVersion(updatedData.getVersion() + 1);
+					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
+					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+				} catch (SQLException sqlE) {
+					String getDataMessageTmp = sqlE.getMessage();
+					message = getDataMessageTmp.split(":")[1];
+				}
+				/* 更新圖片、更新DB都成功 */
+				if (updateIconUrlResult) {
+					if (!oldUrl.equals("")) {
+						/* 刪除舊檔暫存檔 */
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						File deletedOldPic = new File(oldFilePath);
+						if (deletedOldPic.exists()) {							
+							/* 執行刪除 */
+							updateIconUrlResult = deletedOldPic.delete();
+						}
+						message = (updateIconUrlResult) ? message : "圖示更新成功但移除暫存檔案失敗";
+					}
+					map.put("resultCode", updateIconUrlResult.toString());
+				/* 更新圖片成功但更新DB失敗 */
+				} else {
+					/* 刪除新增的圖檔 */
+					String newFilePath = defaultAddress + newIconUrl;
+					File deletedNewPic = new File(newFilePath);
+					Boolean killNewPic = deletedNewPic.delete();
+					/* 重新命名舊圖檔 */
+					if (killNewPic) {
+						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String delMessage = "";
+						try {
+							/* 複製檔案 */
+							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							/* 刪除暫存 */
+							new File(oldFilePath).delete();
+						} catch (IOException ioE) {
+							delMessage = ioE.getMessage();
+							message += delMessage;
+						}
+					}
+				}
+				message = (message.equals("")) ? "圖示已順利更新完成！" : message;
+			} else {
+				message = map.get("resultMessage");
+			}
+			map.put("resultMessage", message);
+			return map;
+		} else {
+			map.put("resultCode", updateIconUrlResult.toString());
+			map.put("resultMessage", message);
+		}
+		return map;
+	}
+	
 	/* 執行管理員修改 */
 	@SuppressWarnings("unchecked")
-	@PostMapping(value = "/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/webUser/controller/WebUserAdminModifyData", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminUpdateWebUser(
 			Model model,
 			@RequestParam(value = "newPassword", required = false, defaultValue="") String newPassword,
@@ -1241,6 +1469,7 @@ public class WebUserController {
 				managedUserData.getVersion() + 1,
 				managedUserData.getStatus(),
 				managedUserData.getIconUrl(),
+				managedUserData.getSignIn(),
 				managedUserData.getAccountLv(),
 				gender,
 				willingOption,
@@ -1317,13 +1546,13 @@ public class WebUserController {
 	}
 	
 	/* 前往顯示註冊資料畫面 */
-	@GetMapping(value = "/DisplayWebUserInfo")
+	@GetMapping(value = "/webUser/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {
 		return "webUser/DisplayWebUserInfo";
 	}
 	
 	/* 前往註冊結束畫面 */
-	@GetMapping(value = "/WebUserRegisterResult")
+	@GetMapping(value = "/webUser/WebUserRegisterResult")
 	public String doGoRegisterResult() {
 		return "webUser/WebUserRegisterResult";
 	}
@@ -1331,65 +1560,65 @@ public class WebUserController {
 	/* 前往登入畫面 */
 	@GetMapping(value = "/WebUserLogin")
 	public String doGoLogin() {
-		return "webUser/WebUserLogin";
+		return "WebUserLogin";
 	}
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
 	public String doGoForget() {		
-		return "webUser/WebUserForgetForm";
+		return "WebUserForgetForm";
 	}
 	
 	/* 前往登入主畫面 */
-	@GetMapping(value = "/WebUserMain")
+	@GetMapping(value = "/webUser/WebUserMain")
 	public String doGoWebUserMain() {
 		return "webUser/WebUserMain";
 	}
 	
 	/* 前往登出畫面 */
-	@GetMapping(value = "WebUserLogoutResult")
+	@GetMapping(value = "/webUser/WebUserLogoutResult")
 	public String doGoLogOut() {
 		return "webUser/WebUserLogoutResult";
 	}
 	
 	/* 前往停用結束畫面 */
-	@GetMapping(value = "WebUserQuitResult")
+	@GetMapping(value = "/webUser/WebUserQuitResult")
 	public String doGoQuitResult() {
 		return "webUser/WebUserQuitResult";
 	}
 	
 	/* 前往顯示個人資料畫面 */
-	@GetMapping(value = "DisplayWebUserData")
+	@GetMapping(value = "/webUser/DisplayWebUserData")
 	public String doGoDisplayWebUserData() {
 		return "webUser/DisplayWebUserData";
 	}
 	
 	/* 前往修改個人密碼畫面 */
-	@GetMapping(value = "WebUserModifyPassword")
+	@GetMapping(value = "/webUser/WebUserModifyPassword")
 	public String doGoWebUserModifyPassword() {
 		return "webUser/WebUserModifyPassword";
 	}
 	
 	/* 前往個人修改結束畫面 */
-	@GetMapping(value = "WebUserChangeResult")
+	@GetMapping(value = "/webUser/WebUserChangeResult")
 	public String doGoWebUserChangeResult() {
 		return "webUser/WebUserChangeResult";
 	}
 	
 	/* 前往管理員用顯示個人資料畫面 */
-	@GetMapping(value = "DisplayManagedUserData")
+	@GetMapping(value = "/webUser/DisplayManagedUserData")
 	public String doGoDisplayManagedWebUserData() {
 		return "webUser/DisplayManagedUserData";
 	}
 	
 	/* 無輸入任何帳號則返回登入 */
-	@GetMapping("/ManageWebUser")
+	@GetMapping("/webUser/ManageWebUser")
 	public String doGoBackToLogin() {
 		return "webUser/WebUserLogin";
 	}
 	
 	/* 前往重設密碼 */
-	@GetMapping("/WebUserResetPassword")
+	@GetMapping("/webUser/WebUserResetPassword")
 	public String doGoResetPassword() {
 		return "webUser/WebUserResetPassword";
 	}
@@ -2381,6 +2610,7 @@ public class WebUserController {
 				0, 
 				"inactive", 
 				"",
+				null,
 				new UserIdentity(), 
 				new Gender(), 
 				new UserWilling(), 
@@ -2459,5 +2689,164 @@ public class WebUserController {
 		map.put("reg_webUser", reg_webUser);
 		map.put("submitMessage", submitMessage);
 		return map;
+	}
+	
+	/* 圖像檔案處理 */
+	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
+		/* 變數宣告 */
+		Map<String, String> map = new HashMap<>();
+		String oldIconPath = (oldIconUrl.equals("")) ? "" : defaultAddress + oldIconUrl;
+		String newIconPath = defaultAddress + newIconUrl;
+		String message = "";
+		Boolean delResult = false;
+		Boolean creResult = false;
+		/* 如果原本沒有圖檔，就直接新建檔案 */
+		if (oldIconPath.equals("")) {
+			try {
+				creResult = doCreateNewIcon(newIconPath, pic);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+			
+			if (message.equals("") && !creResult) {
+				message = "無法新增圖檔！";
+			}
+		/* 如果原本有圖檔，就需要先刪除後再新增 */	
+		} else {
+			try {
+				delResult = doDeleteOldIcon(oldIconPath);
+			} catch (Exception e) {
+				message = e.getMessage();
+			}
+			
+			/* 成功才繼續 */
+			if (delResult) {
+				try {
+					creResult = doCreateNewIcon(newIconPath, pic);
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+			/* 失敗 */
+			} else {
+				message = "無法刪除舊有檔案！";
+			}
+			
+			if (message.equals("") && !creResult) {
+				message = "無法新增圖檔！";
+			}
+		}
+		map.put("resultCode", creResult.toString());
+		map.put("resultMessage", message);
+		return map;
+	}
+	
+	/* 刪除舊檔案 */
+	public Boolean doDeleteOldIcon(String oldIconPath) throws Exception{
+		/* 參數宣告 */
+		Boolean delResult = false;
+		Boolean userDirExist = false;
+		Boolean picDelResult = false;
+		/* 使用者目錄 */
+		String userDirPath = oldIconPath.substring(0,oldIconPath.lastIndexOf("/"));
+		/* 確認使用者目錄是否已建立 */
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
+		/* 確認該路徑是否有檔案存在 */
+		if (userDirExist) {
+			File picFile = new File(oldIconPath);
+			if (!picFile.exists()) {
+				delResult = false;
+			/* 有才執行刪除 */
+			} else {
+				/* 產生暫存檔檔名 */
+				String tempFileName = picFile.getName();
+				String finalTempFileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")) + "_tmp" + tempFileName.substring(tempFileName.lastIndexOf("."));
+				/* 刪除前先建立備份檔 */
+				/* 檢查備份檔是否存在 */
+				File tmpOldPic = new File(finalTempFileName);
+				/* 存在則先刪除舊有的 */
+				if (tmpOldPic.exists()) {
+					tmpOldPic.delete();
+				}
+				/* 複製檔案 */
+				FileUtils.copyFile(picFile, tmpOldPic);
+				/* 再執行刪除 */
+				picDelResult = picFile.delete();
+			}
+		}
+		delResult = (picDelResult) ? true : delResult;
+		return delResult;
+	}
+	
+	/* 建立新檔案 */
+	public Boolean doCreateNewIcon(String newIconPath, CommonsMultipartFile pic) throws Exception{
+		/* 參數宣告 */
+		Boolean creResult = false;
+		Boolean userDirExist = false;
+		Boolean picCreResult = false;
+		/* 使用者目錄 */
+		String userDirPath = newIconPath.substring(0,newIconPath.lastIndexOf("/"));
+		/* 確認使用者目錄是否已建立 */
+		File userDir = new File(userDirPath);
+		/* 有建立且為目錄 */
+		if (userDir.exists() && userDir.isDirectory()) {
+			userDirExist = true;
+		/* 未建立則自動建立 */
+		} else if (!userDir.exists()) {
+			userDirExist = userDir.mkdir();
+		/* 有同名檔案但非目錄 */
+		} else if (userDir.exists() && !userDir.isDirectory()) {
+			/* 先嘗試移除原有檔案 */
+			userDirExist = userDir.delete();
+			/* 成功後再建立目錄 */
+			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
+		}
+		/* 檢查目錄下是否已有該檔案 */
+		if (userDirExist) {
+			File picFile = new File(newIconPath);
+			/* 有則先刪再建 */
+			if (picFile.exists()) {
+				/* 先刪除 */
+				picCreResult = picFile.delete();
+				/* 再建立 */
+				picCreResult = (picCreResult) ? doWritePicIntoFile(picFile, pic) : picCreResult;
+			/* 沒有就直接執行新增 */
+			} else {
+				picCreResult = doWritePicIntoFile(picFile, pic);
+			}
+		}
+		creResult = (picCreResult) ? true : creResult;
+		return creResult;
+	}
+	
+	/* 寫入新檔案 */
+	public Boolean doWritePicIntoFile(File picFile, CommonsMultipartFile pic) throws Exception{
+		Boolean writeResult = false;
+		/* 使用CommonsMultipartFile的getInputStream()取得InputStream */
+		try (InputStream is = pic.getInputStream();
+			FileOutputStream fos = new FileOutputStream(picFile)) 
+		{
+			byte[] buffer = new byte[1024]; 
+			int length = -1;
+			while((length = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, length);
+			}
+			writeResult = true;
+		} catch(IOException ioE) {
+			throw new Exception(ioE.getMessage());
+		}
+		return writeResult;
 	}
 }

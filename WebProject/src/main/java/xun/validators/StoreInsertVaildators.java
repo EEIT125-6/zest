@@ -18,11 +18,13 @@ public class StoreInsertVaildators  implements Validator{
 	@Override
 	public void validate(Object target, Errors errors) {
 		StoreBean sb = (StoreBean)target;
-		
+		System.out.println("使用validate");
 		System.out.println(sb.getStitd());
 		if(sb.getStitd().length()>49) {
-			ValidationUtils.rejectIfEmptyOrWhitespace
-						(errors, "stitd", "","簡介字數超過50請修改");
+			System.out.println("簡介超過50字 應該要擋下來++++++++++++++++++++++++++++++++++++");
+			errors.rejectValue("stitd","", "簡介字數超過50請修改");
+//			ValidationUtils.rejectIfEmptyOrWhitespace
+//						(errors, "stitd", "","簡介字數超過50請修改");
 		}
 		
 	}

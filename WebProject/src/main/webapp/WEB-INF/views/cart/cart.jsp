@@ -242,9 +242,7 @@ ul.slides li img {
 							src="<c:url value='/images/${product.product_picture}'/> "
 							width="120px"></td>
 						<td id="aa">${product.product_price}</td>
-						<td><input list="quantities" name="quantity" class="qu"
-							value="0"> <datalist id="quantities">
-								<option value="0">
+						<td><input list="quantities" name="quantity" class="qu"> <datalist id="quantities">
 								<option value="1">
 								<option value="2">
 								<option value="3">
@@ -263,14 +261,23 @@ ul.slides li img {
 			<button type="button" class="continueShopping">
 				<a href="${pageContext.request.contextPath}/controller/mallRedirector">繼續購物</a>
 			</button>
-			<button type="button">
-				<a href="">結帳</a>
-			</button>
+			<button type="button" class="checkOut"	onclick="checkCart()"> 結帳</button>
 		</form>
 
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script>
+		var K = document.getElementById('tot').innerHTML;
+			function checkCart(){
+				var K = document.getElementById('tot').innerHTML;
+				if (K>0){
+					window.confirm('是否結帳');
+					window.location = "<c:url value='/controller/checkout'/>;";
+				}else{
+					window.alert('您的購物車為空，請繼續購物後再結帳');
+					window.location = "<c:url value='/controller/mallRedirector' />;"
+				}
+			}
 			$(".qu").change(function() {
 				var ProdPrice = parseInt($(this).parent().prev().text());
 				var SelVal = $(this).val();

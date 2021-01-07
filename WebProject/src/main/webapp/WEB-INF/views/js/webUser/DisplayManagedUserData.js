@@ -786,6 +786,8 @@ function changeVisibility() {
 }
 
 function clearMessage() {
+	document.getElementById("picSpan").innerHTML = "";
+	document.getElementById("picPreview").src = "";
 	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";

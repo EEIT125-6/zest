@@ -43,7 +43,7 @@ public class ShoppingCartController {
 		if (checkMemberStatusResult == 1) {
 			return myCartRedirector();
 		} else if (checkMemberStatusResult == 0) {
-			return "/webUser/WebUserLogin";
+			return "/WebUserLogin";
 		} else {
 			return "Index1";
 		}
@@ -53,7 +53,7 @@ public class ShoppingCartController {
 	public String mallRedirector(Model model) {
 		System.out.println("Model="+model);
 		List<ProductInfoBean> list = service.getProductList(); // 呼叫service層執行業務邏輯運算
-		model.addAttribute("product", list); // 將回傳結果加入attribute中
+		model.addAttribute("products", list); // 將回傳結果加入attribute中
 		return "product/mall"; // webappconfig中已導入 prefix suffix (.jsp)
 	}
 
@@ -78,7 +78,17 @@ public class ShoppingCartController {
 		session.setAttribute("products", list);
 		return "cart/cart";
 	}
-
+	
+	@GetMapping(value="/checkout") //導向至購物車結帳頁面
+	public String checkOuter(HttpSession session) {
+		System.out.println("checkOutInitialized");
+		List<ProductInfoBean>list = (List<ProductInfoBean>)session.getAttribute("products");
+		if(list==null) {
+			return "product/mall";
+		}else {
+		return "checkout/checkout";
+		}
+	}
 	
 	@GetMapping(value = "/itemadd") // 加入選定項目進入購物車
 	@SuppressWarnings("unchecked")

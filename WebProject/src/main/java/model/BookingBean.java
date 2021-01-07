@@ -53,7 +53,6 @@ public class BookingBean {
 		this.status=pStatus;
 	}
 	
-
 	public BookingBean(String bookingNo, String bookingdate, String time, Integer number, String restaurant,
 			String name, String phone, String mail, String needs) {
 		super();

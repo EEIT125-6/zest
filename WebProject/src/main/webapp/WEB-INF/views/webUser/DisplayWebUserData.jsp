@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${empty userFullData}">
-					<c:redirect url="WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
 				<form action="<c:url value='/webUser/WebUserModifyData' />" method="post">
 					<fieldset>
@@ -226,7 +226,7 @@
 						            		if (resultObj.selfData.iconUrl != '') {
 						            			content = "<hr /><label>帳號圖示：</label><br /><img src='${pageContext.request.contextPath}"+ resultObj.selfData.iconUrl +"' width='200' height='200' title='這是您目前的帳號圖示'>" 
 						            		} else {
-						            			content = "<hr /><label>帳號圖示：</label><br /><img src='${pageContext.request.contextPath}/image/webUser/default/ncu_scens.jpg' width='200' height='200' title='這是系統預設的帳號圖示'>"
+						            			content = "<hr /><label>帳號圖示：</label><br /><img src='${pageContext.request.contextPath}/images/webUser/default/ncu_scens.jpg' width='200' height='200' title='這是系統預設的帳號圖示'>"
 						            		}
 						            		
 						            		content += "<hr /><label>帳號名稱：" + resultObj.selfData.account + "</label>"

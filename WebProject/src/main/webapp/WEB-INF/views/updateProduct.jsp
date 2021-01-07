@@ -57,8 +57,8 @@ body {
 	            <label>商店名稱:
 	            	<form:hidden path="product_shop"/>
 	            	${productInfoBean.product_shop}          
-	            	<br>
 	            </label>
+	            	<br>
                 <label>商品名稱:
 					<form:input path="product_name"/>
 					<form:errors path="product_name" cssClass="error"/>
@@ -70,13 +70,15 @@ body {
                 <br>
                 <c:if test="${productInfoBean.product_picture !=null }">
                 <label>目前的商品圖片:
-                	<img  src="${productInfoBean.product_picture}" style="width:50px;height:50px">
+                	<img  src="${pageContext.request.contextPath}/123/${productInfoBean.product_picture}" style="width:50px;height:50px">
                 </label>
                 </c:if>
                 <label>商品照片:
-					<input type="file" name="file"/>
+					<input type="file" name="file" id="imgInp"/>
 					<form:hidden path="product_picture"/>
-
+					<br>
+						  <img id="blah" src="" alt="圖片預覽" width="100%;" height="100% "  />
+<!-- 						  <img id="blah" src="" alt="" width="100%;" height="100% "  /> -->
                 </label>
                 <br>
                 <label>商品庫存:
@@ -96,4 +98,22 @@ body {
 <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:100px">
 	<%@include file="Footer-Include-prototype.jsp"%>
 </body>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		function readURL(input) {
+			  if (input.files && input.files[0]) {
+			    var reader = new FileReader();
+			    
+			    reader.onload = function(e) {
+			      $('#blah').attr('src', e.target.result);
+			    }
+			    
+			    reader.readAsDataURL(input.files[0]); // convert to base64 string
+			  }
+			}
+
+			$("#imgInp").change(function() {
+			  readURL(this);
+			});
+	</script>
 </html>

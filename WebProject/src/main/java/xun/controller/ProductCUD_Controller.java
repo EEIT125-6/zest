@@ -64,26 +64,27 @@ public class ProductCUD_Controller {
 		System.out.println(productInfoBean.getStorebean());
 //		處理圖片
 		if(!file.isEmpty()) {
-		String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
-		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
-		String FileFormat = FileName.split("\\.")[1];
+			String FileFormat = FileName.split("\\.")[1];
 
-		FileName = productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = productInfoBean.getProduct_name()+"."+FileFormat;
 //		File productphoto = new File(context.getRealPath("/")+FileName);
-		File productphoto = new File(fakePath+FileName);
+			File productphoto = new File(fakePath+FileName);
 		
-		try {
-			file.transferTo(productphoto);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		productInfoBean.setProduct_picture("Images\\"+FileName);
+			try {
+				file.transferTo(productphoto);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
 		
 //		執行新增
-		ps.save(productInfoBean);
+			ps.save(productInfoBean);
 		}else {
 			ps.save(productInfoBean);
 		}
@@ -154,7 +155,8 @@ public class ProductCUD_Controller {
 			ps.updateProduct(productInfoBean);
 			
 			}else {
-			String fakePath = "C:\\ProjectGithub\\zest\\WebProject-Spring\\src\\main\\webapp\\Images\\";
+			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+//			C:\JavaMVCWorkspace\WebProject\src\main\webapp\WEB-INF\views\images\productInfo\images
 			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
@@ -171,7 +173,8 @@ public class ProductCUD_Controller {
 				e.printStackTrace();
 			}
 //		執行更新
-			productInfoBean.setProduct_picture("Images\\"+FileName);
+			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
+			
 			ps.updateProduct(productInfoBean);
 //			System.out.println(productInfoBean);
 		}
@@ -217,44 +220,45 @@ public class ProductCUD_Controller {
 		return "redirect:/StoreGetFullstore";
 	}
 	
-//	設置商家價值
+//	設置商家價格區間
 	public void CalculateStoreValue(Integer stid) {
 		
-		StoreBean sb = ss.get(stid);
-		
-		
-		List<Integer> productsprice = new ArrayList<Integer>() ;
-		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
-			Integer ss =  pi.getProduct_price();
-			productsprice.add(ss);
-		}
-		
-		Collections.sort(productsprice);
-		Integer storeprice=null;
-		if(productsprice.size()%2 !=0) {
-			storeprice=productsprice.get((productsprice.size()+1)/2);
-			System.out.println(storeprice);
-			System.out.println("+++++++++++"+productsprice);
-		}else {
-			storeprice=productsprice.get((productsprice.size()/2)+1);
-			System.out.println(storeprice);
-			System.out.println("-----------"+productsprice);
-		}
-		if (storeprice < 150) {
-			storeprice = 1;
-		}else if(storeprice < 300) {
-			storeprice = 2;
-		}else if(storeprice < 450) {
-			storeprice = 3;
-		}else if(storeprice < 600) {
-			storeprice = 4;
-		}else {
-			storeprice = 5;
-		}
-		
-		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
-		System.out.println("成功修改STORE_PRICE是1:"+Result);
+//		StoreBean sb = ss.get(stid);
+//		
+//		
+//		List<Integer> productsprice = new ArrayList<Integer>() ;
+//		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
+//			Integer ss =  pi.getProduct_price();
+//			productsprice.add(ss);
+//		}
+//		
+//		Collections.sort(productsprice);
+//		Integer storeprice=null;
+//		if(productsprice.size()%2 !=0) {
+//			storeprice=productsprice.get((productsprice.size()+1)/2-1);
+//			System.out.println(storeprice);
+//			System.out.println("+++++++++++"+productsprice);
+//		}else if(productsprice.size()==0){
+//			storeprice=0;
+//		}else {
+//			storeprice=productsprice.get((productsprice.size()/2));
+//			
+//			System.out.println(storeprice);
+//			System.out.println("-----------"+productsprice);
+//		}
+//		if (storeprice < 150) {
+//			storeprice = 1;
+//		}else if(storeprice < 300) {
+//			storeprice = 2;
+//		}else if(storeprice < 450) {
+//			storeprice = 3;
+//		}else if(storeprice < 600) {
+//			storeprice = 4;
+//		}else {
+//			storeprice = 5;
+//		}
+//		
+//		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
+//		System.out.println("成功修改STORE_PRICE是1:"+Result);
 	}
-
-	
 }

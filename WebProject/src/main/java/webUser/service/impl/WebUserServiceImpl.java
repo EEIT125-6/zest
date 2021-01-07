@@ -126,10 +126,25 @@ public class WebUserServiceImpl implements WebUserService {
 		
 		return checkLoginResult;
 	}
-
+	
+	@Override
+	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException {
+		return webUserDAO.checkWebUserSignIn(inputUserId, today);
+	}
+	
+	@Override
+	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
+		return webUserDAO.runWebUserSignIn(userData);
+	}
+	
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
 		return webUserDAO.getWebUserData(inputAccount);
+	}
+	
+	@Override
+	public WebUserData getWebUserDataById(String userId) throws SQLException {
+		return webUserDAO.getWebUserDataById(userId);
 	}
 
 	@Override
@@ -142,6 +157,11 @@ public class WebUserServiceImpl implements WebUserService {
 		return webUserDAO.quitWebUserData(quitUserData);
 	}
 
+	@Override
+	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
+		return webUserDAO.updateWebUserIconUrl(updatedUserData);
+	}
+	
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
 		return webUserDAO.updateWebUserData(updatedUserData);

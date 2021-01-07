@@ -31,6 +31,9 @@
 	<c:set var = "stitddt" value = "${row.stitddt }"/>
 	<c:set var = "tel" value = "${row.tel }"/>
 	<c:set var = "bannerurl" value = "${row.bannerurl }"/>
+	<c:if test = "${userFullData.account != null}" >
+		<c:set var = "userId" value = "${row.webUserData.userId}"/>
+	</c:if>
 </c:forEach>
 
 
@@ -43,6 +46,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
      <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
+     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
 <!--     <link rel="stylesheet" -->
     <title>橙皮  </title>
@@ -93,11 +97,147 @@
 #gotop :hover{
     background:#0099CC;
 }
+
+.search-area {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5555;
+  background-color: #051922;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+span.close-btn {
+  position: absolute;
+  right: 0%;
+  color: #fff;
+  top: 5%;
+  cursor: pointer;
+}
+
+.search-area {
+  height: 100%;
+}
+
+.search-area div {
+  height: 100%;
+}
+
+.search-bar {
+  height: 100%;
+  display: table;
+  width: 100%;
+}
+
+a.mobile-show {
+  display: none;
+}
+
+.search-area .search-bar div.search-bar-tablecell {
+  display: table-cell;
+  vertical-align: middle;
+  height: auto;
+}
+
+.search-bar-tablecell input {
+  border: none;
+  padding: 15px;
+  width: 60%;
+  background-color: transparent;
+  border-bottom: 1px solid #F28123;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] {
+  border: none;
+  background-color: #F28123;
+  padding: 15px 30px;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.search-bar-tablecell input::-webkit-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input:-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] i {
+  margin-left: 5px;
+}
+
+.search-area {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.search-area.search-active {
+  visibility: visible;
+  opacity: 1;
+  z-index: 999;
+}
+
+.search-bar-tablecell h3 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+}
     </style>
 </head>
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    
+	$(document).ready(function(){
+		$("#lazyload").hide();
+		
+         // search form
+        $(".search-bar-icon").on("click", function(){
+            $(".search-area").addClass("search-active");
+        });
+
+        $(".close-btn").on("click", function() {
+            $(".search-area").removeClass("search-active");
+        });		
+	});
+    </script>
+    <!--PreLoader Ends-->
+    
     <%@include file = "Header-Include.jsp" %>
 
 <!--             <div class="container-fluid  header" > -->
@@ -108,22 +248,44 @@
 <!--               </div> -->
 <!--             </div> -->
 
+<!-- search area -->
+		<div class="search-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<span class="close-btn"><i class="fas fa-window-close"></i></span>
+						<div class="search-bar">
+							<div class="search-bar-tablecell">
+							
+								<form action="<c:url value='/StoreGetNamestore'/>" method="GET" enctype="UTF-8"  >
+									<h3>搜尋商家名稱:</h3>
+									<input type="text" name="nsrch" placeholder="搜尋商家">
+									<button type="submit">搜尋 <i class="fas fa-search"></i></button>
+							    </form>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- end search arewa -->
 <!-- -------------------------------------------------------------- -->
             <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
-            	<%if(true){ %>
-		<c:url value="/Update" var="EDITURL">
+            <c:if test="${userFullData.userId == userId && userId != null}">
+<%--             	<%if(true){ %> --%>
+			<c:url value="/Update" var="EDITURL">
 <%-- 			<c:param name="stname" value="${stname1}" /> --%>
 			<c:param name="id" value="${id}" />	
-		</c:url>
+			</c:url>
 			<a href="${EDITURL}">編輯</a>
 			<span>|</span>
-		<c:url value="/Insert" var="CEATEURL">
-		</c:url> 
+			<c:url value="/Insert" var="CEATEURL">
+			</c:url> 
 			<a href="${CEATEURL}">新增</a>
 			<span>|</span>
-
-			<form action="DeleteStore" method="post" style="display:inline">
+<%-- 		<c:url value = '/DeleteStore'/> --%>
+			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
@@ -134,7 +296,7 @@
 		<c:param name="id" value="${id}"></c:param>
 		<c:param name="photo" value="photo"></c:param>
 		</c:url>
-			<a href="${photoURL}">修改店家photo</a>
+			<a href="${photoURL}">修改店家 封面的照片</a>
 			<span>|</span>
 		<c:url value="/UpdateBanner" var="bannerURL">
 		<c:param name="stname" value="${stname1}"></c:param>
@@ -164,7 +326,8 @@
 <%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
 <!-- 				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
 <!-- 			</form> -->
-	<%} %>
+<%-- 	<%} %> --%>
+		</c:if>
 	<br>
 	
     <div class="container" style="background-color:white; height: 250px;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px
@@ -192,32 +355,14 @@
         <hr>
         <div id="div1" class="ddiv">
             <span style="font-size: 140%">
-            	<div class="box1" style="text-align:center; margin:auto " >
-            		<div class="d1" style="text-align:left ;">評分總人數:</div>
-            		<br>
-			        <div class="d2">
-			            <h3>給予評價</h3>
-			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <br>
-			            <label id = "startPcs"></label>
+            	<c:if test="${userFullData.account != null}">
+	            	<div class="box1" style="text-align:center; margin:auto " >
+	            		<div style="text-align: right;">
+							<i class="fas fa-address-book" style="font-size: 25px; color: yellow"></i> 
+							<a href="${pageContext.request.contextPath}/orange/ShowComment">查詢留言 </a>
+						</div>
 			        </div>
-			        <div id="d1"></div>
-			        <div class="d3">
-			        	<div class="container">
-			        		<div class="row">
-			        			<div class="s2">
-			        			</div>
-		        				<div class="s3">
-			                    	<h3></h3>        
-			                  	</div>
-		        			</div>
-		        		</div>
-		        	</div>
-		        </div>
+		        </c:if>
 		        <br>
 			    <div class="box2" style="text-align:center ;margin: auto;">
 			       <form id="form1" method="get" action="<c:url value='/pack'/>">
@@ -226,15 +371,26 @@
 			       			<input type="hidden" name="storeId" value="${id}">
 			       			<div class="st1">
 						       <label class="t1" for="name">名字:</label>
-						       <input type="text" id="name" name="name" ><br>
+						       <input readonly type="text" id="name" name="name" value="${userFullData.nickname}"><br>
 						    </div>
 						    <div class="st1">
 						        <label for="star" class="t1"></label>
 						        <input type="hidden" id="star" name="star" ><br>
 						    </div>
+						    
+					 <div class="d2">
+			            <span>評價:  </span>
+			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <br>
+			            <label id = "startPcs"></label>
+			        </div>
 						    <div class="st1">
 							    <label class="t1" for="pwd1">留言:</label>
-							    <textarea name="comment" id="comment" cols="33" rows="5"></textarea><br>
+							    <textarea name="comment" id="comment" cols="33" rows="5" ></textarea><br>
 							</div>
 							<div class="sub">
 						        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
@@ -244,7 +400,7 @@
 			       </form>
 			    </div>
 			    <br />
-			    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			    <script src="js/jquery-3.5.1.min.js"></script>
 			    <script >
 			    	$(".i").mousedown(function() {
 			    		let starts = $(this).attr("id").split("img")[1];
@@ -293,7 +449,7 @@
 								    <div class="card" style="background:#f28633;">
 								    <c:if test="${row1.product_picture != null}">
 								    	<div class="imgBx">
-				             				<img src="${pageContext.request.contextPath}/${row1.product_picture}" style="border-radius: 7 px;"/>
+				             				<img src="${pageContext.request.contextPath}/123/${row1.product_picture}" style="border-radius: 7 px;"/>
 				             			</div>	
 				             		</c:if>
 				             		<c:if test="${row1.product_picture == null }">
@@ -314,6 +470,8 @@
 <%-- 				             			<img src="${row1.product_picture}" style="width:50px;height:50px"/>	 --%>
 <%-- 				             		</c:if> --%>
 <%-- 				             		<c:url value='/updateProductpage'/> --%>
+
+							<c:if test="${userFullData.userId == userId && userId != null}">
 							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
@@ -327,6 +485,7 @@
 								<input type="hidden" name="productid" value="${row1.product_id}">
 								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
 							</form>
+						</c:if>
 				             		<br>
 			             </div>
 		            </c:forEach>

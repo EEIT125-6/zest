@@ -431,9 +431,6 @@ public class BookingController {
 	public String good2() {
 		return "booking/cancelResult";
 	}
-	
-	
-	
 }
 
 

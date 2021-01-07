@@ -147,7 +147,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.accountLv.lv != -1}">
-					<c:redirect url="/webUser/WebUserLogin" />
+					<c:redirect url="/WebUserLogin" />
 				</c:if>
                <form method="post">
 					<fieldset>

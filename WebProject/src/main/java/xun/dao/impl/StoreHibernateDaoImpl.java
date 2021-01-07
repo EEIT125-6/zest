@@ -185,6 +185,18 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getStorebyClassandPrice(String sclass, Integer price) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StoreBean Where sclass = :sclass AND price = :price";
+		List<StoreBean> list = session.createQuery(hql)
+				.setParameter("sclass", sclass)
+				.setParameter("price", price)
+				.getResultList();
+		return list;
+	}
+	
 	@Override
 	public StoreBean get(Integer id) {
 		return factory.getCurrentSession().get(StoreBean.class, id);

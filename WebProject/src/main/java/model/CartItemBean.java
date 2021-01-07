@@ -26,7 +26,7 @@ public class CartItemBean implements Serializable {
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId", columnDefinition = ("char(7)"))
-	WebUserData product_User;//購買人資訊
+	private WebUserData product_User;//購買人資訊
 	@ManyToOne
 	@JoinColumn(name="ProductInfo",columnDefinition=("nvarchar(50)"))
 	ProductInfoBean product_Info;//產品資訊

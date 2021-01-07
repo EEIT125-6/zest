@@ -49,14 +49,26 @@ public interface WebUserService {
 	/* 執行登入檢查 -1->異常、0->失敗、1->成功 */
 	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException;
 	
+	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
+	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException;
+	
+	/* 執行簽到 -1->異常、0->錯誤、1->正確 */
+	public Integer runWebUserSignIn(WebUserData userData) throws SQLException;
+	
 	/* 取得使用者個人資料 */
 	public WebUserData getWebUserData(String inputAccount) throws SQLException;
 	
+	/* 取得使用者個人資料 */
+	public WebUserData getWebUserDataById(String userId) throws SQLException;
+
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
+	
+	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
+	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
 	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;

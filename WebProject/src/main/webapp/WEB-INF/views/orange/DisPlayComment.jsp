@@ -91,7 +91,6 @@ request.setCharacterEncoding("UTF-8");
             width:24px;
             height: 10px;
         }
-
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -151,15 +150,25 @@ request.setCharacterEncoding("UTF-8");
         <input type="hidden" name="id" value="${boardBean.boardid }">
     <div class="st1">
         <label class="t1" for="name">姓名:</label>
-        <input type="text" name="name" value=" ${boardBean.name }">
+        <input type="text" name="name" readOnly value="${boardBean.name }">
         <br>
     </div>
     <div class="st1">
-        <label for="star" class="t1">評分:</label>
-        <input type="text" name="star" value="${boardBean.star }">
-        <br>
-        
-    </div> 
+        <label for="star" class="t1"></label>
+        <input type="hidden" id="star" name="star" value="${boardBean.star }">
+  
+						    
+					 <div class="d2">
+			            <span>評價:  </span>
+			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+			            <br>
+			            <label id = "startPcs"></label>
+			        </div>
+						    
        <div class="st1">
         <label class="t1" for="date">時間:</label>
         <input type="text" readonly name="date" value=" ${boardBean.date }">
@@ -175,18 +184,13 @@ request.setCharacterEncoding("UTF-8");
     <textarea name="comment" id="" cols="30" rows="10" >${boardBean.context }</textarea>
     <br>
 </div>
-<!--  <div class="st1"> -->
-<!--         <label class="t1" for="storeId">餐廳</label> -->
         <input type="hidden" name="storeId" value="${boardBean.storebean.id }">
-<!--         <br> -->
-<!--     </div> -->
-
+        
     <div class="sub">
 <%--     	<a href="<c:url value="/updateboard?update=${boardBean.boardid }"/>" >更新</a> --%>
         <input type="submit"  value="更新">
-    	<a href="<c:url value="/deleteboard?update=${boardBean.boardid }"/>" >刪除</a>
-    
-<!--         <input type="submit" name="delete" value="刪除">  -->
+        <input type="reset" value="清除">     
+<!--    <input type="submit" name="delete" value="刪除">  -->
     </div>
 </fieldset>
    
@@ -196,7 +200,30 @@ request.setCharacterEncoding("UTF-8");
 <a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
    <i class="fas fa-chevron-up"></i>
 </a>
-<script type="text/javascript">
+			    <script src="js/jquery-3.5.1.min.js"></script>
+			    <script >
+			    	$(".i").mousedown(function() {
+			    		let starts = $(this).attr("id").split("img")[1];
+			    		$("#star").val(starts);
+			    	});
+			    	
+			    	$(".i").mouseenter(function() {
+			    		$(this).attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).prevAll().attr("src","<c:url value='/star/s3.png'/>");
+			    		$(this).nextAll().attr("src","<c:url value='/star/s1.png'/>");
+			    		let starts = $(this).attr("id").split("img")[1];
+			    	});
+	
+//星星更新判斷
+$(document).ready(function(){
+	let star = $("#star").attr("value")
+	$(".i").each(function(){
+		if($(this).index() == parseInt(star)){
+			$(this).attr("src","<c:url value='/star/s3.png'/>").prevAll().attr("src","<c:url value='/star/s3.png'/>");
+		}
+	})
+	
+})
 $(function() {
     /* 按下GoTop按鈕時的事件 */
     $('#gotop').click(function(){

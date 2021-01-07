@@ -83,7 +83,6 @@
             width:24px;
             height: 10px;
         }
-
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -140,7 +139,7 @@
             </div>
 <script>
 	setTimeout(function(){
-		window.location.href="orange/ShowComment"
+		window.location.href="<c:url value='orange/ShowComment' />"
 	}
 	,5000);
 </script>
@@ -167,7 +166,7 @@ $(function() {
 });
 </script>   
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:420px">
             <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
 </html>

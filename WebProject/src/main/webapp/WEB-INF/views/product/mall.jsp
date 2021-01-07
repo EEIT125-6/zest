@@ -275,7 +275,7 @@ ul.slides li img {
 			<th>商品價格</th>
 			<th>加入購物車</span></th>
 		</tr>
-		<c:forEach var="product" items="${product}">
+		<c:forEach var="product" items="${products}">
 			<tr>
 				<td>${product.product_id}</td>
 				<td class="foodphoto"><img src="${product.product_picture}" width="120px"></td>
