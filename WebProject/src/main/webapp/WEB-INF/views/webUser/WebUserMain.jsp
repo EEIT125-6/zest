@@ -182,6 +182,7 @@
        					<fieldset>
        						<div align="center">
        							<button type="submit" id="select" name="select" style="font-size:18px" >搜索使用者 <i class="material-icons" style="font-size:18px;color:blue">search</i></button>
+       							<hr />
        						</div>
        					</fieldset>
        				</form>

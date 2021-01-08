@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import model.BookingBean;
@@ -30,6 +31,7 @@ import webUser.model.WebUserData;
  
 @Controller
 @RequestMapping("/booking")
+@SessionAttributes({"userFullData"})
 public class BookingController {
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */

@@ -146,9 +146,9 @@
             <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="/webUser/WebUserMain" />
-				</c:if>
+<%--             	<c:if test="${userFullData.password != null}"> --%>
+<%-- 					<c:redirect url="/webUser/WebUserMain" /> --%>
+<%-- 				</c:if> --%>
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
@@ -263,8 +263,10 @@
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 						            		loginSpan.style.color = "black";
 						            		loginSpan.style.fontStyle = "normal";
-						            		/* 刷新 */
-						            		location.reload(true);
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
+// 						            		/* 刷新 */
+// 						            		location.reload(true);
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";

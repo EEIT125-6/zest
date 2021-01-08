@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -290,11 +291,19 @@ public class WebUserController {
 	@PostMapping(value = "/webUser/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
+			HttpServletRequest request,
 			@RequestParam(value = "account", defaultValue="") String account,
 			@RequestParam(value = "password", defaultValue="") String password) {
 		
 		/* 宣告欲回傳的參數 */
 		Map<String, String> map = new HashMap<>();
+		/* 進行請求URL的傳遞 */
+		HttpSession session = request.getSession();
+		String nextPath = (String)session.getAttribute("requestURI");
+		/* 無請求路徑就顯示首頁 */
+		if (nextPath == null) {
+			nextPath = request.getContextPath();
+		}
 		
 		String inputCheckResult = "";
 		Integer accountCheckResult = -3;
@@ -380,6 +389,7 @@ public class WebUserController {
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
 		map.put("signInMessage", signInMessage);
+		map.put("nextPath", nextPath);
 		return map;
 	}
 	
