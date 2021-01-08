@@ -149,7 +149,7 @@
 				<c:if test="${userId == null}">
 					<c:redirect url="/WebUserLogin" />
 				</c:if>
-                <form action="/WebProject/webUser/WebUserServlet" method="post">
+                <form method="POST">
                 	<fieldset>
                 		<legend>重設密碼相關資料</legend>
                 		<hr />
@@ -202,7 +202,7 @@
 	                	
 	                	$.ajax({
 							type:"POST",
-				            url:"<c:url value='/webUser/controller/WebUserResetPassword' />",
+				            url:"<c:url value='/recovery/controller/WebUserResetPassword' />",
 				            data:{
 				            	'inputUserId':userId,
 				            	'inputPassword':password

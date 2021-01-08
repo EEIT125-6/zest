@@ -112,9 +112,9 @@ public class StoreR_Controller {
 			) {
 //		System.out.println("sclass = "+sclass);
 		List<StoreBean> list = new ArrayList<StoreBean>();
-//		System.out.println("sclass  R"+sclass);
-//		System.out.println("stname  R"+stname);
-//		System.out.println("PPPPPPPPPP  :"+priceLimit);
+		System.out.println("sclass  R"+sclass);
+		System.out.println("stname  R"+stname);
+		System.out.println("PPPPPPPPPP  :"+priceLimit);
 		if (stname.isEmpty()) {
 			list = ss.getClassstore(sclass);
 			System.out.println("+++++++++++++++++++++++");

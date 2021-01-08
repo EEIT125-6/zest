@@ -191,7 +191,7 @@ public class WebUserController {
 			/* 將物件reg_webUser以"reg_webUser"的名稱放入Session中 */
 			model.addAttribute("reg_webUser", reg_webUser);
 			/* 移動到顯示使用者輸入資料的畫面 */
-			return "redirect:/webUser/DisplayWebUserInfo";
+			return "redirect:/register/DisplayWebUserInfo";
 		} else {
 			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
@@ -201,7 +201,7 @@ public class WebUserController {
 	}
 
 	/* 執行使用者資料送出 */
-	@PostMapping(value = "/webUser/controller/DisplayWebUserInfo/confirm")
+	@PostMapping(value = "/register/controller/DisplayWebUserInfo/confirm")
 	public String doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
@@ -265,7 +265,7 @@ public class WebUserController {
 			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
 			/* 前往註冊結束畫面 */
-			destinationUrl = "redirect:/webUser/WebUserRegisterResult";
+			destinationUrl = "redirect:/register/WebUserRegisterResult";
 		} else {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
@@ -277,7 +277,7 @@ public class WebUserController {
 	}
 	
 	/* 取消註冊 */
-	@GetMapping(value = "/webUser/controller/DisplayWebUserInfo/undo")
+	@GetMapping(value = "/register/controller/DisplayWebUserInfo/undo")
 	public String doRegisterUndo(
 			SessionStatus sessionStatus) {
 		/* 清空SessionAttribute */
@@ -1226,7 +1226,7 @@ public class WebUserController {
 	}
 	
 	/* 執行密碼重設 */
-	@PostMapping(value = "/webUser/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/recovery/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doResetWebUserPassword(
 			@RequestParam(value = "inputUserId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "inputPassword", required = false, defaultValue = "") String password) {
@@ -1728,15 +1728,15 @@ public class WebUserController {
 	}
 	
 	/* 前往顯示註冊資料畫面 */
-	@GetMapping(value = "/webUser/DisplayWebUserInfo")
+	@GetMapping(value = "/register/DisplayWebUserInfo")
 	public String doGoDisplayInfo() {
-		return "webUser/DisplayWebUserInfo";
+		return "register/DisplayWebUserInfo";
 	}
 	
 	/* 前往註冊結束畫面 */
-	@GetMapping(value = "/webUser/WebUserRegisterResult")
+	@GetMapping(value = "/WebUserRegisterResult")
 	public String doGoRegisterResult() {
-		return "webUser/WebUserRegisterResult";
+		return "WebUserRegisterResult";
 	}
 	
 	/* 前往登入畫面 */
@@ -1796,13 +1796,13 @@ public class WebUserController {
 	/* 無輸入任何帳號則返回登入 */
 	@GetMapping("/webUser/ManageWebUser")
 	public String doGoBackToLogin() {
-		return "webUser/WebUserLogin";
+		return "WebUserLogin";
 	}
 	
 	/* 前往重設密碼 */
-	@GetMapping("/webUser/WebUserResetPassword")
+	@GetMapping("/recovery/WebUserResetPassword")
 	public String doGoResetPassword() {
-		return "webUser/WebUserResetPassword";
+		return "recovery/WebUserResetPassword";
 	}
 	
 	/* 使用者註冊資料檢查 */

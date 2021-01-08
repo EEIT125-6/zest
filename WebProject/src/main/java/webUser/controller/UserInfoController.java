@@ -210,7 +210,7 @@ public class UserInfoController {
 				
 				/* 產生驗證連結 */
 				recoveryUrl = ipAddress + ":" + ipPort + "/" + projectName
-						+ "/webUser/RecoveryAccount?ts=" + nowTimeStamp 
+						+ "/recovery/RecoveryAccount?ts=" + nowTimeStamp 
 						+ "&key=" + checkCode
 						+ "&userId=" + userId;
 				
@@ -235,7 +235,7 @@ public class UserInfoController {
 	}
 	
 	/* 處理驗證連結 */
-	@GetMapping("/webUser/RecoveryAccount")
+	@GetMapping("/recovery/RecoveryAccount")
 	public String doRecoveryUrlCheck(
 			@RequestParam(value = "ts", required = false, defaultValue = "") String timeRecord,
 			@RequestParam(value = "key", required = false, defaultValue = "") String checkCode,
@@ -369,11 +369,11 @@ public class UserInfoController {
 		
 		/* 最終結果 */
 		if (recoveryResult.equals("") && infoIsOk) {
-			destinationUrl = "/webUser/WebUserResetPassword";
+			destinationUrl = "/recovery/WebUserResetPassword";
 			/* 將物件userId以"userId"的名稱放入Attribute中 */
 			model.addAttribute("userId", userId);
 		} else if (userData != null){
-			destinationUrl = "/webUser/WebUserLogin";
+			destinationUrl = "/WebUserLogin";
 		} else {
 			destinationUrl = "";
 		}
@@ -383,13 +383,13 @@ public class UserInfoController {
 		/* 將物件destinationUrl以"destinationUrl"的名稱放入Attribute中 */
 		model.addAttribute("redirectPage", destinationUrl);
 		
-		return "redirect:/webUser/WebUserCheckRecoveryResult";
+		return "redirect:/recovery/WebUserCheckRecoveryResult";
 	}
 	
 	/* 前往檢查結果畫面 */
-	@GetMapping("/webUser/WebUserCheckRecoveryResult")
+	@GetMapping("/recovery/WebUserCheckRecoveryResult")
 	public String doGoRecoveryCheckResult(Model model) {
-		return "webUser/WebUserCheckRecoveryResult";
+		return "recovery/WebUserCheckRecoveryResult";
 	}
 	
 	/* 檢查重設模式的輸入 */
