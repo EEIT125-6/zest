@@ -97,8 +97,8 @@ public class WebUserController {
 	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
 	
 	/* Default Project Physical Address */
-    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
-//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+//  final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
+	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
@@ -288,7 +288,7 @@ public class WebUserController {
 	}
 	
 	/* 執行登入檢查 */
-	@PostMapping(value = "/webUser/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			HttpServletRequest request,
@@ -390,6 +390,10 @@ public class WebUserController {
 		map.put("resultMessage", loginMessage);
 		map.put("signInMessage", signInMessage);
 		map.put("nextPath", nextPath);
+		System.out.println("result is "+map.get("resultCode"));
+		System.out.println("result is "+map.get("resultMessage"));
+		System.out.println("result is "+map.get("signInMessage"));
+		System.out.println("result is "+map.get("nextPath"));
 		return map;
 	}
 	
@@ -413,13 +417,14 @@ public class WebUserController {
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
 		/* 前往登出畫面 */
-		return "redirect:/webUser/WebUserLogoutResult";
+		return "redirect:/WebUserLogoutResult";
 	}
 	
 	/* 執行帳號停用 */
 	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
 	public String doPersonalQuit(
 			Model model,
+			HttpServletRequest request,
 			RedirectAttributes redirectAttributes,
 			SessionStatus sessionStatus) {
 		
@@ -467,6 +472,8 @@ public class WebUserController {
 			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";		
 			/* 清空SessionAttribute */
 			sessionStatus.setComplete();
+			/* 無效HttpSession */
+			request.getSession().invalidate();
 			redirectPage = "/";
 		} 
 		
@@ -475,7 +482,7 @@ public class WebUserController {
 		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("redirectPage", redirectPage);
 		/* 導向停用結束畫面 */
-		return "redirect:/webUser/WebUserQuitResult";
+		return "redirect:/WebUserQuitResult";
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
@@ -531,6 +538,7 @@ public class WebUserController {
 	public String doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
+			HttpServletRequest request,
 			RedirectAttributes redirectAttributes,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "confirmPassword") String confirmPassword ) {	
@@ -566,6 +574,8 @@ public class WebUserController {
 			if (updateResult == 1) {
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
+				/* 無效HttpSession */
+				request.getSession().invalidate();
 			}
 		}
 		if (!updateResultMessage.equals("")) {
@@ -581,7 +591,7 @@ public class WebUserController {
 		
 		if (updateResult == 1) {
 			/* 導向密碼修改結果畫面 */
-			destinationUrl = "redirect:/webUser/WebUserChangeResult";
+			destinationUrl = "redirect:/WebUserChangeResult";
 		} else {
 			/* 導向修改個人密碼畫面 */
 			destinationUrl = "redirect:/webUser/WebUserModifyPassword";
@@ -1768,15 +1778,15 @@ public class WebUserController {
 	}
 	
 	/* 前往登出畫面 */
-	@GetMapping(value = "/webUser/WebUserLogoutResult")
+	@GetMapping(value = "/WebUserLogoutResult")
 	public String doGoLogOut() {
-		return "webUser/WebUserLogoutResult";
+		return "WebUserLogoutResult";
 	}
 	
 	/* 前往停用結束畫面 */
-	@GetMapping(value = "/webUser/WebUserQuitResult")
+	@GetMapping(value = "/WebUserQuitResult")
 	public String doGoQuitResult() {
-		return "webUser/WebUserQuitResult";
+		return "WebUserQuitResult";
 	}
 	
 	/* 前往顯示個人資料畫面 */
@@ -1792,9 +1802,9 @@ public class WebUserController {
 	}
 	
 	/* 前往個人修改結束畫面 */
-	@GetMapping(value = "/webUser/WebUserChangeResult")
+	@GetMapping(value = "/WebUserChangeResult")
 	public String doGoWebUserChangeResult() {
-		return "webUser/WebUserChangeResult";
+		return "WebUserChangeResult";
 	}
 	
 	/* 前往管理員用顯示個人資料畫面 */

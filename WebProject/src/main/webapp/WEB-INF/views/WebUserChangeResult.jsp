@@ -12,8 +12,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>停用流程結束</title>
+    <%@include file = "Link_Meta-Include.jsp" %>    
+    <title>修改資料結束</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -141,30 +141,25 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${quitMessage}</p>
-                <p>5秒後將移至</p>
-                <p id = "pPage">${redirectPage}</p>
+                <c:if test="${updateResultMessage == null}">
+                	<p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
+                </c:if>
+                <c:if test="${updateResultMessage != null}">
+                	<p>${updateResultMessage}</p>
+                </c:if>
                 <script>
-                	let directPage = "";
-                	if (document.getElementById("pPage").innerHTML == "") {
-                		document.getElementById("pPage").innerHTML = "首頁";
-                		directPage = "/WebProject";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
-                		document.getElementById("pPage").innerHTML = "主畫面";
-                		directPage = "WebUserMain";
-                	}
-        
+                	let redirectPage = "../WebUserLogin";
                 	setTimeout(function () {
-	                	   window.location.href = directPage;
+	                	   window.location.href = redirectPage;
                	  	}
 	                , 5000);
                 </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            <%@include file = "Footer-Include-prototype.jsp" %>
 </body>
 </html>

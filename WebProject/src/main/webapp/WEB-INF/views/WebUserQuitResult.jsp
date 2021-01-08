@@ -6,11 +6,14 @@
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 %>
+<!-- taglib宣告 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!-- taglib宣告 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>登出成功</title>
+    <%@include file = "Link_Meta-Include.jsp" %>    
+    <title>停用流程結束</title>
     <style>
         .classimg{
 		 transition: 0.2s;	
@@ -138,21 +141,30 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <p>${logoutMessage}</p>
-                <p>5秒後將移至首頁，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
+                <p>${quitMessage}</p>
+                <p>5秒後將移至</p>
+                <p id = "pPage">${redirectPage}</p>
                 <script>
-                	let redirectPage = "/WebProject";
-	                setTimeout(function () {
-	             	   window.location.href = redirectPage;
-	        	  	}
-	             , 5000);
+                	let directPage = "";
+                	if (document.getElementById("pPage").innerHTML == "") {
+                		document.getElementById("pPage").innerHTML = "首頁";
+                		directPage = "/WebProject";
+                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
+                		document.getElementById("pPage").innerHTML = "主畫面";
+                		directPage = "WebUserMain";
+                	}
+        
+                	setTimeout(function () {
+	                	   window.location.href = directPage;
+               	  	}
+	                , 5000);
                 </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            <%@include file = "Footer-Include-prototype.jsp" %>
 </body>
 </html>

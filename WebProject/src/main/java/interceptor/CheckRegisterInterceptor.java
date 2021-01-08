@@ -11,16 +11,16 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import webUser.model.WebUserData;
 
-public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
+public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
-			"/webUser/*"
+			"/register/*"
 			);
 	
 	String servletPath;
 	String contextPath;
 	String requestURI;
 	
-	public CheckLoginInterceptor()  {
+	public CheckRegisterInterceptor()  {
 	}
 	
 	@Override
@@ -33,12 +33,12 @@ public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 		requestURI  = request.getRequestURI();
 		/* 檢查session是否逾時 */
 		isRequestedSessionIdValid = request.isRequestedSessionIdValid();
-		/* 必須登入者 */
-		if (mustLogin()) {
-			/* 已登入 */
-			if (checkLogin(request)) {   
+		/* 必須有註冊物件 */
+		if (mustRegister()) {
+			/* 註冊階段 */
+			if (checkRegister(request)) {   
 				byPass = true;
-			/* 未登入 */
+			/* 非註冊階段 */
 			} else {				
 				HttpSession session = request.getSession();
 				if ( ! isRequestedSessionIdValid ) {
@@ -47,28 +47,28 @@ public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 					/* 記住原本的要前往的網址，稍後如果登入成功，系統可以自動轉入原本要執行的程式。 */
 					session.setAttribute("requestURI", requestURI);	
 				}
-				response.sendRedirect(contextPath + "/WebUserLogin");
+				response.sendRedirect(contextPath + "/WebUserRegisterForm");
 				byPass = false;
 			}
-		/* 無須登入者，直接執行 */
+		/* 無須有註冊物件者，直接執行 */
 		} else {   
 			byPass = true;
 		}
 		return byPass;
 	}
 	/* 判斷Session物件內是否含有特定識別字串的屬性物件，如果有，表示已經登入，否則代表未登入 */
-	private boolean checkLogin(HttpServletRequest request) {
+	private boolean checkRegister(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		/* 取出指定物件 */
-		WebUserData userData = (WebUserData) session.getAttribute("userFullData");
-		if (userData == null) {
+		WebUserData reg_webUser = (WebUserData) session.getAttribute("reg_webUser");
+		if (reg_webUser == null) {
 			return false;
 		} else {
 			return true;
 		}
 	}
-	/* 如果請求的ServletPath的前導字是以某個必須登入才能使用之資源的路徑，那就必須登入。 */
-	private boolean mustLogin() {
+	/* 如果請求的ServletPath的前導字是以某個必須登入才能使用之資源的路徑，那就必須透過註冊取得物件。 */
+	private boolean mustRegister() {
 		boolean login = false;
 		for (String sURL : url) {
 			if (sURL.endsWith("*")) {

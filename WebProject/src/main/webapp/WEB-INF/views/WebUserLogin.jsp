@@ -216,7 +216,7 @@
 	            		
 	            		let xhrObject = new XMLHttpRequest();
 	            		if (xhrObject != null) {
-	            			xhrObject.open("POST", "<c:url value='/webUser/controller/WebUserLogin' />", true);
+	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhrObject.send("account=" + account + "&password=" + password);
 							
@@ -265,8 +265,6 @@
 						            		loginSpan.style.fontStyle = "normal";
 						            		/* 跳轉 */
 						            		window.location.href = resultObj.nextPath;
-// 						            		/* 刷新 */
-// 						            		location.reload(true);
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";

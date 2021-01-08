@@ -167,6 +167,7 @@ ul.slides li img {
 		<c:if test="${userFullData.password == null}">
 			<c:redirect url="/WebUserLogin" />
 		</c:if>
+		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 		<form method="post" >
 			<fieldset>
 				<legend>搜尋選項</legend>
@@ -436,6 +437,7 @@ ul.slides li img {
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
@@ -449,6 +451,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -458,6 +461,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -469,9 +473,22 @@ ul.slides li img {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
-											+ "<td>"
-											+ (dataIndex + 1)
-											+ "</td>";
+												+ "<td>"
+												+ (dataIndex + 1)
+												+ "</td>"
+												+ "<td>"
+												+ "<img src='"
+												+ document.getElementById("space").value;
+									
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									} else {
+										content += userData.iconUrl
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									}
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
@@ -520,23 +537,23 @@ ul.slides li img {
 														+ "</button>"
 										}
 										content += "</td>"
-												+ "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
-												+ userData.account 
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>"
-												+ userData.account 
-												+ "</td>";
+													+ "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
+													+ userData.account 
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</a>"
+													+ "</td>"
+													+ "<td>"
+													+ userData.account 
+													+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
 									}
 									
 									content += "<td>" + userData.nickname + "</td>"
-											+ "<td>" + userData.fervor + "</td>"
-											+ "<td>" + userData.locationInfo.cityName + "</td>";
+												+ "<td>" + userData.fervor + "</td>"
+												+ "<td>" + userData.locationInfo.cityName + "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>" + userData.accountLv.levelName + "</td>";
@@ -634,6 +651,7 @@ ul.slides li img {
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
@@ -647,6 +665,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -656,6 +675,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -667,9 +687,22 @@ ul.slides li img {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
-											+ "<td>"
-											+ (dataIndex + 1)
-											+ "</td>";
+										+ "<td>"
+										+ (dataIndex + 1)
+										+ "</td>"
+										+ "<td>"
+										+ "<img src='"
+										+ document.getElementById("space").value;
+							
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									} else {
+										content += userData.iconUrl
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									}
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += (userData.account != document.getElementById("userAccount").value)
@@ -718,23 +751,23 @@ ul.slides li img {
 														+ "</button>"
 										}									
 										content += "</td>"
-												+ "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
-												+ "<button type='button' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
-												+ "</button>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>"
-												+ userData.account 
-												+ "</td>";
+													+ "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
+													+ "<button type='button' style='background-color:#ffc107'>"
+													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</button>"
+													+ "</a>"
+													+ "</td>"
+													+ "<td>"
+													+ userData.account 
+													+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
 									}
 									
 									content += "<td>" + userData.nickname + "</td>"
-											+ "<td>" + userData.fervor + "</td>"
-											+ "<td>" + userData.locationInfo.cityName + "</td>";
+												+ "<td>" + userData.fervor + "</td>"
+												+ "<td>" + userData.locationInfo.cityName + "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>" + userData.accountLv.levelName + "</td>";
