@@ -124,11 +124,15 @@
                 <label>地址:
 <!--                     <input type="text" id="address" name="saddress" value="" onblur="checkaddress();" > -->
 						<form:input path="saddress" onblur="checkaddress()"/>
-                </label><span id = "addressspan"></span>
+                </label>
+                <form:errors path="saddress" cssClass="error"/>
+                <span id = "addressspan"></span>
                 <br>
                 <label>電話:
                     <form:input path="tel" onblur="checktel();" />
-                </label><span id = "telspan"></span>
+                </label>
+                <form:errors path="tel" cssClass="error"/>
+                <span id = "telspan"></span>
                 <br>
 
                 <label style="width: 40px;text-align: right;padding-right: 3px;">簡介:
