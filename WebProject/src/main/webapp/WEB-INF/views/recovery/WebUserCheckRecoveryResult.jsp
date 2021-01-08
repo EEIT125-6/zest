@@ -151,13 +151,13 @@
                 	let directPage = "";
                 	if (document.getElementById("pPage").innerHTML == "") {
                 		document.getElementById("pPage").innerHTML = "首頁";
-                		directPage = "/WebProject";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserResetPassword") {
+                		directPage = "../";
+                	} else if (document.getElementById("pPage").innerHTML == "/WebUserResetPassword") {
                 		document.getElementById("pPage").innerHTML = "重設密碼";
-                		directPage = "WebUserResetPassword";
+                		directPage = "../recovery/WebUserResetPassword";
                 	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
                 		document.getElementById("pPage").innerHTML = "主畫面";
-                		directPage = "WebUserMain";
+                		directPage = "../webUser/WebUserMain";
                 	}
         
                 	setTimeout(function () {

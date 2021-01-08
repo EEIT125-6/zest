@@ -155,7 +155,7 @@
 						<hr />
 						<label>帳號圖示：</label>
                 		<c:if test="${selfData.iconUrl == ''}" >
-                			<img src="<c:url value='/images/webUser/defaultIcon/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
+                			<img src="<c:url value='/images/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
                 		</c:if>
                 		<c:if test="${selfData.iconUrl != ''}" >
                 			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">

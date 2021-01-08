@@ -121,8 +121,9 @@ public class StoreR_Controller {
 			System.out.println(list);
 			System.out.println("+++++++++++++++++++++++");
 			if(priceLimit!=null) {
-				System.out.println("有近來");
+				System.out.println("有進來");
 				list= ss.getStoreByClassAndPrice(sclass, priceLimit);
+				System.out.println("應當的結果");
 				System.out.println(list);
 			}
 		}else {
