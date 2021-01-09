@@ -42,7 +42,7 @@ public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 			} else {				
 				HttpSession session = request.getSession();
 				if ( ! isRequestedSessionIdValid ) {
-					session.setAttribute("timeOut", "使用逾時，請重新登入");
+					session.setAttribute("timeOut", "使用逾時，請重新註冊");
 				} else {
 					/* 記住原本的要前往的網址，稍後如果登入成功，系統可以自動轉入原本要執行的程式。 */
 					session.setAttribute("requestURI", requestURI);	
