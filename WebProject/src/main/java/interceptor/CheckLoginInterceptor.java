@@ -7,10 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import webUser.model.WebUserData;
 
+@SessionAttributes({
+	"timeOut"})
 public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
 			"/webUser/*"
@@ -41,8 +44,8 @@ public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 			/* 未登入 */
 			} else {				
 				HttpSession session = request.getSession();
-				if ( ! isRequestedSessionIdValid ) {
-					session.setAttribute("timeOut", "使用逾時，請重新登入");
+				if (!isRequestedSessionIdValid) {
+					;
 				} else {
 					/* 記住原本的要前往的網址，稍後如果登入成功，系統可以自動轉入原本要執行的程式。 */
 					session.setAttribute("requestURI", requestURI);	

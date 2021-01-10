@@ -165,6 +165,11 @@
 						<span id="passwordSpan"></span>
 						<hr />
 						<span id="loginSpan">
+							<c:if test="${timeOut != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${timeOut}" />
+								<hr />
+							</c:if>
 							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
 								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
 								<c:out value="${loginMessage}" />

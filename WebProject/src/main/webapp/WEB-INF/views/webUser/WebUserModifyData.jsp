@@ -444,7 +444,7 @@
                 	function doUpdate() {
                 		let newFirstName = document.getElementById("updatedFirstName").value.trim();
                 		let newLastName = document.getElementById("updatedLastName").value.trim();
-                		let newNickname = document.getElementById("updatedNickname").value.trim();
+                		let newNickname = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
                 		let fervorObj = document.getElementsByClassName("updatedFervor");
                 		let newFervor = "";
                 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
@@ -453,15 +453,15 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let newEmail = document.getElementById("updatedEmail").value.trim();
+                		let newEmail = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
                 		let emailCheckCode = document.getElementById("emailCheckCode").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
                 		let newGetEmail =(document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
                 		newGetEmail = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
                 		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
-                		let newAddr0 = document.getElementById("updatedAddr0").value.trim();
-                		let newAddr1 = document.getElementById("updatedAddr1").value.trim();
-                		let newAddr2 = document.getElementById("updatedAddr2").value.trim();
+                		let newAddr0 = document.getElementById("updatedAddr0").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr1 = document.getElementById("updatedAddr1").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr2 = document.getElementById("updatedAddr2").value.replace('<', ' ').replace('>', '').trim();
                 		
                 		let updateSpan = document.getElementById("updatedSpan");
                 		let updateResultSpan = document.getElementById("updatedResultSpan");
@@ -530,7 +530,7 @@
 				        checkUpdateNickname();
 				    });
 					function checkUpdateNickname() {
-						let nickname = document.getElementById("updatedNickname").value.trim();
+						let nickname = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "處理中...，請稍後";
 						let nicknameIsOk = true;
@@ -584,7 +584,7 @@
 						checkUpdateEmail();
 				    });
 					function checkUpdateEmail() {
-						let email = document.getElementById("updatedEmail").value.trim();
+						let email = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;

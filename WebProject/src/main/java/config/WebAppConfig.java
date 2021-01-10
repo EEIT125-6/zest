@@ -13,6 +13,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import interceptor.CheckLoginInterceptor;
+import interceptor.CheckRecoveryInterceptor;
+import interceptor.CheckRegisterInterceptor;
 
 // for Test By Mimicker0903
 //import xun.AOP.LogAspect;
@@ -55,6 +57,8 @@ public class WebAppConfig implements WebMvcConfigurer {
 	@Override
     public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new CheckLoginInterceptor());
+		registry.addInterceptor(new CheckRegisterInterceptor());
+		registry.addInterceptor(new CheckRecoveryInterceptor());
     }
 	
 	// 為了處理靜態檔案必須加入下列敘述：只要是 /css/開頭的任何請求，都轉到/WEB-INF/views/css/去尋找

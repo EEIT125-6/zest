@@ -9,18 +9,17 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import webUser.model.WebUserData;
-
-public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
+public class CheckRecoveryInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
-			"/register/*"
+			"/recovery/WebUserResetPassword",
+			"/recovery/controller/WebUserResetPassword"
 			);
 	
 	String servletPath;
 	String contextPath;
 	String requestURI;
 	
-	public CheckRegisterInterceptor()  {
+	public CheckRecoveryInterceptor()  {
 	}
 	
 	@Override
@@ -33,35 +32,35 @@ public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 		requestURI  = request.getRequestURI();
 		/* 檢查session是否逾時 */
 		isRequestedSessionIdValid = request.isRequestedSessionIdValid();
-		/* 必須有註冊物件 */
-		if (mustRegister()) {
-			/* 註冊階段 */
-			if (checkRegister(request) && isRequestedSessionIdValid) {   
+		/* 必須驗證者 */
+		if (mustChecked()) {
+			/* 已驗證 */
+			if (checkUserId(request) && isRequestedSessionIdValid) {   
 				byPass = true;
-			/* 非註冊階段 */
+			/* 未驗證 */
 			} else {				
-				response.sendRedirect(contextPath + "/WebUserRegisterForm");
+				response.sendRedirect(contextPath + "/WebUserForgetForm");
 				byPass = false;
 			}
-		/* 無須有註冊物件者，直接執行 */
+		/* 無須驗證者，直接執行 */
 		} else {   
 			byPass = true;
 		}
 		return byPass;
 	}
 	/* 判斷Session物件內是否含有特定識別字串的屬性物件，如果有，表示已經登入，否則代表未登入 */
-	private boolean checkRegister(HttpServletRequest request) {
+	private boolean checkUserId(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		/* 取出指定物件 */
-		WebUserData reg_webUser = (WebUserData) session.getAttribute("reg_webUser");
-		if (reg_webUser == null) {
+		String requestUserId = (String) session.getAttribute("userId");
+		if (requestUserId == null) {
 			return false;
 		} else {
 			return true;
 		}
 	}
-	/* 如果請求的ServletPath的前導字是以某個必須登入才能使用之資源的路徑，那就必須透過註冊取得物件。 */
-	private boolean mustRegister() {
+	/* 如果請求的ServletPath的前導字是以某個必須登入才能使用之資源的路徑，那就必須登入。 */
+	private boolean mustChecked() {
 		boolean login = false;
 		for (String sURL : url) {
 			if (sURL.endsWith("*")) {

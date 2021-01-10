@@ -214,7 +214,7 @@
 	                function sendRecoveryRequest() {
 	                	let account = document.getElementById("account").value.trim();
 	                	let password = document.getElementById("password").value.trim();
-	                	let email = document.getElementById("email").value.trim();
+	                	let email = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	                	let phone = document.getElementById("phone").value.trim();
 	                	let birth = document.getElementById("birth").value.trim();
 	                	

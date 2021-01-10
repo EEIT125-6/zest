@@ -471,7 +471,7 @@
 				        checkUpdateNickname();
 				    });
 					function checkUpdateNickname() {
-						let nickname = document.getElementById("nickname").value.trim();
+						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "處理中...，請稍後";
 						let nicknameIsOk = true;
@@ -525,7 +525,7 @@
 						checkUpdateEmail();
 				    });
 					function checkUpdateEmail() {
-						let email = document.getElementById("email").value.trim();
+						let email = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;
@@ -646,7 +646,7 @@
                 		let newPassword = document.getElementById("password").value.trim();
                 		let newFirstName = document.getElementById("firstName").value.trim();
                 		let newLastName = document.getElementById("lastName").value.trim();
-                		let newNickname = document.getElementById("nickname").value.trim();
+                		let newNickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
                 		let genderObj = document.getElementsByClassName("gender");
                 		let newGender = "";
                 		for (let genderIndex = 0; genderIndex < genderObj.length; genderIndex++) {
@@ -663,14 +663,14 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let newEmail = document.getElementById("email").value.trim();
+                		let newEmail = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
                 		let newPhone = document.getElementById("phone").value.trim();
                 		let newGetEmail =(document.getElementById("getEmail1") == null) ? "" : document.getElementById("getEmail1").value;
                 		newGetEmail = (document.getElementById("getEmail2") == null) ? "" : document.getElementById("getEmail2").value;
                 		let newLocationCode = document.getElementById("locationCode").value.trim();
-                		let newAddr0 = document.getElementById("addr0").value.trim();
-                		let newAddr1 = document.getElementById("addr1").value.trim();
-                		let newAddr2 = document.getElementById("addr2").value.trim();
+                		let newAddr0 = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr1 = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr2 = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
                 		
                 		let updateSpan = document.getElementById("operateResult");
                 		let updateStr = "...處理中，請稍後";
