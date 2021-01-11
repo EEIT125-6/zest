@@ -3,21 +3,48 @@ package config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
+
+// for Test By Mimicker0903
+//import xun.AOP.LogAspect;
 
 @Configuration
 @EnableWebMvc
-/* 掃描的package暫時留空，有需要時請填入 */
-@ComponentScan({})
+@EnableAspectJAutoProxy
+/* 掃描的package */
+@ComponentScan({
+	"config", 
+	"webUser",
+	"xun",
+	"model",
+	"service",
+	"dao",
+	"controller",
+	"board",
+	"dashborad"
+	,"_Init"})
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
 		InternalResourceViewResolver  resolver = new InternalResourceViewResolver();
 		resolver.setPrefix("/WEB-INF/views/");
 		resolver.setSuffix(".jsp");
+		resolver.setViewClass(JstlView.class);
+		return resolver;
+	}
+	
+	// By Mimicker0903
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("UTF-8");
+		resolver.setMaxUploadSize(81920000);
 		return resolver;
 	}
 	
@@ -30,7 +57,16 @@ public class WebAppConfig implements WebMvcConfigurer {
 				.addResourceLocations("/WEB-INF/views/css/");
 		registry.addResourceHandler("/js/**")
 				.addResourceLocations("/WEB-INF/views/js/");
-		registry.addResourceHandler("/image/**")
-				.addResourceLocations("/WEB-INF/views/images/");
+		// By Mimicker0903
+		registry.addResourceHandler("/images/**")
+				.addResourceLocations("/WEB-INF/views/images/"); 
+		registry.addResourceHandler("/Images/**")
+				.addResourceLocations("/Images/");
+		// By mp4056
+		registry.addResourceHandler("/productInfo/images/**")
+		.addResourceLocations("/WEB-INF/views/images/productInfo/images/");
+		// By Brandon-Chen1122
+		registry.addResourceHandler("/star/**")
+		.addResourceLocations("/WEB-INF/views/orange/images/");
 	}
 }
