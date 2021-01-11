@@ -10,7 +10,7 @@ function checkForm() {
 	let lastNameObjValue = document.getElementById("lastName").value.trim();
 	let oldLastNameObjValue = document.getElementById("oldLastName").value.trim();
 	
-	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	
 	let birthObjValue = document.getElementById("birth").value.trim();
@@ -37,7 +37,7 @@ function checkForm() {
 	} 
 	let oldFervorObjValue = document.getElementById("oldFervor").value.trim();
 	
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
@@ -50,13 +50,13 @@ function checkForm() {
 	let locationCodeObjValue = document.getElementById("locationCode").value;
 	let oldLocationCodeObjValue = document.getElementById("oldLocationCode").value;
 	
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
 	
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	
 	let updatedSpan = document.getElementById("operateResult");
@@ -310,7 +310,7 @@ function checkLastName() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	
@@ -493,7 +493,7 @@ function checkFervor() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	let oldEmailObjValue = document.getElementById("oldEmail").value;
 	
@@ -649,7 +649,7 @@ function checkLocationCode() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
 	let addr0Span = document.getElementById("addr0Span");
 	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
 	let addr1ObjValue = document.getElementById("addr1").value.trim();
@@ -694,7 +694,7 @@ function checkAddr0() {
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
 	let addr1Span = document.getElementById("addr1Span");
 	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
@@ -736,7 +736,7 @@ function checkAddr1() {
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
 	let addr2Span = document.getElementById("addr2Span");
 	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	let addr0ObjValue = document.getElementById("addr0").value.trim();

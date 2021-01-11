@@ -153,6 +153,10 @@
 					<fieldset>
 						<legend>註冊相關資料</legend>
 						<span id="submitSpan">
+							<c:if test="${timeOut != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${timeOut}" />
+							</c:if>
 							<c:if test="${submitMessage != null}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${submitMessage}" />
@@ -395,7 +399,7 @@
 					}
 					
 					function checkSameNickname() {
-						let nickname = document.getElementById("nickname").value.trim();
+						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', ' ').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "...處理中，請稍後";
 						let nicknameIsOk = true;
@@ -451,7 +455,7 @@
 					}
 					
 					function checkSameEmail() {
-						let email = document.getElementById("email").value.trim();
+						let email = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;

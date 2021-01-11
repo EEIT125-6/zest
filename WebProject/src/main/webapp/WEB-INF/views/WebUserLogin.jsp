@@ -146,9 +146,9 @@
             <%@include file = "Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
-					<c:redirect url="/webUser/WebUserMain" />
-				</c:if>
+<%--             	<c:if test="${userFullData.password != null}"> --%>
+<%-- 					<c:redirect url="/webUser/WebUserMain" /> --%>
+<%-- 				</c:if> --%>
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
@@ -165,6 +165,11 @@
 						<span id="passwordSpan"></span>
 						<hr />
 						<span id="loginSpan">
+							<c:if test="${timeOut != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${timeOut}" />
+								<hr />
+							</c:if>
 							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
 								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
 								<c:out value="${loginMessage}" />
@@ -216,7 +221,7 @@
 	            		
 	            		let xhrObject = new XMLHttpRequest();
 	            		if (xhrObject != null) {
-	            			xhrObject.open("POST", "<c:url value='/webUser/controller/WebUserLogin' />", true);
+	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhrObject.send("account=" + account + "&password=" + password);
 							
@@ -263,8 +268,8 @@
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 						            		loginSpan.style.color = "black";
 						            		loginSpan.style.fontStyle = "normal";
-						            		/* 刷新 */
-						            		location.reload(true);
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";

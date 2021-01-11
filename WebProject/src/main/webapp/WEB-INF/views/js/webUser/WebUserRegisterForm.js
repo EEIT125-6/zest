@@ -202,7 +202,7 @@ function checkLast_name() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', ' ').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 
 	let nicknameIsOk = true;
@@ -327,7 +327,7 @@ function checkFervor() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
 	let emailIsOk = true;
@@ -472,7 +472,7 @@ function checkLocation_code() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', ' ').trim();
 	let addr0Span = document.getElementById("addr0Span");
 	let addr1ObjValue = document.getElementById("addr1").value.trim();
 	let addr2ObjValue = document.getElementById("addr2").value.trim();
@@ -505,7 +505,7 @@ function checkAddr0() {
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
 	let addr1Span = document.getElementById("addr1Span");
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
 	let addr2ObjValue = document.getElementById("addr2").value.trim();
@@ -535,7 +535,7 @@ function checkAddr1() {
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
 	let addr2Span = document.getElementById("addr2Span");
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
 	let addr1ObjValue = document.getElementById("addr1").value.trim();

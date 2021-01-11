@@ -31,7 +31,7 @@ import webUser.model.WebUserData;
  
 @Controller
 @RequestMapping("/booking")
-@SessionAttributes({"userFullData"})
+@SessionAttributes({"userFullData", "reg_booking"})
 public class BookingController {
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
