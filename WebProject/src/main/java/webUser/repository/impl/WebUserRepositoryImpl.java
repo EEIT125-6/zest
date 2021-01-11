@@ -17,7 +17,13 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	/* 產生SessionFactory */
 	@Autowired
 	SessionFactory factory;
+	
+	/* 每頁顯示筆數 */
+	private final Integer recordsPerPage = 3;
 
+	/* 最大頁數 */
+	private int totalPages = -1;
+	
 	/* 重複出現factory.getCurrentSession()，所以整理成一個方法，直接呼叫結果 */
 	public Session getSession() {
 		return factory.getCurrentSession();
@@ -344,6 +350,92 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 
 		/* 取得當前Session，然後執行HQL以取得陣列 */
 		return getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList();
+	}
+	
+	/* 取得查詢的筆數 */
+	@Override
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM WebUserData AS wu WHERE ");
+
+		String account = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String nickname = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
+		String fervor = (selectedParameters.split(":")[2].equals("?")) ? "" : selectedParameters.split(":")[2];
+		Integer locationCode = (selectedParameters.split(":")[3].equals("0")) ? 0 : Integer.parseInt(selectedParameters.split(":")[3]);
+		Integer lv = Integer.parseInt(selectedParameters.split(":")[4]);
+		String status = "'" + selectedParameters.split(":")[5] + "'";
+		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? ""
+				: "'" + selectedParameters.split(":")[6] + "'";
+		Integer selectedIdentity = (selectedParameters.split(":")[6].equals("-2")) ? -2
+				: Integer.parseInt(selectedParameters.split(":")[7]);
+		
+		if (!account.equals("")) {
+			account = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append("wu.account LIKE " + account);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !nickname.equals("")) {
+			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append("wu.nickname LIKE " + nickname);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !nickname.equals("")) {
+			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND wu.nickname LIKE " + nickname);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !fervor.equals("")) {
+			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
+			sb.append("wu.fervor LIKE " + fervor);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !fervor.equals("")) {
+			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
+			sb.append(" AND wu.fervor LIKE " + fervor);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append("wu.locationInfo.cityCode = " + locationCode);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append(" AND wu.locationInfo.cityCode = " + locationCode);
+		}
+
+		if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.status = " + selectedStatus);
+		} else if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.status = " + selectedStatus);
+		}
+		
+		if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.accountLv.lv = " + selectedIdentity);
+		} else if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.accountLv.lv = " + selectedIdentity);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
+			sb.append("wu.accountLv.lv >= :lv");
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
+			sb.append(" AND wu.accountLv.lv >= :lv");
+		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
+			sb.append("wu.accountLv.lv = :lv AND wu.status = " + status);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
+			sb.append(" AND wu.accountLv.lv = :lv AND wu.status = " + status);
+		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
+			sb.append("wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
+			sb.append(" AND wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
+		}
+
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return Long.parseLong(String.valueOf(getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList().size()));
+	}
+	
+	/* 取得查詢的最大頁數 */
+	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+		totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) recordsPerPage));
+		return totalPages;
 	}
 	
 	/* 更新使用者資料 0->失敗、1->成功 */

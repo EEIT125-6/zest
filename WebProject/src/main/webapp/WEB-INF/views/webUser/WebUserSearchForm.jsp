@@ -15,6 +15,8 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <%@include file="../Link_Meta-Include.jsp"%>
 <!-- Google Icon -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- dataTables用css -->
+<!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"> -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
@@ -168,6 +170,8 @@ ul.slides li img {
 			<c:redirect url="/WebUserLogin" />
 		</c:if>
 		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
+		<input type="hidden" id="pageNo" value="1" />
+		<input type="hidden" id="maxPage" value="1" />
 		<form method="post" >
 			<fieldset>
 				<legend>搜尋選項</legend>
@@ -244,9 +248,40 @@ ul.slides li img {
 			<span id="searchSpan"></span>
 		</div>
 		
+<!-- 		<div align="center" id="dataTableContainer">  -->
+<!-- 			<table id="userDataTable" class="display"> -->
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<!--  						<th>項次</th>  -->
+<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
+<!--  							<th>刪除</th> -->
+<!--  							<th>其他</th>  -->
+<!--  							<th>查看</th>  -->
+<%-- 						</c:if>  --%>
+<!--  						<th>帳號名稱</th>  -->
+<!--  						<th>稱呼</th>  -->
+<!-- 						<th>偏好食物</th>  -->
+<!-- 						<th>居住區域</th>  -->
+<%--  						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}">  --%>
+<!--  							<th>帳號身分</th>  -->
+<%--  						</c:if>  --%>
+<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
+<!--  							<th>帳號狀態</th>  -->
+<%--  						</c:if>  --%>
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 				<tbody> -->
+					
+<!-- 				</tbody> -->
+<!-- 			</table> -->
+<!-- 		</div> -->
+		
 		<div align="center" id="dataContainer"></div>
+		
 		<!-- 引用本地jQuery -->
 		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+		<!-- 引用dataTables.js -->
+<!-- 		<script src ="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
 		<!-- 引用本頁檢查用js -->
 		<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
@@ -280,7 +315,187 @@ ul.slides li img {
 					var mode = 'quit';
 					lastCheck(userId, account, status, mode);
 				});
-			};
+				/* 綁定第一頁按鈕 */
+				$("#dataContainer").on("click", ".pFirst", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pFirstBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定上一頁按鈕 */
+				$("#dataContainer").on("click", ".pPrev", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pPrevBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定下一頁按鈕 */
+				$("#dataContainer").on("click", ".pNext", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = startPage + 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pNextBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = startPage + 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定最末頁按鈕 */
+				$("#dataContainer").on("click", ".pLast", function() {
+					let maxPage = parseInt(document.getElementById("maxPage").value);
+					document.getElementById("pageNo").value = maxPage;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pLastBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let maxPage = parseInt(document.getElementById("maxPage").value);
+					document.getElementById("pageNo").value = maxPage;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				
+				/* dataTable測試區 */
+// 				let table = $("#userDataTable").DataTable({
+// 					processing: false, //關閉預設"顯示處理中"的效果
+// 					searching: false, //關閉內建搜尋
+// 					serverSide: true, //啟用ServerSide模式
+// 					order: [[0, "asc"]], //預設排序(由第0個資料行、升覓排序)
+// 					orderMulti: false, //關閉多欄位排序
+// 					autoWidth: false, //自動調整寬度
+// 					lengthMenu: [5, 10, 20], //設定每頁顯示筆數
+// 					/* 本地化 */
+// 					language: {
+// 				        processing: "處理中...",
+// 				        loadingRecords: "載入中...",
+// 				        lengthMenu: "顯示 _MENU_ 項結果",
+// 				        zeroRecords: "沒有符合的結果",
+// 				        info: "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+// 				        infoEmpty: "顯示第 0 至 0 項結果，共 0 項",
+// 				        infoFiltered: "(從 _MAX_ 項結果中過濾)",
+// 				        infoPostFix: "",
+// 				        search: "搜尋:",
+// 				        paginate: {
+// 				            first: "第一頁",
+// 				            previous: "上一頁",
+// 				            next: "下一頁",
+// 				            last: "最後一頁"
+// 				        },
+// 				        aria: {
+// 				            sortAscending: ": 升冪排列",
+// 				            sortDescending: ": 降冪排列"
+// 				        }
+// 				    },
+// 				    /* ajax */
+// 					ajax: {
+// 						url: "<c:url value='/webUser/controller/WebUserSearchForm' />",
+// 						type: "POST",
+// 						dataType: "json",
+// 						success: function(resultObj) {
+// 							if (resultObj.resultCode == 1) {
+// 								searchStr = resultObj.resultMessage;
+// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+// 										+ searchStr;
+// 								searchSpan.style.color = "black";
+// 								searchSpan.style.fontStyle = "normal";
+
+// 								let content = "";
+// 								if (resultObj.userDataList.length != 0) {
+									
+// 								} 
+// 							} else if (resultObj.resultCode == 0) {
+// 								searchStr = resultObj.resultMessage;
+// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+// 										+ searchStr;
+// 								searchSpan.style.color = "black";
+// 								searchSpan.style.fontStyle = "normal";
+// 							} else if (resultObj.resultCode == -1) {
+// 								searchStr = resultObj.resultMessage;
+// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 										+ searchStr;
+// 								searchSpan.style.color = "red";
+// 								searchSpan.style.fontStyle = "italic";
+// 								dataContainer.innerHTML = "";
+// 								/* 顯示彈窗異常訊息 */
+// 								alert(resultObj.resultMessage);
+// 							}
+// 						},
+// 						error : function(err) {
+// 							searchStr = "發生錯誤，無法載入使用者資料";
+// 							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+// 									+ searchStr;
+// 							searchSpan.style.color = "red";
+// 							searchSpan.style.fontStyle = "italic";
+// 							dataContainer.innerHTML = "";
+// 							/* 顯示彈窗異常訊息 */
+// 							alert(searchStr);
+// 						}
+// 					},
+// 					/* 欄位定義 */
+// 					columns:[
+// 						{data: 'account'},
+// 						{data: 'nickname'},
+// 						{data: 'fervor'}
+// 					]
+// 				});
+ 			};
 		
 			$("#search").click(function() {
 				var counter = 0;
@@ -396,10 +611,12 @@ ul.slides li img {
 			}
 			
 			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity) {
+				let startPage = parseInt(document.getElementById("pageNo").value);
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
+				let avgPage = 3;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 					+ searchStr;
@@ -415,7 +632,7 @@ ul.slides li img {
 						'selectedFervor':fervorObjValue,
 						'selectedLocationCode':locationCodeObjValue,
 						'selectedStatus':selectedStatus,
-						'selectedIdentity':selectedIdentity
+						'selectedIdentity':selectedIdentity,
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -469,16 +686,18 @@ ul.slides li img {
 											+ "</tr>";
 								}
 
-								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
+
+								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
-												+ "<td>"
-												+ (dataIndex + 1)
-												+ "</td>"
-												+ "<td>"
-												+ "<img src='"
-												+ document.getElementById("space").value;
+											+ "<td>"
+											+ (dataIndex + 1)
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
 									
 									if (userData.iconUrl == '') {
 										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
@@ -491,50 +710,49 @@ ul.slides li img {
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != document.getElementById("userAccount").value)
-													? "<td>"
-													+ "<button type='button' class='deleteBtn' id='delBtn" 
+										content += "<td>"
+												+ "<button type='button' class='deleteBtn' id='delBtn" 
+												+ userData.userId 
+												+ "_" 
+												+ userData.account 
+												+ "_" 
+												+ userData.status 
+												+ "' style='background-color:#ffc107'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+												+ "</button>"
+												+ "</td>"
+												+ "<td>";				
+
+										if (userData.status == 'active') {
+											content += "<button type='button' class='quitBtn' id='qutBtn" 
 													+ userData.userId 
 													+ "_" 
 													+ userData.account 
 													+ "_" 
 													+ userData.status 
-													+ "' style='background-color:#ffc107'>"
-													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-													+ "</button>"
-													+ "</td>"
-													: "<td></td>";				
-										content += "<td>";
-										if (userData.status == 'active') {
-											content += "<button type='button' class='quitBtn' id='qutBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status 
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-														+ "</button>";
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+													+ "</button>";
 										} else if (userData.status == 'quit') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+													+ "</button>"
 										} else if (userData.status == 'inactive') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
+													+ "</button>"
 										}
 										content += "</td>"
 													+ "<td>"
@@ -552,8 +770,8 @@ ul.slides li img {
 									}
 									
 									content += "<td>" + userData.nickname + "</td>"
-												+ "<td>" + userData.fervor + "</td>"
-												+ "<td>" + userData.locationInfo.cityName + "</td>";
+											+ "<td>" + userData.fervor + "</td>"
+											+ "<td>" + userData.locationInfo.cityName + "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>" + userData.accountLv.levelName + "</td>";
@@ -584,6 +802,28 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
+										
+								document.getElementById("pageNo").value = startPage;
+								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
+											+ "第一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+											+ "上一頁"
+											+ "</button>";
+											
+								} 
+								
+								if (resultObj.userDataList.length > startPage * avgPage) {
+									content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
+											+ "下一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+											+ "最末頁"
+											+ "</button>";
+								}
 							}
 
 							dataContainer.innerHTML = content;
@@ -618,11 +858,13 @@ ul.slides li img {
 			}
 
 			function selectAllUser() {
+				let startPage = parseInt(document.getElementById("pageNo").value);
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-
+				let avgPage = 3;
+				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 						+ searchStr;
 				searchSpan.style.color = "black";
@@ -682,43 +924,44 @@ ul.slides li img {
 											+ "<th>居住區域</th>"
 											+ "</tr>";
 								}
+								
+								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
 
-								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
-										+ "<td>"
-										+ (dataIndex + 1)
-										+ "</td>"
-										+ "<td>"
-										+ "<img src='"
-										+ document.getElementById("space").value;
+											+ "<td>"
+											+ (dataIndex + 1)
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
 							
 									if (userData.iconUrl == '') {
 										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
-													+ "' width='40' height='40' >"
-													+ "</td>";
+												+ "' width='40' height='40' >"
+												+ "</td>";
 									} else {
 										content += userData.iconUrl
-													+ "' width='40' height='40' >"
-													+ "</td>";
+												+ "' width='40' height='40' >"
+												+ "</td>";
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != document.getElementById("userAccount").value)
-													? "<td>"
-													+ "<button type='button' class='deleteBtn' id='delBtn" 
-													+ userData.userId 
-													+ "_" 
-													+ userData.account 
-													+ "_" 
-													+ userData.status 
-													+ "' style='background-color:#ffc107'>"
-													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-													+ "</button>"
-													+ "</td>"
-													: "<td></td>";				
-										content += "<td>";
+										content += "<td>"
+												+ "<button type='button' class='deleteBtn' id='delBtn" 
+												+ userData.userId 
+												+ "_" 
+												+ userData.account 
+												+ "_" 
+												+ userData.status 
+												+ "' style='background-color:#ffc107'>"
+												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+												+ "</button>"
+												+ "</td>"
+												+ "<td>";				
+
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
 														+ userData.userId 
@@ -798,6 +1041,28 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
+										
+								document.getElementById("pageNo").value = startPage;
+								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
+											+ "第一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+											+ "上一頁"
+											+ "</button>";
+											
+								} 
+								
+								if (resultObj.userDataList.length > startPage * avgPage) {
+									content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
+											+ "下一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pLast'>"
+											+ "最末頁"
+											+ "</button>";
+								}
 							}
 
 							dataContainer.innerHTML = content;
