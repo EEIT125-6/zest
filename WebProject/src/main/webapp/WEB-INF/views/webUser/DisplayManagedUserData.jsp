@@ -174,6 +174,7 @@
 						<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${managedUserData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
                 		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
+                		<button type="button" name="resetDefault" id="resetDefault" style="font-size:18x">回復預設 <i class="material-icons" style="font-size:18px;color:green">refresh</i></button>
                 		<span id="picSpan"></span>
 						<hr />
 					</fieldset>
@@ -363,6 +364,14 @@
                 	function picUpload() {
                 		let choice=confirm("是否確定要上傳指定的圖片？");
                 		if (choice == true) {
+                			/* 停用按鈕，防止連點 */
+                			document.getElementById("uploadPic").disabled = true;
+                			/* 設定計時器，定時啟用 */
+                			setTimeout(enableUploadBtn, 30000);
+                			/* 恢復按鈕的點選 */
+                			function enableUploadBtn() {
+                				document.getElementById("uploadPic").disabled = false;
+							}
                 			var picForm = new FormData();
                 			var pic = $("#iconUrl")[0].files[0];
                 			picForm.append("pic", pic);
@@ -403,6 +412,60 @@
 		            		});
                 		}
                 	}
+                	
+                	$("#resetDefault").click(function() {
+	                	if (document.getElementById("oldIconUrl").value != "") {
+		                	let choice=confirm("是否確定回復圖示設定到預設值？");
+		                	if (choice == true) {
+		                		/* 停用按鈕，防止連點 */
+	                			document.getElementById("resetDefault").disabled = true;
+	                			/* 設定計時器，定時啟用 */
+	                			setTimeout(enableResetIconBtn, 30000);
+	                			/* 恢復按鈕的點選 */
+	                			function enableResetIconBtn() {
+	                				document.getElementById("resetDefault").disabled = false;
+								}
+		                		picStr = "...處理中，請稍後";
+	           					picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + picStr;
+			            		picSpan.style.color = "black";
+			            		picSpan.style.fontStyle = "normal";
+			            		
+			            		$.ajax({
+			            			type:"POST",
+						            url:"<c:url value='/webUser/controller/WebUserAdminResetIcon' />",
+						            dataType : "json",
+									success:function(resultObj) {
+										if (resultObj.resultCode == "true") {
+											picStr = resultObj.resultMessage;
+											alert(picStr);
+											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+											picSpan.style.color = "green";
+											picSpan.style.fontStyle = "normal";
+										} else {
+											picStr = resultObj.resultMessage;
+											alert(picStr);
+											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+											picSpan.style.color = "red";
+											picSpan.style.fontStyle = "italic";
+										}
+									},
+									error:function(err) {
+										picStr = "發生錯誤，無法回復預設值";
+										alert(picStr);
+										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+										picSpan.style.color = "red";
+										picSpan.style.fontStyle = "italic";
+									}
+			            		});
+		                	}
+	                	} else {
+	                		picStr = "無法回復預設值！因為已經為預設圖示";
+							alert(picStr);
+							picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
+							picSpan.style.color = "red";
+							picSpan.style.fontStyle = "italic";
+	                	}
+	                });
 					
 					$("#checkNicknameUsed").click(function() {
 				        checkUpdateNickname();

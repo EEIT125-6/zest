@@ -1,9 +1,14 @@
 package model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import webUser.model.WebUserData;
 
 @Entity
 @Table(name="booking")
@@ -11,7 +16,6 @@ public class BookingBean {
 	@Id
 	@Column(nullable = false,unique = true,columnDefinition = "char(5)")
 	private String bookingNo;
-	private String user_id;
 	private String bookingdate;
 	private String time;
 	private Integer number;
@@ -25,12 +29,15 @@ public class BookingBean {
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(40)")
 	private String needs;
 	private Integer status;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="user_id")
+	private WebUserData user_id;
 
 	public BookingBean() {
 
 	}
 
-	public BookingBean(String pBookingNo, String pUser_id, String pBookingdate, String pTime, Integer pNumber,
+	public BookingBean(String pBookingNo, WebUserData pUser_id, String pBookingdate, String pTime, Integer pNumber,
 			String pRestaurant, String pName, String pPhone, String pMail, String pPurpose, String pNeeds,Integer pStatus) {
 		this.bookingNo = pBookingNo;
 		this.user_id = pUser_id;
@@ -46,7 +53,6 @@ public class BookingBean {
 		this.status=pStatus;
 	}
 	
-
 	public BookingBean(String bookingNo, String bookingdate, String time, Integer number, String restaurant,
 			String name, String phone, String mail, String needs) {
 		super();
@@ -69,11 +75,11 @@ public class BookingBean {
 		this.bookingNo = bookingNo;
 	}
 	
-	public String getUser_id() {
+	public WebUserData getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(WebUserData user_id) {
 		this.user_id = user_id;
 	}
 

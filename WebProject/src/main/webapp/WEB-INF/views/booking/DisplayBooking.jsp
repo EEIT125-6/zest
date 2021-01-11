@@ -10,6 +10,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <!DOCTYPE html>
 <html>
 <head>
+<%@include file = "../Link_Meta-Include.jsp" %>
 <title>訂位資料確認</title>
     <style>
          .classimg{
@@ -143,7 +144,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <center>          
 <h2>訂位資料如下 ! 請確認 !</h2>
 <form action="<c:url value='/booking/confirm'/>" method="post">
-<table  cellspacing="1" cellpadding="1" border="1" width="500px">
+<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
 <tr bgcolor="#F2F4FB">
     <td>訂單編號:</td>
     <td>${reg_booking.bookingNo}</td>
@@ -181,13 +182,14 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <td>${reg_booking.needs}</td>
 </tr>
 </table>
-<div style="margin-top:10px;">
-<input type="submit" name="confirm" value="確認" >
+<div style="margin:10px;">
+<input type="submit" name="confirm" value="確認" style="border-radius: 3px; border: none; outline: none;">
 </div>
 </form>
 </center>  
 </div>
   <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+ <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:120px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
 </body>
-</html>   
+</html>    

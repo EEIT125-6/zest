@@ -28,6 +28,7 @@ import webUser.service.WebUserService;
 import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
+import xun.util.GlobalService;
 import xun.validators.StoreInsertVaildators;
 
 @Controller
@@ -44,7 +45,7 @@ public class StoreCUD_Controller {
 	@Autowired
 	WebUserService ws;
 	
-	@GetMapping("/Insert")
+//	@GetMapping("/Insert")
 	public String InsertPage(
 			Model model
 //			,@RequestParam(value = "userId",required = false) String userId
@@ -56,7 +57,7 @@ public class StoreCUD_Controller {
 		return "Insert";
 	}
 	
-	@PostMapping("/InsertStore")
+//	@PostMapping("/InsertStore")
 	public String InsertStore(
 			@ModelAttribute("storeBean") StoreBean storeBean,
 			Model model,
@@ -79,6 +80,7 @@ public class StoreCUD_Controller {
 			return "Insert";
 		}
 		if (result.hasErrors()) {
+			System.out.println("Result是有錯誤的 應該要返回");
 			return "Insert";
 		}
 
@@ -125,7 +127,9 @@ public class StoreCUD_Controller {
 			result.rejectValue("stname", "","商家名稱重複");
 			return "Update";
 		}
+		System.out.println(result+"目前的錯誤!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		if (result.hasErrors()) {
+			System.out.println("Result是有錯誤的 應該要返回");
 			return "Update";
 		}
 //		修改
@@ -186,14 +190,20 @@ public class StoreCUD_Controller {
 			HttpServletRequest request
 			) {
 		MultipartFile file2 = file;
-		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
+//		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
+		String fakePath = GlobalService.getUploadStorePhotoPath();
 //		String fakePath = "C:\\ProjectGithub\\";
 		
 		String filePath = request.getSession().getServletContext().getRealPath("");
+		
 		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
+		String FileFormat = FileName.split("\\.")[1];
+		
 		String fakeFilePath =fakePath+FileName;
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
+		
+		FileName = storeBean.getId()+"!_!"+storeBean.getStname()+"."+FileFormat;
 		File fkf = new File(fakePath+""+FileName);
 		try {
 //			file2.transferTo(writeFile);
@@ -236,13 +246,17 @@ public class StoreCUD_Controller {
 			) {
 		MultipartFile file2 = file;
 		String filePath = request.getSession().getServletContext().getRealPath("");
-		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
+//		String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\";
+		String fakePath = GlobalService.getUploadStorePhotoPath();
 		
 		String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
+		String FileFormat = FileName.split("\\.")[1];
 		
 		String fakeFilePath =fakePath+FileName;
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
+		
+		FileName = storeBean.getId()+"!_!"+storeBean.getStname()+"."+FileFormat;
 		File fkf = new File(fakePath+""+FileName);
 		try {
 			file.transferTo(fkf);
