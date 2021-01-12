@@ -37,11 +37,11 @@ public class BookingDAO_Impl implements BookingDAO {
 	//查詢
 	@SuppressWarnings("unchecked")
 	@Override
-	public List <BookingBean> findBooking(String phone) {
-		String hql = "FROM BookingBean b where b.phone= :phone";
+	public List <BookingBean> findBooking(String user_id) {
+		String hql = "FROM BookingBean b where b.user_id.userId= :user_id";
 		Session session = factory.getCurrentSession();
 		Query<BookingBean> query = session.createQuery(hql);
-		List<BookingBean> list = query.setParameter("phone", phone).getResultList();
+		List<BookingBean> list = query.setParameter("user_id", user_id).getResultList();
 		System.out.println(list.size()+"筆");
 		return list;
 	}

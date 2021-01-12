@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -31,7 +34,7 @@ import webUser.model.WebUserData;
  
 @Controller
 @RequestMapping("/booking")
-@SessionAttributes({"userFullData"})
+@SessionAttributes({"userFullData","reg_booking"})
 public class BookingController {
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
@@ -128,8 +131,10 @@ public class BookingController {
 	public String insert(Model model) {
 		
 		BookingBean bookingData = (BookingBean)model.getAttribute("reg_booking");
+		System.out.println(bookingData==null);
 		
 		String mailObj = bookingData.getMail();
+		System.out.println(mailObj);
 		String mailContext = "";  
 		if (service.insertBooking(bookingData)>0) {
 			
@@ -220,20 +225,33 @@ public class BookingController {
 		if (user_id == null) {
 			return "WebUserLogin";
 		}
-		return "/booking/Page1";
+		return "/booking/showOrder";
+	}
+	
+	//ajax查詢
+	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> order(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(user_id.getUserId());
+
+	    model.addAttribute("booking",bean);
+	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", data);
+		return map;
 	}
 
 	
 	//查
 	@PostMapping("/select")
-	public String query(Model model,@RequestParam(value="phone") String phone) {
-		
-		List<BookingBean> bean = service.findBooking(phone);
+	public String query(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(user_id.getUserId());
 
 	    model.addAttribute("booking",bean);
-	    model.getAttribute("booking");
+	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
 	    
-		return "booking/queryResult";
+		return "booking/showOrder";
 	}
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
@@ -321,10 +339,10 @@ public class BookingController {
 			else {
 				System.out.println("訂位取消未成功。。。");
 			}
-			return "redirect:/booking/Page1";
+			return "redirect:/booking/showOrder";
 		}
 		ra.addFlashAttribute("line","已過取消期限");
-		return "redirect:/booking/Page1";
+		return "redirect:/booking/showOrder";
 		
 		
 	}
@@ -398,9 +416,9 @@ public class BookingController {
 			} else {
 				System.out.println("訂位資料更新失敗！");
 			}
-			return "redirect:/booking/Page1";
+			return "redirect:/booking/showOrder";
 		}
-		return "redirect:/booking/Page1";
+		return "redirect:/booking/showOrder";
 	}
 
 	@GetMapping("/updateResult2")

@@ -37,7 +37,7 @@ public class DisplayController {
 	
 	@GetMapping("/booking/Index1")
 	public String home() {
-		return "booking/Index1";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/booking/{restaurant}")

@@ -426,6 +426,7 @@ ul.slides li img {
 							searchSpan.style.fontStyle = "normal";
 
 							let content = "";
+							
 							if (resultObj.userDataList.length != 0) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
