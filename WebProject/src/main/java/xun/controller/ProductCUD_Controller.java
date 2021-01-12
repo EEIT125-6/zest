@@ -22,6 +22,7 @@ import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
+import xun.util.GlobalService;
 
 @Controller
 public class ProductCUD_Controller {
@@ -34,6 +35,7 @@ public class ProductCUD_Controller {
 	
 	@Autowired
 	StoreService ss;
+	
 	
 	@GetMapping("/InsertProduct")
 	public String InsertProductPage(
@@ -54,6 +56,7 @@ public class ProductCUD_Controller {
 //			,BindingResult result
 			,@ModelAttribute ("productInfoBean") ProductInfoBean productInfoBean
 			,@RequestParam(value="stid") Integer stid
+			,@RequestParam(value = "forAOP" , required = false) String forAOP
 			,@RequestParam("photo") MultipartFile file
 			) {
 //		檢查
@@ -64,12 +67,15 @@ public class ProductCUD_Controller {
 		System.out.println(productInfoBean.getStorebean());
 //		處理圖片
 		if(!file.isEmpty()) {
-			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+//			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+			String fakePath = GlobalService.getUploadProductPhotoPath();
 			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
-
-			FileName = productInfoBean.getProduct_name()+"."+FileFormat;
+			
+			String newProductId = String.valueOf(ps.getLastProductId()+1); 
+//			FileName = productInfoBean.getProduct_id()+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = newProductId+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
 //		File productphoto = new File(context.getRealPath("/")+FileName);
 			File productphoto = new File(fakePath+FileName);
 		
@@ -90,22 +96,6 @@ public class ProductCUD_Controller {
 		}
 //		建置商家price
 
-//		List<Integer> productsprice = new ArrayList<Integer>() ;
-//		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
-//			Integer ss =  pi.getProduct_price();
-//			productsprice.add(ss);
-//		}
-//		
-//		Collections.sort(productsprice);
-//		if(productsprice.size()%2 !=0) {
-//			Integer storeprice=productsprice.get((productsprice.size()+1)/2);
-//			System.out.println(storeprice);
-//			System.out.println("+++++++++++"+productsprice);
-//		}else {
-//			Integer storeprice=productsprice.get((productsprice.size()/2)+1);
-//			System.out.println(storeprice);
-//			System.out.println("-----------"+productsprice);
-//		}
 		CalculateStoreValue(sb.getId());
 		
 		
@@ -121,6 +111,7 @@ public class ProductCUD_Controller {
 	public String updateProductPage(
 			Model model
 			,@RequestParam(value = "id") Integer stid
+			,@RequestParam(value = "forAOP" , required = false) String forAOP
 			,@RequestParam(value = "productid") Integer product_id
 			) {
 		ProductInfoBean productInfoBean = ps.get(product_id);
@@ -155,13 +146,14 @@ public class ProductCUD_Controller {
 			ps.updateProduct(productInfoBean);
 			
 			}else {
-			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+//			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
+			String fakePath = GlobalService.getUploadProductPhotoPath();
 //			C:\JavaMVCWorkspace\WebProject\src\main\webapp\WEB-INF\views\images\productInfo\images
 			String FileName = file.getOriginalFilename().replaceAll("\\s+", "");
 
 			String FileFormat = FileName.split("\\.")[1];
 
-			FileName = productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = productInfoBean.getProduct_id()+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
 //			File productphoto = new File(context.getRealPath("/")+FileName);
 			File productphoto = new File(fakePath+FileName);
 			
@@ -193,6 +185,7 @@ public class ProductCUD_Controller {
 	public String deletepage(
 			Model model
 			,@RequestParam(value = "id") Integer stid
+			,@RequestParam(value = "forAOP" , required = false) String forAOP
 			,@RequestParam(value = "productid") Integer product_id
 			) {
 		ProductInfoBean productInfoBean = ps.get(product_id);
@@ -222,7 +215,7 @@ public class ProductCUD_Controller {
 	
 //	設置商家價格區間
 	public void CalculateStoreValue(Integer stid) {
-		
+//		轉入AOP
 //		StoreBean sb = ss.get(stid);
 //		
 //		

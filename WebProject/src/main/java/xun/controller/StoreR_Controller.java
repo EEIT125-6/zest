@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,9 @@ public class StoreR_Controller {
 	@Autowired
 	StoreService ss;
 	
-	@GetMapping("/StoreGetFullstore")
+	
+	
+	@GetMapping("/StoreGetFullstore") 
 	public String FullStore(
 			Model model,
 			@RequestParam String stname,
@@ -107,8 +110,7 @@ public class StoreR_Controller {
 			@RequestParam String sclass,
 			@RequestParam String stname,
 			@RequestParam(value = "priceLimit" , required = false) Integer priceLimit,
-			@RequestParam Integer offset,
-			@RequestParam Integer stopload
+			@RequestParam Integer offset
 			) {
 //		System.out.println("sclass = "+sclass);
 		List<StoreBean> list = new ArrayList<StoreBean>();
@@ -135,7 +137,7 @@ public class StoreR_Controller {
 		Integer off3 = offset+3;
 		if(off3>list.size()) {
 			off3 = list.size();
-			stopload = 1;
+//			stopload = 1;
 		}
 		if(offset>off3) {
 			offset=off3;

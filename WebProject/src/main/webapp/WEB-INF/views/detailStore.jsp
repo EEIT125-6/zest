@@ -43,6 +43,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
      <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
@@ -337,6 +341,32 @@ a.mobile-show {
         <h1 style="margin-bottom: 100px" >${stname1}</h1>
         <hr>
         <span style="font-size: 140%">地點:<c:out value = "${saddress}"></c:out></span>
+<!--        -------地圖觸發紐----------- -->
+        <button type="button"  data-toggle="modal" data-target="#exampleModal" style = "border: none;background:Transparent">
+  			<i class="fas fa-map-marker-alt" style="color:red"></i>
+		</button>
+<!-- 		-------詳細地圖介面------------- -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      		<span>如果你可以正常顯示就太棒了</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 		-------/詳細地圖介面------------- -->
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
@@ -400,7 +430,7 @@ a.mobile-show {
 			       </form>
 			    </div>
 			    <br />
-			    <script src="js/jquery-3.5.1.min.js"></script>
+<!-- 			    <script src="js/jquery-3.5.1.min.js"></script> -->
 			    <script >
 			    	$(".i").mousedown(function() {
 			    		let starts = $(this).attr("id").split("img")[1];
@@ -570,6 +600,10 @@ a.mobile-show {
 		</div>
 		<div>
 			<span style="font-size: 140%">地址:<c:out value="${saddress }"></c:out></span>
+<!--        -------地圖觸發紐----------- -->
+        <button type="button"  data-toggle="modal" data-target="#exampleModal" style = "border: none;background:Transparent">
+  			<i class="fas fa-map-marker-alt" style="color:red"></i>
+		</button>
 		</div>
 	</div>
 

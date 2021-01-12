@@ -35,7 +35,10 @@ import interceptor.CheckRegisterInterceptor;
 	"controller",
 	"board",
 	"dashborad",
-	"interceptor"})
+	"interceptor",
+	"_Init"
+	})
+
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {

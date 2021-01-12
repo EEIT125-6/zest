@@ -56,7 +56,9 @@ public class RootAppConfig {
 				"board", 
 				"model", 
 				"dashborad",
-				"interceptor"});
+				"interceptor",
+				"_Init"});
+
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;

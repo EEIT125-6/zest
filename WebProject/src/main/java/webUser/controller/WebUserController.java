@@ -419,6 +419,7 @@ public class WebUserController {
 		/* 簡易防閒置的暫時處置 */
 		String nickname = (userData == null) ? "訪客" : userData.getNickname();
 		String logoutMessage = "謝謝您的使用，" + nickname + " !";
+
 		
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();

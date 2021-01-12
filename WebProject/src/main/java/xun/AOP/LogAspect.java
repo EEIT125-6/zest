@@ -13,10 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+import org.apache.logging.log4j.LogManager;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,11 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import com.mchange.lang.ArrayUtils;
-
-import xun.controller.ProductCUD_Controller;
 import xun.controller.StoreR_Controller;
 import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
@@ -82,7 +78,9 @@ public class LogAspect {
 	@After("pointcut()")
 	public void afterLog(JoinPoint joinPoint) {
 		
+		org.apache.logging.log4j.Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
+		logger.info("infoMessage");
 		String remoteAddr = req.getRemoteAddr();
 //		System.out.println(remoteAddr);
 		
