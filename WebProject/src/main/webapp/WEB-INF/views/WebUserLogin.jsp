@@ -153,6 +153,10 @@
                 	<fieldset>
                 		<legend>登入相關資料</legend>
                 		<hr />
+                		<button type="button" id="userInput">使用者一鍵輸入</button>
+                		<button type="button" id="bossInput">店家一鍵輸入</button>
+                		<button type="button" id="adminInput">管理員一鍵輸入</button>
+                		<hr />
                 		<label>帳號名稱：</label>
                 		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
 							placeholder="請輸入帳號，8~20個字" required="required" />
@@ -194,9 +198,24 @@
                 <script>
                 	window.onload = function() {
                 		let submitBtn = document.getElementById("submit");
+                		let userAutoInputBtn = document.getElementById("userInput");
+                		let bossAutoInputBtn = document.getElementById("bossInput");
+                		let adminAutoInputBtn = document.getElementById("adminInput");
                 		
                 		submitBtn.onclick = function() {
                 			inputCheck();
+                		};
+                		userAutoInputBtn.onclick = function() {
+                			document.getElementById("account").value = "brandon123";
+                			document.getElementById("password").value = "avril456";
+                		};
+                		bossAutoInputBtn.onclick = function() {
+                			document.getElementById("account").value = "TomcatTest";
+                			document.getElementById("password").value = "TomcatTest2021";
+                		};
+                		adminAutoInputBtn.onclick = function() {
+                			document.getElementById("account").value = "WebAdmin";
+                			document.getElementById("password").value = "WebAdmin2020";
                 		};
                 	};
                 	

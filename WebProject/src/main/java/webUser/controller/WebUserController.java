@@ -275,7 +275,7 @@ public class WebUserController {
 			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
 			/* 前往註冊結束畫面 */
-			destinationUrl = "redirect:/register/WebUserRegisterResult";
+			destinationUrl = "redirect:/WebUserRegisterResult";
 		} else {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
