@@ -342,30 +342,79 @@ a.mobile-show {
         <hr>
         <span style="font-size: 140%">地點:<c:out value = "${saddress}"></c:out></span>
 <!--        -------地圖觸發紐----------- -->
-        <button type="button"  data-toggle="modal" data-target="#exampleModal" style = "border: none;background:Transparent">
+        <button type="button"  data-toggle="modal" data-target="#myModal" style = "border: none;background:Transparent">
   			<i class="fas fa-map-marker-alt" style="color:red"></i>
 		</button>
 <!-- 		-------詳細地圖介面------------- -->
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      		<span>如果你可以正常顯示就太棒了</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" >Google Map</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 modal_body_content">
+<!--               <p>Some contents...</p> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 modal_body_map">
+              <div class="location-map" id="location-map">
+                <div style="width: 100%; height: 400px;" id="map"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 modal_body_end">
+<!--               <p>Else...</p> -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<!--   -------------------------------------------- -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnJDAMDvH2aKvUIdQV0nTQ9YX32cZ4xds&callback=initMap" async defer></script>
+<script type="text/javascript">
+var map, geocoder;
+
+function initMap() {
+  geocoder = new google.maps.Geocoder();
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 17
+  });
+
+  var address = '${saddress}';
+
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == 'OK') {
+      map.setCenter(results[0].geometry.location);
+      var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+      });
+    } else {
+      console.log(status);
+    }
+  });
+}
+  // Re-init map before show modal
+  $('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    initializeGMap(button.data('lat'), button.data('lng'));
+    $("#location-map").css("width", "100%");
+    $("#map_canvas").css("width", "100%");
+  });
+
+  // Trigger map resize event after modal shown
+  $('#myModal').on('shown.bs.modal', function() {
+    google.maps.event.trigger(map, "resize");
+    map.setCenter(myLatlng);
+  });
+</script>  
 <!-- 		-------/詳細地圖介面------------- -->
     </div>
     
@@ -601,7 +650,7 @@ a.mobile-show {
 		<div>
 			<span style="font-size: 140%">地址:<c:out value="${saddress }"></c:out></span>
 <!--        -------地圖觸發紐----------- -->
-        <button type="button"  data-toggle="modal" data-target="#exampleModal" style = "border: none;background:Transparent">
+        <button type="button"  data-toggle="modal" data-target="#myModal" style = "border: none;background:Transparent">
   			<i class="fas fa-map-marker-alt" style="color:red"></i>
 		</button>
 		</div>
