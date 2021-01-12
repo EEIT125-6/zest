@@ -31,9 +31,7 @@
     <title>橙皮</title>
     <style>
         body{
-         background-color: 		rgb(235, 159, 18);
-        
-        
+         background-color:rgb(235, 159, 18); 
        }
 
        .header{

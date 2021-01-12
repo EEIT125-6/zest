@@ -149,6 +149,10 @@
             	<c:if test="${userFullData.password != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
+				<c:if test="${timeOut != null}">
+					<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+					<c:out value="${timeOut}" />
+				</c:if>
                 <form method="post" >
                 	<fieldset>
                 		<legend>請進行填寫下列資料以便重新取回您的帳號，如不確定可保持空白</legend>
@@ -214,7 +218,7 @@
 	                function sendRecoveryRequest() {
 	                	let account = document.getElementById("account").value.trim();
 	                	let password = document.getElementById("password").value.trim();
-	                	let email = document.getElementById("email").value.trim();
+	                	let email = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	                	let phone = document.getElementById("phone").value.trim();
 	                	let birth = document.getElementById("birth").value.trim();
 	                	

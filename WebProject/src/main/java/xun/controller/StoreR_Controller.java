@@ -111,7 +111,6 @@ public class StoreR_Controller {
 			@RequestParam String stname,
 			@RequestParam(value = "priceLimit" , required = false) Integer priceLimit,
 			@RequestParam Integer offset
-//			,@RequestParam Integer stopload
 			) {
 //		System.out.println("sclass = "+sclass);
 		List<StoreBean> list = new ArrayList<StoreBean>();

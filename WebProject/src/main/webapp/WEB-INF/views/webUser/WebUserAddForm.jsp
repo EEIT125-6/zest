@@ -337,7 +337,7 @@
 						let password = document.getElementById("password").value.trim();
 						let firstName = document.getElementById("firstName").value.trim();
 						let lastName = document.getElementById("lastName").value.trim();
-						let nickname = document.getElementById("nickname").value.trim();
+						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 						let genderCode = document.getElementsByName("gender");
 						let gender;
 						for (let genderIndex = 0; genderIndex < genderCode.length; genderIndex++) {
@@ -353,7 +353,7 @@
                 				fervorValue.push(fervorObj[fervorIndex].value);
                 			}
                 		}
-                		let email = document.getElementById("email").value.trim();
+                		let email = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
                 		let getEmail = document.getElementsByName("getEmail");
                 		let getEmailValue = "";
                 		for (let getEmailIndex = 0; getEmailIndex < getEmail.length; getEmailIndex++) {
@@ -363,9 +363,9 @@
                 		}
                 		let phone = document.getElementById("phone").value.trim();
                 		let cityCode = document.getElementById("locationCode").value;
-                		let addr0 = document.getElementById("addr0").value.trim();
-                		let addr1 = document.getElementById("addr1").value.trim();
-                		let addr2 = document.getElementById("addr2").value.trim();
+                		let addr0 = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
+                		let addr1 = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
+                		let addr2 = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
                 		
 						addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + addResultStr;
 						addResultSpan.style.color = "black";
@@ -492,7 +492,7 @@
 					}
 					
 					function checkSameNickname() {
-						let nickname = document.getElementById("nickname").value.trim();
+						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "...處理中，請稍後";
 						let nicknameIsOk = true;
@@ -548,7 +548,7 @@
 					}
 					
 					function checkSameEmail() {
-						let email = document.getElementById("email").value.trim();
+						let email = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;

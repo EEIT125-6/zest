@@ -47,7 +47,18 @@ public class RootAppConfig {
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		/* 掃描的package */
-		factory.setPackagesToScan(new String[] { "xun", "webUser", "controller", "dao", "service", "board", "model", "dashborad","_Init"});
+		factory.setPackagesToScan(new String[] { 
+				"xun", 
+				"webUser", 
+				"controller", 
+				"dao", 
+				"service", 
+				"board", 
+				"model", 
+				"dashborad",
+				"interceptor",
+				"_Init"});
+
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;

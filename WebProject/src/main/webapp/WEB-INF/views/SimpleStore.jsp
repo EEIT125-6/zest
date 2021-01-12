@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%-- <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%> --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -268,6 +269,7 @@ a.mobile-show {
 	<div class="container" style="margin-top:10px">
 	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
 	<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
+
 		<c:url value="StoreGetClassstore" var="riceURL">
 			<c:param name="sclass" value="中式" />
 		</c:url>
@@ -486,15 +488,11 @@ a.mobile-show {
 				
 				
 				$(window).scroll(function(){
+
+// 					$.delay(3000);
 					
 
 					if($(window).scrollTop() >= $(document).height() - $(window).height() &&  flag>0){
-// 						console.log("$--------------")
-// 						console.log("${stname}")
-// 						console.log("+++++++++++++++")			
-// 						console.log("${sclass}")
-// 						console.log("---------------")	
-					
 	//上下兩個方法皆有BUG 有可能會重複前三筆資料 
 // 					if($(this).scrollTop() >= ($(document).height() - $(window).height())*0.8){
 						

@@ -7,7 +7,7 @@ function checkForm() {
 	let lastNameObjValue = document.getElementById("updatedLastName").value.trim();
 	let oldLastNameObjValue = document.getElementById("originalLastName").value.trim();
 	
-	let nicknameObjValue = document.getElementById("updatedNickname").value.trim();
+	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 	let oldNicknameObjValue = document.getElementById("originalNickname").value.trim();
 	
 	let fervorObj = document.getElementsByName("updatedFervor");
@@ -23,7 +23,7 @@ function checkForm() {
 
 	let oldFervorObjValue = document.getElementById("originalFervor").value.trim();
 	
-	let emailObjValue = document.getElementById("updatedEmail").value.trim();
+	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
 	let oldEmailObjValue = document.getElementById("originalEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
@@ -36,13 +36,13 @@ function checkForm() {
 	let locationCodeObjValue = document.getElementById("updatedLocationCode").value;
 	let oldLocationCodeObjValue = document.getElementById("originalLocationCode").value;
 	
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
 	
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
 	
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	
 	let updatedSpan = document.getElementById("updatedSpan");
@@ -213,7 +213,7 @@ function checkLastName() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("updatedNickname").value.trim();
+	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 	
 	let nicknameIsOk = true;
@@ -289,7 +289,7 @@ function checkFervor() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("updatedEmail").value.trim();
+	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	let oldEmailObjValue = document.getElementById("originalEmail").value;
 	
@@ -436,7 +436,7 @@ function checkLocationCode() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
+	let addr0ObjValue = document.getElementById("updatedAddr0").value.replace('<', ' ').replace('>', '').trim();
 	let addr0Span = document.getElementById("addr0Span");
 	let oldAddr0ObjValue = document.getElementById("originalAddr0").value.trim();
 	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
@@ -478,7 +478,7 @@ function checkAddr0() {
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("updatedAddr1").value.trim();
+	let addr1ObjValue = document.getElementById("updatedAddr1").value.replace('<', ' ').replace('>', '').trim();
 	let addr1Span = document.getElementById("addr1Span");
 	let oldAddr1ObjValue = document.getElementById("originalAddr1").value.trim();
 	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
@@ -517,7 +517,7 @@ function checkAddr1() {
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("updatedAddr2").value.trim();
+	let addr2ObjValue = document.getElementById("updatedAddr2").value.replace('<', ' ').replace('>', '').trim();
 	let addr2Span = document.getElementById("addr2Span");
 	let oldAddr2ObjValue = document.getElementById("originalAddr2").value.trim();
 	let addr0ObjValue = document.getElementById("updatedAddr0").value.trim();
@@ -576,7 +576,7 @@ function clearMessage() {
 }
 
 function checkSameNickname(){
-	let nicknameObjValue = document.getElementById("updatedNickname").value.trim();
+	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 	let oldNicknameObjValue = document.getElementById("originalNickname").value;
 	
@@ -597,7 +597,7 @@ function checkSameNickname(){
 }
 
 function checkSameEmail(){
-	let emailObjValue = document.getElementById("updatedEmail").value.trim();
+	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	let oldEmailObjValue = document.getElementById("originalEmail").value;
 	

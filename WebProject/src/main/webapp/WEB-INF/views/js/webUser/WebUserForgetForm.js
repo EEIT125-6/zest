@@ -115,7 +115,7 @@ function checkAccountPassword() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
 	let emailIsOk = true;
