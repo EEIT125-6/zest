@@ -419,7 +419,6 @@ public class WebUserController {
 		/* 簡易防閒置的暫時處置 */
 		String nickname = (userData == null) ? "訪客" : userData.getNickname();
 		String logoutMessage = "謝謝您的使用，" + nickname + " !";
-
 		
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
@@ -427,8 +426,10 @@ public class WebUserController {
 		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
-		/* 前往登出畫面 */
-		return "redirect:/WebUserLogoutResult";
+//		/* 前往登出畫面 */
+//		return "redirect:/WebUserLogoutResult";
+		/* 前往首頁 */
+		return "redirect:/";
 	}
 	
 	/* 執行帳號停用 */
@@ -443,6 +444,7 @@ public class WebUserController {
 		Integer deleteResult = -1;
 		String quitMessage = "";
 		String redirectPage = "/webUser/WebUserMain";
+		String contextPath = request.getContextPath();
 		
 		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
 	
@@ -467,7 +469,7 @@ public class WebUserController {
 					/* 執行停用 */
 					deleteResult = wus.quitWebUserData(quitUserData);
 					/* 寄送Email */
-					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit");
+					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit", contextPath);
 				}
 			} catch (SQLException sqlE) {
 				String quitMessageTmp = sqlE.getMessage();
@@ -1008,6 +1010,7 @@ public class WebUserController {
 		Map<String, Object> map = new HashMap<>();
 		Integer getResult = -1;
 		String getResultMessage = "";
+		Integer userDataTotalPages = 0;
 		
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
@@ -1076,6 +1079,7 @@ public class WebUserController {
 			/* 調用服務裡的方法 */
 			try {
 				userDataList = wus.getSelectedWebUserData(selectedParameters);
+				userDataTotalPages = wus.getTotalUserRecordCounts(selectedParameters);
 			} catch (SQLException sqlE) {
 				String getDataMessageTmp = sqlE.getMessage();
 				getResultMessage = getDataMessageTmp.split(":")[1];
@@ -1084,7 +1088,7 @@ public class WebUserController {
 		
 		if (userDataList != null) {
 			getResult = 1;
-			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
+			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料，共有 " + userDataTotalPages + " 頁";
 		} else if (getResultMessage.equals("")) {
 			getResult = 0;
 			getResultMessage = "無法查詢到任何有效的使用者資料";
@@ -1156,12 +1160,14 @@ public class WebUserController {
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "account", required = false, defaultValue = "") String account,
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
-			@PathVariable(value = "mode", required = false) String mode) {
+			@PathVariable(value = "mode", required = false) String mode,
+			HttpServletRequest request) {
 		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
 		Integer operateResult = -1;
+		String contextPath = request.getContextPath();
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
@@ -1207,7 +1213,7 @@ public class WebUserController {
 							/* 執行停用 */
 							operateResult = wus.adminChangeWebUserData(userId, status);
 							/* 寄送Email */
-							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit");
+							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
 						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
@@ -1239,7 +1245,7 @@ public class WebUserController {
 							/* 設定屬於哪種情境 */
 							String adMinMode = (FirstTimeUse) ? "adminActivate" : "adminReActive";
 							/* 寄送Email */
-							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode);
+							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode, contextPath);
 							operateResult = (sendResult) ? 1 : 0;
 						}
 					} catch (SQLException sqlE) {
@@ -2387,13 +2393,13 @@ public class WebUserController {
 		if (account.equals("")) {
 			submitMessage = "帳號不可為空白";
 			inputIsOk = false;
-		} else if (account.length() < 8 || account.length() > 20) {
-			submitMessage = "帳號長度不符格式，僅接受8~20個字元";
+		} else if (account.length() < 6 || account.length() > 30) {
+			submitMessage = "帳號長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (account.matches("[1-9]{1}.")) {
 			submitMessage = "帳號不可以數字開頭";
 			inputIsOk = false;
-		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
 		} else {
@@ -2425,13 +2431,13 @@ public class WebUserController {
 		if (password.equals("")) {
 			submitMessage = "密碼不可為空白";
 			inputIsOk = false;
-		} else if (password.length() < 8 || password.length() > 20) {
-			submitMessage = "密碼長度不符格式，僅接受8~20個字元";
+		} else if (password.length() < 6 || password.length() > 30) {
+			submitMessage = "密碼長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
 			submitMessage = "密碼不可以數字開頭";
 			inputIsOk = false;
-		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
 			inputIsOk = false;
 		} 
@@ -2485,8 +2491,8 @@ public class WebUserController {
 		if (lastName.equals("")) {
 			message = "名字不可為空白";
 			inputIsOk = false;
-		} else if (lastName.length() > 3) {
-			message = "名字長度過長，最多僅3個字元";
+		} else if (lastName.length() > 22) {
+			message = "名字長度過長，最多僅22個字元";
 			inputIsOk = false;
 		} else {
 			Integer charCountBegin = 0;
@@ -2524,7 +2530,7 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (nickname.equals("") && !lastName.equals("")) {
 			nickname = lastName;
-		} else if (nickname.length() > 20){
+		} else if (nickname.length() > 25){
 			message = "稱呼長度過長";
 			inputIsOk = false;
 		} 

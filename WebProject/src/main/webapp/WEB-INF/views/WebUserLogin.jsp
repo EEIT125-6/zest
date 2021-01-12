@@ -14,6 +14,8 @@
 <head>
    	<%@include file = "Link_Meta-Include.jsp" %>
    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
    	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css"> 
     <title>進行登入</title>
     <style>
@@ -144,27 +146,27 @@
 </head>
 <body>
             <%@include file = "Header-Include.jsp" %>
+            <%@include file = "LoadingScreen.jsp" %>            
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-<%--             	<c:if test="${userFullData.password != null}"> --%>
-<%-- 					<c:redirect url="/webUser/WebUserMain" /> --%>
-<%-- 				</c:if> --%>
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
                 		<hr />
-                		<button type="button" id="userInput">使用者一鍵輸入</button>
-                		<button type="button" id="bossInput">店家一鍵輸入</button>
-                		<button type="button" id="adminInput">管理員一鍵輸入</button>
+                		<div align="center">
+	                		<button type="button" id="userInput">使用者一鍵輸入</button>
+	                		<button type="button" id="bossInput">店家一鍵輸入</button>
+	                		<button type="button" id="adminInput">管理員一鍵輸入</button>
+                		</div>
                 		<hr />
                 		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字" required="required" />
+                		<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
+							placeholder="請輸入帳號，6~30個字" required="required" />
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
+						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~30個字" required="required" />
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
@@ -194,7 +196,7 @@
 					</div>
 					<hr />
                 </form>
-                <script src="<c:url value='/js/webUser//WebUserLogin.js' />"></script>
+                <script src="<c:url value='/js/webUser/WebUserLogin.js' />"></script>
                 <script>
                 	window.onload = function() {
                 		let submitBtn = document.getElementById("submit");
@@ -308,6 +310,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
-            <%@include file = "Footer-Include-prototype.jsp" %>
+            	<%@include file = "Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

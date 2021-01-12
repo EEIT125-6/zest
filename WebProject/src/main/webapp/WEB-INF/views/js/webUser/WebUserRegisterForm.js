@@ -64,13 +64,12 @@ function checkAccountName() {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 		accountSpan.style.color = "red";
 		accountSpan.style.fontStyle = "italic";
-		document.getElementById("checkAccount").style = "display:none";
 		return false;
 	} else {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
 		accountSpan.style.color = "black";
 		accountSpan.style.fontStyle = "normal";
-		document.getElementById("checkAccount").style = "display:inline";
+		checkSameAccount();
 		return true;
 	}
 }
@@ -170,7 +169,7 @@ function checkLast_name() {
 	if (last_nameObjValue == "" || last_nameObjValue.length == 0) {
 		last_nameStr = "名字不可為空白";
 		last_nameIsOk = false;
-	} else if (last_nameObjValue.length < 4) {
+	} else if (last_nameObjValue.length < 23) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
 		let charChineseWordCountEnd = 0x9fff;
@@ -217,6 +216,9 @@ function checkNickname() {
 			document.getElementById("nickname").value = document.getElementById("lastName").value;
 			nicknameIsOk = true;
 		}
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
 	} else {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
@@ -225,14 +227,13 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
-		document.getElementById("checkRegisterNickname").style = "display:none";
 		return false;
 	}
 	else {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 		nicknameSpan.style.color = "black";
 		nicknameSpan.style.fontStyle = "normal";
-		document.getElementById("checkRegisterNickname").style = "display:inline";
+		checkSameNickname();
 		return true;
 	}
 }
@@ -350,14 +351,13 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
-		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 		emailSpan.style.color = "black";
 		emailSpan.style.fontStyle = "normal";
-		document.getElementById("checkEmailUsed").style = "display:inline";
+		checkSameEmail();
 		return true;
 	}
 }
@@ -431,14 +431,13 @@ function checkPhone() {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
-		document.getElementById("checkRegisterPhone").style = "display:none";
 		return false;
 	}
 	else {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 		phoneSpan.style.color = "black";
 		phoneSpan.style.fontStyle = "normal";
-		document.getElementById("checkRegisterPhone").style = "display:inline";
+		checkSamePhone();
 		return true;
 	}
 }
@@ -574,20 +573,15 @@ function changeVisibility() {
 
 function clearMessage() {
 	document.getElementById("accountSpan").innerHTML = "";
-	document.getElementById("checkAccount").style = "display:none";
 	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkRegisterNickname").style = "display:none";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("emailCheckCodeSpan").innerHTML = "";
-	document.getElementById("sendCheckCode").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkRegisterPhone").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";

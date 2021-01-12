@@ -64,6 +64,9 @@ public interface WebUserService {
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
+	/* 取得可查詢到的總頁數 */
+	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException;
+	
 	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
 	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
 	

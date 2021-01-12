@@ -223,14 +223,18 @@
 						</div>
                 	</fieldset>
                 </form>
-                <script src="${pageContext.request.contextPath}/js/webUser/WebUserMain.js"></script>
                 <script>
                 	window.onload = function () {
                 		let quitBtn = document.getElementById("quit");
+                		let logOutBtn = document.getElementById("logout");
                 		
                 		quitBtn.onclick = function () {
                 			quitAlert();
-                		}
+                		};
+                		logOutBtn.onclick = function() {
+        					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
+        					alert("謝謝您的使用，" + account + " ！");
+        				};
                 	}
 	                
                 	function quitAlert() {

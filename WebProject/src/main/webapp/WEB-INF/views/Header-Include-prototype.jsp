@@ -23,6 +23,7 @@
 				<span>|</span> 
 			</c:if>
 			<c:if test="${userFullData.account != null}">
+				<input type="hidden" id="account" value="${userFullData.account}" />
 				<a href="${pageContext.request.contextPath}/webUser/WebUserMain">
 				<c:if test="${userFullData.iconUrl == ''}">
 					<c:if test="${userFullData.accountLv.lv == -1}">
@@ -97,11 +98,20 @@
 				</c:if>
 				<i class="fas fa-door-open" style="font-size: 25px;color: yellow"></i>
 				<a href="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout">
-				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">登出</span>
+				<span id="logOutBtn" style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">登出</span>
 				</a>
 				<span>|</span>
 			</c:if>			
 		</p>
+		<script>
+			window.onload = function() {
+				let logOutBtn = document.getElementById("logOutBtn");
+				logOutBtn.onclick = function() {
+					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
+					alert("謝謝您的使用，" + account + " ！");
+				};
+			};
+		</script>
 	</div>
 
 	<!-- ============================================ -->
