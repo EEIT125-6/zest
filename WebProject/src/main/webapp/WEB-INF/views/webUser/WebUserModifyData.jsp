@@ -13,6 +13,8 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
     <title>修改個人資料</title>
@@ -144,6 +146,7 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${empty userFullData}">
@@ -471,7 +474,7 @@
 						updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
 						updateSpan.style.color = "black";
 						updateSpan.style.fontStyle = "normal";
-						updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
+						updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr + "<hr />";
 						updateResultSpan.style.color = "black";
 						updateResultSpan.style.fontStyle = "normal";
 						
@@ -499,7 +502,7 @@
 				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
 				            		updateSpan.style.color = "black";
 				            		updateSpan.style.fontStyle = "normal";
-				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
 				            		updateResultSpan.style.color = "black";
 				            		updateResultSpan.style.fontStyle = "normal";
 				            	} else {
@@ -507,7 +510,7 @@
 					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 					            	updateSpan.style.color = "red";
 					            	updateSpan.style.fontStyle = "italic";
-					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 					            	updateResultSpan.style.color = "red";
 					            	updateResultSpan.style.fontStyle = "italic";
 					            	/* 顯示彈窗異常訊息 */
@@ -519,7 +522,7 @@
 				            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 				            	updateSpan.style.color = "red";
 				            	updateSpan.style.fontStyle = "italic";
-				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 				            	updateResultSpan.style.color = "red";
 				            	updateResultSpan.style.fontStyle = "italic";
 				            }
@@ -723,6 +726,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

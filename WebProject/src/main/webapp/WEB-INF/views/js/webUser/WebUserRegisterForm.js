@@ -40,11 +40,8 @@ function checkAccountName() {
 	if (accountObjValue == "" || accountObjValue.length == 0) {
 		accountStr = "帳號不可為空白";
 		accountIsOk = false;
-	} else if (accountObjValue.length < 8) {
-		accountStr = "帳號長度不足";
-		accountIsOk = false;
-	} else if (accountObjValue.length > 20) {
-		accountStr = "帳號長度過長";
+	} else if (accountObjValue.length < 6 || accountObjValue.length > 30) {
+		accountStr = "帳號長度錯誤，需6~30個字元";
 		accountIsOk = false;
 	} else if (accountObjValue.charAt(0).match(startCharReg)) {
 		accountStr = "帳號不可以數字開頭";
@@ -85,17 +82,14 @@ function checkAccountPassword() {
 	if (passwordObjValue == "" || passwordObjValue.length == 0) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
 	} else {
-		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
+		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
 		if (!passwordObjValue.match(passwordReg)) {
 			passwordStr = "密碼不符合格式";
@@ -259,7 +253,7 @@ function checkBirthday() {
 		let todayYear = today.getFullYear();
 		let todayMonth = today.getMonth() + 1;
 		let todayDate = today.getDate();
-		let today18 = today.setFullYear(todayYear - 18);
+		let today15 = today.setFullYear(todayYear - 15);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -270,8 +264,8 @@ function checkBirthday() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (today18 < new Date(birthdayObjValue).getTime()) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
+		} else if (today15 < new Date(birthdayObjValue).getTime()) {
+			birthdayStr = "未滿15歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
 			birthdayStr = "有效的出生時間";

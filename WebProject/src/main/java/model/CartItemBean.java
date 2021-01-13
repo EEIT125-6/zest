@@ -29,7 +29,7 @@ public class CartItemBean implements Serializable {
 	private WebUserData product_User;//購買人資訊
 	@ManyToOne
 	@JoinColumn(name="ProductInfo",columnDefinition=("nvarchar(50)"))
-	ProductInfoBean product_Info;//產品資訊
+	private ProductInfoBean product_Info;//產品資訊
 	@Column(name="PurchaseQuantity", columnDefinition=("nvarchar(50)"))
 	private String product_Quantity;//購買數量
 	@Column(name="PurchaseTime",columnDefinition=("TIMESTAMP WITH TIME ZONE"))

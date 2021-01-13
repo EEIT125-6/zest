@@ -15,6 +15,8 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <%@include file="../Link_Meta-Include.jsp"%>
 <!-- Google Icon -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <!-- dataTables用css -->
 <!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"> -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
@@ -164,6 +166,7 @@ ul.slides li img {
 </head>
 <body>
 	<%@include file="../Header-Include.jsp"%>
+	<%@include file="../LoadingScreen.jsp" %>
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
 		<c:if test="${userFullData.password == null}">
@@ -248,33 +251,32 @@ ul.slides li img {
 			<span id="searchSpan"></span>
 		</div>
 		
-		<div align="center" id="dataTableContainer"> 
-			<table id="userDataTable" class="display">
-				<thead>
-					<tr>
- 						<th>項次</th> 
- 						<c:if test="${userFullData.accountLv.lv == -1}"> 
- 							<th>刪除</th>
- 							<th>其他</th> 
- 							<th>查看</th> 
-						</c:if> 
- 						<th>帳號名稱</th> 
- 						<th>稱呼</th> 
-						<th>偏好食物</th> 
-						<th>居住區域</th> 
- 						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}"> 
- 							<th>帳號身分</th> 
- 						</c:if> 
- 						<c:if test="${userFullData.accountLv.lv == -1}"> 
- 							<th>帳號狀態</th> 
- 						</c:if> 
-					</tr>
-				</thead>
-				<tbody>
+<!-- 		<div align="center" id="dataTableContainer">  -->
+<!-- 			<table id="userDataTable" class="display"> -->
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<!--  						<th>項次</th>  -->
+<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
+<!--  							<th>其他</th>  -->
+<!--  							<th>查看</th>  -->
+<%-- 						</c:if>  --%>
+<!--  						<th>帳號名稱</th>  -->
+<!--  						<th>稱呼</th>  -->
+<!-- 						<th>偏好食物</th>  -->
+<!-- 						<th>居住區域</th>  -->
+<%--  						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}">  --%>
+<!--  							<th>帳號身分</th>  -->
+<%--  						</c:if>  --%>
+<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
+<!--  							<th>帳號狀態</th>  -->
+<%--  						</c:if>  --%>
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 				<tbody> -->
 					
-				</tbody>
-			</table>
-		</div>
+<!-- 				</tbody> -->
+<!-- 			</table> -->
+<!-- 		</div> -->
 		
 		<div align="center" id="dataContainer"></div>
 		
@@ -655,7 +657,6 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>圖示</th>"
-											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -710,18 +711,7 @@ ul.slides li img {
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<button type='button' class='deleteBtn' id='delBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status 
-												+ "' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</button>"
-												+ "</td>"
-												+ "<td>";				
+										content += "<td>";				
 
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
@@ -894,7 +884,6 @@ ul.slides li img {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>圖示</th>"
-											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -949,18 +938,7 @@ ul.slides li img {
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<button type='button' class='deleteBtn' id='delBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status 
-												+ "' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</button>"
-												+ "</td>"
-												+ "<td>";				
+										content += "<td>";				
 
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
@@ -1101,8 +1079,8 @@ ul.slides li img {
 		</script>
 	</div>
 	<!-- -------------------------------------------------------------------- -->
-	<div
-		style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
+	<div style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
 		<%@include file="../Footer-Include-prototype.jsp"%>
+	</div>
 </body>
 </html>

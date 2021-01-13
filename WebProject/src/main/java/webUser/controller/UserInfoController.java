@@ -59,7 +59,7 @@ public class UserInfoController {
 	/* 執行註冊流程的相關檢查，並交由Ajax回傳 */
 	@PostMapping(value="/webUser/controller/UserInfoController", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doRegisterCheck(
-			@RequestParam(value="inputAccount", required=false, defaultValue="") String account, 
+			@RequestParam(value="inputAccount", required=false, defaultValue="") String newAccount, 
 			@RequestParam(value="inputPassword", required=false, defaultValue="") String password,
 			@RequestParam(value="inputNickname", required=false, defaultValue="") String nickname,
 			@RequestParam(value="inputEmail", required=false, defaultValue="") String email,
@@ -79,7 +79,7 @@ public class UserInfoController {
 			String message = "";
 			
 			try {
-				accountCheckResult = wus.checkAccountExist(account);
+				accountCheckResult = wus.checkAccountExist(newAccount);
 			} catch (SQLException sqlE) {
 				message = sqlE.getMessage();
 			}
@@ -141,7 +141,7 @@ public class UserInfoController {
 			String registerEmail;
 			
 			try {
-				sendResult = doSendEmail(account, email, checkCode, "submit", contextPath);
+				sendResult = doSendEmail(newAccount, email, checkCode, "submit", contextPath);
 			} catch (Exception e) {
 				message = e.getMessage();
 			}
@@ -172,7 +172,7 @@ public class UserInfoController {
 			WebUserData recoveryUserData = new WebUserData();
 			
 			/* 執行後端檢查 */
-			recoveryMessage = doRecoveryInputCheck(account, password, email, phone, birth);
+			recoveryMessage = doRecoveryInputCheck(newAccount, password, email, phone, birth);
 			
 			/* 驗證資料是否存在 */
 			if (recoveryMessage.equals("")) {
@@ -181,14 +181,14 @@ public class UserInfoController {
 				
 				/* 帶入必要資訊驗證 + 選填資訊進行驗證，並從DB取得使用者的必要資訊 */
 				try {
-					if (account.equals("") && password.equals("")) {
+					if (newAccount.equals("") && password.equals("")) {
 						recoveryUserData = wus.checkRecoveryInfo(email, phone, inputBirth);
-					} else if (!account.equals("") && password.equals("")) {
-						recoveryUserData = wus.checkRecoveryInfo(account, email, phone, inputBirth);
-					} else if (account.equals("") && !password.equals("")) {
+					} else if (!newAccount.equals("") && password.equals("")) {
+						recoveryUserData = wus.checkRecoveryInfo(newAccount, email, phone, inputBirth);
+					} else if (newAccount.equals("") && !password.equals("")) {
 						recoveryUserData = wus.checkRecoveryInfoAnother(password, email, phone, inputBirth);
 					} else {
-						recoveryUserData = wus.checkRecoveryInfo(account, password, email, phone, inputBirth);
+						recoveryUserData = wus.checkRecoveryInfo(newAccount, password, email, phone, inputBirth);
 					}
 				} catch (SQLException sqlE) {
 					recoveryMessage = sqlE.getMessage();
@@ -212,7 +212,7 @@ public class UserInfoController {
 				
 				/* 寄送到指定email */
 				try {
-					sendResult = doSendEmail(account, email, recoveryUrl, "forget", contextPath);
+					sendResult = doSendEmail(newAccount, email, recoveryUrl, "forget", contextPath);
 				} catch (Exception e) {
 					recoveryMessage = e.getMessage();
 				}
@@ -550,18 +550,7 @@ public class UserInfoController {
 			}
 		});
 		
-//		Session mailSessionTest = Session.getDefaultInstance(props, null);
-//		MimeMessage messageTest = new MimeMessage(mailSessionTest);
-//		messageTest.addRecipient(Message.RecipientType.TO, new InternetAddress(mailObj));
-//		messageTest.setSubject("Test");
-//		messageTest.setContent(mailContext, "text/html; Charset=UTF-8");
-		
-		try {
-//			Transport transportTest = mailSessionTest.getTransport("smtp");
-//			transportTest.connect("smtp.gmail.com", mailHost, mailPassword);
-//			transportTest.sendMessage(messageTest, messageTest.getAllRecipients());
-//			transportTest.close();
-			
+		try {	
 			Message message = new MimeMessage(mailSession);
 			message.setRecipients(
 					Message.RecipientType.TO

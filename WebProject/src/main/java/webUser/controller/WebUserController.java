@@ -426,76 +426,8 @@ public class WebUserController {
 		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
-//		/* 前往登出畫面 */
-//		return "redirect:/WebUserLogoutResult";
 		/* 前往首頁 */
 		return "redirect:/";
-	}
-	
-	/* 執行帳號停用 */
-	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
-	public String doPersonalQuit(
-			Model model,
-			HttpServletRequest request,
-			RedirectAttributes redirectAttributes,
-			SessionStatus sessionStatus) {
-		
-		/* 宣告要傳回的參數 */
-		Integer deleteResult = -1;
-		String quitMessage = "";
-		String redirectPage = "/webUser/WebUserMain";
-		String contextPath = request.getContextPath();
-		
-		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
-	
-		/* 預防性後端檢查 */
-		quitMessage = doCheckQuitInput(quitUserData);
-		if (quitMessage.equals("")) {
-			Integer quitUserLv = quitUserData.getAccountLv().getLv();
-			Boolean runQuit = true;
-			/* 調用服務裡的方法 */
-			try {
-				quitUserData.setVersion(quitUserData.getVersion() + 1);
-				quitUserData.setStatus("quit");
-				/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
-				if (quitUserLv == -1) {
-					if (wus.checkAdminAccess() - 1 == 0) {
-						runQuit = false;
-						quitMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
-					}
-				}
-				/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
-				if (runQuit) {
-					/* 執行停用 */
-					deleteResult = wus.quitWebUserData(quitUserData);
-					/* 寄送Email */
-					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit", contextPath);
-				}
-			} catch (SQLException sqlE) {
-				String quitMessageTmp = sqlE.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			} catch (Exception e) {
-				String quitMessageTmp = e.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			}
-		}
-		
-		/* 成功變更 */
-		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";		
-			/* 清空SessionAttribute */
-			sessionStatus.setComplete();
-			/* 無效HttpSession */
-			request.getSession().invalidate();
-			redirectPage = "/";
-		} 
-		
-		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
-		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("redirectPage", redirectPage);
-		/* 導向停用結束畫面 */
-		return "redirect:/WebUserQuitResult";
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
@@ -532,12 +464,6 @@ public class WebUserController {
 		map.put("selfData", selfData);
 		map.put("birthday", String.valueOf(selfData.getBirth()));
 		return map;
-	}
-	
-	/* 準備顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/controller/WebUserMain/Modify")
-	public String doDisplayOwnUserData() {
-		return "redirect:/webUser/DisplayWebUserData";
 	}
 	
 	/* 準備顯示修改密碼畫面 */
@@ -596,7 +522,7 @@ public class WebUserController {
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
 		} else {
-			updateResultMessage = userData.getAccount() + "的密碼變更成功！5秒後將返回登入畫面";
+			updateResultMessage = userData.getAccount() + "的密碼變更成功！3秒後將返回登入畫面";
 		}
 		
 		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
@@ -842,7 +768,7 @@ public class WebUserController {
 			@RequestParam(value = "inputCheckCode", required = false, defaultValue="") String inputCheckCode,
 			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
 			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
-			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
+			@RequestParam(value = "newLocationCode", required = false, defaultValue="0") Integer newLocationCode,
 			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
 			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
@@ -929,7 +855,7 @@ public class WebUserController {
 		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
+			updateResultMessage = (doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1].equals("?")) ? "" : doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
 		}
 		
 		/* 追加檢查checkCode */
@@ -1175,21 +1101,6 @@ public class WebUserController {
 		/* 預防性後端輸入檢查 */
 		operateMessage = doCheckAdminInput(userData, userId, account, status, mode);
 		
-		/* 特殊情況檢查
-		 * 1.自己刪自己
-		 * 2.刪預設的3個特定帳號 */
-		if (operateMessage.equals("")) {
-			if (mode.equals("delete") && userData.getAccount().equals(account)) {
-				operateMessage = "無法由操作者刪除操作者自身的帳號!";
-			} else if (mode.equals("delete")) {
-				for (String defaultAccount:defaultAccounts) {
-					if (defaultAccount.equals(account)) {
-						operateMessage = "無法刪除系統內建的帳號!";
-					}
-				}
-			}
-		}
-		
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
 			switch(mode) {
@@ -1220,14 +1131,6 @@ public class WebUserController {
 					} catch (Exception e) {
 						String quitMessageTmp = e.getMessage();
 						operateMessage = quitMessageTmp.split(":")[1];
-					}
-					break;
-				case "delete":
-					/* 調用服務裡的方法 */
-					try {
-						operateResult = wus.deleteWebUserData(userId);
-					} catch (SQLException sqlE) {
-						operateMessage = sqlE.getMessage();
 					}
 					break;
 				case "active":
@@ -1824,18 +1727,6 @@ public class WebUserController {
 		return "WebUserLogoutResult";
 	}
 	
-	/* 前往停用結束畫面 */
-	@GetMapping(value = "/WebUserQuitResult")
-	public String doGoQuitResult() {
-		return "WebUserQuitResult";
-	}
-	
-	/* 前往顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/DisplayWebUserData")
-	public String doGoDisplayWebUserData() {
-		return "webUser/DisplayWebUserData";
-	}
-	
 	/* 前往修改個人密碼畫面 */
 	@GetMapping(value = "/webUser/WebUserModifyPassword")
 	public String doGoWebUserModifyPassword() {
@@ -2225,6 +2116,8 @@ public class WebUserController {
 			}
 		}
 		
+		System.out.println("cityCode check result is " + updateResultMessage);
+		
 		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
 			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
@@ -2253,6 +2146,8 @@ public class WebUserController {
 		}
 		
 		updateResultMessage = (updateResultMessage.equals("")) ? "?" : updateResultMessage;
+		
+		System.out.println("final check result is " + updateResultMessage);
 		/* 結算有效變動項目 */
 		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
@@ -2584,8 +2479,8 @@ public class WebUserController {
 		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
 			message = "生日異常";
 			inputIsOk = false;
-		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(18, ChronoUnit.YEARS)))) {
-			message = "未滿18歲，無法申辦本服務";
+		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(15, ChronoUnit.YEARS)))) {
+			message = "未滿15歲，無法申辦本服務";
 			inputIsOk = false;
 		} else {
 			inputIsOk = true;
@@ -2700,6 +2595,8 @@ public class WebUserController {
 	public String doCheckCityCode(Integer cityCode, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
+		
+		System.out.println("cityCode is " + cityCode);
 		
 		switch(cityCode) {
 			case 1:

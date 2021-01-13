@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -73,7 +76,8 @@ public class BookingController {
 	if (booking.compareTo(deadline)<=0) {
 		return false;
 	}
-		return true;
+	
+	return true;
 }
 	
 	//確認資料
@@ -205,35 +209,44 @@ public class BookingController {
 		} catch (Exception e) {
 			;
 		}
-		
 		return "redirect:/booking/Thanks";
-
 	}
 	
 	@GetMapping("/Thanks")
 	public String thanks() {
 		return "/booking/Thanks";
 	}
+	
 	@GetMapping("/Page1")
 	public String jump(Model model) {
 		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
 		if (user_id == null) {
 			return "WebUserLogin";
 		}
-		return "/booking/Page1";
+		return "/booking/showOrder";
 	}
 
+	//ajax查詢
+	@SuppressWarnings("unchecked")
+	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> order(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(user_id.getUserId());
+
+	    model.addAttribute("booking",bean);
+	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", data);
+		return map;
+	}
 	
 	//查
 	@PostMapping("/select")
-	public String query(Model model,@RequestParam(value="phone") String phone) {
-		
-		List<BookingBean> bean = service.findBooking(phone);
-
+	public String query(Model model) {
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(userData.getUserId());
 	    model.addAttribute("booking",bean);
-	    model.getAttribute("booking");
-	    
-		return "booking/queryResult";
+		return "booking/showOrder";
 	}
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
@@ -398,9 +411,9 @@ public class BookingController {
 			} else {
 				System.out.println("訂位資料更新失敗！");
 			}
-			return "redirect:/booking/Page1";
+			return "redirect:/booking/showOrder";
 		}
-		return "redirect:/booking/Page1";
+		return "redirect:/booking/showOrder";
 	}
 
 	@GetMapping("/updateResult2")

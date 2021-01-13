@@ -14,6 +14,8 @@
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">    
     <title>查詢結果</title>
     <style>
@@ -143,7 +145,8 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file="../Header-Include.jsp" %>
+            <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${managedUserData.account == null}">
@@ -187,28 +190,27 @@
 						<hr />
 						<label>帳號密碼：</label>
 						<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkPassword()"
-							size="40" maxlength="20" placeholder="請輸入密碼，8~20個字">
+							size="30" maxlength="30" placeholder="請輸入密碼，6~30個字">
 						<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>中文姓氏：</label>
 						<input type="text" name="firstName" id="firstName" value="${managedUserData.firstName}" onblur="checkFirstName()"
-							size="40" maxlength="20" placeholder="請輸入名字，1~3個中文字">
+							size="30" maxlength="30" placeholder="請輸入名字，1~3個中文字">
 						<input type="hidden" name="oldFirstName" id="oldFirstName" value="${managedUserData.firstName}">
 						<span id="firstNameSpan"></span>
 						<hr />
 						<label>中文名字：</label>
 						<input type="text" name="lastName" id="lastName" value="${managedUserData.lastName}" onblur="checkLastName()"
-							size="40" maxlength="20" placeholder="請輸入名字，1~3個中文字">
+							size="30" maxlength="30" placeholder="請輸入名字，1~22個中文字">
 						<input type="hidden" name="oldLastName" id="oldLastName" value="${managedUserData.lastName}">
 						<span id="lastNameSpan"></span>
 						<hr />
 						<label>稱呼方式：</label>
 						<input type="text" name="nickname" id="nickname" value="${managedUserData.nickname}" onblur="checkNickname()"
-							size="40" maxlength="20" placeholder="請輸入想要的稱呼">
+							size="30" maxlength="30" placeholder="請輸入想要的稱呼">
 						<input type="hidden" name="oldNickname" id="oldNickname" value="${managedUserData.nickname}">
-						<button type="button" style="font-size:18px" id="checkNicknameUsed" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<label>生理性別：</label>
@@ -249,16 +251,14 @@
 						<hr />
 						<label>聯絡信箱：</label>
 						<input type="text" name="email" id="email" value="${managedUserData.email}" onblur="checkEmail()"
-							size="40" maxlength="30" placeholder="請輸入驗證、聯絡用的E-Mail地址">
+							size="30" maxlength="30" placeholder="請輸入驗證、聯絡用的E-Mail地址">
 						<input type="hidden" name="oldEmail" id="oldEmail" value="${managedUserData.email}">
-						<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<label>聯絡電話：</label>
 						<input type="text" name="phone" id="phone" value="${managedUserData.phone}" onblur="checkPhone()"
 							size="40" maxlength="11" placeholder="請輸入行動電話或市內電話號碼">
 						<input type="hidden" name="oldPhone" id="oldPhone" value="${managedUserData.phone}">
-						<button type="button" style="font-size:18px" id="checkPhoneUsed" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
@@ -467,9 +467,6 @@
 	                	}
 	                });
 					
-					$("#checkNicknameUsed").click(function() {
-				        checkUpdateNickname();
-				    });
 					function checkUpdateNickname() {
 						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
@@ -521,9 +518,6 @@
 						});
 					}
 					
-					$("#checkEmailUsed").click(function() {
-						checkUpdateEmail();
-				    });
 					function checkUpdateEmail() {
 						let email = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 						let emailSpan = document.getElementById("emailSpan");
@@ -575,9 +569,6 @@
 						});
 					}
 					
-					$("#checkPhoneUsed").click(function() {
-				        checkUpdatePhone();
-				    });
 					function checkUpdatePhone() {
 						let phone = document.getElementById("phone").value.trim();
 						let phoneSpan = document.getElementById("phoneSpan");
@@ -727,6 +718,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>
