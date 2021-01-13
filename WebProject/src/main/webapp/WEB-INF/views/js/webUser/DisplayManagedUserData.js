@@ -172,11 +172,8 @@ function checkPassword() {
 	if (passwordObjValue == "" || passwordObjValue.length == 0) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
@@ -275,7 +272,7 @@ function checkLastName() {
 	} else if (lastNameObjValue == oldLastNameObjValue) {
 		lastNameStr = "";
 		lastNameIsOk = true;
-	} else if (lastNameObjValue.length < 4) {
+	} else if (lastNameObjValue.length < 23) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
 		let charChineseWordCountEnd = 0x9fff;
@@ -326,6 +323,9 @@ function checkNickname() {
 			nicknameStr = "稱呼不可為空";
 			nicknameIsOk = false;
 		}
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
 	} else if (nicknameObjValue == oldNicknameObjValue) {
 		nicknameStr = "";
 		nicknameIsOk = true;
@@ -337,19 +337,17 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
-		document.getElementById("checkNicknameUsed").style = "display:none";
-		return true;
+		return false;
 	} else {
 		if (nicknameObjValue == oldNicknameObjValue) {
 			nicknameSpan.innerHTML = "";
-			document.getElementById("checkNicknameUsed").style = "display:none";
 		} else {
 			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 			nicknameSpan.style.color = "black";
 			nicknameSpan.style.fontStyle = "normal";
-			document.getElementById("checkNicknameUsed").style = "display:inline";
+			checkUpdateNickname();
 		}
-		return false;
+		return true;
 	} 
 }
 
@@ -412,7 +410,7 @@ function checkBirth() {
 		let todayYear = today.getFullYear();
 		let todayMonth = today.getMonth() + 1;
 		let todayDate = today.getDate();
-		let today18 = today.setFullYear(todayYear - 18);
+		let today15 = today.setFullYear(todayYear - 15);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -423,8 +421,8 @@ function checkBirth() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (today18 < new Date(birthdayObjValue).getTime()) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
+		} else if (today15 < new Date(birthdayObjValue).getTime()) {
+			birthdayStr = "未滿15歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
 			birthdayStr = "有效的出生時間";
@@ -520,7 +518,6 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
-		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
@@ -530,7 +527,7 @@ function checkEmail() {
 			emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 			emailSpan.style.color = "black";
 			emailSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
+			checkUpdateEmail();
 		}
 		return true;
 	} 
@@ -580,7 +577,7 @@ function checkPhone() {
 			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 			phoneSpan.style.color = "black";
 			phoneSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
+			checkUpdatePhone();
 		}
 		return true;
 	}
@@ -792,14 +789,11 @@ function clearMessage() {
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkNicknameUsed").style = "display:none";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("genderSpan").innerHTML = "";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkPhoneUsed").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";

@@ -50,6 +50,7 @@ body {
 	             <form:form  method="POST" modelAttribute="productInfoBean" enctype='multipart/form-data'>
                 <legend>新增商品</legend>
                 <input type="hidden" name="stid" value="${stid}">
+                <input type="hidden" name="forAOP" value="stid=${stid}">
 	            <label>商店名稱:
 	            	<form:hidden path="product_shop"/>
 	            	${productInfoBean.product_shop}          

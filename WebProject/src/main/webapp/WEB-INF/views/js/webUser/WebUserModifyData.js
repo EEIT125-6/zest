@@ -134,13 +134,17 @@ function checkForm() {
 function checkFirstName() {
 	let firstNameObjValue = document.getElementById("updatedFirstName").value.trim();
 	let firstNameSpan = document.getElementById("firstNameSpan");
-
+	let oldFirstNameObjValue = document.getElementById("originalFirstName").value;
+	
 	let firstNameIsOk = true;
 	let firstNameStr;
 
 	if (firstNameObjValue == "" || firstNameObjValue.length == 0) {
 		firstNameStr = "姓氏不可為空";
 		firstNameIsOk = false;
+	} else if (oldFirstNameObjValue == firstNameObjValue) {
+		firstNameStr = "";
+		firstNameIsOk = true;
 	} else if (firstNameObjValue.length < 4) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
@@ -165,9 +169,13 @@ function checkFirstName() {
 		return false;
 	}
 	else {
-		firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
-		firstNameSpan.style.color = "black";
-		firstNameSpan.style.fontStyle = "normal";
+		if (oldFirstNameObjValue == firstNameObjValue) {
+			firstNameSpan.innerHTML = "";
+		} else {
+			firstNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + firstNameStr;
+			firstNameSpan.style.color = "black";
+			firstNameSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
@@ -175,6 +183,7 @@ function checkFirstName() {
 function checkLastName() {
 	let lastNameObjValue = document.getElementById("updatedLastName").value.trim();
 	let lastNameSpan = document.getElementById("lastNameSpan");
+	let oldLastNameObjValue = document.getElementById("originalLastName").value;
 	
 	let lastNameIsOk = true;
 	let lastNameStr;
@@ -182,7 +191,10 @@ function checkLastName() {
 	if (lastNameObjValue == "" || lastNameObjValue.length == 0) {
 		lastNameStr = "名字不可為空";
 		lastNameIsOk = false;
-	} else if (lastNameObjValue.length < 4) {
+	} else if (lastNameObjValue == oldLastNameObjValue) {
+		lastNameStr = "";
+		lastNameIsOk = true;
+	} else if (lastNameObjValue.length < 23) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
 		let charChineseWordCountEnd = 0x9fff;
@@ -205,9 +217,13 @@ function checkLastName() {
 		lastNameSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
-		lastNameSpan.style.color = "black";
-		lastNameSpan.style.fontStyle = "normal";
+		if (lastNameObjValue == oldLastNameObjValue) {
+			lastNameSpan.innerHTML = "";
+		} else {
+			lastNameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + lastNameStr;
+			lastNameSpan.style.color = "black";
+			lastNameSpan.style.fontStyle = "normal";
+		}
 		return true;
 	}
 }
@@ -215,6 +231,7 @@ function checkLastName() {
 function checkNickname() {
 	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
+	let oldNicknameObjValue = document.getElementById("originalNickname").value;
 	
 	let nicknameIsOk = true;
 	let nicknameStr;
@@ -228,21 +245,30 @@ function checkNickname() {
 			nicknameStr = "稱呼不可為空";
 			nicknameIsOk = false;
 		}
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
+	} else if (nicknameObjValue == oldNicknameObjValue) {
+		nicknameStr = "";
+		nicknameIsOK = true;
 	} else {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
 	}
-	if (nicknameIsOk) {
+	if (!nicknameIsOk) {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 		nicknameSpan.style.color = "black";
 		nicknameSpan.style.fontStyle = "normal";
-		document.getElementById("checkNicknameUsed").style = "display:inline";
 		return true;
 	} else {
-		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-		nicknameSpan.style.color = "red";
-		nicknameSpan.style.fontStyle = "italic";
-		document.getElementById("checkNicknameUsed").style = "display:none";
+		if (nicknameObjValue == oldNicknameObjValue) {
+			nicknameSpan.innerHTML = "";
+		} else {
+			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+			nicknameSpan.style.color = "red";
+			nicknameSpan.style.fontStyle = "italic";
+			checkUpdateNickname();
+		}
 		return false;
 	} 
 }
@@ -316,8 +342,6 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
-		document.getElementById("checkEmailUsed").style = "display:none";
-		document.getElementById("emailSendSpace").style = "display:none";
 		return false;
 	}
 	else {
@@ -327,8 +351,7 @@ function checkEmail() {
 			emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 			emailSpan.style.color = "black";
 			emailSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
-			document.getElementById("emailSendSpace").style = "display:inline";
+			checkUpdateEmail();
 		}
 		return true;
 	} 
@@ -369,7 +392,6 @@ function checkPhone() {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
-		document.getElementById("checkPhoneUsed").style = "display:none";
 		return false;
 	}
 	else {
@@ -379,7 +401,7 @@ function checkPhone() {
 			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 			phoneSpan.style.color = "black";
 			phoneSpan.style.fontStyle = "normal";
-			document.getElementById("checkPhoneUsed").style = "display:inline";
+			checkUpdatePhone();
 		}
 		return true;
 	}
@@ -561,12 +583,9 @@ function clearMessage() {
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkNicknameUsed").style = "display:none";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkPhoneUsed").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";

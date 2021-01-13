@@ -7,16 +7,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import webUser.model.WebUserData;
 
-@SessionAttributes({
-	"timeOut"})
 public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
-			"/webUser/*"
+			"/webUser/DisplayWebUserData",
+			"/webUser/WebUserMain",
+			"/webUser/WebUserModifyData",
+			"/webUser/WebUserModifyPassword",
+			"/webUser/WebUserSearchForm",
+			"/webUser/controller/WebUserMain/Logout",
+			"/webUser/controller/WebUserMain/Quit",
+			"/webUser/controller/DisplaySelfData",
+			"/webUser/controller/WebUserMain/Modify",
+			"/webUser/controller/WebUserModifyPassword",
+			"/webUser/controller/WebUserModifyIcon",
+			"/webUser/controller/WebUserResetIcon",
+			"/webUser/controller/WebUserModifyData",
+			"/webUser/controller/WebUserMain/Search",
+			"/webUser/controller/WebUserSearchForm",
+			"/booking/*",
+			"/orange/*",
+			"/controller/checkMemberStatus",
+			"/controller/mallRedirector",
+			"/controller/myCartRedirector",
+			"/controller/itemremove",
+			"/controller/unchecked",
+			"/controller//itemadd",
+			"/checkout/*",
+			"/product/*",
+			"/cart/*"
 			);
 	
 	String servletPath;

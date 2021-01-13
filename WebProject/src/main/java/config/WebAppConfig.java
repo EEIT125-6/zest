@@ -12,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import interceptor.CheckAdminLoginInterceptor;
+import interceptor.CheckBossLoginInterceptor;
 import interceptor.CheckLoginInterceptor;
 import interceptor.CheckRecoveryInterceptor;
 import interceptor.CheckRegisterInterceptor;
@@ -33,7 +35,10 @@ import interceptor.CheckRegisterInterceptor;
 	"controller",
 	"board",
 	"dashborad",
-	"interceptor"})
+	"interceptor",
+	"_Init"
+	})
+
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
@@ -59,6 +64,8 @@ public class WebAppConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new CheckLoginInterceptor());
 		registry.addInterceptor(new CheckRegisterInterceptor());
 		registry.addInterceptor(new CheckRecoveryInterceptor());
+		registry.addInterceptor(new CheckBossLoginInterceptor());
+		registry.addInterceptor(new CheckAdminLoginInterceptor());
     }
 	
 	// 為了處理靜態檔案必須加入下列敘述：只要是 /css/開頭的任何請求，都轉到/WEB-INF/views/css/去尋找

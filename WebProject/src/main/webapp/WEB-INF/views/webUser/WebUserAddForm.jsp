@@ -14,6 +14,8 @@
 <head>
 	<%@include file = "../Link_Meta-Include.jsp" %>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
     <title>新增使用者</title>
     <style>
@@ -143,7 +145,8 @@
     </style>
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+            <%@include file="../Header-Include.jsp" %>
+            <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.accountLv.lv != -1}">
@@ -171,14 +174,13 @@
 						</c:forEach>
 					    <hr />
 						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字" required="required" />
-						<button type="button" style="font-size:18px" id="checkAccount" >檢查帳號 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+						<input type="text" name="account" id="newAccount" size="40" maxlength="20" onblur="checkAccountName()"
+							placeholder="請輸入帳號，6~30個字" required="required" />
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
 						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
+							placeholder="請輸入密碼，6~30個字" required="required" />
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
@@ -195,7 +197,6 @@
 						<label>稱呼方式：</label>
 						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
 						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
-						<button type="button" style="font-size:18px" id="checkRegisterNickname" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<label>生理性別：</label>
@@ -228,13 +229,11 @@
 						<label>聯絡信箱：</label>
 						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<label>聯絡電話：</label>
 						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
-						<button type="button" style="font-size:18px" id="checkRegisterPhone" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
@@ -288,37 +287,12 @@
 				<script>
 					window.onload = function() {
 						let addBtn = document.getElementById("add");
-						let checkAccountBtn = document.getElementById("checkAccount");
-						let checkNicknameBtn = document.getElementById("checkRegisterNickname");
-						let checkEmailBtn = document.getElementById("checkEmailUsed");
-						let checkPhoneBtn = document.getElementById("checkRegisterPhone");
-						
-						checkAccountBtn.style = "display:none";
-						checkNicknameBtn.style = "display:none";
-						checkEmailBtn.style = "display:none";
-						checkPhoneBtn.style = "display:none";
 						
 						add.onclick = function() {
 							if (checkForm()) {
 								adminAddUser();
 							}
-						}
-						
-						checkAccountBtn.onclick = function() {
-							checkSameAccount();
 						};
-						
-						checkNicknameBtn.onclick = function() {
-							checkSameNickname();
-						}
-						
-						checkEmailBtn.onclick = function() {
-							checkSameEmail();
-						}
-						
-						checkPhoneBtn.onclick = function() {
-							checkSamePhone();
-						} 
 					};
 					
 					function adminAddUser() {
@@ -436,7 +410,7 @@
 					}
 					
 					function checkSameAccount() {
-						let account = document.getElementById("account").value.trim();
+						let newAccount = document.getElementById("newAccount").value.trim();
 						let accountSpan = document.getElementById("accountSpan");
 						let accountStr = "...處理中，請稍後";
 						let accountIsOk = true;
@@ -450,7 +424,7 @@
 						if (xhrObject != null) {
 							xhrObject.open("POST", "<c:url value='/webUser/controller/UserInfoController' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("inputAccount=" + account + "&register=" + mode);
+							xhrObject.send("inputAccount=" + newAccount + "&register=" + mode);
 							
 							xhrObject.onreadystatechange = function() {
 								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
@@ -662,6 +636,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

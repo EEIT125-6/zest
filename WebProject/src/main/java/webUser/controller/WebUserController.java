@@ -134,7 +134,7 @@ public class WebUserController {
 		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
 		/* 逾時 */
 		if (!isRequestedSessionIdValid) {
-			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請重新註冊");
+			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請重新執行註冊");
 		}
 		
 		/* 前往註冊畫面 */
@@ -275,7 +275,7 @@ public class WebUserController {
 			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
 			/* 前往註冊結束畫面 */
-			destinationUrl = "redirect:/register/WebUserRegisterResult";
+			destinationUrl = "redirect:/WebUserRegisterResult";
 		} else {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
@@ -426,73 +426,8 @@ public class WebUserController {
 		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
-		/* 前往登出畫面 */
-		return "redirect:/WebUserLogoutResult";
-	}
-	
-	/* 執行帳號停用 */
-	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
-	public String doPersonalQuit(
-			Model model,
-			HttpServletRequest request,
-			RedirectAttributes redirectAttributes,
-			SessionStatus sessionStatus) {
-		
-		/* 宣告要傳回的參數 */
-		Integer deleteResult = -1;
-		String quitMessage = "";
-		String redirectPage = "/webUser/WebUserMain";
-		
-		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
-	
-		/* 預防性後端檢查 */
-		quitMessage = doCheckQuitInput(quitUserData);
-		if (quitMessage.equals("")) {
-			Integer quitUserLv = quitUserData.getAccountLv().getLv();
-			Boolean runQuit = true;
-			/* 調用服務裡的方法 */
-			try {
-				quitUserData.setVersion(quitUserData.getVersion() + 1);
-				quitUserData.setStatus("quit");
-				/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
-				if (quitUserLv == -1) {
-					if (wus.checkAdminAccess() - 1 == 0) {
-						runQuit = false;
-						quitMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
-					}
-				}
-				/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
-				if (runQuit) {
-					/* 執行停用 */
-					deleteResult = wus.quitWebUserData(quitUserData);
-					/* 寄送Email */
-					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit");
-				}
-			} catch (SQLException sqlE) {
-				String quitMessageTmp = sqlE.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			} catch (Exception e) {
-				String quitMessageTmp = e.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			}
-		}
-		
-		/* 成功變更 */
-		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";		
-			/* 清空SessionAttribute */
-			sessionStatus.setComplete();
-			/* 無效HttpSession */
-			request.getSession().invalidate();
-			redirectPage = "/";
-		} 
-		
-		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
-		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("redirectPage", redirectPage);
-		/* 導向停用結束畫面 */
-		return "redirect:/WebUserQuitResult";
+		/* 前往首頁 */
+		return "redirect:/";
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
@@ -529,12 +464,6 @@ public class WebUserController {
 		map.put("selfData", selfData);
 		map.put("birthday", String.valueOf(selfData.getBirth()));
 		return map;
-	}
-	
-	/* 準備顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/controller/WebUserMain/Modify")
-	public String doDisplayOwnUserData() {
-		return "redirect:/webUser/DisplayWebUserData";
 	}
 	
 	/* 準備顯示修改密碼畫面 */
@@ -593,7 +522,7 @@ public class WebUserController {
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
 		} else {
-			updateResultMessage = userData.getAccount() + "的密碼變更成功！5秒後將返回登入畫面";
+			updateResultMessage = userData.getAccount() + "的密碼變更成功！3秒後將返回登入畫面";
 		}
 		
 		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
@@ -839,7 +768,7 @@ public class WebUserController {
 			@RequestParam(value = "inputCheckCode", required = false, defaultValue="") String inputCheckCode,
 			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
 			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
-			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
+			@RequestParam(value = "newLocationCode", required = false, defaultValue="0") Integer newLocationCode,
 			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
 			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
@@ -926,7 +855,7 @@ public class WebUserController {
 		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
+			updateResultMessage = (doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1].equals("?")) ? "" : doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
 		}
 		
 		/* 追加檢查checkCode */
@@ -1157,33 +1086,20 @@ public class WebUserController {
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "account", required = false, defaultValue = "") String account,
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
-			@PathVariable(value = "mode", required = false) String mode) {
+			@PathVariable(value = "mode", required = false) String mode,
+			HttpServletRequest request) {
 		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
 		Integer operateResult = -1;
+		String contextPath = request.getContextPath();
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
 		/* 預防性後端輸入檢查 */
 		operateMessage = doCheckAdminInput(userData, userId, account, status, mode);
-		
-		/* 特殊情況檢查
-		 * 1.自己刪自己
-		 * 2.刪預設的3個特定帳號 */
-		if (operateMessage.equals("")) {
-			if (mode.equals("delete") && userData.getAccount().equals(account)) {
-				operateMessage = "無法由操作者刪除操作者自身的帳號!";
-			} else if (mode.equals("delete")) {
-				for (String defaultAccount:defaultAccounts) {
-					if (defaultAccount.equals(account)) {
-						operateMessage = "無法刪除系統內建的帳號!";
-					}
-				}
-			}
-		}
 		
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
@@ -1208,21 +1124,13 @@ public class WebUserController {
 							/* 執行停用 */
 							operateResult = wus.adminChangeWebUserData(userId, status);
 							/* 寄送Email */
-							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit");
+							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
 						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
 					} catch (Exception e) {
 						String quitMessageTmp = e.getMessage();
 						operateMessage = quitMessageTmp.split(":")[1];
-					}
-					break;
-				case "delete":
-					/* 調用服務裡的方法 */
-					try {
-						operateResult = wus.deleteWebUserData(userId);
-					} catch (SQLException sqlE) {
-						operateMessage = sqlE.getMessage();
 					}
 					break;
 				case "active":
@@ -1240,7 +1148,7 @@ public class WebUserController {
 							/* 設定屬於哪種情境 */
 							String adMinMode = (FirstTimeUse) ? "adminActivate" : "adminReActive";
 							/* 寄送Email */
-							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode);
+							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode, contextPath);
 							operateResult = (sendResult) ? 1 : 0;
 						}
 					} catch (SQLException sqlE) {
@@ -1795,7 +1703,15 @@ public class WebUserController {
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
-	public String doGoForget() {		
+	public String doGoForget(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
+		/* 判斷是否逾時 */
+		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
+		/* 逾時 */
+		if (!isRequestedSessionIdValid) {
+			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請點選有效的重設連結或重新提出請求");
+		}
 		return "WebUserForgetForm";
 	}
 	
@@ -1809,18 +1725,6 @@ public class WebUserController {
 	@GetMapping(value = "/WebUserLogoutResult")
 	public String doGoLogOut() {
 		return "WebUserLogoutResult";
-	}
-	
-	/* 前往停用結束畫面 */
-	@GetMapping(value = "/WebUserQuitResult")
-	public String doGoQuitResult() {
-		return "WebUserQuitResult";
-	}
-	
-	/* 前往顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/DisplayWebUserData")
-	public String doGoDisplayWebUserData() {
-		return "webUser/DisplayWebUserData";
 	}
 	
 	/* 前往修改個人密碼畫面 */
@@ -2212,6 +2116,8 @@ public class WebUserController {
 			}
 		}
 		
+		System.out.println("cityCode check result is " + updateResultMessage);
+		
 		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
 			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
@@ -2240,6 +2146,8 @@ public class WebUserController {
 		}
 		
 		updateResultMessage = (updateResultMessage.equals("")) ? "?" : updateResultMessage;
+		
+		System.out.println("final check result is " + updateResultMessage);
 		/* 結算有效變動項目 */
 		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
@@ -2380,13 +2288,13 @@ public class WebUserController {
 		if (account.equals("")) {
 			submitMessage = "帳號不可為空白";
 			inputIsOk = false;
-		} else if (account.length() < 8 || account.length() > 20) {
-			submitMessage = "帳號長度不符格式，僅接受8~20個字元";
+		} else if (account.length() < 6 || account.length() > 30) {
+			submitMessage = "帳號長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (account.matches("[1-9]{1}.")) {
 			submitMessage = "帳號不可以數字開頭";
 			inputIsOk = false;
-		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
 		} else {
@@ -2418,13 +2326,13 @@ public class WebUserController {
 		if (password.equals("")) {
 			submitMessage = "密碼不可為空白";
 			inputIsOk = false;
-		} else if (password.length() < 8 || password.length() > 20) {
-			submitMessage = "密碼長度不符格式，僅接受8~20個字元";
+		} else if (password.length() < 6 || password.length() > 30) {
+			submitMessage = "密碼長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
 			submitMessage = "密碼不可以數字開頭";
 			inputIsOk = false;
-		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
 			inputIsOk = false;
 		} 
@@ -2478,8 +2386,8 @@ public class WebUserController {
 		if (lastName.equals("")) {
 			message = "名字不可為空白";
 			inputIsOk = false;
-		} else if (lastName.length() > 3) {
-			message = "名字長度過長，最多僅3個字元";
+		} else if (lastName.length() > 22) {
+			message = "名字長度過長，最多僅22個字元";
 			inputIsOk = false;
 		} else {
 			Integer charCountBegin = 0;
@@ -2517,7 +2425,7 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (nickname.equals("") && !lastName.equals("")) {
 			nickname = lastName;
-		} else if (nickname.length() > 20){
+		} else if (nickname.length() > 25){
 			message = "稱呼長度過長";
 			inputIsOk = false;
 		} 
@@ -2571,8 +2479,8 @@ public class WebUserController {
 		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
 			message = "生日異常";
 			inputIsOk = false;
-		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(18, ChronoUnit.YEARS)))) {
-			message = "未滿18歲，無法申辦本服務";
+		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(15, ChronoUnit.YEARS)))) {
+			message = "未滿15歲，無法申辦本服務";
 			inputIsOk = false;
 		} else {
 			inputIsOk = true;
@@ -2687,6 +2595,8 @@ public class WebUserController {
 	public String doCheckCityCode(Integer cityCode, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
+		
+		System.out.println("cityCode is " + cityCode);
 		
 		switch(cityCode) {
 			case 1:

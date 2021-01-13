@@ -40,11 +40,8 @@ function checkAccountName() {
 	if (accountObjValue == "" || accountObjValue.length == 0) {
 		accountStr = "帳號不可為空白";
 		accountIsOk = false;
-	} else if (accountObjValue.length < 8) {
-		accountStr = "帳號長度不足";
-		accountIsOk = false;
-	} else if (accountObjValue.length > 20) {
-		accountStr = "帳號長度過長";
+	} else if (accountObjValue.length < 6 || accountObjValue.length > 30) {
+		accountStr = "帳號長度錯誤，需6~30個字元";
 		accountIsOk = false;
 	} else if (accountObjValue.charAt(0).match(startCharReg)) {
 		accountStr = "帳號不可以數字開頭";
@@ -64,13 +61,12 @@ function checkAccountName() {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 		accountSpan.style.color = "red";
 		accountSpan.style.fontStyle = "italic";
-		document.getElementById("checkAccount").style = "display:none";
 		return false;
 	} else {
 		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
 		accountSpan.style.color = "black";
 		accountSpan.style.fontStyle = "normal";
-		document.getElementById("checkAccount").style = "display:inline";
+		checkSameAccount();
 		return true;
 	}
 }
@@ -86,17 +82,14 @@ function checkAccountPassword() {
 	if (passwordObjValue == "" || passwordObjValue.length == 0) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
 	} else {
-		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
+		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
 		if (!passwordObjValue.match(passwordReg)) {
 			passwordStr = "密碼不符合格式";
@@ -170,7 +163,7 @@ function checkLast_name() {
 	if (last_nameObjValue == "" || last_nameObjValue.length == 0) {
 		last_nameStr = "名字不可為空白";
 		last_nameIsOk = false;
-	} else if (last_nameObjValue.length < 4) {
+	} else if (last_nameObjValue.length < 23) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
 		let charChineseWordCountEnd = 0x9fff;
@@ -217,6 +210,9 @@ function checkNickname() {
 			document.getElementById("nickname").value = document.getElementById("lastName").value;
 			nicknameIsOk = true;
 		}
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
 	} else {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
@@ -225,14 +221,13 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
-		document.getElementById("checkRegisterNickname").style = "display:none";
 		return false;
 	}
 	else {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 		nicknameSpan.style.color = "black";
 		nicknameSpan.style.fontStyle = "normal";
-		document.getElementById("checkRegisterNickname").style = "display:inline";
+		checkSameNickname();
 		return true;
 	}
 }
@@ -258,7 +253,7 @@ function checkBirthday() {
 		let todayYear = today.getFullYear();
 		let todayMonth = today.getMonth() + 1;
 		let todayDate = today.getDate();
-		let today18 = today.setFullYear(todayYear - 18);
+		let today15 = today.setFullYear(todayYear - 15);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -269,8 +264,8 @@ function checkBirthday() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (today18 < new Date(birthdayObjValue).getTime()) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
+		} else if (today15 < new Date(birthdayObjValue).getTime()) {
+			birthdayStr = "未滿15歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
 			birthdayStr = "有效的出生時間";
@@ -350,14 +345,13 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
-		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 		emailSpan.style.color = "black";
 		emailSpan.style.fontStyle = "normal";
-		document.getElementById("checkEmailUsed").style = "display:inline";
+		checkSameEmail();
 		return true;
 	}
 }
@@ -431,14 +425,13 @@ function checkPhone() {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 		phoneSpan.style.color = "red";
 		phoneSpan.style.fontStyle = "italic";
-		document.getElementById("checkRegisterPhone").style = "display:none";
 		return false;
 	}
 	else {
 		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 		phoneSpan.style.color = "black";
 		phoneSpan.style.fontStyle = "normal";
-		document.getElementById("checkRegisterPhone").style = "display:inline";
+		checkSamePhone();
 		return true;
 	}
 }
@@ -574,31 +567,27 @@ function changeVisibility() {
 
 function clearMessage() {
 	document.getElementById("accountSpan").innerHTML = "";
-	document.getElementById("checkAccount").style = "display:none";
 	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkRegisterNickname").style = "display:none";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("emailCheckCodeSpan").innerHTML = "";
-	document.getElementById("sendCheckCode").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkRegisterPhone").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";
 	document.getElementById("addr2Span").innerHTML = "";
 }
 
-
 function checkSameInput(){
 	let accountSpan = document.getElementById("accountSpan");
+	let nicknameSpan = document.getElementById("nicknameSpan");
 	let emailSpan = document.getElementById("emailSpan");
 	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let phoneSpan = document.getElementById("phoneSpan");
 	
 	if (accountSpan.textContent != "check_circle可建立此帳號！") {
 		alert("請先執行帳號檢查");
