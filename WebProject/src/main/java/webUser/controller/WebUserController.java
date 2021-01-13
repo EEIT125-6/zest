@@ -47,6 +47,7 @@ import webUser.service.IdentityService;
 import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import webUser.service.WillingService;
+import xun.util.GlobalService;
 
 @SessionAttributes({
 		"registerEmail", 
@@ -92,13 +93,6 @@ public class WebUserController {
 
 	/* Today */
 	final LocalDate today = LocalDate.now();
-	
-	/* Default Account List */
-	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
-	
-	/* Default Project Physical Address */
-	final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
-//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
@@ -636,7 +630,7 @@ public class WebUserController {
 				if (updateIconUrlResult) {
 					if (!oldUrl.equals("")) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -648,16 +642,16 @@ public class WebUserController {
 				/* 更新圖片成功但更新DB失敗 */
 				} else {
 					/* 刪除新增的圖檔 */
-					String newFilePath = defaultAddress + newIconUrl;
+					String newFilePath = GlobalService.getUploadUserIconPath() + newIconUrl;
 					File deletedNewPic = new File(newFilePath);
 					Boolean killNewPic = deletedNewPic.delete();
 					/* 重新命名舊圖檔 */
 					if (killNewPic) {
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -701,7 +695,7 @@ public class WebUserController {
 		
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = userData.getIconUrl();
-		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		String oldIconPath = (oldUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldUrl;
 		
 		/* 非預設值才執行刪除舊檔 */
 		if (message.equals("") && !oldIconPath.equals("")) {
@@ -718,7 +712,7 @@ public class WebUserController {
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -728,11 +722,11 @@ public class WebUserController {
 					/* 更新圖片成功但更新DB失敗 */
 					} else {
 						/* 重新命名舊圖檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -1367,7 +1361,7 @@ public class WebUserController {
 				if (updateIconUrlResult) {
 					if (!oldUrl.equals("")) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -1379,16 +1373,16 @@ public class WebUserController {
 				/* 更新圖片成功但更新DB失敗 */
 				} else {
 					/* 刪除新增的圖檔 */
-					String newFilePath = defaultAddress + newIconUrl;
+					String newFilePath = GlobalService.getUploadUserIconPath() + newIconUrl;
 					File deletedNewPic = new File(newFilePath);
 					Boolean killNewPic = deletedNewPic.delete();
 					/* 重新命名舊圖檔 */
 					if (killNewPic) {
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -1440,7 +1434,7 @@ public class WebUserController {
 		
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = managedUserData.getIconUrl();
-		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		String oldIconPath = (oldUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldUrl;
 		
 		/* 非預設值才執行刪除舊檔 */
 		if (message.equals("") && !oldIconPath.equals("")) {
@@ -1457,7 +1451,7 @@ public class WebUserController {
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -1467,11 +1461,11 @@ public class WebUserController {
 					/* 更新圖片成功但更新DB失敗 */
 					} else {
 						/* 重新命名舊圖檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -2835,8 +2829,8 @@ public class WebUserController {
 	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
 		/* 變數宣告 */
 		Map<String, String> map = new HashMap<>();
-		String oldIconPath = (oldIconUrl.equals("")) ? "" : defaultAddress + oldIconUrl;
-		String newIconPath = defaultAddress + newIconUrl;
+		String oldIconPath = (oldIconUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldIconUrl;
+		String newIconPath = GlobalService.getUploadUserIconPath() + newIconUrl;
 		String message = "";
 		Boolean delResult = false;
 		Boolean creResult = false;

@@ -11,6 +11,7 @@ public class GlobalService {
 		List<String> photourl =	Arrays.asList(
 				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
 				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
+				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);
@@ -33,6 +34,31 @@ public class GlobalService {
 		List<String> photourl =	Arrays.asList(
 				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
 				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\Images\\"
+				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
+				);
+		for(String pUrl : photourl) {
+			File pUF = new File(pUrl);
+			if(pUF.exists()) {
+				return pUrl;			
+			}else {
+				String failUrl = "C:/photoTemp";
+				File fail = new File(failUrl);
+				if(!fail.exists()) {
+						fail.mkdirs();
+				failUrl = failUrl + "/";
+				return failUrl;
+				}
+			}
+		}
+		return null;	
+	}
+	
+	/* 取得UserIcon的實體路徑 By George017 */
+	public static String getUploadUserIconPath() {
+		List<String> photourl =	Arrays.asList(
+				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
+				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\views\\"
+				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);

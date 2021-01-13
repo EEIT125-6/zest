@@ -50,17 +50,13 @@ function checkForm() {
 
 	let choice=confirm("是否確定要送出修改後的資料？");
 	if (choice == true) {
-		if (!checkFirstName()) {
+		if (!checkSameInput()) {
+			return false;
+		} else if (!checkFirstName()) {
 			return false;
 		} else if (!checkLastName()) {
 			return false;
-		} else if (!checkSameNickname()) {
-			return false;
 		} else if (!checkFervor()) {
-			return false;
-		} else if (!checkSameEmail()) {
-			return false;
-		} else if (!checkSamePhone()) {
 			return false;
 		} else if (!checkGetEmail()) {
 			return false;
@@ -692,5 +688,48 @@ function checkSamePhone(){
 		}
 	} else {
 		return true;
+	}
+}
+
+function checkSameInput(){
+	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
+	let oldNicknameObjValue = document.getElementById("originalNickname").value.trim();
+	let nicknameSpan = document.getElementById("nicknameSpan");
+	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
+	let oldEmailObjValue = document.getElementById("originalEmail").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	let phoneSpan = document.getElementById("phoneSpan");
+	
+	if (nicknameObjValue != oldNicknameObjValue) {
+		if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+			alert("請先執行稱呼檢查");
+			return false;
+		} 
+	} else if (emailObjValue != oldEmailObjValue) {
+		if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+			alert("請先執行電子信箱檢查");
+			return false;
+		} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
+			alert("請先執行電子信箱驗證");
+			return false;
+		} 
+	} else if (phoneObjValue != oldPhoneObjValue) {
+		if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+			alert("請先執行聯絡電話檢查");
+			return false;
+		} 
+	} else {
+		if (!checkNickname()) {
+			return false;
+		} else if (!checkEmailCheckCode()) {
+			return false;
+		} else if (!checkPhone()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
