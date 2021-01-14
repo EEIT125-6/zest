@@ -227,6 +227,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         
         <input type="hidden" id="restaurant" name="restaurant" value="${restaurant}">
         
+        <div class="st1"></div>
         <div class="st1">
             <label for="" class="st3">訂位日期:</label>
             <input id="datepicker1" type="text" name="bookingdate" > 

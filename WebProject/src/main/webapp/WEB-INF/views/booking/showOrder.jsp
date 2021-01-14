@@ -14,7 +14,7 @@
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
 <title>show order</title>
-				
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">				
     <style>
          .classimg{
 		 transition: 0.2s;	
@@ -138,21 +138,11 @@
 		    background:#0099CC;
 		}
     </style>
-</head>
-<body>
- <%@include file = "../Header-Include.jsp" %>
-<!-- -------------------------------------------------------------- -->
-<h2>訂位紀錄如下 : </h2>
-<div id="aa"></div>
-<input type="hidden" name="purpose" value="${bean.purpose}">
-<input type="hidden" name="status" value="${bean.status}">
-<input type="hidden" name="user_id" value="${bean.user_id}">
-
 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 <script>
 window.onload = function() {
 	/* 載入後先執行一次預設查詢 */
-		showOrder();
+		def();
 	};
 function showOrder(){
 	$.ajax({
@@ -166,8 +156,8 @@ function showOrder(){
 					
 	      	for(let i=0;i<booking.length;i++){
 	      		let data=booking[i];
-			content +='<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">'
-					+'<tr style="visibility: hidden;"><td width="200px"><td width="300px"></tr>';
+				content +='<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">'
+						+'<tr style="visibility: hidden;"><td width="200px"><td width="300px"></tr>';
 	      		content+='<tr bgcolor="#F2F4FB"><td>訂單編號:</td>';
 	      		if (data.status==1){
 	      			content+="<td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td></tr>"
@@ -200,14 +190,129 @@ function showOrder(){
 	
 	});
 }
+	function def(){
+		$.ajax({
+			type : "POST",
+			url : "<c:url value='/booking/order'/>",
+			dataType : "json",
+			success : function(resultObj) {
+				let booking=resultObj.data;
+				let contentA="";
+				let contentB="";
+				let contentC="";
+			if (booking !=null){
+				
+		      	for(let i=0;i<booking.length;i++){
+		      		let data=booking[i];
+		      		if(data.status==1){
+						contentA +="<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
+								+"<tr style='visibility: hidden;'><td width='200px'><td width='300px'></tr><tr bgcolor='#F2F4FB'><td>訂單編號:</td>"
+			      				+"<td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td></tr>"
+			      				+"<tr bgcolor='#FFFFE1'><td>訂位狀態:</td><td>有效</td></tr>"
+			      				+"<tr bgcolor='#F2F4FB'><td>餐廳名稱:</td><td>"+data.restaurant
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>訂位日期:</td><td>"+data.bookingdate
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>時間:</td><td>"+data.time
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>人數:</td><td>"+data.number
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>姓名:</td><td>"+data.name
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>聯絡電話:</td><td>"+data.phone
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>E-mail:</td><td>"+data.mail
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>用餐目的:</td><td>"+data.purpose
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>特殊需求:</td><td>"+data.needs+"</td></tr></table>";
+		      		}
+		      		
+		      		if(data.status==0){
+						contentC +="<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
+								+"<tr style='visibility: hidden;'><td width='200px'><td width='300px'></tr>"
+			      				+"<tr bgcolor='#F2F4FB'><td>訂單編號:</td><td>"+data.bookingNo+"</td></tr>"
+			      				+"<tr bgcolor='#FFFFE1'><td>訂位狀態:</td><td>已取消</td></tr>"
+			      				+"<tr bgcolor='#F2F4FB'><td>餐廳名稱:</td><td>"+data.restaurant
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>訂位日期:</td><td>"+data.bookingdate
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>時間:</td><td>"+data.time
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>人數:</td><td>"+data.number
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>姓名:</td><td>"+data.name
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>聯絡電話:</td><td>"+data.phone
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>E-mail:</td><td>"+data.mail
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>用餐目的:</td><td>"+data.purpose
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>特殊需求:</td><td>"+data.needs+"</td></tr></table>";
+		      		}
+		      		if(data.status==2){
+		      			contentB +="<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
+								+"<tr style='visibility: hidden;'><td width='200px'><td width='300px'></tr>"
+			      				+"<tr bgcolor='#F2F4FB'><td>訂單編號:</td><td>"+data.bookingNo+"</td></tr>"
+			      				+"<tr bgcolor='#FFFFE1'><td>訂位狀態:</td><td>用餐過</td></tr>"
+			      				+"<tr bgcolor='#F2F4FB'><td>餐廳名稱:</td><td>"+data.restaurant
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>訂位日期:</td><td>"+data.bookingdate
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>時間:</td><td>"+data.time
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>人數:</td><td>"+data.number
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>姓名:</td><td>"+data.name
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>聯絡電話:</td><td>"+data.phone
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>E-mail:</td><td>"+data.mail
+			      				+"</td></tr><tr bgcolor='#FFFFE1'><td>用餐目的:</td><td>"+data.purpose
+			      				+"</td></tr><tr bgcolor='#F2F4FB'><td>特殊需求:</td><td>"+data.needs+"</td></tr></table>";
+			      		}
+		      		
+		      	}
+		      	
+	      		if(contentA=="")contentA="<h3>查無訂位資料</h3>";
+	      		if(contentB=="")contentB="<h3>查無訂位資料</h3>";
+	      		if(contentC=="")contentC="<h3>查無訂位資料</h3>";
+		
+		      	}else{
+		      		contentA="<h3>查無訂位資料</h3>";
+		      		contentB="<h3>查無訂位資料</h3>";
+		      		contentC="<h3>查無訂位資料</h3>";
+		      		
+		      	} 
+		      	aa.innerHTML=contentA;
+	      		cc.innerHTML=contentC;
+	      		bb.innerHTML=contentB;
+		      	
+			}
+		
+		});
+	}
 </script>
 
+</head>
+<body>
+ <%@include file = "../Header-Include.jsp" %>
+<!-- -------------------------------------------------------------- -->
+<input type="hidden" name="purpose" value="${bean.purpose}">
+<input type="hidden" name="status" value="${bean.status}">
+<input type="hidden" name="user_id" value="${bean.user_id}">
+		       
+<h2 style="margin-left:170px">訂位紀錄如下 : </h2><br>
+
+ <!-- ########################### -->
+<div class="container" >
+		  <ul class="nav nav-tabs">
+		    <li class="active"><a data-toggle="tab" href="#home"><b>訂位中</b></a></li>
+		    <li><a data-toggle="tab" href="#menu1">用餐過</a></li>
+		    <li><a data-toggle="tab" href="#menu2">已取消</a></li>
+		  </ul>
+		  
+		  <div class="tab-content">
+		    <div id="home" class="tab-pane fade in active" >
+		      <br><br><div id="aa"></div>
+		    </div>
+		    <div id="menu1" class="tab-pane fade">
+		      <br/><br/><div id="bb"></div>
+		    </div>
+		    <div id="menu2" class="tab-pane fade">
+		      <br/><br/><div id="cc"></div>
+		    </div>
+		  </div>
+</div>
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- ########################### -->
+<!-- <div id="aa"></div> -->
 <form action="<c:url value='/booking/Index1'/>" >
-<input type="submit"  value="返回" style="margin:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
+<input type="submit"  value="返回" style="margin-left:170px;margin-top:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
 </form> 
- 
+
   <!-- -------------------------------------------------------------- -->
- <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:160px">
+ <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:60px">
     <%@include file = "../Footer-Include-prototype.jsp" %>
         
 </body>

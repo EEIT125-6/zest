@@ -21,4 +21,5 @@ public interface BookingDAO {
 	boolean checkBooking(String bookingNo);
 
 	BookingBean singleBooking(String bookingNo);
+
 }

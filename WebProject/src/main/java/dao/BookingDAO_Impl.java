@@ -1,11 +1,16 @@
 package dao;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.sun.xml.fastinfoset.util.StringArray;
+
 import model.BookingBean;
 
 @Repository
@@ -34,6 +39,16 @@ public class BookingDAO_Impl implements BookingDAO {
 		return count;
 	}
 	
+	//update
+	@Override
+	public int updateBooking(BookingBean bean) {
+		int count = 0;
+		Session session = factory.getCurrentSession();
+		session.saveOrUpdate(bean);
+		count++;
+		return count;
+	}
+	
 	//查詢
 	@SuppressWarnings("unchecked")
 	@Override
@@ -43,6 +58,16 @@ public class BookingDAO_Impl implements BookingDAO {
 		Query<BookingBean> query = session.createQuery(hql);
 		List<BookingBean> list = query.setParameter("user_id", user_id).getResultList();
 		System.out.println(list.size()+"筆");
+		for (int i = 0; i < list.size(); i++) {
+			String date=list.get(i).getBookingdate();
+			Date booking = Date.valueOf(date);
+			Date today = Date.valueOf(LocalDate.now());        
+				
+			if (booking.compareTo(today)<0) {
+				list.get(i).setStatus(2);
+				updateBooking(list.get(i));
+			}
+		}
 		return list;
 	}
 	
@@ -60,16 +85,6 @@ public class BookingDAO_Impl implements BookingDAO {
 		return null;
 	}
 	
-	//update
-	@Override
-	public int updateBooking(BookingBean bean) {
-		int count = 0;
-		Session session = factory.getCurrentSession();
-		session.saveOrUpdate(bean);
-		count++;
-		return count;
-	}
-	
 	//check BookingNo
 	@SuppressWarnings("unchecked")
 	@Override
@@ -84,4 +99,5 @@ public class BookingDAO_Impl implements BookingDAO {
 		}
 		return true;
 	}
+	
 }
