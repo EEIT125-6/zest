@@ -12,6 +12,8 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <head>
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+  <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <%@include file = "../Link_Meta-Include.jsp" %>
@@ -218,6 +220,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 <!--  <div class="container"  style="margin-top: 20px;"> -->
 

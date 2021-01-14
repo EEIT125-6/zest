@@ -13,7 +13,7 @@ public interface BookingService {
 	int cancelBooking(BookingBean bean);
 
 	//查詢query
-	List<BookingBean> findBooking(String phone);
+	List<BookingBean> findBooking(String user_Id);
 
 	//更新update
 	int updateBooking(BookingBean bean);

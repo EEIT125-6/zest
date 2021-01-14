@@ -34,6 +34,11 @@
  
   </script>
       <style>
+      	/* Table cellpadding */
+    	th, td { padding: 1; }
+    	/* Table cellspacing */
+    	table { border-collapse: collapse; border-spacing: 1; }
+        /*  */
          .classimg{
 		 transition: 0.2s;	
         	width:80px
@@ -252,9 +257,10 @@
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
-<center>
+<div align="center">
 <h2>訂位紀錄 : </h2>
 <p>請選擇欲修改之項目</p>
 <form name="form1" action="<c:url value='/booking/confirmUpd'/>" method="post" onSubmit="return egg();" >
@@ -264,17 +270,19 @@
 <c:if test="${bean.status == 0}">
 	<c:redirect url='updateResult'/>	
 </c:if>
+
 <input type="hidden" name="user_id" value="${bean.user_id}">
-<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
+<input type="hidden" name="bookingNo" value="${bean.bookingNo}">
+<input type="hidden" name="restaurant" value="${bean.restaurant}">
+
+<table border="1" style="border:8px #FFD382 groove;width:500px;">
 <tr bgcolor="#FFFFE1">
     <td>訂單編號:</td>
     <td>${bean.bookingNo}</td>
-    <input type="hidden" name="bookingNo" value="${bean.bookingNo}">
 </tr>
 <tr bgcolor="#F2F4FB">
     <td>餐廳名稱:</td>
     <td>${bean.restaurant}</td>
-    <input type="hidden" name="restaurant" value="${bean.restaurant}">
 </tr>
 <tr bgcolor="#FFFFE1">
     <td>訂位日期:</td>
@@ -329,7 +337,7 @@
 			return true;
 } 
 </script>        
-</center> 
+</div> 
   <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>
 </body>

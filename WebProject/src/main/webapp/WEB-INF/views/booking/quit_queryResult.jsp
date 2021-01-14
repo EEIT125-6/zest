@@ -1,25 +1,20 @@
+<%@ page import="model.BookingBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+  
 <%
-response.setContentType("text/html;charset=UTF-8");
-response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-response.setHeader("Pragma","no-cache"); // HTTP 1.0
-response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
+	response.setContentType("text/html;charset=UTF-8");
+	response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
+	response.setHeader("Pragma","no-cache"); // HTTP 1.0
+	response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 %>    
 <!DOCTYPE html>
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
-<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-<title>訂位資料確認</title>
+<title>訂位紀錄查詢</title>
     <style>
-    	/* Table cellpadding */
-    	th, td { padding: 1; }
-    	/* Table cellspacing */
-    	table { border-collapse: collapse; border-spacing: 1; }
-        /*  */
          .classimg{
 		 transition: 0.2s;	
         	width:80px
@@ -144,59 +139,91 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     </style>
 </head>
 <body>
-<%@include file = "../Header-Include.jsp" %>
-<%@include file="../LoadingScreen.jsp" %>
+ <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
- <div class="container" align="center" style="margin-top: 20px;">  
-<h2>訂位資料如下 ! 請確認 !</h2>
-<form action="<c:url value='/booking/confirm'/>" method="post">
-<table border="1" style="border:8px #FFD382 groove;width:500px">
-<tr bgcolor="#F2F4FB">
-    <td>訂單編號:</td>
-    <td>${reg_booking.bookingNo}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>訂位日期:</td>
-    <td>${reg_booking.bookingdate}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>時間:</td>
-    <td>${reg_booking.time}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>人數:</td>
-    <td>${reg_booking.number}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>姓名:</td>
-    <td>${reg_booking.name}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>聯絡電話:</td>
-    <td>${reg_booking.phone}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>E-mail:</td>
-    <td>${reg_booking.mail}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>用餐目的:</td>
-    <td>${reg_booking.purpose}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>特殊需求:</td>
-    <td>${reg_booking.needs}</td>
-</tr>
+<center>         
+<h2>訂位紀錄如下 : </h2>
+<table  cellspacing="1" cellpadding="1" border="1" width="500px">
+<input type="hidden" name="purpose" value="${bean.purpose}">
+<input type="hidden" name="status" value="${bean.status}">
+<input type="hidden" name="user_id" value="${bean.user_id}">
+<c:if test='${empty booking}'>
+		查無訂位資料<br>
+	</c:if>
+	<c:if test='${not empty booking}'>
+	<c:forEach var='booking' varStatus='bk' items='${booking}'>
+	<table  cellspacing="1" cellpadding="1" border="1" width="500px" style="border:8px #FFD382 groove;">
+      <tr style="visibility: hidden;">
+      	<td width="200px">
+      	<td width="300px">
+      </tr>			
+			<tr bgcolor="#F2F4FB">
+				<td>訂單編號:</td>
+				<c:if test="${booking.status == 1}">
+				<td><a href=<c:url value='/booking/DisplayController?key=${booking.bookingNo}'/>>${booking.bookingNo}</a></td>
+				</c:if>
+				<c:if test="${booking.status == 0}">
+				<td>${booking.bookingNo}</td>
+				</c:if>
+			</tr>
+			<tr bgcolor="#FFFFE1">
+				<td>訂位狀態:</td>
+				<c:if test="${booking.status == 1}">
+					<td>有效</td>
+				</c:if>
+				<c:if test="${booking.status == 0}">
+					<td>已取消</td>
+				</c:if>
+			</tr>
+			<tr bgcolor="#F2F4FB">
+				<td>餐廳名稱:</td>
+				<td>${booking.restaurant}</td>
+			</tr>
+			<tr bgcolor="#FFFFE1">	
+				<td>訂位日期:</td>
+				<td>${booking.bookingdate}</td>
+			</tr>	
+			<tr bgcolor="#F2F4FB">
+				<td>時間:</td>
+				<td>${booking.time}</td>
+			</tr>
+			<tr bgcolor="#FFFFE1">
+				<td>人數:</td>
+				<td>${booking.number}</td>
+			</tr>	
+			<tr bgcolor="#F2F4FB">
+				<td>姓名:</td>
+				<td>${booking.name}</td>
+			</tr>
+			<tr bgcolor="#FFFFE1">
+				<td>聯絡電話:</td>
+				<td>${booking.phone}</td>
+			</tr>
+			<tr bgcolor="#F2F4FB">
+				<td>E-mail:</td>
+				<td>${booking.mail}</td>
+			</tr>
+			<tr bgcolor="#FFFFE1">
+				<td>用餐目的:</td>
+				<td>${booking.purpose}</td>
+			</tr>
+			<tr bgcolor="#F2F4FB">
+				<td>特殊需求:</td>
+				<td>${booking.needs}</td>
+			</tr>
+
+		</c:forEach>
+	</c:if>
 </table>
-<div style="margin:10px;">
-<input type="submit" name="confirm" value="確認" style="border-radius: 3px; border: none; outline: none;">
-</div>
-</form>  
-</div>
+
+<%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
+<form action="<c:url value='/booking/Page1'/>" >
+<input type="submit" name="back" value="返回" style="margin:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
+</form> 
+</center> 
   <!-- -------------------------------------------------------------- -->
- <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:120px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
- </div>
+ <%@include file = "../Footer-Include.jsp" %>
+        
 </body>
-</html>    
+</html>
