@@ -293,13 +293,13 @@ function showOrder(){
 		  
 		  <div class="tab-content">
 		    <div id="home" class="tab-pane fade in active" >
-		      <br><br><div id="aa"></div>
+		      <br><br><div id="aa" style="height:600px;overflow-y:auto"></div>
 		    </div>
 		    <div id="menu1" class="tab-pane fade">
 		      <br/><br/><div id="bb"></div>
 		    </div>
 		    <div id="menu2" class="tab-pane fade">
-		      <br/><br/><div id="cc"></div>
+		      <br/><br/><div id="cc" style="height:600px;overflow-y:auto"></div>
 		    </div>
 		  </div>
 </div>
