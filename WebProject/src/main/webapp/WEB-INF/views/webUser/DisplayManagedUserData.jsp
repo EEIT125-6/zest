@@ -621,10 +621,7 @@
 					}
 					
 					$("#updateAccount").click(function() {
-						let choice=confirm("是否要執行特定的操作？");
-						if (choice){
-							checkUpdate();
-						}
+						checkUpdate();
                 	});
                 	function checkUpdate() {
                 		if (checkForm()) {

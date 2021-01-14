@@ -582,11 +582,12 @@ function clearMessage() {
 	document.getElementById("addr2Span").innerHTML = "";
 }
 
-
 function checkSameInput(){
 	let accountSpan = document.getElementById("accountSpan");
+	let nicknameSpan = document.getElementById("nicknameSpan");
 	let emailSpan = document.getElementById("emailSpan");
 	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let phoneSpan = document.getElementById("phoneSpan");
 	
 	if (accountSpan.textContent != "check_circle可建立此帳號！") {
 		alert("請先執行帳號檢查");

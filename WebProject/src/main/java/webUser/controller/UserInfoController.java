@@ -147,7 +147,7 @@ public class UserInfoController {
 			}
 			
 			if (sendResult) {		
-				message = "驗證碼已寄出，請至您填寫的信箱收信，並將驗證碼複製貼上至指定欄位";
+				message = "驗證碼已寄出，請至填寫的信箱收信，將驗證碼貼上";
 				sendResult = true;
 				/* 將變數賦值 */
 				registerEmail = email;
