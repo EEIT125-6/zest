@@ -15,6 +15,8 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <%@include file="../Link_Meta-Include.jsp"%>
 <!-- Google Icon -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
@@ -162,11 +164,15 @@ ul.slides li img {
 </head>
 <body>
 	<%@include file="../Header-Include.jsp"%>
+	<%@include file="../LoadingScreen.jsp" %>
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
 		<c:if test="${userFullData.password == null}">
 			<c:redirect url="/WebUserLogin" />
 		</c:if>
+		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
+		<input type="hidden" id="pageNo" value="1" />
+		<input type="hidden" id="maxPage" value="1" />
 		<form method="post" >
 			<fieldset>
 				<legend>搜尋選項</legend>
@@ -241,6 +247,7 @@ ul.slides li img {
 		</form>
 		<div align="center">
 			<span id="searchSpan"></span>
+			<hr />
 		</div>
 		
 		<div align="center" id="dataContainer"></div>
@@ -278,6 +285,102 @@ ul.slides li img {
 					var status = selectedQutBtnInfo.split("_")[2];
 					var mode = 'quit';
 					lastCheck(userId, account, status, mode);
+				});
+				/* 綁定第一頁按鈕 */
+				$("#dataContainer").on("click", ".pFirst", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pFirstBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定上一頁按鈕 */
+				$("#dataContainer").on("click", ".pPrev", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pPrevBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定下一頁按鈕 */
+				$("#dataContainer").on("click", ".pNext", function() {
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = startPage + 1;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pNextBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let startPage = parseInt(document.getElementById("pageNo").value);
+					document.getElementById("pageNo").value = startPage + 1;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
+				});
+				/* 綁定最末頁按鈕 */
+				$("#dataContainer").on("click", ".pLast", function() {
+					let maxPage = parseInt(document.getElementById("maxPage").value);
+					document.getElementById("pageNo").value = maxPage;
+					selectAllUser();
+				});
+				$("#dataContainer").on("click", ".pLastBtn", function() {
+					var accountObjValue = document.getElementById("account").value.trim();
+					var nicknameObjValue = document.getElementById("nickname").value.trim();
+					var fervorObj = document.getElementsByClassName("fervor");
+					var fervorObjValue = "";
+					
+					for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
+						fervorObjValue += (fervorObjValue != "" && fervorObj[fervorIndex].checked) ? "," : "";
+						fervorObjValue += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
+					}
+					var locationCodeObjValue = document.getElementById("locationCode").value;
+					var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+					var selectedIdentity = (userLv == -1) ? document.getElementById("identity").value : "";
+					
+					let maxPage = parseInt(document.getElementById("maxPage").value);
+					document.getElementById("pageNo").value = maxPage;
+					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 				});
 			};
 		
@@ -395,10 +498,12 @@ ul.slides li img {
 			}
 			
 			function selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity) {
+				let startPage = parseInt(document.getElementById("pageNo").value);
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
+				let avgPage = 3;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 					+ searchStr;
@@ -414,7 +519,7 @@ ul.slides li img {
 						'selectedFervor':fervorObjValue,
 						'selectedLocationCode':locationCodeObjValue,
 						'selectedStatus':selectedStatus,
-						'selectedIdentity':selectedIdentity
+						'selectedIdentity':selectedIdentity,
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -426,7 +531,6 @@ ul.slides li img {
 							searchSpan.style.fontStyle = "normal";
 
 							let content = "";
-							
 							if (resultObj.userDataList.length != 0) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
@@ -437,7 +541,7 @@ ul.slides li img {
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
-											+ "<th>刪除</th>"
+											+ "<th>圖示</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -450,6 +554,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -459,6 +564,7 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -466,71 +572,74 @@ ul.slides li img {
 											+ "</tr>";
 								}
 
-								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
+
+								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
 											+ "<td>"
 											+ (dataIndex + 1)
-											+ "</td>";
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
+									
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									} else {
+										content += userData.iconUrl
+													+ "' width='40' height='40' >"
+													+ "</td>";
+									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != document.getElementById("userAccount").value)
-													? "<td>"
-													+ "<button type='button' class='deleteBtn' id='delBtn" 
+										content += "<td>";				
+
+										if (userData.status == 'active') {
+											content += "<button type='button' class='quitBtn' id='qutBtn" 
 													+ userData.userId 
 													+ "_" 
 													+ userData.account 
 													+ "_" 
 													+ userData.status 
-													+ "' style='background-color:#ffc107'>"
-													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-													+ "</button>"
-													+ "</td>"
-													: "<td></td>";				
-										content += "<td>";
-										if (userData.status == 'active') {
-											content += "<button type='button' class='quitBtn' id='qutBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status 
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-														+ "</button>";
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+													+ "</button>";
 										} else if (userData.status == 'quit') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+													+ "</button>"
 										} else if (userData.status == 'inactive') {
 											content += "<button type='button' class='activeBtn' id='actBtn" 
-														+ userData.userId 
-														+ "_" 
-														+ userData.account 
-														+ "_" 
-														+ userData.status
-														+ "' style='background-color:#ffc107'>" 
-														+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
-														+ "</button>"
+													+ userData.userId 
+													+ "_" 
+													+ userData.account 
+													+ "_" 
+													+ userData.status
+													+ "' style='background-color:#ffc107'>" 
+													+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
+													+ "</button>"
 										}
 										content += "</td>"
-												+ "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
-												+ userData.account 
-												+ "'>"
-												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>"
-												+ userData.account 
-												+ "</td>";
+													+ "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
+													+ userData.account 
+													+ "'>"
+													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</a>"
+													+ "</td>"
+													+ "<td>"
+													+ userData.account 
+													+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
 									}
@@ -568,6 +677,28 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
+										
+								document.getElementById("pageNo").value = startPage;
+								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
+											+ "第一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+											+ "上一頁"
+											+ "</button>";
+											
+								} 
+								
+								if (resultObj.userDataList.length > startPage * avgPage) {
+									content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
+											+ "下一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+											+ "最末頁"
+											+ "</button>";
+								}
 							}
 
 							dataContainer.innerHTML = content;
@@ -602,11 +733,13 @@ ul.slides li img {
 			}
 
 			function selectAllUser() {
+				let startPage = parseInt(document.getElementById("pageNo").value);
 				let searchSpan = document.getElementById("searchSpan");
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-
+				let avgPage = 3;
+				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 						+ searchStr;
 				searchSpan.style.color = "black";
@@ -628,14 +761,12 @@ ul.slides li img {
 							if (resultObj.userDataList != null) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
-										+ "<legend>以下為使用者列表：</legend>"
-										+ "<hr />"
 										+ "<table border='1'>";
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
-											+ "<th>刪除</th>"
+											+ "<th>圖示</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -648,6 +779,7 @@ ul.slides li img {
 								} else if (document.getElementById("userLv").value == 1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
@@ -657,36 +789,40 @@ ul.slides li img {
 								} else {
 									content += "<tr>"
 											+ "<th>項次</th>"
+											+ "<th>圖示</th>"
 											+ "<th>帳號名稱</th>"
 											+ "<th>稱呼</th>"
 											+ "<th>偏好食物</th>"
 											+ "<th>居住區域</th>"
 											+ "</tr>";
 								}
+								
+								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
 
-								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
 											+ "<td>"
 											+ (dataIndex + 1)
-											+ "</td>";
+											+ "</td>"
+											+ "<td>"
+											+ "<img src='"
+											+ document.getElementById("space").value;
+							
+									if (userData.iconUrl == '') {
+										content += "/images/webUser/defaultIcon/ncu_scens.jpg"
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									} else {
+										content += userData.iconUrl
+												+ "' width='40' height='40' >"
+												+ "</td>";
+									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += (userData.account != document.getElementById("userAccount").value)
-													? "<td>"
-													+ "<button type='button' class='deleteBtn' id='delBtn" 
-													+ userData.userId 
-													+ "_" 
-													+ userData.account 
-													+ "_" 
-													+ userData.status 
-													+ "' style='background-color:#ffc107'>"
-													+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-													+ "</button>"
-													+ "</td>"
-													: "<td></td>";				
-										content += "<td>";
+										content += "<td>";				
+
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
 														+ userData.userId 
@@ -719,23 +855,23 @@ ul.slides li img {
 														+ "</button>"
 										}									
 										content += "</td>"
-												+ "<td>"
-												+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
-												+ "<button type='button' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
-												+ "</button>"
-												+ "</a>"
-												+ "</td>"
-												+ "<td>"
-												+ userData.account 
-												+ "</td>";
+													+ "<td>"
+													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
+													+ "<button type='button' style='background-color:#ffc107'>"
+													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</button>"
+													+ "</a>"
+													+ "</td>"
+													+ "<td>"
+													+ userData.account 
+													+ "</td>";
 									} else {
 										content += "<td>" + userData.account + "</td>";
 									}
 									
 									content += "<td>" + userData.nickname + "</td>"
-											+ "<td>" + userData.fervor + "</td>"
-											+ "<td>" + userData.locationInfo.cityName + "</td>";
+												+ "<td>" + userData.fervor + "</td>"
+												+ "<td>" + userData.locationInfo.cityName + "</td>";
 									
 									if (document.getElementById("userLv").value == -1) {
 										content += "<td>" + userData.accountLv.levelName + "</td>";
@@ -766,6 +902,28 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
+										
+								document.getElementById("pageNo").value = startPage;
+								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
+											+ "第一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+											+ "上一頁"
+											+ "</button>";
+											
+								} 
+								
+								if (resultObj.userDataList.length > startPage * avgPage) {
+									content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
+											+ "下一頁"
+											+ "</button>"
+											+ "<button type='button' style='background-color:#ffc107' class='pLast'>"
+											+ "最末頁"
+											+ "</button>";
+								}
 							}
 
 							dataContainer.innerHTML = content;
@@ -804,8 +962,8 @@ ul.slides li img {
 		</script>
 	</div>
 	<!-- -------------------------------------------------------------------- -->
-	<div
-		style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
+	<div style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
 		<%@include file="../Footer-Include-prototype.jsp"%>
+	</div>
 </body>
 </html>

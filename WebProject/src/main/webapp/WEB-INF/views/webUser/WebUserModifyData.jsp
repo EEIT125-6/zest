@@ -13,6 +13,8 @@
 <html lang="en">
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
     <title>修改個人資料</title>
@@ -144,6 +146,7 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${empty userFullData}">
@@ -155,7 +158,7 @@
 						<hr />
 						<label>帳號圖示：</label>
                 		<c:if test="${selfData.iconUrl == ''}" >
-                			<img src="<c:url value='/images/webUser/default/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
+                			<img src="<c:url value='/images/webUser/defaultIcon/ncu_scens.jpg' />" width="200" height="200" title="這是系統預設的帳號圖示">
                 		</c:if>
                 		<c:if test="${selfData.iconUrl != ''}" >
                 			<img src="<c:url value='${selfData.iconUrl}' />" width="200" height="200" title="這是您目前的帳號圖示">
@@ -179,21 +182,20 @@
 						<input type="hidden" name="account" id="account" value="${selfData.account}">
                 		<input type="hidden" name="originalFirstName" id="originalFirstName" value="${selfData.firstName}">
 						<label>中文姓氏：</label>
-						<input type="text" name="updatedFirstName" id="updatedFirstName" size="40" maxlength="3" onblur="checkFirstName()"
+						<input type="text" name="updatedFirstName" id="updatedFirstName" size="30" maxlength="3" onblur="checkFirstName()"
 							placeholder="請輸入姓氏，1~3個中文字" value="${selfData.firstName}" />
 						<span id="firstNameSpan"></span>
 						<hr />
 						<input type="hidden" name="originalLastName" id="originalLastName" value="${selfData.lastName}">
 						<label>中文名字：</label>
-						<input type="text" name="updatedLastName" id="updatedLastName" size="40" maxlength="3" onblur="checkLastName()"
+						<input type="text" name="updatedLastName" id="updatedLastName" size="30" maxlength="22" onblur="checkLastName()"
 							placeholder="請輸入名字，1~3個中文字" value="${selfData.lastName}" />
 						<span id="lastNameSpan"></span>
 						<hr />
 						<input type="hidden" name="originalNickname" id="originalNickname" value="${selfData.nickname}">
 						<label>稱呼方式：</label>
-						<input type="text" name="updatedNickname" id="updatedNickname" size="40" maxlength="20" onblur="checkNickname()"
+						<input type="text" name="updatedNickname" id="updatedNickname" size="30" maxlength="25" onblur="checkNickname()"
 							placeholder="請輸入想要的稱呼" value="${selfData.nickname}" />
-						<button type="button" name="update" id="checkNicknameUsed" style="font-size:18px" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<input type="hidden" name="originalFervor" id="originalFervor" value="${selfData.fervor}">
@@ -213,16 +215,14 @@
 						<hr />
 						<input type="hidden" name="originalEmail" id="originalEmail" value="${selfData.email}">
 						<label>聯絡信箱：</label>
-						<input type="email" name="updatedEmail" id="updatedEmail" size="40" maxlength="30" onblur="checkEmail()"
+						<input type="email" name="updatedEmail" id="updatedEmail" size="30" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" value="${selfData.email}" />
-						<button type="button" name="update" id="checkEmailUsed" style="font-size:18px" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<div id="emailSendSpace">
 							<label>信箱驗證：</label>
-							<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
+							<input type="text" name="emailCheckCode" id="emailCheckCode" size="30" maxlength="8" onblur="checkEmailCheckCode()"
 							    placeholder="請輸入E-Mail中所收到的驗證碼" />
-							<button type="button" style="font-size:18px" name="update" id="sendCheckSpace" >傳送驗證碼 <i class="material-icons" style="font-size:18px;color:green">mail</i></button>
 							<span id="emailCheckCodeSpan"></span>
 							<br />
 							<input type="hidden" name="inputCheckCode" id="checkCode" value="" />
@@ -230,9 +230,8 @@
 						</div>
 						<input type="hidden" name="originalPhone" id="originalPhone" value="${selfData.phone}">
 						<label>聯絡電話：</label>
-						<input type="tel" name="updatedPhone" id="updatedPhone" size="40" maxlength="11" onblur="checkPhone()"
+						<input type="tel" name="updatedPhone" id="updatedPhone" size="30" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" value="${selfData.phone}" />
-						<button type="button" name="update" id="checkPhoneUsed" style="font-size:18px" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 					    <hr />
 					    <input type="hidden" name="originalGetEmail" id="originalGetEmail" value="${selfData.getEmail.willingCode}">
@@ -439,12 +438,14 @@
                 	function checkUpdate() {
                 		if (checkForm()) {
                 			doUpdate();
-                		}	
+                		} else {
+                			alert("欄位檢查失敗！");
+                		}
                 	}
                 	function doUpdate() {
                 		let newFirstName = document.getElementById("updatedFirstName").value.trim();
                 		let newLastName = document.getElementById("updatedLastName").value.trim();
-                		let newNickname = document.getElementById("updatedNickname").value.trim();
+                		let newNickname = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
                 		let fervorObj = document.getElementsByClassName("updatedFervor");
                 		let newFervor = "";
                 		for (let fervorIndex = 0; fervorIndex < fervorObj.length; fervorIndex++) {
@@ -453,15 +454,15 @@
                 			}
                 			newFervor += (fervorObj[fervorIndex].checked) ? fervorObj[fervorIndex].value : "";
                 		}
-                		let newEmail = document.getElementById("updatedEmail").value.trim();
+                		let newEmail = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
                 		let emailCheckCode = document.getElementById("emailCheckCode").value.trim();
                 		let newPhone = document.getElementById("updatedPhone").value.trim();
                 		let newGetEmail =(document.getElementById("updatedGetEmail1") == null) ? "" : document.getElementById("updatedGetEmail1").value;
                 		newGetEmail = (document.getElementById("updatedGetEmail2") == null) ? "" : document.getElementById("updatedGetEmail2").value;
                 		let newLocationCode = document.getElementById("updatedLocationCode").value.trim();
-                		let newAddr0 = document.getElementById("updatedAddr0").value.trim();
-                		let newAddr1 = document.getElementById("updatedAddr1").value.trim();
-                		let newAddr2 = document.getElementById("updatedAddr2").value.trim();
+                		let newAddr0 = document.getElementById("updatedAddr0").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr1 = document.getElementById("updatedAddr1").value.replace('<', ' ').replace('>', '').trim();
+                		let newAddr2 = document.getElementById("updatedAddr2").value.replace('<', ' ').replace('>', '').trim();
                 		
                 		let updateSpan = document.getElementById("updatedSpan");
                 		let updateResultSpan = document.getElementById("updatedResultSpan");
@@ -471,7 +472,7 @@
 						updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
 						updateSpan.style.color = "black";
 						updateSpan.style.fontStyle = "normal";
-						updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr;
+						updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + updateStr + "<hr />";
 						updateResultSpan.style.color = "black";
 						updateResultSpan.style.fontStyle = "normal";
 						
@@ -499,7 +500,7 @@
 				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
 				            		updateSpan.style.color = "black";
 				            		updateSpan.style.fontStyle = "normal";
-				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
 				            		updateResultSpan.style.color = "black";
 				            		updateResultSpan.style.fontStyle = "normal";
 				            	} else {
@@ -507,7 +508,7 @@
 					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 					            	updateSpan.style.color = "red";
 					            	updateSpan.style.fontStyle = "italic";
-					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 					            	updateResultSpan.style.color = "red";
 					            	updateResultSpan.style.fontStyle = "italic";
 					            	/* 顯示彈窗異常訊息 */
@@ -519,18 +520,15 @@
 				            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 				            	updateSpan.style.color = "red";
 				            	updateSpan.style.fontStyle = "italic";
-				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
+				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 				            	updateResultSpan.style.color = "red";
 				            	updateResultSpan.style.fontStyle = "italic";
 				            }
 						});
                 	}
                 
-	                $("#checkNicknameUsed").click(function() {
-				        checkUpdateNickname();
-				    });
 					function checkUpdateNickname() {
-						let nickname = document.getElementById("updatedNickname").value.trim();
+						let nickname = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "處理中...，請稍後";
 						let nicknameIsOk = true;
@@ -580,11 +578,8 @@
 						});
 					}	
                 
-					$("#checkEmailUsed").click(function() {
-						checkUpdateEmail();
-				    });
 					function checkUpdateEmail() {
-						let email = document.getElementById("updatedEmail").value.trim();
+						let email = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;
@@ -623,6 +618,10 @@
 				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 				            		emailSpan.style.color = "black";
 				            		emailSpan.style.fontStyle = "normal";
+				            		let choice=confirm("是否要寄往 " + email + " ?");
+				            		if (choice) {
+				            			sendTestEmail();
+				            		}
 				            	}
 				            },
 				            error:function(err) {
@@ -634,9 +633,6 @@
 						});
 					}
 					
-					$("#checkPhoneUsed").click(function() {
-				        checkUpdatePhone();
-				    });
 					function checkUpdatePhone() {
 						let phone = document.getElementById("updatedPhone").value.trim();
 						let phoneSpan = document.getElementById("phoneSpan");
@@ -698,6 +694,10 @@
 						let emailCheckCodeStr = "...處理中，請稍後";
 						let emailCheckCodeIsOk = true;
 						
+						emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + emailCheckCodeStr;
+						emailCheckCodeSpan.style.color = "black";
+						emailCheckCodeSpan.style.fontStyle = "normal";
+						
 						$.ajax({
 							type:"POST",
 							url:"<c:url value='/webUser/controller/UserInfoController' />",
@@ -709,13 +709,27 @@
 				            dataType:"json",
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == "true") {
-				            		alert(resultObj.resultMessage);
+				            		emailCheckCodeStr = resultObj.resultMessage;
+				            		alert(emailCheckCodeStr);
+				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+				            		emailCheckCodeSpan.style.color = "black";
+				            		emailCheckCodeSpan.style.fontStyle = "normal";
+				            		checkCodeStr = resultObj.resultText;
+				            		document.getElementById("checkCode").value = checkCodeStr;
 				            	} else if (resultObj.resultCode == "false") {
-				            		alert(resultObj.resultMessage);
+				            		emailCheckCodeStr = resultObj.resultMessage;
+				            		alert(emailCheckCodeStr);
+				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+					            	emailCheckCodeSpan.style.color = "red";
+					            	emailCheckCodeSpan.style.fontStyle = "italic";
 				            	}
 				            },
 				            error:function(err) {
-				            	alert("發生錯誤，無法寄出測試信");
+				            	emailCheckCodeStr = "發生錯誤，無法寄出測試信";
+				            	alert(emailCheckCodeStr);
+				            	emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+				            	emailCheckCodeSpan.style.color = "red";
+				            	emailCheckCodeSpan.style.fontStyle = "italic";
 				            }
 						});
 					}
@@ -723,6 +737,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

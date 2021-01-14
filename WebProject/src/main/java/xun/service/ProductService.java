@@ -17,4 +17,6 @@ public interface ProductService {
 	Integer deleteALLProduct(StoreBean sb);
 	
 	List<ProductInfoBean> getStoreProduct(StoreBean sb);
+	
+	Integer getLastProductId();
 }

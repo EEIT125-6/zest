@@ -151,11 +151,11 @@ public class WebUserServiceImpl implements WebUserService {
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
 		return webUserDAO.getSelectedWebUserData(selectedParameters);
 	}
-
-	@Override
-	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
-		return webUserDAO.updateWebUserData(quitUserData);
-	}
+	
+//	@Override
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+//		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
+//	}
 
 	@Override
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
@@ -172,11 +172,6 @@ public class WebUserServiceImpl implements WebUserService {
 		return webUserDAO.updateWebUserData(updatedUserData);
 	}
 	
-	@Override
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
-		return webUserDAO.deleteWebUserData(deletedUserId);
-	}
-
 	@Override
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException {
 		return webUserDAO.resetWebUserPassword(userId, password);

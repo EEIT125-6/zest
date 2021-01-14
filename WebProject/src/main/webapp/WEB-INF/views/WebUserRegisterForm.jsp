@@ -14,7 +14,9 @@
 <head>
 	<%@include file = "Link_Meta-Include.jsp" %>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />       
     <title>進行註冊</title>
     <style>
         .classimg{
@@ -144,6 +146,7 @@
 </head>
 <body>
             <%@include file = "Header-Include.jsp" %>
+            <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                <c:if test="${userFullData.password != null}">
@@ -152,7 +155,15 @@
                <form action="<c:url value='/webUser/controller/WebUserRegisterForm' />" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>註冊相關資料</legend>
+						<hr />
+                		<div align="center">
+	                		<button type="button" id="userInput">一鍵輸入</button>
+                		</div>
 						<span id="submitSpan">
+							<c:if test="${timeOut != null}">
+								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+								<c:out value="${timeOut}" />
+							</c:if>
 							<c:if test="${submitMessage != null}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${submitMessage}" />
@@ -171,31 +182,29 @@
 						</c:forEach>
 					    <hr />
 						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字" required="required" />
-						<button type="button" style="font-size:18px" id="checkAccount" >檢查帳號 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+						<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
+							placeholder="請輸入帳號，6~30個字" required="required" />
 						<span id="accountSpan"></span>
 						<hr />
 						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
+						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~30個字" required="required" />
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>中文姓氏：</label>
-						<input type="text" name="firstName" id="firstName" size="40" maxlength="3" onblur="checkFirst_name()"
+						<input type="text" name="firstName" id="firstName" size="30" maxlength="3" onblur="checkFirst_name()"
 						    placeholder="請輸入姓氏，1~3個中文字" required="required" />
 						<span id="firstNameSpan"></span>
 						<hr />
 						<label>中文名字：</label>
-						<input type="text" name="lastName" id="lastName" size="40" maxlength="3" onblur="checkLast_name()"
-						    placeholder="請輸入名字，1~3個中文字" required="required" />
+						<input type="text" name="lastName" id="lastName" size="30" maxlength="22" onblur="checkLast_name()"
+						    placeholder="請輸入名字，1~22個中文字" required="required" />
 						<span id="lastNameSpan"></span>
 						<hr />
 						<label>稱呼方式：</label>
-						<input type="text" name="nickname" id="nickname" size="40" maxlength="20" onblur="checkNickname()"
+						<input type="text" name="nickname" id="nickname" size="30" maxlength="25" onblur="checkNickname()"
 						    placeholder="請輸入想要的稱呼(留白的話會設定為名字)" required="required" />
-						<button type="button" style="font-size:18px" id="checkRegisterNickname" >檢查稱呼 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="nicknameSpan"></span>
 						<hr />
 						<label>生理性別：</label>
@@ -215,10 +224,10 @@
 						<hr />
 						<label>偏好食物：</label>
 						<c:forEach items="${fervorList}" var="fervorObject" >
-							<c:if test="${fervorObject.fervorCode==7}" >
+							<c:if test="${fervorObject.fervorCode == fervorList.size()}" >
 								<input type="checkbox" name="fervorOption" class="fervor" value="${fervorObject.fervorCode}" checked="checked" onblur="checkFervor()" />
 							</c:if>
-							<c:if test="${fervorObject.fervorCode!=7}" >
+							<c:if test="${fervorObject.fervorCode != fervorList.size()}" >
 								<input type="checkbox" name="fervorOption" class="fervor" value="${fervorObject.fervorCode}" onblur="checkFervor()" />
 							</c:if>
 							<label><c:out value="${fervorObject.fervorItem}" ></c:out></label>
@@ -226,23 +235,20 @@
 						<span id="fervorSpan"></span>
 						<hr />
 						<label>聯絡信箱：</label>
-						<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
+						<input type="email" name="email" id="email" size="30" maxlength="30" onblur="checkEmail()"
 						    placeholder="請輸入驗證、聯絡用的E-Mail地址" required="required" />
-						<button type="button" style="font-size:18px" id="checkEmailUsed" >檢查信箱 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="emailSpan"></span>
 						<hr />
 						<label>信箱驗證：</label>
-						<input type="text" name="emailCheckCode" id="emailCheckCode" size="40" maxlength="8" onblur="checkEmailCheckCode()"
+						<input type="text" name="emailCheckCode" id="emailCheckCode" size="30" maxlength="8" onblur="checkEmailCheckCode()"
 						    placeholder="請輸入E-Mail中所收到的驗證碼" required="required" />
-						<button type="button" style="font-size:18px" id="sendCheckCode" >傳送驗證碼 <i class="material-icons" style="font-size:18px;color:green">mail</i></button>
 						<span id="emailCheckCodeSpan"></span>
 						<br />
 						<input type="hidden" name="inputCheckCode" id="checkCode" value="" />
 						<hr />
 						<label>聯絡電話：</label>
-						<input type="tel" name="phone" id="phone" size="40" maxlength="11" onblur="checkPhone()"
+						<input type="tel" name="phone" id="phone" size="30" maxlength="11" onblur="checkPhone()"
 						    placeholder="請輸入行動電話或市內電話號碼" required="required" />
-						<button type="button" style="font-size:18px" id="checkRegisterPhone" >檢查電話 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 						<span id="phoneSpan"></span>
 						<hr />
 						<label>是否願意接收促銷/優惠訊息：</label>
@@ -294,46 +300,22 @@
 				<script src="<c:url value='/js/webUser/WebUserRegisterForm.js' />"></script>
 				<script>
 					window.onload = function() {
-						let checkAccountBtn = document.getElementById("checkAccount");
-						let checkNicknameBtn = document.getElementById("checkRegisterNickname");
-						let checkEmailBtn = document.getElementById("checkEmailUsed");
-						let sendEmailCheckCodeBtn = document.getElementById("sendCheckCode");
-						let checkPhoneBtn = document.getElementById("checkRegisterPhone");
+						let userAutoInputBtn = document.getElementById("userInput");
 						
-						checkAccountBtn.style = "display:none";
-						checkNicknameBtn.style = "display:none";
-						checkEmailBtn.style = "display:none";
-						sendEmailCheckCodeBtn.style = "display:none";
-						checkPhoneBtn.style = "display:none";
-						
-						checkAccountBtn.onclick = function() {
-							checkSameAccount();
-						};
-						
-						checkNicknameBtn.onclick = function() {
-							checkSameNickname();
-						}
-						
-						checkEmailBtn.onclick = function() {
-							checkSameEmail();
-						}
-						
-						sendEmailCheckCodeBtn.onclick = function() {
-							let email = document.getElementById("email").value.trim();
-							let choice=confirm("是否要寄往 " + email + " ?");
-							if (choice) {
-								sendEmailCheckCodeBtn.disabled = true;
-								setTimeout(enableBtn, 45000);
-								sendEmailCheckCode();
-								function enableBtn() {
-									sendEmailCheckCodeBtn.disabled = false;
-								}
-							} 
-						}
-						
-						checkPhoneBtn.onclick = function() {
-							checkSamePhone();
-						} 
+						userAutoInputBtn.onclick = function() {
+                			document.getElementById("account").value = "George610787";
+                			document.getElementById("password").value = "Geo1rge6";
+                			document.getElementById("firstName").value = "王";
+                			document.getElementById("lastName").value = "小明";
+                			document.getElementById("nickname").value = "小明";
+                			document.getElementById("birth").value = "2000-10-20";
+                			document.getElementById("email").value = "george610787@gmail.com";
+                			document.getElementById("phone").value = "0911773355";
+                			document.getElementById("locationCode").value = 13;
+                			document.getElementById("addr0").value = "桃園市中壢區中大路300號";
+                			document.getElementById("addr1").value = "宜蘭縣大同鄉太平巷58之1號";
+                			document.getElementById("addr2").value = "南投縣鹿谷鄉興產路2之3號";
+                		};
 					};
 					
 					function checkSameAccount() {
@@ -374,12 +356,10 @@
 						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 						            		accountSpan.style.color = "red";
 						            		accountSpan.style.fontStyle = "italic";
-						            		document.getElementById("sendCheckCode").style = "display:none";
 						            	} else {
 						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
 						            		accountSpan.style.color = "black";
 						            		accountSpan.style.fontStyle = "normal";
-						            		document.getElementById("sendCheckCode").style = "display:inline";
 						            	}
 									} else {
 										accountStr = "發生錯誤，無法執行檢查";
@@ -395,7 +375,7 @@
 					}
 					
 					function checkSameNickname() {
-						let nickname = document.getElementById("nickname").value.trim();
+						let nickname = document.getElementById("nickname").value.replace('<', ' ').replace('>', ' ').trim();
 						let nicknameSpan = document.getElementById("nicknameSpan");
 						let nicknameStr = "...處理中，請稍後";
 						let nicknameIsOk = true;
@@ -451,7 +431,7 @@
 					}
 					
 					function checkSameEmail() {
-						let email = document.getElementById("email").value.trim();
+						let email = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 						let emailSpan = document.getElementById("emailSpan");
 						let emailStr = "...處理中，請稍後";
 						let emailIsOk = true;
@@ -492,6 +472,10 @@
 						            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 						            		emailSpan.style.color = "black";
 						            		emailSpan.style.fontStyle = "normal";
+						            		let choice=confirm("是否要寄往 " + email + " ?");
+						            		if (choice) {
+						            			sendEmailCheckCode();
+						            		}
 						            	}
 									} else {
 										emailStr = "發生錯誤，無法執行檢查";
@@ -626,6 +610,7 @@
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "Footer-Include-prototype.jsp" %>
+            	<%@include file = "Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

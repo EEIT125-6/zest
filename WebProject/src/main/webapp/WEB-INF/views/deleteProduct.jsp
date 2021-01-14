@@ -64,6 +64,7 @@
                 <legend>確定要刪除此資料嗎?</legend>
 <%--                 	<form:input type="hidden" path="id" /> --%>
 				<input type="hidden" name="stid" value="${stid}">
+                <input type="hidden" name="forAOP" value="stid=${stid}">
 				<form:hidden path="product_id"/>
                 <label>商品名稱:
 <%--                     <form:input type="hidden"  path="stname"/> --%>

@@ -10,6 +10,8 @@
 <html lang="en">
 <head>
 	<%@include file = "Link_Meta-Include.jsp" %>    
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />  
     <title>註冊流程結束</title>
     <style>
         .classimg{
@@ -139,18 +141,21 @@
 </head>
 <body>
             <%@include file = "Header-Include.jsp" %>
+            <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
+            	<input type="hidden" id="webBase" value="${pageContext.request.contextPath}" />
                 <p>${insertResultMessage}</p>
                 <p>5秒後將移至</p>
                 <p id = "pPage">${insertResultPage}</p>
                 <script>
+                	let webBase = document.getElementById("webBase").value;
                 	if (document.getElementById("pPage").innerHTML == "" || document.getElementById("pPage").innerHTML == "WebUserRegisterForm") {
                 		document.getElementById("pPage").innerHTML = "註冊";
                 	} else if (document.getElementById("pPage").innerHTML == "WebUserLogin") {
                 		document.getElementById("pPage").innerHTML = "登入";
                 	}
-                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? "../WebUserLogin" : "../WebUserRegisterForm";
+                	let redirectPage = (document.getElementById("pPage").innerHTML == "登入") ? webBase + "/WebUserLogin" : webBase + "/WebUserRegisterForm";
                 	setTimeout(function () {
 	                	   window.location.href = redirectPage;
                	  	}
@@ -159,6 +164,7 @@
             </div> 
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "Footer-Include-prototype.jsp" %>
+            	<%@include file = "Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

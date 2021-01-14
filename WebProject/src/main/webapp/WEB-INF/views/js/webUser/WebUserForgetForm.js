@@ -29,17 +29,14 @@ function checkAccountName() {
 	if (accountObjValue == "" || accountObjValue.length == 0) {
 		accountStr = "";
 		accountIsOk = true;
-	} else if (accountObjValue.length < 8) {
-		accountStr = "帳號長度不足";
-		accountIsOk = false;
-	} else if (accountObjValue.length > 20) {
-		accountStr = "帳號長度過長";
+	} else if (accountObjValue.length < 6 || accountObjValue.length > 30) {
+		accountStr = "帳號長度為6~30個字元";
 		accountIsOk = false;
 	} else if (accountObjValue.charAt(0).match(startCharReg)) {
 		accountStr = "帳號不可以數字開頭";
 		accountIsOk = false;
 	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
+		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";
@@ -77,17 +74,14 @@ function checkAccountPassword() {
 	if (passwordObjValue == "" || passwordObjValue.length == 0) {
 		passwordStr = "";
 		passwordIsOk = true;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需為6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
 	} else {
-		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{7}/;
+		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
 		if (!passwordObjValue.match(passwordReg)) {
 			passwordStr = "密碼不符合格式";
@@ -115,7 +109,7 @@ function checkAccountPassword() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
 	let emailIsOk = true;

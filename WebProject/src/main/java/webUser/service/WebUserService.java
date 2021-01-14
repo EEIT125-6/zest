@@ -64,9 +64,9 @@ public interface WebUserService {
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
-	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
-	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
-	
+//	/* 取得可查詢到的總頁數 */
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException;
+//	
 	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
 	
@@ -75,9 +75,6 @@ public interface WebUserService {
 	
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
-	
-	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
 	
 	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;

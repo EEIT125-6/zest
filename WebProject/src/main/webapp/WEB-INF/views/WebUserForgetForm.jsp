@@ -14,7 +14,9 @@
 <head>
     <%@include file = "Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">       
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserForgetForm.css">       
     <title>忘記帳號或密碼</title>
     <style>
         .classimg{
@@ -144,28 +146,37 @@
 </head>
 <body>
             <%@include file = "Header-Include.jsp" %>
+            <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
             	<c:if test="${userFullData.password != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
+				<c:if test="${timeOut != null}">
+					<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
+					<c:out value="${timeOut}" />
+				</c:if>
                 <form method="post" >
                 	<fieldset>
                 		<legend>請進行填寫下列資料以便重新取回您的帳號，如不確定可保持空白</legend>
                 		<hr />
+                		<div align="center">
+	                		<button type="button" id="userInput">一鍵輸入</button>
+                		</div>
+                		<hr />
                 		<label>帳號名稱：</label>
-                		<input type="text" name="account" id="account" size="40" maxlength="20" onblur="checkAccountName()"
-							placeholder="請輸入帳號，8~20個字(選填)" />
+                		<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
+							placeholder="請輸入帳號，6~30個字(選填)" />
 						<span id="accountSpan"></span>
 						<hr />
                 		<label>帳號密碼：</label>
-                		<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字(選填)" />
-						<input type="button" name="visibility_switch" id="visibility_switch" value="顯示密碼" onclick="changeVisibility()">
+                		<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~30個字(選填)" />
+						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
                 		<label>聯絡信箱：</label>
-                		<input type="email" name="email" id="email" size="40" maxlength="30" onblur="checkEmail()"
+                		<input type="email" name="email" id="email" size="30" maxlength="30" onblur="checkEmail()"
 							placeholder="請輸入帳號所使用的聯絡信箱(必填)" required="required" />
 						<span id="emailSpan"></span>
 						<hr />
@@ -191,6 +202,11 @@
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserForgetForm.js"></script>
                 <script>
+	                $("#userInput").click(function () {
+	                	document.getElementById("email").value = "georgecycuphy@cycu.org.tw";
+	                	document.getElementById("phone").value = "0911954504";
+	                	document.getElementById("birth").value = "1992-01-16";
+				    });
 	                $("#recovery").click(function () {
 	                	checkRecoveryRequest();
 				    });
@@ -214,7 +230,7 @@
 	                function sendRecoveryRequest() {
 	                	let account = document.getElementById("account").value.trim();
 	                	let password = document.getElementById("password").value.trim();
-	                	let email = document.getElementById("email").value.trim();
+	                	let email = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	                	let phone = document.getElementById("phone").value.trim();
 	                	let birth = document.getElementById("birth").value.trim();
 	                	
@@ -273,6 +289,7 @@
             </div>     
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "Footer-Include-prototype.jsp" %>
+            	<%@include file = "Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

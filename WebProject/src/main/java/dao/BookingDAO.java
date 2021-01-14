@@ -12,7 +12,7 @@ public interface BookingDAO {
 	int cancelBooking(BookingBean bean);
 
 	//查詢query
-	List<BookingBean> findBooking(String phone);
+	List<BookingBean> findBooking(String user_id);
 
 	//更新update
 	int updateBooking(BookingBean bean);
@@ -21,5 +21,4 @@ public interface BookingDAO {
 	boolean checkBooking(String bookingNo);
 
 	BookingBean singleBooking(String bookingNo);
-
 }

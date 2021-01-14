@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -46,6 +47,7 @@ import webUser.service.IdentityService;
 import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import webUser.service.WillingService;
+import xun.util.GlobalService;
 
 @SessionAttributes({
 		"registerEmail", 
@@ -58,7 +60,8 @@ import webUser.service.WillingService;
 		"reg_webUser",
 		"userFullData",
 		"managedUserData",
-		"selfData"})
+		"selfData",
+		"userDataList"})
 @Controller
 public class WebUserController {
 	/* ServletContext */
@@ -92,13 +95,6 @@ public class WebUserController {
 	/* Today */
 	final LocalDate today = LocalDate.now();
 	
-	/* Default Account List */
-	final String[] defaultAccounts = {"WebAdmin", "TestUser", "TestBoss"};
-	
-	/* Default Project Physical Address */
-    final String defaultAddress = "C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
-//	final String defaultAddress = "H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views";
-	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
 	/* 簽到用生日當月時顯示字串 */
@@ -108,7 +104,9 @@ public class WebUserController {
 	
 	/* 傳送表單所必需的資料 */
 	@GetMapping(value = "/WebUserRegisterForm")
-	public String doCreateRegisterForm(Model model) {
+	public String doCreateRegisterForm(Model model,
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
 		
 		/* 取得下拉選單、單選、多選所需的固定資料 */
 		List<UserWilling> willingList = wis.getUserWillingList();
@@ -126,6 +124,13 @@ public class WebUserController {
 		model.addAttribute("fervorList", fervorList);
 		model.addAttribute("genderList", genderList);
 		model.addAttribute("cityInfoList", cityInfoList);
+		
+		/* 判斷是否逾時 */
+		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
+		/* 逾時 */
+		if (!isRequestedSessionIdValid) {
+			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請重新執行註冊");
+		}
 		
 		/* 前往註冊畫面 */
 		return "WebUserRegisterForm";
@@ -265,7 +270,7 @@ public class WebUserController {
 			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
 			/* 前往註冊結束畫面 */
-			destinationUrl = "redirect:/register/WebUserRegisterResult";
+			destinationUrl = "redirect:/WebUserRegisterResult";
 		} else {
 			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
@@ -287,14 +292,25 @@ public class WebUserController {
 	}
 	
 	/* 執行登入檢查 */
-	@PostMapping(value = "/webUser/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
+			HttpServletRequest request,
 			@RequestParam(value = "account", defaultValue="") String account,
 			@RequestParam(value = "password", defaultValue="") String password) {
 		
 		/* 宣告欲回傳的參數 */
 		Map<String, String> map = new HashMap<>();
+		/* 進行請求URL的傳遞 */
+		HttpSession session = request.getSession(true);
+		String nextPath = (String) session.getAttribute("requestURI");
+		/* 無請求路徑就顯示首頁 */
+		if (nextPath == null) {
+			nextPath = request.getContextPath();
+		/* 如果直接按登入則導向首頁 */
+		} else if (nextPath.equals(request.getContextPath() + "WebUserLogin")){
+			nextPath = request.getContextPath();
+		}
 		
 		String inputCheckResult = "";
 		Integer accountCheckResult = -3;
@@ -375,14 +391,17 @@ public class WebUserController {
 			loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
 			/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
 			model.addAttribute("userFullData", userFullData);
+			/* 清空timeOut物件 */
+			model.addAttribute("timeOut", null);
 		} 
 		
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
 		map.put("signInMessage", signInMessage);
+		map.put("nextPath", nextPath);
 		return map;
 	}
-	
+
 	/* 執行登出 */
 	@GetMapping(value = "/webUser/controller/WebUserMain/Logout")
 	public String doLogOut(
@@ -393,8 +412,8 @@ public class WebUserController {
 		
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		/* 簡易防閒置的暫時處置 */
-		String nickname = (userData == null) ? "" : userData.getNickname();
-		String logoutMessage = "謝謝您的使用，" + nickname + "!";
+		String nickname = (userData == null) ? "訪客" : userData.getNickname();
+		String logoutMessage = "謝謝您的使用，" + nickname + " !";
 		
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
@@ -402,70 +421,8 @@ public class WebUserController {
 		session.invalidate();
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
-		/* 前往登出畫面 */
-		return "redirect:/webUser/WebUserLogoutResult";
-	}
-	
-	/* 執行帳號停用 */
-	@PostMapping(value = "/webUser/controller/WebUserMain/Quit")
-	public String doPersonalQuit(
-			Model model,
-			RedirectAttributes redirectAttributes,
-			SessionStatus sessionStatus) {
-		
-		/* 宣告要傳回的參數 */
-		Integer deleteResult = -1;
-		String quitMessage = "";
-		String redirectPage = "/webUser/WebUserMain";
-		
-		WebUserData quitUserData = (WebUserData) model.getAttribute("userFullData");
-	
-		/* 預防性後端檢查 */
-		quitMessage = doCheckQuitInput(quitUserData);
-		if (quitMessage.equals("")) {
-			Integer quitUserLv = quitUserData.getAccountLv().getLv();
-			Boolean runQuit = true;
-			/* 調用服務裡的方法 */
-			try {
-				quitUserData.setVersion(quitUserData.getVersion() + 1);
-				quitUserData.setStatus("quit");
-				/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
-				if (quitUserLv == -1) {
-					if (wus.checkAdminAccess() - 1 == 0) {
-						runQuit = false;
-						quitMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
-					}
-				}
-				/* 如果本帳號停用後，無管理員可登入系統，則阻止 */
-				if (runQuit) {
-					/* 執行停用 */
-					deleteResult = wus.quitWebUserData(quitUserData);
-					/* 寄送Email */
-					UserInfoController.doSendEmail(quitUserData.getAccount(), quitUserData.getEmail(), "", "personalQuit");
-				}
-			} catch (SQLException sqlE) {
-				String quitMessageTmp = sqlE.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			} catch (Exception e) {
-				String quitMessageTmp = e.getMessage();
-				quitMessage = quitMessageTmp.split(":")[1];
-			}
-		}
-		
-		/* 成功變更 */
-		if (deleteResult == 1) {
-			quitMessage = "感謝您的使用， " + quitUserData.getNickname() + " ！我們有緣再見...";		
-			/* 清空SessionAttribute */
-			sessionStatus.setComplete();
-			redirectPage = "/";
-		} 
-		
-		/* 將物件quitMessage以"quitMessage"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("quitMessage", quitMessage);
-		/* 將物件redirectPag以"redirectPag"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("redirectPage", redirectPage);
-		/* 導向停用結束畫面 */
-		return "redirect:/webUser/WebUserQuitResult";
+		/* 前往首頁 */
+		return "redirect:/";
 	}
 	
 	/* 以Ajax取回使用者個人資料 */
@@ -504,12 +461,6 @@ public class WebUserController {
 		return map;
 	}
 	
-	/* 準備顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/controller/WebUserMain/Modify")
-	public String doDisplayOwnUserData() {
-		return "redirect:/webUser/DisplayWebUserData";
-	}
-	
 	/* 準備顯示修改密碼畫面 */
 	@GetMapping(value = "/webUser/controller/WebUserModifyPassword")
 	public String doWebUserModifyPassword() {
@@ -521,6 +472,7 @@ public class WebUserController {
 	public String doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
+			HttpServletRequest request,
 			RedirectAttributes redirectAttributes,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "confirmPassword") String confirmPassword ) {	
@@ -556,6 +508,8 @@ public class WebUserController {
 			if (updateResult == 1) {
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
+				/* 無效HttpSession */
+				request.getSession().invalidate();
 			}
 		}
 		if (!updateResultMessage.equals("")) {
@@ -563,7 +517,7 @@ public class WebUserController {
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
 		} else {
-			updateResultMessage = userData.getAccount() + "的密碼變更成功！5秒後將返回登入畫面";
+			updateResultMessage = userData.getAccount() + "的密碼變更成功！3秒後將返回登入畫面";
 		}
 		
 		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
@@ -571,7 +525,7 @@ public class WebUserController {
 		
 		if (updateResult == 1) {
 			/* 導向密碼修改結果畫面 */
-			destinationUrl = "redirect:/webUser/WebUserChangeResult";
+			destinationUrl = "redirect:/WebUserChangeResult";
 		} else {
 			/* 導向修改個人密碼畫面 */
 			destinationUrl = "redirect:/webUser/WebUserModifyPassword";
@@ -649,7 +603,7 @@ public class WebUserController {
 		}
 		
 		/* 取出上傳檔案的檔名 */
-		String realFileName = picFile.getOriginalFilename();
+		String realFileName = picFile.getOriginalFilename().replace('<', ' ').replace('>', ' ').trim();
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = userData.getIconUrl();
 		/* 取得使用者ID */
@@ -677,7 +631,7 @@ public class WebUserController {
 				if (updateIconUrlResult) {
 					if (!oldUrl.equals("")) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -689,16 +643,16 @@ public class WebUserController {
 				/* 更新圖片成功但更新DB失敗 */
 				} else {
 					/* 刪除新增的圖檔 */
-					String newFilePath = defaultAddress + newIconUrl;
+					String newFilePath = GlobalService.getUploadUserIconPath() + newIconUrl;
 					File deletedNewPic = new File(newFilePath);
 					Boolean killNewPic = deletedNewPic.delete();
 					/* 重新命名舊圖檔 */
 					if (killNewPic) {
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -742,7 +696,7 @@ public class WebUserController {
 		
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = userData.getIconUrl();
-		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		String oldIconPath = (oldUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldUrl;
 		
 		/* 非預設值才執行刪除舊檔 */
 		if (message.equals("") && !oldIconPath.equals("")) {
@@ -759,7 +713,7 @@ public class WebUserController {
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -769,11 +723,11 @@ public class WebUserController {
 					/* 更新圖片成功但更新DB失敗 */
 					} else {
 						/* 重新命名舊圖檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -809,7 +763,7 @@ public class WebUserController {
 			@RequestParam(value = "inputCheckCode", required = false, defaultValue="") String inputCheckCode,
 			@RequestParam(value = "newPhone", required = false, defaultValue="") String newPhone,
 			@RequestParam(value = "newGetEmail", required = false, defaultValue="") String newGetEmail,
-			@RequestParam(value = "newLocationCode", required = false, defaultValue="") Integer newLocationCode,
+			@RequestParam(value = "newLocationCode", required = false, defaultValue="0") Integer newLocationCode,
 			@RequestParam(value = "newAddr0", required = false, defaultValue="") String newAddr0,
 			@RequestParam(value = "newAddr1", required = false, defaultValue="") String newAddr1,
 			@RequestParam(value = "newAddr2", required = false, defaultValue="") String newAddr2) {
@@ -874,15 +828,15 @@ public class WebUserController {
 					selfData.getPassword(), 
 					newFirstName, 
 					newLastName, 
-					newNickname,
+					newNickname.replace('<', ' ').replace('>', ' ').trim(),
 					selfData.getBirth(),
 					fervor,
-					newEmail,
+					newEmail.replace('<', ' ').replace('>', ' ').trim(),
 					newPhone,
 					selfData.getJoinDate(),
-					newAddr0,
-					newAddr1,
-					newAddr2,
+					newAddr0.replace('<', ' ').replace('>', ' ').trim(),
+					newAddr1.replace('<', ' ').replace('>', ' ').trim(),
+					newAddr2.replace('<', ' ').replace('>', ' ').trim(),
 					selfData.getZest(),
 					selfData.getVersion() + 1,
 					selfData.getStatus(),
@@ -896,13 +850,13 @@ public class WebUserController {
 		
 		/* 預防性後端檢查 */
 		if (updateResultMessage.equals("")) {
-			updateResultMessage = doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
+			updateResultMessage = (doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1].equals("?")) ? "" : doCheckUpdateDataInput(updatedUserData, selfData).split(",")[1];
 		}
 		
 		/* 追加檢查checkCode */
 		if (updateResultMessage.equals("")) {
-			if (!newEmail.equals(selfData.getEmail())) {	
-				updateResultMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail);
+			if (!newEmail.replace('<', ' ').replace('>', ' ').trim().equals(selfData.getEmail())) {	
+				updateResultMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail.replace('<', ' ').replace('>', ' ').trim());
 			}
 		}
 		
@@ -1020,13 +974,21 @@ public class WebUserController {
 			}
 			
 			if (lv != -1) {	
-				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
-						+ selectedFervor + ":" + selectedLocationCode + ":" 
-						+ String.valueOf(lv) + ":" + status + ":?:-2";
+				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
+								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+								+ selectedFervor + ":" 
+								+ selectedLocationCode + ":" 
+								+ String.valueOf(lv) + ":" 
+								+ status + ":?:-2";
 			} else {
-				selectedParameters = selectedAccount + ":" + selectedNickname + ":" 
-						+ selectedFervor + ":" + selectedLocationCode + ":" 
-						+ String.valueOf(lv) + ":" + status + ":" + selectedStatus + ":" + selectedIdentity.toString();
+				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
+								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+								+ selectedFervor + ":" 
+								+ selectedLocationCode + ":" 
+								+ String.valueOf(lv) + ":" 
+								+ status + ":" 
+								+ selectedStatus + ":" 
+								+ selectedIdentity.toString();
 			}
 			
 			/* 預防性後端輸入檢查 */
@@ -1054,6 +1016,7 @@ public class WebUserController {
 		map.put("resultCode", getResult.toString());
 		map.put("resultMessage", getResultMessage);
 		map.put("userDataList", userDataList);
+		model.addAttribute("userDataList", userDataList);
 		return map;
 	} 
 	
@@ -1117,33 +1080,20 @@ public class WebUserController {
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "account", required = false, defaultValue = "") String account,
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
-			@PathVariable(value = "mode", required = false) String mode) {
+			@PathVariable(value = "mode", required = false) String mode,
+			HttpServletRequest request) {
 		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
 		Integer operateResult = -1;
+		String contextPath = request.getContextPath();
 		
 		/* 取出sessionAttribute裡的使用者資料物件 */
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		
 		/* 預防性後端輸入檢查 */
 		operateMessage = doCheckAdminInput(userData, userId, account, status, mode);
-		
-		/* 特殊情況檢查
-		 * 1.自己刪自己
-		 * 2.刪預設的3個特定帳號 */
-		if (operateMessage.equals("")) {
-			if (mode.equals("delete") && userData.getAccount().equals(account)) {
-				operateMessage = "無法由操作者刪除操作者自身的帳號!";
-			} else if (mode.equals("delete")) {
-				for (String defaultAccount:defaultAccounts) {
-					if (defaultAccount.equals(account)) {
-						operateMessage = "無法刪除系統內建的帳號!";
-					}
-				}
-			}
-		}
 		
 		/* 通過檢查 */
 		if(operateMessage.equals("")) {
@@ -1168,21 +1118,13 @@ public class WebUserController {
 							/* 執行停用 */
 							operateResult = wus.adminChangeWebUserData(userId, status);
 							/* 寄送Email */
-							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit");
+							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
 						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
 					} catch (Exception e) {
 						String quitMessageTmp = e.getMessage();
 						operateMessage = quitMessageTmp.split(":")[1];
-					}
-					break;
-				case "delete":
-					/* 調用服務裡的方法 */
-					try {
-						operateResult = wus.deleteWebUserData(userId);
-					} catch (SQLException sqlE) {
-						operateMessage = sqlE.getMessage();
 					}
 					break;
 				case "active":
@@ -1200,7 +1142,7 @@ public class WebUserController {
 							/* 設定屬於哪種情境 */
 							String adMinMode = (FirstTimeUse) ? "adminActivate" : "adminReActive";
 							/* 寄送Email */
-							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode);
+							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode, contextPath);
 							operateResult = (sendResult) ? 1 : 0;
 						}
 					} catch (SQLException sqlE) {
@@ -1391,7 +1333,7 @@ public class WebUserController {
 		}
 		
 		/* 取出上傳檔案的檔名 */
-		String realFileName = picFile.getOriginalFilename();
+		String realFileName = picFile.getOriginalFilename().replace('<', ' ').replace('>', ' ').trim();
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = managedUserData.getIconUrl();
 		/* 取得使用者ID */
@@ -1419,7 +1361,7 @@ public class WebUserController {
 				if (updateIconUrlResult) {
 					if (!oldUrl.equals("")) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -1431,16 +1373,16 @@ public class WebUserController {
 				/* 更新圖片成功但更新DB失敗 */
 				} else {
 					/* 刪除新增的圖檔 */
-					String newFilePath = defaultAddress + newIconUrl;
+					String newFilePath = GlobalService.getUploadUserIconPath() + newIconUrl;
 					File deletedNewPic = new File(newFilePath);
 					Boolean killNewPic = deletedNewPic.delete();
 					/* 重新命名舊圖檔 */
 					if (killNewPic) {
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -1492,7 +1434,7 @@ public class WebUserController {
 		
 		/* 取出原有圖示的相對路徑 */
 		String oldUrl = managedUserData.getIconUrl();
-		String oldIconPath = (oldUrl.equals("")) ? "" : defaultAddress + oldUrl;
+		String oldIconPath = (oldUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldUrl;
 		
 		/* 非預設值才執行刪除舊檔 */
 		if (message.equals("") && !oldIconPath.equals("")) {
@@ -1509,7 +1451,7 @@ public class WebUserController {
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						File deletedOldPic = new File(oldFilePath);
 						if (deletedOldPic.exists()) {							
 							/* 執行刪除 */
@@ -1519,11 +1461,11 @@ public class WebUserController {
 					/* 更新圖片成功但更新DB失敗 */
 					} else {
 						/* 重新命名舊圖檔 */
-						String oldFilePath = defaultAddress + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
+						String oldFilePath = GlobalService.getUploadUserIconPath() + oldUrl.substring(0, oldUrl.lastIndexOf(".")) + "_tmp" + oldUrl.substring(oldUrl.lastIndexOf("."));
 						String delMessage = "";
 						try {
 							/* 複製檔案 */
-							FileUtils.copyFile(new File(oldFilePath), new File(defaultAddress + oldUrl));
+							FileUtils.copyFile(new File(oldFilePath), new File(GlobalService.getUploadUserIconPath() + oldUrl));
 							/* 刪除暫存 */
 							new File(oldFilePath).delete();
 						} catch (IOException ioE) {
@@ -1638,15 +1580,15 @@ public class WebUserController {
 				newPassword, 
 				newFirstName, 
 				newLastName, 
-				newNickname,
+				newNickname.replace('<', ' ').replace('>', ' ').trim(),
 				newBirth,
 				fervor,
-				newEmail,
+				newEmail.replace('<', ' ').replace('>', ' ').trim(),
 				newPhone,
 				managedUserData.getJoinDate(),
-				newAddr0,
-				newAddr1,
-				newAddr2,
+				newAddr0.replace('<', ' ').replace('>', ' ').trim(),
+				newAddr1.replace('<', ' ').replace('>', ' ').trim(),
+				newAddr2.replace('<', ' ').replace('>', ' ').trim(),
 				managedUserData.getZest(),
 				managedUserData.getVersion() + 1,
 				managedUserData.getStatus(),
@@ -1741,13 +1683,29 @@ public class WebUserController {
 	
 	/* 前往登入畫面 */
 	@GetMapping(value = "/WebUserLogin")
-	public String doGoLogin() {
+	public String doGoLogin(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
+		/* 檢查session是否逾時 */
+		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
+		/* 逾時 */
+		if (!isRequestedSessionIdValid) {
+			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請重新登入");
+		}
 		return "WebUserLogin";
 	}
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
-	public String doGoForget() {		
+	public String doGoForget(
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
+		/* 判斷是否逾時 */
+		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
+		/* 逾時 */
+		if (!isRequestedSessionIdValid) {
+			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請點選有效的重設連結或重新提出請求");
+		}
 		return "WebUserForgetForm";
 	}
 	
@@ -1758,21 +1716,9 @@ public class WebUserController {
 	}
 	
 	/* 前往登出畫面 */
-	@GetMapping(value = "/webUser/WebUserLogoutResult")
+	@GetMapping(value = "/WebUserLogoutResult")
 	public String doGoLogOut() {
-		return "webUser/WebUserLogoutResult";
-	}
-	
-	/* 前往停用結束畫面 */
-	@GetMapping(value = "/webUser/WebUserQuitResult")
-	public String doGoQuitResult() {
-		return "webUser/WebUserQuitResult";
-	}
-	
-	/* 前往顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/DisplayWebUserData")
-	public String doGoDisplayWebUserData() {
-		return "webUser/DisplayWebUserData";
+		return "WebUserLogoutResult";
 	}
 	
 	/* 前往修改個人密碼畫面 */
@@ -1782,9 +1728,9 @@ public class WebUserController {
 	}
 	
 	/* 前往個人修改結束畫面 */
-	@GetMapping(value = "/webUser/WebUserChangeResult")
+	@GetMapping(value = "/WebUserChangeResult")
 	public String doGoWebUserChangeResult() {
-		return "webUser/WebUserChangeResult";
+		return "WebUserChangeResult";
 	}
 	
 	/* 前往管理員用顯示個人資料畫面 */
@@ -2164,6 +2110,8 @@ public class WebUserController {
 			}
 		}
 		
+		System.out.println("cityCode check result is " + updateResultMessage);
+		
 		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
 			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
@@ -2192,6 +2140,8 @@ public class WebUserController {
 		}
 		
 		updateResultMessage = (updateResultMessage.equals("")) ? "?" : updateResultMessage;
+		
+		System.out.println("final check result is " + updateResultMessage);
 		/* 結算有效變動項目 */
 		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
@@ -2332,13 +2282,13 @@ public class WebUserController {
 		if (account.equals("")) {
 			submitMessage = "帳號不可為空白";
 			inputIsOk = false;
-		} else if (account.length() < 8 || account.length() > 20) {
-			submitMessage = "帳號長度不符格式，僅接受8~20個字元";
+		} else if (account.length() < 6 || account.length() > 30) {
+			submitMessage = "帳號長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (account.matches("[1-9]{1}.")) {
 			submitMessage = "帳號不可以數字開頭";
 			inputIsOk = false;
-		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
 		} else {
@@ -2370,13 +2320,13 @@ public class WebUserController {
 		if (password.equals("")) {
 			submitMessage = "密碼不可為空白";
 			inputIsOk = false;
-		} else if (password.length() < 8 || password.length() > 20) {
-			submitMessage = "密碼長度不符格式，僅接受8~20個字元";
+		} else if (password.length() < 6 || password.length() > 30) {
+			submitMessage = "密碼長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
 			submitMessage = "密碼不可以數字開頭";
 			inputIsOk = false;
-		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
 			inputIsOk = false;
 		} 
@@ -2430,8 +2380,8 @@ public class WebUserController {
 		if (lastName.equals("")) {
 			message = "名字不可為空白";
 			inputIsOk = false;
-		} else if (lastName.length() > 3) {
-			message = "名字長度過長，最多僅3個字元";
+		} else if (lastName.length() > 22) {
+			message = "名字長度過長，最多僅22個字元";
 			inputIsOk = false;
 		} else {
 			Integer charCountBegin = 0;
@@ -2469,7 +2419,7 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (nickname.equals("") && !lastName.equals("")) {
 			nickname = lastName;
-		} else if (nickname.length() > 20){
+		} else if (nickname.length() > 25){
 			message = "稱呼長度過長";
 			inputIsOk = false;
 		} 
@@ -2523,8 +2473,8 @@ public class WebUserController {
 		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
 			message = "生日異常";
 			inputIsOk = false;
-		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(18, ChronoUnit.YEARS)))) {
-			message = "未滿18歲，無法申辦本服務";
+		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(15, ChronoUnit.YEARS)))) {
+			message = "未滿15歲，無法申辦本服務";
 			inputIsOk = false;
 		} else {
 			inputIsOk = true;
@@ -2639,6 +2589,8 @@ public class WebUserController {
 	public String doCheckCityCode(Integer cityCode, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
+		
+		System.out.println("cityCode is " + cityCode);
 		
 		switch(cityCode) {
 			case 1:
@@ -2779,15 +2731,15 @@ public class WebUserController {
 				password, 
 				firstName, 
 				lastName, 
-				nickname, 
+				nickname.replace('<', ' ').replace('>', ' ').trim(), 
 				birth, 
 				"",
-				email, 
+				email.replace('<', ' ').replace('>', ' ').trim(), 
 				phone, 
 				Date.valueOf(today), 
-				addr0, 
-				addr1, 
-				addr2, 
+				addr0.replace('<', ' ').replace('>', ' ').trim(), 
+				addr1.replace('<', ' ').replace('>', ' ').trim(), 
+				addr2.replace('<', ' ').replace('>', ' ').trim(), 
 				BigDecimal.ZERO, 
 				0, 
 				"inactive", 
@@ -2877,8 +2829,8 @@ public class WebUserController {
 	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
 		/* 變數宣告 */
 		Map<String, String> map = new HashMap<>();
-		String oldIconPath = (oldIconUrl.equals("")) ? "" : defaultAddress + oldIconUrl;
-		String newIconPath = defaultAddress + newIconUrl;
+		String oldIconPath = (oldIconUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldIconUrl;
+		String newIconPath = GlobalService.getUploadUserIconPath() + newIconUrl;
 		String message = "";
 		Boolean delResult = false;
 		Boolean creResult = false;

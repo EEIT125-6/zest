@@ -8,9 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.sun.xml.fastinfoset.util.StringArray;
-
 import model.BookingBean;
 
 @Repository
@@ -53,7 +50,7 @@ public class BookingDAO_Impl implements BookingDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List <BookingBean> findBooking(String user_id) {
-		String hql = "FROM BookingBean b where b.user_id.userId= :user_id";
+		String hql = "FROM BookingBean b where b.userData.userId= :user_id";
 		Session session = factory.getCurrentSession();
 		Query<BookingBean> query = session.createQuery(hql);
 		List<BookingBean> list = query.setParameter("user_id", user_id).getResultList();
@@ -99,5 +96,4 @@ public class BookingDAO_Impl implements BookingDAO {
 		}
 		return true;
 	}
-	
 }

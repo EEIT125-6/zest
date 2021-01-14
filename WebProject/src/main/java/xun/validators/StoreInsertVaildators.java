@@ -35,7 +35,7 @@ public class StoreInsertVaildators  implements Validator{
 		try {
 			Integer.valueOf(sb.getTel());
 		} catch (Exception e) {
-			errors.rejectValue("tel", "","電話只能包含數字");
+			errors.rejectValue("tel","","電話只能包含數字");
 		}
 		if(sb.getStitd().length()>49) {
 			errors.rejectValue("stitd","", "簡介字數超過50請修改");

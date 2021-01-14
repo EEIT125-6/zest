@@ -18,9 +18,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import xun.model.StoreBean;
 import xun.service.StoreService;
+import xun.util.GlobalService;
 @Controller
 public class StoreIndexHomeController {
 	
@@ -39,7 +41,14 @@ public class StoreIndexHomeController {
 		model.addAttribute("AD", list_AD);
 		return "Index1";
 	}
-	
+//	-----------------------------------------
+//	@GetMapping("/undefind")
+//	public @ResponseBody String unPhoto(
+//			
+//			) {
+//		String unPhoto = context.getContextPath()+"/Images/LOGO1-removebg-preview.png";
+//		return unPhoto;
+//	}
 //	-----------------------------------------
 	
 	

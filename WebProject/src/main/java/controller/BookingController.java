@@ -34,7 +34,7 @@ import webUser.model.WebUserData;
  
 @Controller
 @RequestMapping("/booking")
-@SessionAttributes({"userFullData","reg_booking"})
+@SessionAttributes({"userFullData", "reg_booking"})
 public class BookingController {
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
@@ -76,7 +76,8 @@ public class BookingController {
 	if (booking.compareTo(deadline)<=0) {
 		return false;
 	}
-		return true;
+	
+	return true;
 }
 	
 	//確認資料
@@ -131,10 +132,8 @@ public class BookingController {
 	public String insert(Model model) {
 		
 		BookingBean bookingData = (BookingBean)model.getAttribute("reg_booking");
-		System.out.println(bookingData==null);
 		
 		String mailObj = bookingData.getMail();
-		System.out.println(mailObj);
 		String mailContext = "";  
 		if (service.insertBooking(bookingData)>0) {
 			
@@ -210,15 +209,14 @@ public class BookingController {
 		} catch (Exception e) {
 			;
 		}
-		
 		return "redirect:/booking/Thanks";
-
 	}
 	
 	@GetMapping("/Thanks")
 	public String thanks() {
 		return "/booking/Thanks";
 	}
+	
 	@GetMapping("/Page1")
 	public String jump(Model model) {
 		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
@@ -227,8 +225,9 @@ public class BookingController {
 		}
 		return "/booking/showOrder";
 	}
-	
+
 	//ajax查詢
+	@SuppressWarnings("unchecked")
 	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> order(Model model) {
 		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
@@ -240,17 +239,13 @@ public class BookingController {
 	    map.put("data", data);
 		return map;
 	}
-
 	
 	//查
 	@PostMapping("/select")
 	public String query(Model model) {
-		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
-		List<BookingBean> bean = service.findBooking(user_id.getUserId());
-
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(userData.getUserId());
 	    model.addAttribute("booking",bean);
-	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
-	    
 		return "booking/showOrder";
 	}
 	//刪
@@ -339,10 +334,10 @@ public class BookingController {
 			else {
 				System.out.println("訂位取消未成功。。。");
 			}
-			return "redirect:/booking/showOrder";
+			return "redirect:/booking/Page1";
 		}
 		ra.addFlashAttribute("line","已過取消期限");
-		return "redirect:/booking/showOrder";
+		return "redirect:/booking/Page1";
 		
 		
 	}

@@ -1,21 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	response.setContentType("text/html;charset=UTF-8"); // 設定response編碼
-	response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-	response.setDateHeader("Expires", -1); // 防止proxy server進行快取
-%>
-<!-- taglib宣告 -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!-- taglib宣告 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <%@include file = "../Link_Meta-Include.jsp" %>    
-    <title>修改資料結束</title>
-    <style>
-        .classimg{
+<%@include file = "../Link_Meta-Include.jsp" %>
+<title>訂位查詢</title>
+<style>
+        .aa{
+            font-size:34px;
+            color:#000;
+            padding:10px;
+            /* border:2px solid #e5e5e5; */
+            vertical-align:middle;
+            margin-top:30px;
+            }
+        .aa:hover{
+            background:#e5e5e5
+            } 
+        body{
+         background-color: 		rgb(235, 159, 18);
+        
+        
+       }
+         .classimg{
 		 transition: 0.2s;	
         	width:80px
         }
@@ -91,7 +99,6 @@
             width:24px;
             height: 10px;
         }
-
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -118,48 +125,60 @@
             color:rgba(255,255,255,1);            
         }
         
-        
-#gotop {
-    position:fixed;
-    z-index:90;
-    right:30px;
-    bottom:31px;
-    display:none;
-    width:50px;
-    height:50px;
-    color:#fff;
-    background:#ddbe56;
-    line-height:50px;
-    border-radius:50%;
-    transition:all 1.5s;
-    text-align: center;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-}
-#gotop :hover{
-    background:#0099CC;
-}
-    </style>
+		#gotop {
+		    position:fixed;
+		    z-index:90;
+		    right:30px;
+		    bottom:31px;
+		    display:none;
+		    width:50px;
+		    height:50px;
+		    color:#fff;
+		    background:#ddbe56;
+		    line-height:50px;
+		    border-radius:50%;
+		    transition:all 1.5s;
+		    text-align: center;
+		    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+		}
+		#gotop :hover{
+		    background:#0099CC;
+		}
+       .h1{
+       		height: 500px;
+       }
+ </style>
+
 </head>
 <body>
-            <%@include file = "../Header-Include.jsp" %>
+<%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
-                <c:if test="${updateResultMessage == null}">
-                	<p>5秒後將移至登入，您也可以選擇直接點選右上方前往登入或註冊畫面</p>
-                </c:if>
-                <c:if test="${updateResultMessage != null}">
-                	<p>${updateResultMessage}</p>
-                </c:if>
-                <script>
-                	let redirectPage = "../WebUserLogin";
-                	setTimeout(function () {
-	                	   window.location.href = redirectPage;
-               	  	}
-	                , 5000);
-                </script>
-            </div>
-<!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+
+<div class="h1"> 
+<form action="<c:url value='/booking/select'/>" method="post" >
+<center>
+<label class="aa">
+<input type="tel"  placeholder="請輸入手機號碼" name="phone" id="phone" >
+</label>
+
+<label class="aa">
+<input type="submit" value="查詢訂位" name="select" id="select" >
+</label>
+<label class="aa">
+<c:if test="${line!=null}">
+<c:out value="${line }"/>
+</c:if> 
+</label>
+
+</center>
+<!-- <label class="aa">
+<input type="submit" value="取消訂位" name="cancel" id="cancel" >
+</label> -->
+
+</form>   
+</div>
+  <!-- -------------------------------------------------------------- -->
+ <%@include file = "../Footer-Include.jsp" %>
+    
 </body>
 </html>

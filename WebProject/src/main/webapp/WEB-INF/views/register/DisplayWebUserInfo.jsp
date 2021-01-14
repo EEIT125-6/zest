@@ -146,10 +146,7 @@
             <%@include file = "../Header-Include.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-				<c:if test="${reg_webUser.password == null}">
-					<c:redirect url="/WebUserRegisterForm" />
-				</c:if>
-				<form action="<c:url value='/webUser/controller/DisplayWebUserInfo/confirm' />" method="post" onSubmit="return checkForm();">
+				<form action="<c:url value='/register/controller/DisplayWebUserInfo/confirm' />" method="post" onSubmit="return checkForm();">
 					<fieldset>
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
 						<hr />
@@ -221,7 +218,7 @@
 					</fieldset>
 					<div align="center">
 						<button type="submit" name="register" id="registerConfirm" style="font-size:18px" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<a href="<c:url value='/webUser/controller/DisplayWebUserInfo/undo' />"><button type="button" name="register" id="registerCancel" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<a href="<c:url value='/register/controller/DisplayWebUserInfo/undo' />"><button type="button" name="register" id="registerCancel" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
 				</form>
