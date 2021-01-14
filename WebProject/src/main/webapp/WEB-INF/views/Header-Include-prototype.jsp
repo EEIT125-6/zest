@@ -71,6 +71,11 @@
 				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">搜尋餐廳</span>
 			</a>
 			<span>|</span>
+			<i class="fas fa-calendar-check" style="font-size: 25px; color: yellow"></i>
+			<a href="${pageContext.request.contextPath}/booking/Page1">
+				<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">查詢訂位</span> 
+			</a>
+			<span>|</span>
 			<c:if test="${userFullData.account != null}">
 				<c:if test="${userFullData.accountLv.lv == -1}">
 					<i class="fas fa-building" style="font-size: 25px; color: yellow"></i>

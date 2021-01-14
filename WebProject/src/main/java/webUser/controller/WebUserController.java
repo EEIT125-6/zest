@@ -60,7 +60,8 @@ import xun.util.GlobalService;
 		"reg_webUser",
 		"userFullData",
 		"managedUserData",
-		"selfData"})
+		"selfData",
+		"userDataList"})
 @Controller
 public class WebUserController {
 	/* ServletContext */
@@ -930,7 +931,6 @@ public class WebUserController {
 		Map<String, Object> map = new HashMap<>();
 		Integer getResult = -1;
 		String getResultMessage = "";
-		Integer userDataTotalPages = 0;
 		
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
@@ -999,7 +999,6 @@ public class WebUserController {
 			/* 調用服務裡的方法 */
 			try {
 				userDataList = wus.getSelectedWebUserData(selectedParameters);
-				userDataTotalPages = wus.getTotalUserRecordCounts(selectedParameters);
 			} catch (SQLException sqlE) {
 				String getDataMessageTmp = sqlE.getMessage();
 				getResultMessage = getDataMessageTmp.split(":")[1];
@@ -1008,7 +1007,7 @@ public class WebUserController {
 		
 		if (userDataList != null) {
 			getResult = 1;
-			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料，共有 " + userDataTotalPages + " 頁";
+			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
 		} else if (getResultMessage.equals("")) {
 			getResult = 0;
 			getResultMessage = "無法查詢到任何有效的使用者資料";
@@ -1017,6 +1016,7 @@ public class WebUserController {
 		map.put("resultCode", getResult.toString());
 		map.put("resultMessage", getResultMessage);
 		map.put("userDataList", userDataList);
+		model.addAttribute("userDataList", userDataList);
 		return map;
 	} 
 	

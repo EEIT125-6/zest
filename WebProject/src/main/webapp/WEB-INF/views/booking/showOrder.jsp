@@ -140,10 +140,11 @@
 		    background:#0099CC;
 		}
     </style>
+<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 </head>
 <body>
  <%@include file = "../Header-Include.jsp" %>
- <%@include file = "../LoadingScreen.jsp" %>
+ <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 <input type="hidden" name="purpose" value="${bean.purpose}">
 <input type="hidden" name="status" value="${bean.status}">
@@ -161,13 +162,13 @@
 		  
 		  <div class="tab-content">
 		    <div id="home" class="tab-pane fade in active" >
-		      <br><br><div id="aa"></div>
+		      <br><br><div id="aa" style="height:600px;overflow-y:auto"></div>
 		    </div>
 		    <div id="menu1" class="tab-pane fade">
-		      <br/><br/><div id="bb"></div>
+		      <br/><br/><div id="bb" style="height:600px;overflow-y:auto"></div>
 		    </div>
 		    <div id="menu2" class="tab-pane fade">
-		      <br/><br/><div id="cc"></div>
+		      <br/><br/><div id="cc" style="height:600px;overflow-y:auto"></div>
 		    </div>
 		  </div>
 </div>
@@ -176,24 +177,23 @@
 <!-- ########################### -->
 <!-- <div id="aa"></div> -->
 <form action="<c:url value='/booking/Index1'/>" >
-<input type="submit"  value="返回" style="margin-left:400px;margin-top:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
+<input type="submit"  value="返回" style="margin-left:170px;margin-top:20px;border-radius: 3px; border: none; outline: none;text;font-size:26px;">
 </form> 
-<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 <script>
 	window.onload = function() {
 		/* 載入後先執行一次預設查詢 */
 		def();
 	};
 	function def(){
-		let contentA="";
-		let contentB="";
-		let contentC="";
 		$.ajax({
 			type : "POST",
 			url : "<c:url value='/booking/order'/>",
 			dataType : "json",
 			success : function(resultObj) {
 				let booking=resultObj.data;
+				let contentA="";
+				let contentB="";
+				let contentC="";
 			if (booking !=null){
 				
 		      	for(let i=0;i<booking.length;i++){
@@ -261,16 +261,15 @@
 	      		cc.innerHTML=contentC;
 	      		bb.innerHTML=contentB;
 		      	
-			},
-			error : function(err) {
-				alert("取得資料失敗");
 			}
+		
 		});
 	}
 </script>
   <!-- -------------------------------------------------------------- -->
  <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:60px">
     <%@include file = "../Footer-Include-prototype.jsp" %>
- </div>       
+ </div>
+        
 </body>
 </html>

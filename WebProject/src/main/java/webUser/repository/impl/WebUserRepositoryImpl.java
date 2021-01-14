@@ -18,11 +18,11 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	@Autowired
 	SessionFactory factory;
 	
-	/* 每頁顯示筆數 */
-	private final Integer recordsPerPage = 3;
-
-	/* 最大頁數 */
-	private int totalPages = -1;
+//	/* 每頁顯示筆數 */
+//	private final Integer recordsPerPage = 3;
+//
+//	/* 最大頁數 */
+//	private int totalPages = -1;
 	
 	/* 重複出現factory.getCurrentSession()，所以整理成一個方法，直接呼叫結果 */
 	public Session getSession() {
@@ -432,11 +432,11 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return Long.parseLong(String.valueOf(getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList().size()));
 	}
 	
-	/* 取得查詢的最大頁數 */
-	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
-		totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) recordsPerPage));
-		return totalPages;
-	}
+//	/* 取得查詢的最大頁數 */
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+//		totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) recordsPerPage));
+//		return totalPages;
+//	}
 	
 	/* 更新使用者資料 0->失敗、1->成功 */
 	@Override

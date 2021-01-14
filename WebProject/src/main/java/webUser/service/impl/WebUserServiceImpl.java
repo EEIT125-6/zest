@@ -152,10 +152,10 @@ public class WebUserServiceImpl implements WebUserService {
 		return webUserDAO.getSelectedWebUserData(selectedParameters);
 	}
 	
-	@Override
-	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
-		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
-	}
+//	@Override
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+//		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
+//	}
 
 	@Override
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {

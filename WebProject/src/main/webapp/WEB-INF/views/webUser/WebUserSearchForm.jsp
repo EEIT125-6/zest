@@ -17,8 +17,6 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-<!-- dataTables用css -->
-<!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"> -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
@@ -249,41 +247,12 @@ ul.slides li img {
 		</form>
 		<div align="center">
 			<span id="searchSpan"></span>
+			<hr />
 		</div>
 		
-<!-- 		<div align="center" id="dataTableContainer">  -->
-<!-- 			<table id="userDataTable" class="display"> -->
-<!-- 				<thead> -->
-<!-- 					<tr> -->
-<!--  						<th>項次</th>  -->
-<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
-<!--  							<th>其他</th>  -->
-<!--  							<th>查看</th>  -->
-<%-- 						</c:if>  --%>
-<!--  						<th>帳號名稱</th>  -->
-<!--  						<th>稱呼</th>  -->
-<!-- 						<th>偏好食物</th>  -->
-<!-- 						<th>居住區域</th>  -->
-<%--  						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}">  --%>
-<!--  							<th>帳號身分</th>  -->
-<%--  						</c:if>  --%>
-<%--  						<c:if test="${userFullData.accountLv.lv == -1}">  --%>
-<!--  							<th>帳號狀態</th>  -->
-<%--  						</c:if>  --%>
-<!-- 					</tr> -->
-<!-- 				</thead> -->
-<!-- 				<tbody> -->
-					
-<!-- 				</tbody> -->
-<!-- 			</table> -->
-<!-- 		</div> -->
-		
 		<div align="center" id="dataContainer"></div>
-		
 		<!-- 引用本地jQuery -->
 		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
-		<!-- 引用dataTables.js -->
-<!-- 		<script src ="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
 		<!-- 引用本頁檢查用js -->
 		<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
@@ -413,91 +382,7 @@ ul.slides li img {
 					document.getElementById("pageNo").value = maxPage;
 					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 				});
-				
-				/* dataTable測試區 */
-// 				let table = $("#userDataTable").DataTable({
-// 					processing: false, //關閉預設"顯示處理中"的效果
-// 					searching: false, //關閉內建搜尋
-// 					serverSide: true, //啟用ServerSide模式
-// 					order: [[0, "asc"]], //預設排序(由第0個資料行、升覓排序)
-// 					orderMulti: false, //關閉多欄位排序
-// 					autoWidth: false, //自動調整寬度
-// 					lengthMenu: [5, 10, 20], //設定每頁顯示筆數
-// 					/* 本地化 */
-// 					language: {
-// 				        processing: "處理中...",
-// 				        loadingRecords: "載入中...",
-// 				        lengthMenu: "顯示 _MENU_ 項結果",
-// 				        zeroRecords: "沒有符合的結果",
-// 				        info: "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
-// 				        infoEmpty: "顯示第 0 至 0 項結果，共 0 項",
-// 				        infoFiltered: "(從 _MAX_ 項結果中過濾)",
-// 				        infoPostFix: "",
-// 				        search: "搜尋:",
-// 				        paginate: {
-// 				            first: "第一頁",
-// 				            previous: "上一頁",
-// 				            next: "下一頁",
-// 				            last: "最後一頁"
-// 				        },
-// 				        aria: {
-// 				            sortAscending: ": 升冪排列",
-// 				            sortDescending: ": 降冪排列"
-// 				        }
-// 				    },
-// 				    /* ajax */
-// 					ajax: {
-// 						url: "<c:url value='/webUser/controller/WebUserSearchForm' />",
-// 						type: "POST",
-// 						dataType: "json",
-// 						success: function(resultObj) {
-// 							if (resultObj.resultCode == 1) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "black";
-// 								searchSpan.style.fontStyle = "normal";
-
-// 								let content = "";
-// 								if (resultObj.userDataList.length != 0) {
-									
-// 								} 
-// 							} else if (resultObj.resultCode == 0) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "black";
-// 								searchSpan.style.fontStyle = "normal";
-// 							} else if (resultObj.resultCode == -1) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "red";
-// 								searchSpan.style.fontStyle = "italic";
-// 								dataContainer.innerHTML = "";
-// 								/* 顯示彈窗異常訊息 */
-// 								alert(resultObj.resultMessage);
-// 							}
-// 						},
-// 						error : function(err) {
-// 							searchStr = "發生錯誤，無法載入使用者資料";
-// 							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 									+ searchStr;
-// 							searchSpan.style.color = "red";
-// 							searchSpan.style.fontStyle = "italic";
-// 							dataContainer.innerHTML = "";
-// 							/* 顯示彈窗異常訊息 */
-// 							alert(searchStr);
-// 						}
-// 					},
-// 					/* 欄位定義 */
-// 					columns:[
-// 						{data: 'account'},
-// 						{data: 'nickname'},
-// 						{data: 'fervor'}
-// 					]
-// 				});
- 			};
+			};
 		
 			$("#search").click(function() {
 				var counter = 0;
@@ -876,8 +761,6 @@ ul.slides li img {
 							if (resultObj.userDataList != null) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
-										+ "<legend>以下為使用者列表：</legend>"
-										+ "<hr />"
 										+ "<table border='1'>";
 										
 								if (document.getElementById("userLv").value == -1) {

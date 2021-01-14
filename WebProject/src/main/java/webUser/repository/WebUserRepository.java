@@ -73,8 +73,8 @@ public interface WebUserRepository {
 	/* 取得查詢到的總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
-	/* 取得查詢的最大頁數 */
-	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException;
+//	/* 取得查詢的最大頁數 */
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException;
 	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
