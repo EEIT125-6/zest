@@ -148,14 +148,14 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
-		return webUserDAO.getSelectedWebUserData(selectedParameters);
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException {
+		return webUserDAO.getSelectedWebUserData(selectedParameters, avPage, startPage);
 	}
 	
-	@Override
-	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
-		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
-	}
+//	@Override
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+//		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
+//	}
 
 	@Override
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {

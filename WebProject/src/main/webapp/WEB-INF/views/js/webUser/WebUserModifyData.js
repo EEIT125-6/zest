@@ -252,20 +252,20 @@ function checkNickname() {
 		nicknameIsOk = true;
 	}
 	if (!nicknameIsOk) {
-		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
-		nicknameSpan.style.color = "black";
-		nicknameSpan.style.fontStyle = "normal";
-		return true;
+		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
+		nicknameSpan.style.color = "red";
+		nicknameSpan.style.fontStyle = "italic";
+		return false;
 	} else {
 		if (nicknameObjValue == oldNicknameObjValue) {
 			nicknameSpan.innerHTML = "";
 		} else {
-			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
-			nicknameSpan.style.color = "red";
-			nicknameSpan.style.fontStyle = "italic";
+			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
+			nicknameSpan.style.color = "black";
+			nicknameSpan.style.fontStyle = "normal";
 			checkUpdateNickname();
 		}
-		return false;
+		return true;
 	} 
 }
 
@@ -692,41 +692,40 @@ function checkSamePhone(){
 }
 
 function checkSameInput(){
-	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
-	let oldNicknameObjValue = document.getElementById("originalNickname").value.trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
-	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
-	let oldEmailObjValue = document.getElementById("originalEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
 	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
-	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
-	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
+	let nicknameObjValue = document.getElementById("updatedNickname").value.replace('<', ' ').replace('>', '').trim();
+	let oldNicknameObjValue = document.getElementById("originalNickname").value.trim();
+	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
+	let oldEmailObjValue = document.getElementById("originalEmail").value;
+	let emailCheckCodeObjValue = document.getElementById("emailCheckCode").value.trim();
+	let checkCode = document.getElementById("checkCode").value.trim();
+	let phoneObjValue = document.getElementById("updatedPhone").value;
+	let oldPhoneObjValue = document.getElementById("originalPhone").value;
 	
-	if (nicknameObjValue != oldNicknameObjValue) {
-		if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
-			alert("請先執行稱呼檢查");
-			return false;
-		} 
-	} else if (emailObjValue != oldEmailObjValue) {
-		if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-			alert("請先執行電子信箱檢查");
-			return false;
-		} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
-			alert("請先執行電子信箱驗證");
-			return false;
-		} 
-	} else if (phoneObjValue != oldPhoneObjValue) {
-		if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
-			alert("請先執行聯絡電話檢查");
-			return false;
-		} 
+	if (nicknameSpan.textContent != "check_circle可使用此稱呼！" && nicknameObjValue != oldNicknameObjValue) {
+		alert("請先執行稱呼檢查");
+		return false;
+	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！" && emailObjValue != oldEmailObjValue) {
+		alert("請先執行電子信箱檢查");
+		return false;
+	} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功" && emailCheckCodeObjValue != checkCode) {
+		alert("請先執行電子信箱驗證");
+		return false;
+	} else if (phoneSpan.textContent != "check_circle可使用此聯絡電話！" && phoneObjValue != oldPhoneObjValue) {
+		alert("請先執行聯絡電話檢查");
+		return false;
 	} else {
 		if (!checkNickname()) {
+		    alert("nickname fail");
 			return false;
 		} else if (!checkEmailCheckCode()) {
+			alert("email fail");
 			return false;
 		} else if (!checkPhone()) {
+			alert("phone fail");
 			return false;
 		} else {
 			return true;

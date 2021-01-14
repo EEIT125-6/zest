@@ -7,6 +7,8 @@ response.setContentType("text/html;charset=UTF-8");
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <title>訂位取消</title>
     <style>
          .classimg{
@@ -134,23 +136,21 @@ response.setContentType("text/html;charset=UTF-8");
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
- <div class="container"  style="margin-top: 20px;">  
-<center>
-<div class="h1"> 
-<h2>您的預約已取消！</h2>
-</div>  
-<%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
-<form action="<c:url value='/booking/Page1'/>" method="get" >
-<input type="submit" name="back" value="返回" style="border-radius: 3px; border: none; outline: none;margin:50px;">
-</form>
-  
-</center>
+<div class="container" align="center" style="margin-top: 20px;">  
+	<div class="h1"> 
+	<h2>您的預約已取消！</h2>
+	</div>  
+	<form action="<c:url value='/booking/Page1'/>" method="get" >
+		<input type="submit" name="back" value="返回" style="border-radius: 3px; border: none; outline: none;margin:50px;">
+	</form>
 </div>
   <!-- -------------------------------------------------------------- -->
  <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:300px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+ 	<%@include file = "../Footer-Include-prototype.jsp" %>
+ </div>
     
 </body>
 </html>

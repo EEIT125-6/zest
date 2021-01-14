@@ -216,10 +216,10 @@
 						<hr />
 						<label>偏好食物：</label>
 						<c:forEach items="${fervorList}" var="fervorObject" >
-							<c:if test="${fervorObject.fervorCode==7}" >
+							<c:if test="${fervorObject.fervorCode==fervorList.size()}" >
 								<input type="checkbox" name="fervorOption" class="fervor" value="${fervorObject.fervorCode}" checked="checked" onblur="checkFervor()" />
 							</c:if>
-							<c:if test="${fervorObject.fervorCode!=7}" >
+							<c:if test="${fervorObject.fervorCode!=fervorList.size()}" >
 								<input type="checkbox" name="fervorOption" class="fervor" value="${fervorObject.fervorCode}" onblur="checkFervor()" />
 							</c:if>
 							<label><c:out value="${fervorObject.fervorItem}" ></c:out></label>

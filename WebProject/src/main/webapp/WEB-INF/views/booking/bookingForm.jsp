@@ -12,8 +12,8 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <head>
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+  <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <%@include file = "../Link_Meta-Include.jsp" %>
 <title>訂位系統</title>
     <style>
@@ -168,64 +168,26 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     background:#0099CC;
 }
     </style>
-    <script type="text/javascript">
-	  
-	 function checkPhone( strPhone ) 	{ 
-	 	    var cellphone = /^09[0-9]{8}$/; 
-	 	 
-	 	    if ( !cellphone.test( strPhone ) ) { 
-	 	        alert( "手機格式輸入錯誤" ); 
-	 	    } 
-	 	    
-	 	};  
- 	
- 		function check(){
- 			if($("#datepicker1").val()==""){
- 				alert("請選擇訂位日期");
- 				return false;
- 			}else if($("#name").val()==""){
- 				alert("姓名不得為空白");
- 				eval("document.form['name'].focus()");	
- 				return false;
- 			}else if($("#phone").val()==""){
- 				alert("手機號碼尚未填寫");
- 				eval("document.form['phone'].focus()");	
- 				return false;
- 			}else if($("#email").val()==""){
- 				alert("e-mail尚未填寫");
- 				eval("document.form['email'].focus()");	
- 				return false;
- 			}else{
- 				return true;  
- 			}
- 		};
-    $(document).ready(function(){
-      $.datepicker.regional['zh-TW']={
-        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
-        dayNamesMin:["日","一","二","三","四","五","六"],
-        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        prevText:"上月",
-        nextText:"次月",
-        weekHeader:"週"
-        };
-      $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
-      $("#datepicker1").datepicker({
-    	  minDate: new Date(),
-    	  dateFormat:'yy-mm-dd'});
-      });
-  </script>
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 <!--  <div class="container"  style="margin-top: 20px;"> -->
-
  <form id="form1" name="form1" action="<c:url value='/booking/next'/>" method="post" onsubmit="return check();" >
     <fieldset>
+<input type="hidden" id="nameX" value="${userFullData.firstName}">
+<input type="hidden" id="nameY" value="${userFullData.lastName}">
+
+<input type="hidden" id="phoneX" value="${userFullData.phone}">
+<input type="hidden" id="mailX"  value="${userFullData.email}">
         <legend>填寫訂位資料</legend>
-        
         <input type="hidden" id="restaurant" name="restaurant" value="${restaurant}">
+        
+        <div class="st1">
+        <input type="checkbox" id="same" name="same" value="">
+        <label for="same">同會員資料</label>
+        </div>
         
         <div class="st1">
             <label for="" class="st3">訂位日期:</label>
@@ -290,6 +252,60 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         </div>
     </fieldset>
     </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+		 function checkPhone( strPhone ) { 
+	 	    var cellphone = /^09[0-9]{8}$/; 
+	 	 
+	 	    if (!cellphone.test( strPhone )) { 
+	 	        alert( "手機格式輸入錯誤" ); 
+	 	    } 	    
+		 };  
+ 	
+		function check(){
+			if($("#datepicker1").val()==""){
+				alert("請選擇訂位日期");
+				return false;
+			}else if($("#name").val()==""){
+				alert("姓名不得為空白");
+				eval("document.form['name'].focus()");	
+				return false;
+			}else if($("#phone").val()==""){
+				alert("手機號碼尚未填寫");
+				eval("document.form['phone'].focus()");	
+				return false;
+			}else if($("#email").val()==""){
+				alert("e-mail尚未填寫");
+				eval("document.form['email'].focus()");	
+				return false;
+			}else{
+				return true;  
+			}
+		};
+		
+	    $(document).ready(function(){
+	    	$.datepicker.regional['zh-TW']={
+		        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
+		        dayNamesMin:["日","一","二","三","四","五","六"],
+		        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+		        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+		        prevText:"上月",
+		        nextText:"次月",
+		        weekHeader:"週"
+	        };
+	    	$.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
+	    	$("#datepicker1").datepicker({
+		    	minDate: new Date(),
+		    	dateFormat:'yy-mm-dd' });
+	    	
+			$('#same').click(function(){
+				document.getElementById("name").value =$("#nameX").val()+$("#nameY").val();
+				document.getElementById("phone").value = $("#phoneX").val();
+				document.getElementById("email").value = $("#mailX").val();	
+			});  
+	      });
+  </script>
 <!--   </div> -->
  <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>

@@ -438,7 +438,9 @@
                 	function checkUpdate() {
                 		if (checkForm()) {
                 			doUpdate();
-                		}	
+                		} else {
+                			alert("欄位檢查失敗！");
+                		}
                 	}
                 	function doUpdate() {
                 		let newFirstName = document.getElementById("updatedFirstName").value.trim();

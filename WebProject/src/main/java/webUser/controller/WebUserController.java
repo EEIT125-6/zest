@@ -924,13 +924,14 @@ public class WebUserController {
 			@RequestParam(value = "selectedFervor", defaultValue = "?") String selectedFervor,
 			@RequestParam(value = "selectedLocationCode", defaultValue = "0") Integer selectedLocationCode,
 			@RequestParam(value = "selectedStatus", defaultValue = "?") String selectedStatus,
-			@RequestParam(value = "selectedIdentity", defaultValue = "-2") Integer selectedIdentity) {
+			@RequestParam(value = "selectedIdentity", defaultValue = "-2") Integer selectedIdentity,
+			@RequestParam(value = "avPage", defaultValue = "5") Integer avPage,
+			@RequestParam(value = "startPage", required = false, defaultValue = "1") Integer startPage) {
 		
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		Integer getResult = -1;
 		String getResultMessage = "";
-		Integer userDataTotalPages = 0;
 		
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
@@ -998,8 +999,7 @@ public class WebUserController {
 		if (getResultMessage.equals("")) {
 			/* 調用服務裡的方法 */
 			try {
-				userDataList = wus.getSelectedWebUserData(selectedParameters);
-				userDataTotalPages = wus.getTotalUserRecordCounts(selectedParameters);
+				userDataList = wus.getSelectedWebUserData(selectedParameters, startPage, avPage);
 			} catch (SQLException sqlE) {
 				String getDataMessageTmp = sqlE.getMessage();
 				getResultMessage = getDataMessageTmp.split(":")[1];
@@ -1008,7 +1008,7 @@ public class WebUserController {
 		
 		if (userDataList != null) {
 			getResult = 1;
-			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料，共有 " + userDataTotalPages + " 頁";
+			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
 		} else if (getResultMessage.equals("")) {
 			getResult = 0;
 			getResultMessage = "無法查詢到任何有效的使用者資料";

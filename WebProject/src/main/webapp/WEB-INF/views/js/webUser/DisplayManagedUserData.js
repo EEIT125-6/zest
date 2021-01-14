@@ -112,15 +112,7 @@ function checkForm() {
 			}
 			if (emailObjValue == oldEmailObjValue) {
 				counter++;
-			} else {
-				if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-					alert("請先執行電子信箱檢查");
-					return false;
-				} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
-					alert("請先執行電子信箱驗證");
-					return false;
-				}
-			}
+			} 
 			if (phoneObjValue == oldPhoneObjValue) {
 				counter++;
 			}
@@ -865,36 +857,26 @@ function checkSameInput(){
 	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
-	let emailObjValue = document.getElementById("updatedEmail").value.replace('<', ' ').replace('>', '').trim();
-	let oldEmailObjValue = document.getElementById("originalEmail").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
+	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
 	let emailSpan = document.getElementById("emailSpan");
-	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
-	let phoneObjValue = document.getElementById("updatedPhone").value.trim();
-	let oldPhoneObjValue = document.getElementById("originalPhone").value;
+	let phoneObjValue = document.getElementById("phone").value.trim();
+	let oldPhoneObjValue = document.getElementById("oldPhone").value;
 	let phoneSpan = document.getElementById("phoneSpan");
 	
-	if (nicknameObjValue != oldNicknameObjValue) {
-		if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
-			alert("請先執行稱呼檢查");
-			return false;
-		} 
-	} else if (emailObjValue != oldEmailObjValue) {
-		if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-			alert("請先執行電子信箱檢查");
-			return false;
-		} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
-			alert("請先執行電子信箱驗證");
-			return false;
-		} 
-	} else if (phoneObjValue != oldPhoneObjValue) {
-		if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
-			alert("請先執行聯絡電話檢查");
-			return false;
-		} 
+	if (nicknameObjValue != oldNicknameObjValue && nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+		alert("請先執行稱呼檢查");
+		return false;
+	} else if (emailObjValue != oldEmailObjValue && emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		alert("請先執行電子信箱檢查");
+		return false;
+	} else if (phoneObjValue != oldPhoneObjValue && phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+		alert("請先執行聯絡電話檢查");
+		return false;
 	} else {
 		if (!checkNickname()) {
 			return false;
-		} else if (!checkEmailCheckCode()) {
+		} else if (!checkEmail()) {
 			return false;
 		} else if (!checkPhone()) {
 			return false;

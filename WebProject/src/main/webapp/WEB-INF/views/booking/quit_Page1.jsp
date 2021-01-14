@@ -1,25 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-response.setContentType("text/html;charset=UTF-8");
-response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-response.setHeader("Pragma","no-cache"); // HTTP 1.0
-response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
-%>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html>
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
-<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-<title>訂位資料確認</title>
-    <style>
-    	/* Table cellpadding */
-    	th, td { padding: 1; }
-    	/* Table cellspacing */
-    	table { border-collapse: collapse; border-spacing: 1; }
-        /*  */
+<title>訂位查詢</title>
+<style>
+        .aa{
+            font-size:34px;
+            color:#000;
+            padding:10px;
+            /* border:2px solid #e5e5e5; */
+            vertical-align:middle;
+            margin-top:30px;
+            }
+        .aa:hover{
+            background:#e5e5e5
+            } 
+        body{
+         background-color: 		rgb(235, 159, 18);
+        
+        
+       }
          .classimg{
 		 transition: 0.2s;	
         	width:80px
@@ -141,62 +144,41 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 		#gotop :hover{
 		    background:#0099CC;
 		}
-    </style>
+       .h1{
+       		height: 500px;
+       }
+ </style>
+
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
-<%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
- <div class="container" align="center" style="margin-top: 20px;">  
-<h2>訂位資料如下 ! 請確認 !</h2>
-<form action="<c:url value='/booking/confirm'/>" method="post">
-<table border="1" style="border:8px #FFD382 groove;width:500px">
-<tr bgcolor="#F2F4FB">
-    <td>訂單編號:</td>
-    <td>${reg_booking.bookingNo}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>訂位日期:</td>
-    <td>${reg_booking.bookingdate}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>時間:</td>
-    <td>${reg_booking.time}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>人數:</td>
-    <td>${reg_booking.number}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>姓名:</td>
-    <td>${reg_booking.name}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>聯絡電話:</td>
-    <td>${reg_booking.phone}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>E-mail:</td>
-    <td>${reg_booking.mail}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>用餐目的:</td>
-    <td>${reg_booking.purpose}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>特殊需求:</td>
-    <td>${reg_booking.needs}</td>
-</tr>
-</table>
-<div style="margin:10px;">
-<input type="submit" name="confirm" value="確認" style="border-radius: 3px; border: none; outline: none;">
-</div>
-</form>  
+
+<div class="h1"> 
+<form action="<c:url value='/booking/select'/>" method="post" >
+<center>
+<label class="aa">
+<input type="tel"  placeholder="請輸入手機號碼" name="phone" id="phone" >
+</label>
+
+<label class="aa">
+<input type="submit" value="查詢訂位" name="select" id="select" >
+</label>
+<label class="aa">
+<c:if test="${line!=null}">
+<c:out value="${line }"/>
+</c:if> 
+</label>
+
+</center>
+<!-- <label class="aa">
+<input type="submit" value="取消訂位" name="cancel" id="cancel" >
+</label> -->
+
+</form>   
 </div>
   <!-- -------------------------------------------------------------- -->
- <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:120px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
- </div>
+ <%@include file = "../Footer-Include.jsp" %>
+    
 </body>
-</html>    
+</html>

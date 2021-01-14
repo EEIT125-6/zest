@@ -18,11 +18,11 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	@Autowired
 	SessionFactory factory;
 	
-	/* 每頁顯示筆數 */
-	private final Integer recordsPerPage = 3;
-
-	/* 最大頁數 */
-	private int totalPages = -1;
+//	/* 每頁顯示筆數 */
+//	private final Integer recordsPerPage = 3;
+//
+//	/* 最大頁數 */
+//	private int totalPages = -1;
 	
 	/* 重複出現factory.getCurrentSession()，所以整理成一個方法，直接呼叫結果 */
 	public Session getSession() {
@@ -274,7 +274,10 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException {
+		/* 取得開始的筆數 */
+		Integer StartIndex = (startPage - 1) * avPage;
+		/* 開始組字串 */
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM WebUserData AS wu WHERE ");
 
@@ -347,9 +350,14 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
 			sb.append(" AND wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
 		}
+		
+		System.out.println("HQL is " + sb.toString());
 
 		/* 取得當前Session，然後執行HQL以取得陣列 */
-		return getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList();
+		return getSession().createQuery(sb.toString())
+				.setParameter("lv", lv)
+				.setFirstResult(StartIndex)
+                .setMaxResults(avPage).getResultList();
 	}
 	
 	/* 取得查詢的筆數 */
@@ -432,11 +440,11 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return Long.parseLong(String.valueOf(getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList().size()));
 	}
 	
-	/* 取得查詢的最大頁數 */
-	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
-		totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) recordsPerPage));
-		return totalPages;
-	}
+//	/* 取得查詢的最大頁數 */
+//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
+//		totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) recordsPerPage));
+//		return totalPages;
+//	}
 	
 	/* 更新使用者資料 0->失敗、1->成功 */
 	@Override
