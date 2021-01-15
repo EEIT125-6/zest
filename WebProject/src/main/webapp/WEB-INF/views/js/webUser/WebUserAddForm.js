@@ -47,7 +47,7 @@ function checkAccountName() {
 		accountStr = "帳號不可以數字開頭";
 		accountIsOk = false;
 	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{6,29}/;
+		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";

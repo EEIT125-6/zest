@@ -159,6 +159,12 @@
                 		<div align="center">
 	                		<button type="button" id="userInput">一鍵輸入</button>
                 		</div>
+                		<c:if test="${id_token == null}">
+                			<c:redirect url="/WebUserLogin" />
+                		</c:if>
+                		<c:if test="${extraAccount == null}">
+                			<c:redirect url="/WebUserLogin" />
+                		</c:if>
 						<span id="submitSpan">
 							<c:if test="${timeOut != null}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
@@ -182,15 +188,9 @@
 						</c:forEach>
 					    <hr />
 						<label>帳號名稱：</label> 
-						<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
-							placeholder="請輸入帳號，6~30個字" required="required" />
+						<input type="text" name="account" id="account" size="30" maxlength="30"
+							placeholder="請輸入帳號，6~30個字" value="${extraAccount}" readonly/>
 						<span id="accountSpan"></span>
-						<hr />
-						<label>帳號密碼：</label> 
-						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
-						<span id="passwordSpan"></span>
 						<hr />
 						<label>中文姓氏：</label>
 						<input type="text" name="firstName" id="firstName" size="30" maxlength="3" onblur="checkFirst_name()"
@@ -297,19 +297,17 @@
 					</div>
 					<hr />
 				</form>
-				<script src="<c:url value='/js/webUser/WebUserRegisterForm.js' />"></script>
+				<script src="<c:url value='/js/webUser/WebUserExtraRegisterForm.js' />"></script>
 				<script>
 					window.onload = function() {
 						let userAutoInputBtn = document.getElementById("userInput");
 						
 						userAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "George610787";
-                			document.getElementById("password").value = "Geo1rge6";
                 			document.getElementById("firstName").value = "王";
                 			document.getElementById("lastName").value = "小明";
                 			document.getElementById("nickname").value = "小明";
                 			document.getElementById("birth").value = "2000-10-20";
-                			document.getElementById("email").value = "georgecycuphy@cycu.org.tw";
+                			document.getElementById("email").value = "george610787@gmail.com";
                 			document.getElementById("phone").value = "0911773355";
                 			document.getElementById("locationCode").value = 13;
                 			document.getElementById("addr0").value = "桃園市中壢區中大路300號";

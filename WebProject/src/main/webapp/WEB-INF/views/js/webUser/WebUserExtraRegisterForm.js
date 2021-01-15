@@ -3,8 +3,6 @@ function checkForm() {
 	if (choice==true) {
 		if (!checkSameInput()) {
 			return false;
-		} else if (!checkAccountPassword()) {
-			return false;
 		} else if (!checkFirst_name()) {
 			return false;
 		} else if (!checkLast_name()) {
@@ -26,89 +24,6 @@ function checkForm() {
 		}
 	} else {
 		return false;
-	}
-}
-
-function checkAccountName() {
-	let accountObjValue = document.getElementById("account").value.trim();
-	let accountSpan = document.getElementById("accountSpan");
-
-	let accountIsOk = true;
-	let accountStr;
-	let startCharReg = /[0-9]/;
-
-	if (accountObjValue == "" || accountObjValue.length == 0) {
-		accountStr = "帳號不可為空白";
-		accountIsOk = false;
-	} else if (accountObjValue.length < 6 || accountObjValue.length > 30) {
-		accountStr = "帳號長度錯誤，需6~30個字元";
-		accountIsOk = false;
-	} else if (accountObjValue.charAt(0).match(startCharReg)) {
-		accountStr = "帳號不可以數字開頭";
-		accountIsOk = false;
-	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
-
-		if (!accountObjValue.match(accountReg)) {
-			accountStr = "帳號不符合格式";
-			accountIsOk = false;
-		} else {
-			accountStr = "帳號格式正確";
-			accountIsOk = true;
-		}
-	}
-	if (!accountIsOk) {
-		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-		accountSpan.style.color = "red";
-		accountSpan.style.fontStyle = "italic";
-		return false;
-	} else {
-		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-		accountSpan.style.color = "black";
-		accountSpan.style.fontStyle = "normal";
-		checkSameAccount();
-		return true;
-	}
-}
-
-function checkAccountPassword() {
-	let passwordObjValue = document.getElementById("password").value.trim();
-	let passwordSpan = document.getElementById("passwordSpan");
-
-	let passwordIsOk = true;
-	let passwordStr;
-	let startCharReg = /[0-9]/;
-
-	if (passwordObjValue == "" || passwordObjValue.length == 0) {
-		passwordStr = "密碼不可為空白";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
-		passwordStr = "密碼長度錯誤，需6~30個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
-		passwordStr = "密碼不可以數字開頭";
-		passwordIsOk = false;
-	} else {
-		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
-
-		if (!passwordObjValue.match(passwordReg)) {
-			passwordStr = "密碼不符合格式";
-			passwordIsOk = false;
-		} else {
-			passwordStr = "密碼格式正確";
-			passwordIsOk = true;
-		}
-	}
-	if (!passwordIsOk) {
-		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + passwordStr;
-		passwordSpan.style.color = "red";
-		passwordSpan.style.fontStyle = "italic";
-		return false;
-	} else {
-		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
-		passwordSpan.style.color = "black";
-		passwordSpan.style.fontStyle = "normal";
-		return true;
 	}
 }
 
@@ -566,8 +481,6 @@ function changeVisibility() {
 }
 
 function clearMessage() {
-	document.getElementById("accountSpan").innerHTML = "";
-	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
@@ -583,16 +496,12 @@ function clearMessage() {
 }
 
 function checkSameInput(){
-	let accountSpan = document.getElementById("accountSpan");
 	let nicknameSpan = document.getElementById("nicknameSpan");
 	let emailSpan = document.getElementById("emailSpan");
 	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
 	let phoneSpan = document.getElementById("phoneSpan");
 	
-	if (accountSpan.textContent != "check_circle可建立此帳號！") {
-		alert("請先執行帳號檢查");
-		return false;
-	} else if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+	if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
 		alert("請先執行稱呼檢查");
 		return false;
 	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
@@ -605,9 +514,7 @@ function checkSameInput(){
 		alert("請先執行聯絡電話檢查");
 		return false;
 	} else {
-		if (!checkAccountName()) {
-			return false;
-		} else if (!checkNickname()) {
+		if (!checkNickname()) {
 			return false;
 		} else if (!checkEmailCheckCode()) {
 			return false;

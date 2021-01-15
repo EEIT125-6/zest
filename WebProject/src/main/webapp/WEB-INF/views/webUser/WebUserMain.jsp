@@ -148,9 +148,6 @@
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="/WebUserLogin" />
-				</c:if>
 				<input type="hidden" id="password" value="${userFullData.password}" />
                 <form action="<c:url value='/webUser/WebUserModifyData' />" method="POST">
                 	<fieldset>
@@ -170,9 +167,11 @@
                 				<button type="button" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 			</a>
                 		</c:if>
+                		<c:if test="${userFullData.password.length() != 0}">
                 		<a href="<c:url value='/webUser/controller/WebUserModifyPassword' />">
                 			<button type="button" name="updatePassword" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
                			</a>
+               			</c:if>
                 		<a href="<c:url value='/booking/Page1' />">
                 			<button type="button" id="checkBooking" name="checkBooking" style="font-size:18px" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
                 		</a>

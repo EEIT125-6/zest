@@ -51,22 +51,30 @@ public class WebUserServiceImpl implements WebUserService {
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : requestedUserData;
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String account, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(account, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, email, phone, birth);
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
 	}
 	
 	@Override
@@ -152,10 +160,15 @@ public class WebUserServiceImpl implements WebUserService {
 		return webUserDAO.getSelectedWebUserData(selectedParameters, avPage, startPage);
 	}
 	
-//	@Override
-//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException {
-//		return webUserDAO.getTotalUserRecordCounts(selectedParameters);
-//	}
+	@Override
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
+		return webUserDAO.getUserRecordCounts(selectedParameters);
+	}
+	
+	@Override
+	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException {
+		return webUserDAO.getTotalUserRecordCounts(selectedParameters, avPage);
+	}
 
 	@Override
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {

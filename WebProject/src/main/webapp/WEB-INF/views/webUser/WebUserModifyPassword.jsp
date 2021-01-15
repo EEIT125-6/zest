@@ -149,11 +149,6 @@
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-                <jsp:useBean id="userFullData" class="webUser.model.WebUserData"
-					scope="session" />
-				<c:if test="${userFullData.password == null}">
-					<c:redirect url="/WebUserLogin" />
-				</c:if>
                 <form action="<c:url value='/webUser/controller/WebUserModifyPassword' />" method="post" onSubmit="return checkForm();">
                 	<fieldset>
                 		<legend>密碼相關資料</legend>

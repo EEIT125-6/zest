@@ -189,13 +189,21 @@
 						</span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="<c:url value='/WebUserForgetForm' /> "><button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button></a>
-						<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<a href="<c:url value='/WebUserRegisterForm' /> "><button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+                		<a href="<c:url value='/WebUserForgetForm' /> ">
+                			<button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button>
+                		</a>
+               			<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="button" style="font-size:18px" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
+						<a href="<c:url value='/WebUserRegisterForm' /> ">
+							<button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+						</a>
 						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>
+                <!-- 引用本地jQuery -->
+				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+                <!-- 引用檢查用js -->
                 <script src="<c:url value='/js/webUser/WebUserLogin.js' />"></script>
                 <script>
                 	window.onload = function() {
@@ -203,6 +211,7 @@
                 		let userAutoInputBtn = document.getElementById("userInput");
                 		let bossAutoInputBtn = document.getElementById("bossInput");
                 		let adminAutoInputBtn = document.getElementById("adminInput");
+                		let googleLoginBtn = document.getElementById("googleLogin");
                 		
                 		submitBtn.onclick = function() {
                 			inputCheck();
@@ -219,19 +228,55 @@
                 			document.getElementById("account").value = "WebAdmin";
                 			document.getElementById("password").value = "WebAdmin2020";
                 		};
+                		googleLoginBtn.onclick = function() {
+                			GoogleLogin();
+                		};
                 	};
                 	
+                	function GoogleClientInit() {
+                        gapi.load('client', function () {
+                            gapi.client.init({
+                                clientId: CLIENT_ID,
+                                scope: "profile",
+                                discoveryDocs: DISCOVERY_DOCS
+                            });
+                        });
+                    }
+                	
+                	function GoogleLogin() {
+                        let auth2 = gapi.auth2.getAuthInstance();//取得GoogleAuth物件
+                        auth2.signIn().then(function (GoogleUser) {
+                            let user_id = GoogleUser.getId();//取得user id，不過要發送至Server端的話，為了資安請使用id_token
+                            let AuthResponse = GoogleUser.getAuthResponse(true) ;//true會回傳包含access token ，false則不會
+                            var id_token = AuthResponse.id_token;//取得id_token
+                            gapi.client.people.people.get({
+                                'resourceName': 'people/me',
+                                'personFields': 'names,emailAddresses',
+                            }).then(function (res) {
+                                /* email */
+                                let inputEmail = res.result.emailAddresses[0].value;
+                                /* id */
+                                var account = inputEmail.substring(0, inputEmail.indexOf("@"));
+                                loginCheck(account, "", id_token)
+                            });
+                        },
+                        function (error) {
+                            alert("Google登入失敗");
+                        });
+
+                    }
+                	
                 	function inputCheck() {
-	                	if(!checkForm()) {
+	                	var account = document.getElementById("account").value.trim();
+	                	var password = document.getElementById("password").value.trim();
+						if(!checkForm()) {
 	                		alert("帳號或密碼不符規範，請再檢查一次！");
 	                	} else {
-	                		loginCheck();	
+	                		loginCheck(account, password, "");	
 	                	}
 	                }
                 	
-                	function loginCheck() {
-                		let account = document.getElementById("account").value.trim();
-	                	let password = document.getElementById("password").value.trim();
+                	function loginCheck(account, password, id_token) {
 	                	let loginSpan = document.getElementById("loginSpan");
 						let loginStr = "...處理中，請稍後";
 						let loginIsOk = true;
@@ -244,13 +289,19 @@
 	            		if (xhrObject != null) {
 	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("account=" + account + "&password=" + password);
+							xhrObject.send("account=" + account + "&password=" + password + "&id_token=" + id_token);
 							
 							xhrObject.onreadystatechange = function() {
 								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
 									let typeObject = xhrObject.getResponseHeader("Content-Type");
 									if (typeObject.indexOf("application/json") === 0) {
 										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 2) {
+											loginStr = "驗證成功！將導向新畫面";
+											loginIsOk = true;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										}
 										if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
@@ -307,6 +358,14 @@
 						}
                 	}
                 </script>
+                <script type="text/javascript">
+			        let CLIENT_ID = "669411837109-7e2a842ctg9ft9t6p9q8s8t3ic5gmp5k.apps.googleusercontent.com";
+			        let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/people/v1/rest"];
+			    </script>
+                <script async defer src="https://apis.google.com/js/api.js"
+		            onload="this.onload=function(){};GoogleClientInit()"
+		            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+			    </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:200px">
