@@ -58,20 +58,20 @@ function checkForm() {
 }
 
 function checkAccountName() {
-	let accountObjValue = document.getElementById("account").value.trim();
+	let accountObjValue = document.getElementById("usrAccount").value.trim();
 	let accountSpan = document.getElementById("accountSpan");
 
 	let accountIsOk = true;
 	let accountStr;
 
-	if (accountObjValue == "" || accountObjValue.length == 0) {
+	if (accountObjValue.length == 0) {
 		accountStr = "";
 		accountIsOk = true;
-	} else if (accountObjValue.length > 20) {
+	} else if (accountObjValue.length > 30) {
 		accountStr = "帳號長度過長";
 		accountIsOk = false;
 	} else {
-		let accountReg = /[a-zA-Z0-9]{1,20}/;
+		let accountReg = /[a-zA-Z0-9]{1,30}/;
 
 		if (!accountObjValue.match(accountReg)) {
 			accountStr = "帳號不符合格式";
@@ -87,7 +87,7 @@ function checkAccountName() {
 		accountSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		if (accountObjValue == "" || accountObjValue.length == 0) {
+		if (accountObjValue.length == 0) {
 			accountSpan.innerHTML = "";
 		} else {
 			accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;

@@ -64,9 +64,12 @@ public interface WebUserService {
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
 	
-//	/* 取得可查詢到的總頁數 */
-//	public Integer getTotalUserRecordCounts(String selectedParameters) throws SQLException;
-//	
+	/* 取得可查詢到總筆數 */
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
+	
+	/* 取得可查詢到的總頁數 */
+	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException;
+	
 	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
 	

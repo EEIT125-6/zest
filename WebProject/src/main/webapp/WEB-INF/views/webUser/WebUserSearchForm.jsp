@@ -185,8 +185,8 @@ ul.slides li img {
 				</c:if>
 				<hr />
 				<label>帳號名稱：</label> <input type="text" name="selectedAccount"
-					id="account" size="40" maxlength="20" onblur="checkAccountName()"
-					placeholder="請輸入要查詢的帳號，8~20個字" /> 
+					id="usrAccount" size="30" maxlength="30" onblur="checkAccountName()"
+					placeholder="請輸入要查詢的帳號，6~30個字" /> 
 				<span id="accountSpan"></span>
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
 					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
@@ -234,6 +234,13 @@ ul.slides li img {
 				<hr />
 			</fieldset>
 			<div align="center">
+				<label>顯示筆數：</label>
+				<select id=avPage onblur="specSearch()">
+					<option value="3" label="3">
+					<option value="5" label="5">
+					<option value="10" label="10">
+					<option value="20" label="20">
+				</select>
 				<a href="WebUserMain">
 				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
@@ -259,15 +266,6 @@ ul.slides li img {
 			window.onload = function() {
 				/* 載入後先執行一次預設查詢 */
 				selectAllUser();
-				/* 綁定刪除按鈕 */
-				$("#dataContainer").on("click", ".deleteBtn", function() {
-					let selectedDelBtnInfo = this.id.substring(6);
-					var userId = selectedDelBtnInfo.split("_")[0];
-					var account = selectedDelBtnInfo.split("_")[1];
-					var status = selectedDelBtnInfo.split("_")[2];
-					var mode = 'delete';
-					lastCheck(userId, account, status, mode);
-				});
 				/* 綁定啟用按鈕 */
 				$("#dataContainer").on("click", ".activeBtn", function() {
 					let selectedActBtnInfo = this.id.substring(6);
@@ -293,7 +291,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pFirstBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -317,7 +315,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pPrevBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -341,7 +339,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pNextBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -365,7 +363,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pLastBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -387,8 +385,8 @@ ul.slides li img {
 			$("#search").click(function() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
-				var account = document.getElementById("userAccount").value.trim();
-				var accountObjValue = document.getElementById("account").value.trim();
+ 				var account = document.getElementById("userAccount").value.trim();
+				var accountObjValue = document.getElementById("usrAccount").value.trim();
 				var nicknameObjValue = document.getElementById("nickname").value.trim();
 				var fervorObj = document.getElementsByClassName("fervor");
 				var fervorObjValue = "";
@@ -520,6 +518,8 @@ ul.slides li img {
 						'selectedLocationCode':locationCodeObjValue,
 						'selectedStatus':selectedStatus,
 						'selectedIdentity':selectedIdentity,
+						'avPage':avgPage,
+						'startPage':startPage
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -571,10 +571,7 @@ ul.slides li img {
 											+ "<th>居住區域</th>"
 											+ "</tr>";
 								}
-
-								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
-
-								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
+								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
@@ -634,7 +631,9 @@ ul.slides li img {
 													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
 													+ userData.account 
 													+ "'>"
+													+ "<button type='button' style='background-color:#ffc107'>"
 													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</button>"
 													+ "</a>"
 													+ "</td>"
 													+ "<td>"
@@ -678,24 +677,28 @@ ul.slides li img {
 										+ "</fieldset>" 
 										+ "</form>";
 										
-								document.getElementById("pageNo").value = startPage;
-								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
-								
-								if (startPage - 1 > 0) {
+								document.getElementById("maxPage").value = resultObj.totalDataPages;		
+										
+								if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
 									content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
 											+ "第一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+											+ "</button>";
+								}
+								
+								if (startPage - 1 > 0) {
+									content +="<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
 											+ "上一頁"
 											+ "</button>";
-											
 								} 
 								
-								if (resultObj.userDataList.length > startPage * avgPage) {
+								if (resultObj.totalDataNums > startPage * avgPage) {
 									content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
 											+ "下一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+											+ "</button>";
+								}
+								
+								if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+									content += "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
 											+ "最末頁"
 											+ "</button>";
 								}
@@ -748,6 +751,10 @@ ul.slides li img {
 				$.ajax({
 					type : "POST",
 					url : "<c:url value='/webUser/controller/WebUserSearchForm' />",
+					data : {
+						'avPage':avgPage,
+						'startPage':startPage
+					},
 					dataType : "json",
 					success : function(resultObj) {
 						if (resultObj.resultCode == 1) {
@@ -902,25 +909,30 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
-										
-								document.getElementById("pageNo").value = startPage;
-								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
 								
-								if (startPage - 1 > 0) {
+								document.getElementById("maxPage").value = resultObj.totalDataPages;
+								if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
 									content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
 											+ "第一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+											+ "</button>";
+											
+								} 
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pPrev'>"
 											+ "上一頁"
 											+ "</button>";
 											
 								} 
 								
-								if (resultObj.userDataList.length > startPage * avgPage) {
+								if (resultObj.totalDataNums > startPage * avgPage) {
 									content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
 											+ "下一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pLast'>"
+											+ "</button>";
+								}
+								
+								if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+									content += "<button type='button' style='background-color:#ffc107' class='pLast'>"
 											+ "最末頁"
 											+ "</button>";
 								}

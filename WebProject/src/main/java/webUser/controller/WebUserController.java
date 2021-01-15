@@ -931,6 +931,8 @@ public class WebUserController {
 		Map<String, Object> map = new HashMap<>();
 		Integer getResult = -1;
 		String getResultMessage = "";
+		Long totalDataNums = 0L;
+		Integer totalDataPages = 0;
 		
 		/* 產生資料陣列 */
 		List<WebUserData> userDataList = new ArrayList<>();
@@ -998,7 +1000,9 @@ public class WebUserController {
 		if (getResultMessage.equals("")) {
 			/* 調用服務裡的方法 */
 			try {
-				userDataList = wus.getSelectedWebUserData(selectedParameters);
+				userDataList = wus.getSelectedWebUserData(selectedParameters, avPage, startPage);
+				totalDataNums = wus.getUserRecordCounts(selectedParameters);
+				totalDataPages = wus.getTotalUserRecordCounts(selectedParameters, avPage);
 			} catch (SQLException sqlE) {
 				String getDataMessageTmp = sqlE.getMessage();
 				getResultMessage = getDataMessageTmp.split(":")[1];
@@ -1007,7 +1011,7 @@ public class WebUserController {
 		
 		if (userDataList != null) {
 			getResult = 1;
-			getResultMessage = "查詢到 " + userDataList.size() + " 筆有效的使用者資料";
+			getResultMessage = "查詢到 " + totalDataNums + " 筆有效的使用者資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁";
 		} else if (getResultMessage.equals("")) {
 			getResult = 0;
 			getResultMessage = "無法查詢到任何有效的使用者資料";
@@ -1016,7 +1020,8 @@ public class WebUserController {
 		map.put("resultCode", getResult.toString());
 		map.put("resultMessage", getResultMessage);
 		map.put("userDataList", userDataList);
-		model.addAttribute("userDataList", userDataList);
+		map.put("totalDataNums", totalDataNums);
+		map.put("totalDataPages", totalDataPages);
 		return map;
 	} 
 	
