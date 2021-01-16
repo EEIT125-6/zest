@@ -30,10 +30,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import webUser.model.CityInfo;
 import webUser.model.FoodFervor;
@@ -68,6 +69,9 @@ public class WebUserController {
 	/* ServletContext */
 	@Autowired
 	ServletContext context;
+	
+	/* WebApplicationContext */
+	WebApplicationContext webApplicationContext;
 	
 	/* WebUserData Service */
 	@Autowired
@@ -341,10 +345,12 @@ public class WebUserController {
 	}
 	
 	/* 執行登入檢查 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			HttpServletRequest request,
+			WebApplicationContext webApplicationContext,
 			@RequestParam(value = "account", defaultValue="") String account,
 			@RequestParam(value = "password", required = false, defaultValue="") String password,
 			@RequestParam(value = "id_token", required = false, defaultValue="") String id_token) {
@@ -465,6 +471,35 @@ public class WebUserController {
 		} 
 		
 		if (accountCheckResult == 1) {
+			Map<String, Object> userMap = (Map<String, Object>) webApplicationContext.getServletContext().getAttribute("userMap");
+			/* 第一位登入系統的使用者 */
+			if (userMap == null) {
+				loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
+				/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
+				model.addAttribute("userFullData", userFullData);
+				/* 清空timeOut物件 */
+				model.addAttribute("timeOut", null);
+				
+				Map<String, Object> userDataMap = new HashMap<>();
+				/* 登入使用的物件 */
+				userDataMap.put("userFullData", userFullData);
+				/* sessionId */
+				String currentSessionId = WebUtils.getSessionId(request);
+				System.out.println("currentSessionId is :" + currentSessionId);
+				userDataMap.put("currentSessionId", currentSessionId);
+				/* 放入存所有使用者資料的map */
+				Map<String, Object> zeroUserMap = new HashMap<>(); 
+				
+				zeroUserMap.put(account, userDataMap);
+				/* 將sessionId、帳號、登入使用的物件存入servletContext */
+				webApplicationContext.getServletContext().setAttribute("userMap", zeroUserMap);
+			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
+			} else if (userMap != null && userMap.get(account) == null) {
+				
+			/* 非第一位登入系統的使用者，此帳號重複登入 */
+			} else {
+				
+			}
 			loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
 			/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
 			model.addAttribute("userFullData", userFullData);
