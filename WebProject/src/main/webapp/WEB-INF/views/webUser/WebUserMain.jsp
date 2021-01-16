@@ -180,6 +180,14 @@
                 		</a>
                 		<c:if test="${userFullData.accountLv.lv == -1}" >
                 			<button type="button" id="manage" name="manage" style="font-size:18px" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
+                			<a href="<c:url value='/booking/admin1'/>">
+                				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
+                			</a>
+                		</c:if>
+                		<c:if test="${userFullData.accountLv.lv == 1}" >
+                			<a href="">
+                				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
+                			</a>
                 		</c:if>
                 		<c:if test="${userFullData.accountLv.lv != -1}" >
                 			<button type="button" id="manage" name="manage" style="font-size:18px;display:none;" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>

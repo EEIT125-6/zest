@@ -1,25 +1,19 @@
+<%@ page import="model.BookingBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 response.setContentType("text/html;charset=UTF-8");
-response.setHeader("Cache-Control","no-cache"); // HTTP 1.1
-response.setHeader("Pragma","no-cache"); // HTTP 1.0
-response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
-%>    
+%>
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file = "../Link_Meta-Include.jsp" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-<title>訂位資料確認</title>
+<title>管理員＿訂單管理</title>
     <style>
-    	/* Table cellpadding */
-    	th, td { padding: 1; }
-    	/* Table cellspacing */
-    	table { border-collapse: collapse; border-spacing: 1; }
-        /*  */
          .classimg{
 		 transition: 0.2s;	
         	width:80px
@@ -141,66 +135,73 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 		#gotop :hover{
 		    background:#0099CC;
 		}
+       .h1{
+       		height: 200px;
+       }
     </style>
 </head>
+
+   
 <body>
 <%@include file = "../Header-Include.jsp" %>
 <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
- <div class="container" align="center" style="margin-top: 20px;">  
-<h2>訂位資料如下 ! 請確認 !</h2>
-<form action="<c:url value='/booking/confirm'/>" method="post">
-<table border="1" style="border:8px #FFD382 groove;width:500px">
-<tr bgcolor="#FFFFE1">
-    <td>訂單編號:</td>
-    <td>${reg_booking.bookingNo}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>餐廳名稱:</td>
-    <td>${reg_booking.restaurant}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>訂位日期:</td>
-    <td>${reg_booking.bookingdate}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>時間:</td>
-    <td>${reg_booking.time}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>人數:</td>
-    <td>${reg_booking.number}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>姓名:</td>
-    <td>${reg_booking.name}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>聯絡電話:</td>
-    <td>${reg_booking.phone}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>E-mail:</td>
-    <td>${reg_booking.mail}</td>
-</tr>
-<tr bgcolor="#FFFFE1">
-    <td>用餐目的:</td>
-    <td>${reg_booking.purpose}</td>
-</tr>
-<tr bgcolor="#F2F4FB">
-    <td>特殊需求:</td>
-    <td>${reg_booking.needs}</td>
-</tr>
-</table>
-<div style="margin:10px;">
-<input type="submit" name="confirm" value="確認" style="border-radius: 3px; border: none; outline: none;">
-</div>
-</form>  
-</div>
+<div align="center">
+<h2><i>所有會員訂位資訊 :</i></h2>
+<div id="aa"></div>
+<script>
+	window.onload = function() {
+		/* 載入後先執行一次預設查詢 */
+		showAll();
+	};
+ 	function showAll(){
+		var aa=document.getElementById("aa");
+		$.ajax({
+			type : "POST",
+			url : "<c:url value='/booking/admin'/>",
+			dataType : "json",
+			success : function(resultObj) {
+				let booking=resultObj.data;	
+				let content="";
+				if (booking !=null){
+		      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
+		      				+"<tr><th>訂單編號</th><th>訂位狀態</th><th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
+		      	for(let i=0;i<booking.length;i++){
+		      		let data=booking[i];
+		      			
+		      		if (data.status==1){
+		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
+		      					
+		      		}else{
+		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
+		      		}
+		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
+		      	}
+		      	content+="</table>";
+	      		aa.innerHTML=content;
+	      		
+		      	
+		      	}else{
+		      		aa.innerHTML="<h3>查無訂位資料</h3>";
+		      		
+		      	} 
+		      	
+			}
+		
+		}); 
+	}
+</script>
+<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>   
+<form action="<c:url value='/'/>" >
+<input type="submit" name="back" value="回首頁" style="margin-top:30px;">
+</form> 
+</div>   
   <!-- -------------------------------------------------------------- -->
- <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:120px">
+ <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:90px">
             <%@include file = "../Footer-Include-prototype.jsp" %>
  </div>
+    
 </body>
-</html>    
+</html>

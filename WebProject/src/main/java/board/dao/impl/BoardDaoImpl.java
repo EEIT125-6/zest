@@ -68,18 +68,6 @@ public class BoardDaoImpl implements BoardDao {
 
 		return count;
 	}
-
-//	@Override
-//	public int deleteBoard(Integer id) {
-//		int result = 0;
-//		Session session = factory.getCurrentSession();
-//		/* 取得要刪除的物件 */
-//		BoardBean deleteBean = session.get(BoardBean.class, id);
-//		/* 執行刪除 */
-//		session.delete(deleteBean);
-//		result++;
-//		return result;
-//	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BoardBean> getAllcomment(){

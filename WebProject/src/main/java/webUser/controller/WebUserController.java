@@ -350,7 +350,6 @@ public class WebUserController {
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			HttpServletRequest request,
-			WebApplicationContext webApplicationContext,
 			@RequestParam(value = "account", defaultValue="") String account,
 			@RequestParam(value = "password", required = false, defaultValue="") String password,
 			@RequestParam(value = "id_token", required = false, defaultValue="") String id_token) {
@@ -471,40 +470,71 @@ public class WebUserController {
 		} 
 		
 		if (accountCheckResult == 1) {
-			Map<String, Object> userMap = (Map<String, Object>) webApplicationContext.getServletContext().getAttribute("userMap");
+			Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
+			Boolean singleLogin = false;
 			/* 第一位登入系統的使用者 */
 			if (userMap == null) {
-				loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
-				/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
-				model.addAttribute("userFullData", userFullData);
-				/* 清空timeOut物件 */
-				model.addAttribute("timeOut", null);
-				
+				singleLogin = true;
 				Map<String, Object> userDataMap = new HashMap<>();
 				/* 登入使用的物件 */
 				userDataMap.put("userFullData", userFullData);
 				/* sessionId */
 				String currentSessionId = WebUtils.getSessionId(request);
-				System.out.println("currentSessionId is :" + currentSessionId);
 				userDataMap.put("currentSessionId", currentSessionId);
+				
 				/* 放入存所有使用者資料的map */
 				Map<String, Object> zeroUserMap = new HashMap<>(); 
-				
 				zeroUserMap.put(account, userDataMap);
 				/* 將sessionId、帳號、登入使用的物件存入servletContext */
-				webApplicationContext.getServletContext().setAttribute("userMap", zeroUserMap);
+				context.setAttribute("userMap", zeroUserMap);
 			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
 			} else if (userMap != null && userMap.get(account) == null) {
+				singleLogin = true;
+				Map<String, Object> userDataMap = new HashMap<>();
+				/* 登入使用的物件 */
+				userDataMap.put("userFullData", userFullData);
+				/* sessionId */
+				String currentSessionId = WebUtils.getSessionId(request);
+				userDataMap.put("currentSessionId", currentSessionId);
 				
-			/* 非第一位登入系統的使用者，此帳號重複登入 */
+				/* 放入存所有使用者資料的map */
+				userMap.put(account, userDataMap);
+				/* 將sessionId、帳號、登入使用的物件存入servletContext */
+				context.setAttribute("userMap", userMap);
+			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
 			} else {
+				Map<String, Object> userDataMap = (Map<String, Object>) userMap.get(account);
+				String oldSessionId = (String) userDataMap.get("currentSessionId");
+				HttpSession oldSession = (HttpSession) context.getAttribute(oldSessionId);
 				
+				/* 存在且有效 */
+				if (oldSession != null) {
+					singleLogin = false;
+				/* 存在但過期或已無效 */
+				} else {
+					singleLogin = true;
+					/* 移除舊的 */
+					userMap.remove(account);
+					/* 插入當下的 */
+					userDataMap.put("userFullData", userFullData);
+					/* sessionId */
+					String currentSessionId = WebUtils.getSessionId(request);
+					userDataMap.put("currentSessionId", currentSessionId);
+					
+					/* 放入存所有使用者資料的map */
+					userMap.put(account, userDataMap);
+					/* 將sessionId、帳號、登入使用的物件存入servletContext */
+					context.setAttribute("userMap", userMap);
+				}
 			}
-			loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
-			/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
-			model.addAttribute("userFullData", userFullData);
-			/* 清空timeOut物件 */
-			model.addAttribute("timeOut", null);
+			
+			if(singleLogin) {
+				loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
+				/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
+				model.addAttribute("userFullData", userFullData);
+				/* 清空timeOut物件 */
+				model.addAttribute("timeOut", null);
+			}
 		} 
 		
 		map.put("resultCode", accountCheckResult.toString());
@@ -515,6 +545,7 @@ public class WebUserController {
 	}
 
 	/* 執行登出 */
+	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/webUser/controller/WebUserMain/Logout")
 	public String doLogOut(
 			Model model,
@@ -527,6 +558,17 @@ public class WebUserController {
 		String nickname = (userData == null) ? "訪客" : userData.getNickname();
 		String logoutMessage = "謝謝您的使用，" + nickname + " !";
 		
+		/* 將servletContext中的物件裡的對應部分移除 */
+		Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
+		/* 移除本使用者 */
+		userMap.remove(userData.getAccount());
+		if (userMap.size() > 0) {
+			/* 回存 */
+			context.setAttribute("userMap", userMap);
+		} else if (userMap.size() == 0) {
+			/* 直接移除 */
+			context.removeAttribute("userMap");
+		}
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 無效httpSession */
