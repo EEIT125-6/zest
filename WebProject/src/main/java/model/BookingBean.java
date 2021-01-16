@@ -31,7 +31,7 @@ public class BookingBean {
 	private Integer status;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
-	private WebUserData userData;
+	private WebUserData user_id;
 
 	public BookingBean() {
 
@@ -40,7 +40,7 @@ public class BookingBean {
 	public BookingBean(String pBookingNo, WebUserData pUser_id, String pBookingdate, String pTime, Integer pNumber,
 			String pRestaurant, String pName, String pPhone, String pMail, String pPurpose, String pNeeds,Integer pStatus) {
 		this.bookingNo = pBookingNo;
-		this.userData = pUser_id;
+		this.user_id = pUser_id;
 		this.bookingdate = pBookingdate;
 		this.time = pTime;
 		this.number = pNumber;
@@ -76,11 +76,11 @@ public class BookingBean {
 	}
 	
 	public WebUserData getUser_id() {
-		return userData;
+		return user_id;
 	}
 
 	public void setUser_id(WebUserData user_id) {
-		this.userData = user_id;
+		this.user_id = user_id;
 	}
 
 

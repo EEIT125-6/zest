@@ -152,9 +152,13 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 <h2>訂位資料如下 ! 請確認 !</h2>
 <form action="<c:url value='/booking/confirm'/>" method="post">
 <table border="1" style="border:8px #FFD382 groove;width:500px">
-<tr bgcolor="#F2F4FB">
+<tr bgcolor="#FFFFE1">
     <td>訂單編號:</td>
     <td>${reg_booking.bookingNo}</td>
+</tr>
+<tr bgcolor="#F2F4FB">
+    <td>餐廳名稱:</td>
+    <td>${reg_booking.restaurant}</td>
 </tr>
 <tr bgcolor="#FFFFE1">
     <td>訂位日期:</td>

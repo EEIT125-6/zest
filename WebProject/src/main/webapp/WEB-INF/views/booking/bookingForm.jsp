@@ -250,8 +250,10 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
             <a href="javascript:history.back()"><input type="button" name="back" value="上一步"></a>
             <input type="submit" name="next" id="next" value="下一步" >
         </div>
+        
     </fieldset>
     </form>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript">

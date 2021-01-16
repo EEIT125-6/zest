@@ -3,6 +3,8 @@ package dao;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+
+import org.apache.logging.log4j.core.util.SystemClock;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -67,6 +69,29 @@ public class BookingDAO_Impl implements BookingDAO {
 		}
 		return list;
 	}
+	
+	//管理員查詢
+		@SuppressWarnings("unchecked")
+		@Override
+		public List <BookingBean> allBooking() {
+			String hql = "FROM BookingBean";
+			Session session = factory.getCurrentSession();
+			Query<BookingBean> query = session.createQuery(hql);
+			List<BookingBean> list = query.getResultList();
+			System.out.println(list.size()+"筆");
+			for (int i = 0; i < list.size(); i++) {
+				String date=list.get(i).getBookingdate();
+				System.out.println("test "+list.get(i).getUser_id().getUserId());
+				Date booking = Date.valueOf(date);
+				Date today = Date.valueOf(LocalDate.now());        
+					
+				if (booking.compareTo(today)<0) {
+					list.get(i).setStatus(2);
+					updateBooking(list.get(i));
+				}
+			}
+			return list;
+		}
 	
 	//查詢單筆
 	@SuppressWarnings("unchecked")

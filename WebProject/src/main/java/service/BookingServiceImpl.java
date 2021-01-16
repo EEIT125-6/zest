@@ -43,6 +43,15 @@ public class BookingServiceImpl implements BookingService {
 		return list;
 	}
 	
+	//管理員查詢
+	@Override
+	public List <BookingBean> allBooking() {
+		List<BookingBean> list = new ArrayList<>();
+		list =dao.allBooking();
+			
+		return list;
+	}
+	
 	//查詢單筆
 	@Override
 	public BookingBean singleBooking(String bookingNo) {

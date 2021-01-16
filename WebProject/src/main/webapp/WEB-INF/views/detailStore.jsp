@@ -316,7 +316,13 @@ a.mobile-show {
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
 			</form>
-			
+		<span>|</span>
+			<c:url value="newBookingTime" var="addBookingTime">
+				<c:param name="storeId" value="${id}" />
+			</c:url>
+		<a href="${addBookingTime}">
+			<span>新增店家訂位時間</span>
+		</a>
 <!-- 			<span>|</span> -->
 <!-- 			<form action="#" method="post" style="display:inline"> -->
 <%-- 				<input type="hidden" name="id" value="${id}"> --%>
@@ -419,6 +425,7 @@ function initMap() {
     </div>
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
+		
 		<a href="<c:url value='/booking/${stname1}'/> ">	
 			<span style="font-size: 140%">餐廳服務</span>
 		</a>

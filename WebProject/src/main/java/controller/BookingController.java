@@ -248,6 +248,16 @@ public class BookingController {
 	    model.addAttribute("booking",bean);
 		return "booking/showOrder";
 	}
+	//管理員＿訂單管理
+	@PostMapping(value ="/admin", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> admin(Model model) {
+		List<BookingBean> bean = service.allBooking();
+		System.out.println("筆數="+bean.size());
+		
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", bean);
+		return map;
+	}
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
 	public String cancel(Model model,
@@ -414,6 +424,10 @@ public class BookingController {
 			return "redirect:/booking/showOrder";
 		}
 		return "redirect:/booking/showOrder";
+	}
+	@GetMapping("/admin1")
+	public String admin1() {
+		return "booking/admin";
 	}
 
 	@GetMapping("/updateResult2")
