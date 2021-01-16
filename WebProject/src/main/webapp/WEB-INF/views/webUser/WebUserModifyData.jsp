@@ -149,9 +149,6 @@
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-				<c:if test="${empty userFullData}">
-					<c:redirect url="/WebUserLogin" />
-				</c:if>
 				<form method="post" enctype="multipart/form-data">
 					<fieldset>
 						<legend>以下為您可變更的資料：</legend>

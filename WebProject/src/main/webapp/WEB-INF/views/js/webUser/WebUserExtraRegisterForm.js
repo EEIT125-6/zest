@@ -3,8 +3,6 @@ function checkForm() {
 	if (choice==true) {
 		if (!checkSameInput()) {
 			return false;
-		} else if (!checkAccountPassword()) {
-			return false;
 		} else if (!checkFirst_name()) {
 			return false;
 		} else if (!checkLast_name()) {
@@ -26,113 +24,6 @@ function checkForm() {
 		}
 	} else {
 		return false;
-	}
-}
-
-function checkAccountName() {
-	let accountObjValue = document.getElementById("newAccount").value.trim();
-	let accountSpan = document.getElementById("accountSpan");
-
-	let accountIsOk = true;
-	let accountStr;
-	let startCharReg = /[0-9]/;
-
-	if (accountObjValue == "" || accountObjValue.length == 0) {
-		accountStr = "帳號不可為空白";
-		accountIsOk = false;
-	} else if (accountObjValue.length < 6 || accountObjValue.length > 30) {
-		accountStr = "帳號長度錯誤，需6~30個字元";
-		accountIsOk = false;
-	} else if (accountObjValue.charAt(0).match(startCharReg)) {
-		accountStr = "帳號不可以數字開頭";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("&") != -1) {
-		accountStr = "帳號不可以包含&符號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("=") != -1) {
-		accountStr = "帳號不可以包含等號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("_") != -1) {
-		accountStr = "帳號不可以包含底線";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("-") != -1) {
-		accountStr = "帳號不可以包含破折號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("+") != -1) {
-		accountStr = "帳號不可以包含加號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf(",") != -1 || accountObjValue.indexOf("，") != -1) {
-		accountStr = "帳號不可以包含逗號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf(".") != -1 || accountObjValue.indexOf("。") != -1) {
-		accountStr = "帳號不可以包含句號";
-		accountIsOk = false;
-	} else if (accountObjValue.indexOf("?") != -1 || accountObjValue.indexOf("？") != -1) {
-		accountStr = "帳號不可以包含問號";
-		accountIsOk = false;
-	} else {
-		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
-
-		if (!accountObjValue.match(accountReg)) {
-			accountStr = "帳號不符合格式";
-			accountIsOk = false;
-		} else {
-			accountStr = "帳號格式正確";
-			accountIsOk = true;
-		}
-	}
-	if (!accountIsOk) {
-		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
-		accountSpan.style.color = "red";
-		accountSpan.style.fontStyle = "italic";
-		return false;
-	} else {
-		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
-		accountSpan.style.color = "black";
-		accountSpan.style.fontStyle = "normal";
-		checkSameAccount();
-		return true;
-	}
-}
-
-function checkAccountPassword() {
-	let passwordObjValue = document.getElementById("password").value.trim();
-	let passwordSpan = document.getElementById("passwordSpan");
-
-	let passwordIsOk = true;
-	let passwordStr;
-	let startCharReg = /[0-9]/;
-
-	if (passwordObjValue == "" || passwordObjValue.length == 0) {
-		passwordStr = "密碼不可為空白";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
-		passwordStr = "密碼長度不足，需6~30個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
-		passwordStr = "密碼不可以數字開頭";
-		passwordIsOk = false;
-	} else {
-		let passwordReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
-
-		if (!passwordObjValue.match(passwordReg)) {
-			passwordStr = "密碼不符合格式";
-			passwordIsOk = false;
-		} else {
-			passwordStr = "密碼格式正確";
-			passwordIsOk = true;
-		}
-	}
-	if (!passwordIsOk) {
-		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + passwordStr;
-		passwordSpan.style.color = "red";
-		passwordSpan.style.fontStyle = "italic";
-		return false;
-	} else {
-		passwordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + passwordStr;
-		passwordSpan.style.color = "black";
-		passwordSpan.style.fontStyle = "normal";
-		return true;
 	}
 }
 
@@ -219,7 +110,7 @@ function checkLast_name() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', ' ').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 
 	let nicknameIsOk = true;
@@ -277,7 +168,7 @@ function checkBirthday() {
 		let todayYear = today.getFullYear();
 		let todayMonth = today.getMonth() + 1;
 		let todayDate = today.getDate();
-		let today18 = today.setFullYear(todayYear - 18);
+		let today15 = today.setFullYear(todayYear - 15);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -288,8 +179,8 @@ function checkBirthday() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (today18 < new Date(birthdayObjValue).getTime()) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
+		} else if (today15 < new Date(birthdayObjValue).getTime()) {
+			birthdayStr = "未滿15歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
 			birthdayStr = "有效的出生時間";
@@ -346,7 +237,7 @@ function checkFervor() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', ' ').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	
 	let emailIsOk = true;
@@ -376,6 +267,44 @@ function checkEmail() {
 		emailSpan.style.color = "black";
 		emailSpan.style.fontStyle = "normal";
 		checkSameEmail();
+		return true;
+	}
+}
+
+function checkEmailCheckCode() {
+	let emailCheckCodeObjValue = document.getElementById("emailCheckCode").value.trim();
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let checkCode = document.getElementById("checkCode").value.trim();
+	
+	let emailCheckCodeIsOk = true;
+	let emailCheckCodeStr;
+	
+	if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		emailCheckCodeStr = "請先執行聯絡信箱檢查";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode == "" || checkCode.length == 0) {
+		emailCheckCodeStr = "尚未產生驗證碼";
+		emailCheckCodeIsOk = false;
+	} else if (emailCheckCodeObjValue == "" || emailCheckCodeObjValue.length == 0) {
+		emailCheckCodeStr = "驗證碼不可為空值";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode.toUpperCase() != emailCheckCodeObjValue.toUpperCase()) {
+		emailCheckCodeStr = "聯絡信箱驗證碼錯誤";
+		emailCheckCodeIsOk = false;
+	} else if (checkCode.toUpperCase() == emailCheckCodeObjValue.toUpperCase()) {
+		emailCheckCodeStr = "聯絡信箱驗證成功";
+		emailCheckCodeIsOk = true;
+	} 
+	if (!emailCheckCodeIsOk) {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "red";
+		emailCheckCodeSpan.style.fontStyle = "italic";
+		return false;
+	}
+	else {
+		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+		emailCheckCodeSpan.style.color = "black";
+		emailCheckCodeSpan.style.fontStyle = "normal";
 		return true;
 	}
 }
@@ -451,7 +380,7 @@ function checkLocation_code() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', ' ').trim();
 	let addr0Span = document.getElementById("addr0Span");
 	let addr1ObjValue = document.getElementById("addr1").value.trim();
 	let addr2ObjValue = document.getElementById("addr2").value.trim();
@@ -552,14 +481,13 @@ function changeVisibility() {
 }
 
 function clearMessage() {
-	document.getElementById("accountSpan").innerHTML = "";
-	document.getElementById("passwordSpan").innerHTML = "";
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
+	document.getElementById("emailCheckCodeSpan").innerHTML = "";
 	document.getElementById("phoneSpan").innerHTML = "";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
@@ -567,27 +495,28 @@ function clearMessage() {
 	document.getElementById("addr2Span").innerHTML = "";
 }
 
-
 function checkSameInput(){
-	let accountSpan = document.getElementById("accountSpan");
+	let nicknameSpan = document.getElementById("nicknameSpan");
 	let emailSpan = document.getElementById("emailSpan");
+	let emailCheckCodeSpan = document.getElementById("emailCheckCodeSpan");
+	let phoneSpan = document.getElementById("phoneSpan");
 	
-	if (accountSpan.textContent != "check_circle可建立此帳號！") {
-		alert("請先執行帳號檢查");
-		return false;
-	} else if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+	if (nicknameSpan.textContent != "check_circle可使用此稱呼！") {
 		alert("請先執行稱呼檢查");
 		return false;
 	} else if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
 		alert("請先執行電子信箱檢查");
 		return false;
+	} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
+		alert("請先執行電子信箱驗證");
+		return false;
 	} else if (phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
 		alert("請先執行聯絡電話檢查");
 		return false;
 	} else {
-		if (!checkAccountName()) {
+		if (!checkNickname()) {
 			return false;
-		} else if (!checkNickname()) {
+		} else if (!checkEmailCheckCode()) {
 			return false;
 		} else if (!checkPhone()) {
 			return false;

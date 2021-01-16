@@ -156,15 +156,25 @@
 						<label>帳號名稱：</label>
 						<c:out value="${reg_webUser.account}" />
 						<hr />
-						<label>帳號密碼：</label>
-						<c:if test="${reg_webUser.password.length() > 0}">
-							<c:forEach var="passwordChar" begin="0" end="${reg_webUser.password.length()-1}">
-								<c:out value = "*" />
-							</c:forEach>
+						<c:if test="${extraAccount == null}">
+							<c:if test="${id_token == null}">
+								<label>帳號密碼：</label>
+								<c:if test="${reg_webUser.password.length() > 0}">
+									<c:forEach var="passwordChar" begin="0" end="${reg_webUser.password.length()-1}">
+										<c:out value = "*" />
+									</c:forEach>
+								</c:if>
+								<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
+								<hr />
+							</c:if>
 						</c:if>
-						<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
-						<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
-						<hr />
+						<c:if test="${extraAccount != null}">
+							<c:if test="${id_token != null}">
+								<button type="button" name="showPassword" id="showPassword" style="font-size:18px;display:none;" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red;">visibility</i></button>
+								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
+							</c:if>
+						</c:if>
 						<label>中文姓氏：</label>
 						<c:out value="${reg_webUser.firstName}" />
 						<hr />
@@ -239,6 +249,7 @@
             </div>         
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>    
+            	<%@include file = "../Footer-Include-prototype.jsp" %>  
+            </div>  
 </body>
 </html>

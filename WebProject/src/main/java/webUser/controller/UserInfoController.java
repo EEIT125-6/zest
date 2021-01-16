@@ -216,6 +216,8 @@ public class UserInfoController {
 				} catch (Exception e) {
 					recoveryMessage = e.getMessage();
 				}
+			} else if (recoveryMessage.equals("") && recoveryUserData == null) {
+				recoveryMessage = "您似乎未在本服務註冊，或著您使用Google登入";
 			}
 			
 			if (sendResult) {

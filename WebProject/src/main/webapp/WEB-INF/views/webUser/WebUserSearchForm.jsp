@@ -167,9 +167,6 @@ ul.slides li img {
 	<%@include file="../LoadingScreen.jsp" %>
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
-		<c:if test="${userFullData.password == null}">
-			<c:redirect url="/WebUserLogin" />
-		</c:if>
 		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 		<input type="hidden" id="pageNo" value="1" />
 		<input type="hidden" id="maxPage" value="1" />
@@ -189,7 +186,7 @@ ul.slides li img {
 					placeholder="請輸入要查詢的帳號，6~30個字" /> 
 				<span id="accountSpan"></span>
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
-					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
+					id="nickname" size="30" maxlength="25" onblur="checkNickname()"
 					placeholder="請輸入要查詢的暱稱" /> 
 				<span id="nicknameSpan"></span>
 				<hr />
@@ -242,9 +239,9 @@ ul.slides li img {
 					<option value="20" label="20">
 				</select>
 				<a href="WebUserMain">
-				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+					<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
-				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+				<button type="button" id="search" name="select" style="font-size:18px" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 				<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 				<c:if test="${userFullData.accountLv.lv == -1}" >
 					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:green">add</i></button></a>
@@ -381,8 +378,12 @@ ul.slides li img {
 					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 				});
 			};
-		
+			
 			$("#search").click(function() {
+				specSearch();
+	    	});
+			
+			function specSearch() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
  				var account = document.getElementById("userAccount").value.trim();
@@ -433,11 +434,13 @@ ul.slides li img {
 						} 
 					}
 				}
-	    	});
+			};
 			
 			function lastCheck(userId, account, status, mode) {
 				let choice=confirm("是否要執行特定的操作？");
 				if (choice) {
+					document.getElementById("pageNo").value = 1;
+					document.getElementById("maxPage").value = 1;
 					let operateResultSpan = document.getElementById("searchSpan");
 					let operateResultStr = "...處理中，請稍後";
 					let operateResultIsOk = true;
@@ -501,7 +504,7 @@ ul.slides li img {
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-				let avgPage = 3;
+				let avgPage = document.getElementById("avPage").value;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 					+ searchStr;
@@ -534,8 +537,6 @@ ul.slides li img {
 							if (resultObj.userDataList.length != 0) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
-										+ "<legend>以下為使用者列表：</legend>"
-										+ "<hr />"
 										+ "<table border='1'>";
 										
 								if (document.getElementById("userLv").value == -1) {
@@ -571,6 +572,7 @@ ul.slides li img {
 											+ "<th>居住區域</th>"
 											+ "</tr>";
 								}
+
 								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
@@ -741,7 +743,7 @@ ul.slides li img {
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-				let avgPage = 3;
+				let avgPage = document.getElementById("avPage").value;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 						+ searchStr;
@@ -804,9 +806,7 @@ ul.slides li img {
 											+ "</tr>";
 								}
 								
-								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
-
-								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
+								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
@@ -911,6 +911,7 @@ ul.slides li img {
 										+ "</form>";
 								
 								document.getElementById("maxPage").value = resultObj.totalDataPages;
+										
 								if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
 									content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
 											+ "第一頁"

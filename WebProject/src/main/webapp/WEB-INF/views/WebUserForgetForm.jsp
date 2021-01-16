@@ -149,7 +149,7 @@
             <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-            	<c:if test="${userFullData.password != null}">
+            	<c:if test="${userFullData.account != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
 				<c:if test="${timeOut != null}">

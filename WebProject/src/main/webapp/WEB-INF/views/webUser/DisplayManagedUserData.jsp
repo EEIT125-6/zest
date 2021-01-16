@@ -188,13 +188,25 @@
 						<input type="hidden" name="account" id="account" value="${managedUserData.account}" />
 						<c:out value="${managedUserData.account}" />
 						<hr />
-						<label>帳號密碼：</label>
-						<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkPassword()"
-							size="30" maxlength="30" placeholder="請輸入密碼，6~30個字">
-						<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
-						<span id="passwordSpan"></span>
-						<hr />
+						<c:if test="${managedUserData.password == null}">
+							<input type="hidden" name="password" id="password" value="${managedUserData.password}" onblur="checkPassword()"
+								size="30" maxlength="30" placeholder="請輸入密碼，6~30個字" readonly>
+						</c:if>
+						<c:if test="${managedUserData.password != null}">
+							<label>帳號密碼：</label>
+							<input type="password" name="password" id="password" value="${managedUserData.password}" onblur="checkPassword()"
+								size="30" maxlength="30" placeholder="請輸入密碼，6~30個字">
+						</c:if>
+						<c:if test="${managedUserData.password == null}">
+							<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
+							<button type="button" style="font-size:18px;display:none;" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						</c:if>
+						<c:if test="${managedUserData.password != null}">
+							<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
+							<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+							<span id="passwordSpan"></span>
+							<hr />
+						</c:if>
 						<label>中文姓氏：</label>
 						<input type="text" name="firstName" id="firstName" value="${managedUserData.firstName}" onblur="checkFirstName()"
 							size="30" maxlength="30" placeholder="請輸入名字，1~3個中文字">

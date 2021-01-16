@@ -64,7 +64,7 @@ function checkAccountName() {
 	let accountIsOk = true;
 	let accountStr;
 
-	if (accountObjValue.length == 0) {
+	if (accountObjValue == "" || accountObjValue.length == 0) {
 		accountStr = "";
 		accountIsOk = true;
 	} else if (accountObjValue.length > 30) {
@@ -87,7 +87,7 @@ function checkAccountName() {
 		accountSpan.style.fontStyle = "italic";
 		return false;
 	} else {
-		if (accountObjValue.length == 0) {
+		if (accountObjValue == "" || accountObjValue.length == 0) {
 			accountSpan.innerHTML = "";
 		} else {
 			accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + accountStr;
