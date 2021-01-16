@@ -29,6 +29,14 @@ public class DisplayController {
 		return "booking/updateResult";
 		
 	}
+	@GetMapping("/booking/Display")
+	public String displayDetail(Model model,@RequestParam(value="key") String bookingNo) {
+		BookingBean bean = service.singleBooking(bookingNo);
+		model.addAttribute("bean", bean);
+		
+		return "booking/queryResult";
+		
+	}
 	
 	@GetMapping("/booking/updateResult")
 	public String fail() {

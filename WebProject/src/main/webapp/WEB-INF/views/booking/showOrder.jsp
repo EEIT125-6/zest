@@ -151,10 +151,7 @@
 <input type="hidden" name="user_id" value="${bean.user_id}">
 		       
 <h2 style="margin-left:170px">訂位紀錄如下 : </h2><br>
-<%-- <form action="<c:url value='/booking/admin'/>" method="post"> --%>
-<!-- <input type="submit" name="back" value="test" style="margin-bottom:70px"> -->
-<!-- </form> -->
-<%-- <button onclick="<c:url value='/booking/admin'/>"></button> --%>
+
 <a href="<c:url value='/booking/admin1'/>" ><input type ="button" value="test"></a>
 
 

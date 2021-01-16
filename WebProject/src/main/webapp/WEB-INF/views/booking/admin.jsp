@@ -170,32 +170,13 @@ response.setContentType("text/html;charset=UTF-8");
 		      		let data=booking[i];
 		      			
 		      		if (data.status==1){
-		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
 		      					
 		      		}else{
-		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
 		      		}
 		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
-				
-					/* content +="<table  cellspacing='1' cellpadding='1' border='1' width='500px' style='border:8px #FFD382 groove;'>"
-							+"<tr style='visibility: hidden;'><td width='200px'><td width='300px'></tr><tr bgcolor='#F2F4FB'><td>訂單編號:</td>";
-		      		if (data.status==1){
-		      			content+="<td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td></tr>"
-		      					+"<tr bgcolor='#FFFFE1'><td>訂位狀態:</td><td>有效</td></tr>";
-		      		}else{
-		      			content+="<td>"+data.bookingNo+"</td></tr>"
-		      					+"<tr bgcolor='#FFFFE1'><td>訂位狀態:</td><td>已取消</td></tr>";
-		      		}
-		      		content+="<tr bgcolor='#F2F4FB'><td>餐廳名稱:</td><td>"+data.restaurant
-		      				+"</td></tr><tr bgcolor='#FFFFE1'><td>訂位日期:</td><td>"+data.bookingdate
-		      				+"</td></tr><tr bgcolor='#F2F4FB'><td>時間:</td><td>"+data.time
-		      				+"</td></tr><tr bgcolor='#FFFFE1'><td>人數:</td><td>"+data.number
-		      				+"</td></tr><tr bgcolor='#F2F4FB'><td>姓名:</td><td>"+data.name
-		      				+"</td></tr><tr bgcolor='#FFFFE1'><td>聯絡電話:</td><td>"+data.phone
-		      				+"</td></tr><tr bgcolor='#F2F4FB'><td>E-mail:</td><td>"+data.mail
-		      				+"</td></tr><tr bgcolor='#FFFFE1'><td>用餐目的:</td><td>"+data.purpose
-		      				+"</td></tr><tr bgcolor='#F2F4FB'><td>特殊需求:</td><td>"+data.needs+"</td></tr>"; */
-		      				
+							
 		      	}
 		      	content+="</table>";
 	      		aa.innerHTML=content;
