@@ -39,7 +39,6 @@ function checkForm() {
 	
 	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
-	let emailSpan = document.getElementById("emailSpan");
 	
 	let phoneObjValue = document.getElementById("phone").value.trim();
 	let oldPhoneObjValue = document.getElementById("oldPhone").value;
@@ -157,9 +156,12 @@ function checkPassword() {
 	let passwordStr;
 	let startCharReg = /[0-9]/;
 
-	if (passwordObjValue == "" || passwordObjValue.length == 0) {
+	if (oldPasswordObjValue != null && (passwordObjValue == "" || passwordObjValue.length == 0)) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
+	} else if (oldPasswordObjValue == null) {
+		passwordStr = "";
+		passwordIsOk = true;
 	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
 		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;

@@ -232,7 +232,12 @@ public class WebUserController {
 			model.addAttribute("reg_webUser", reg_webUser);
 			/* 移動到顯示使用者輸入資料的畫面 */
 			return "redirect:/register/DisplayWebUserInfo";
-		} else {
+		} else if (model.getAttribute("id_token") != null && model.getAttribute("extraAccount") != null) {
+			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
+			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
+			/* 返回註冊畫面 */
+			return "redirect:/WebUserExtraRegisterForm";	
+		}else {
 			/* 將物件submitMessage以"submitMessage"的名稱放入flashAttribute中 */
 			redirectAttributes.addFlashAttribute("submitMessage", submitMessage);
 			/* 返回註冊畫面 */
@@ -260,10 +265,19 @@ public class WebUserController {
 		Integer insertResult = -1;
 		String insertResultPage = "WebUserRegisterForm";
 		
+		/* 驗證是否為第三方登入的註冊者 */
+		if (model.getAttribute("id_token") != null && model.getAttribute("extraAccount") != null) {
+			if (reg_webUser.getAccount().equals(model.getAttribute("extraAccount"))) {
+				insertResultMessage = "";
+			} else {
+				insertResultMessage = "資料驗證失敗，請重新執行";
+			}
+		} 
+		
 		/* 預防性後端輸入檢查，正常時回傳空字串 */
-		insertResultMessage = doCheckRegisterInput(
-				reg_webUser, 
-				model);
+		insertResultMessage = (insertResultMessage.equals(""))
+				? doCheckRegisterInput(reg_webUser, model) 
+				: insertResultMessage;
 		
 		/* 追加檢查項目 */
 		if (!reg_webUser.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
@@ -373,15 +387,21 @@ public class WebUserController {
 					/* 將登入時使用的資訊送往註冊頁 */
 					model.addAttribute("id_token",id_token);
 					model.addAttribute("extraAccount",account);
-				/* 第三方登入的使用者已註冊過時 */
-				} else if (!id_token.equals("") && wus.checkAccountExist(account) == 1) {
-					
-				/* 一般登入使用者 */
+				/* 第三方登入的使用者已註冊過時，排除碰撞的情況 */
+				} else if (!id_token.equals("") && wus.checkAccountExist(account) == 1 && wus.getWebUserData(account).getPassword() != null) {
+					accountCheckResult = 3;
+					loginMessage = "本系統已有與你帳號同名的使用者帳號，建議您可以考慮改建立一個專屬帳號";
+				/* 一般登入使用者或已註冊的第三方登入 */
 				} else {
-					/* 檢查登入 */
-					accountCheckResult = wus.checkWebUserLogin(account, password);
+					if (id_token.equals("")) {
+						/* 檢查登入 */
+						accountCheckResult = wus.checkWebUserLogin(account, password);
+					} else {
+						/* 檢查第三方登入 */
+						accountCheckResult = wus.checkExtraWebUserLogin(account);
+					}
 				}
-				if (accountCheckResult != 2) {
+				if (accountCheckResult != 2 && accountCheckResult != 3) {
 					/* 存取使用者個人資料 */
 					userFullData = wus.getWebUserData(account);
 					if (userFullData != null) {
@@ -1643,7 +1663,7 @@ public class WebUserController {
 		} 
 		
 		/* 不允許第三方登入修改密碼 */
-		if (resultMessage.equals("") && managedUserData.getPassword() == null) {
+		if (resultMessage.equals("") && managedUserData.getPassword() == null && newPassword.equals("")) {
 			resultMessage = "第三方登入的帳號無法修改密碼!";
 		}
 		
@@ -1718,8 +1738,7 @@ public class WebUserController {
 		resultMessage = (count == 14) ? "沒有輸入任何有效的修改內容，請重新操作" : resultMessage;
 		
 		/* 檢查完畢 */
-		if (resultMessage.equals("")) {
-			
+		if (resultMessage.equals("")) {	
 			/* 調用服務裡的方法 */
 			try {
 				updateResult = wus.updateWebUserData(updatedUserData);
@@ -1890,7 +1909,7 @@ public class WebUserController {
 		submitMessage = (inputIsOk) ? "" : "帳號身分錯誤";
 		
 		/* 第三方登入者 */
-		if (model.getAttribute("extraAccount") != null) {
+		if (model.getAttribute("extraAccount") != null && model.getAttribute("id_token") != null) {
 			inputIsOk = true;
 		/* 一般註冊者 */
 		} else {
@@ -1903,7 +1922,7 @@ public class WebUserController {
 		}
 		
 		/* 第三方登入者 */
-		if (model.getAttribute("extraAccount") != null) {
+		if (model.getAttribute("extraAccount") != null && model.getAttribute("id_token") != null) {
 			inputIsOk = true;
 		/* 一般註冊者 */
 		} else {
@@ -2394,6 +2413,30 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (account.matches("[1-9]{1}.")) {
 			submitMessage = "帳號不可以數字開頭";
+			inputIsOk = false;
+		} else if (account.indexOf("&") != -1) {
+			submitMessage = "帳號不可以包含&符號";
+			inputIsOk = false;
+		} else if (account.indexOf("=") != -1) {
+			submitMessage = "帳號不可以包含等號";
+			inputIsOk = false;
+		} else if (account.indexOf("_") != -1) {
+			submitMessage = "帳號不可以包含底線";
+			inputIsOk = false;
+		} else if (account.indexOf("-") != -1) {
+			submitMessage = "帳號不可以包含破折號";
+			inputIsOk = false;
+		} else if (account.indexOf("+") != -1) {
+			submitMessage = "帳號不可以包含加號";
+			inputIsOk = false;
+		} else if (account.indexOf(",") != -1 || account.indexOf("，") != -1) {
+			submitMessage = "帳號不可以包含逗號";
+			inputIsOk = false;
+		} else if (account.indexOf(".") != -1 || account.indexOf("。") != -1) {
+			submitMessage = "帳號不可以包含句號";
+			inputIsOk = false;
+		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
+			submitMessage = "帳號不可以包含問號";
 			inputIsOk = false;
 		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";

@@ -136,6 +136,34 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
+	public Integer checkExtraWebUserLogin(String inputAccount) throws SQLException {
+		/* 變數宣告 */
+		Integer checkLoginResult = -1;
+		Integer checkAccountResult = -1;
+		Integer checkAccountQuit = -1;
+		
+		/* 檢查帳號 */
+		checkAccountResult = webUserDAO.checkAccountExist(inputAccount);
+		/* 帳號不存在就不繼續往下執行 */
+		if (checkAccountResult != 1) {
+			throw new SQLException("帳號錯誤，請檢查之後再次輸入");
+		} else {
+			checkLoginResult++;
+		}
+		
+		/* 檢查帳號是否有效 */
+		checkAccountQuit = webUserDAO.checkAccountQuit(inputAccount);
+		/* 帳號棄用就不繼續往下執行 */
+		if (checkAccountQuit != 1) {
+			throw new SQLException("該帳號已棄用！請選擇其他帳號登入或註冊一個新帳號");
+		} else {
+			checkLoginResult++;
+		}
+		
+		return checkLoginResult;
+	}
+	
+	@Override
 	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException {
 		return webUserDAO.checkWebUserSignIn(inputUserId, today);
 	}

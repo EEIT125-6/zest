@@ -167,10 +167,10 @@
                 				<button type="button" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 			</a>
                 		</c:if>
-                		<c:if test="${userFullData.password.length() != 0}">
-                		<a href="<c:url value='/webUser/controller/WebUserModifyPassword' />">
-                			<button type="button" name="updatePassword" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
-               			</a>
+                		<c:if test="${userFullData.password != null}">
+	                		<a href="<c:url value='/webUser/controller/WebUserModifyPassword' />">
+	                			<button type="button" name="updatePassword" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
+	               			</a>
                			</c:if>
                 		<a href="<c:url value='/booking/Page1' />">
                 			<button type="button" id="checkBooking" name="checkBooking" style="font-size:18px" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
@@ -264,7 +264,7 @@
 						            		getDataSpan.style.color = "black";
 						            		getDataSpan.style.fontStyle = "normal";
 						            		
-						            		let passwordLength = resultObj.selfData.password.length;
+						            		let passwordLength = (resultObj.selfData.password == null) ? 0 : resultObj.selfData.password.length;
 						            		let coveredPassword = "";
 						            		for (let lengthIndex = 0; lengthIndex < passwordLength; lengthIndex++) {
 												coveredPassword += "*";						            			
@@ -290,24 +290,26 @@
 						            			content = "<hr /><label>帳號圖示：</label><br /><img src='${pageContext.request.contextPath}/images/webUser/defaultIcon/ncu_scens.jpg' width='200' height='200' title='這是系統預設的帳號圖示'>"
 						            		}
 						            		
-						            		content += "<hr /><label>帳號名稱：" + resultObj.selfData.account + "</label>"
-						            						+ "<hr /><label>帳號密碼：" + coveredPassword + "</label>"
-						            						+ "<hr /><label>中文姓氏：" + resultObj.selfData.firstName + "</label>"
-						            						+ "<hr /><label>中文姓名：" + resultObj.selfData.lastName + "</label>"
-						            						+ "<hr /><label>稱呼方式：" + resultObj.selfData.nickname + "</label>"
-						            						+ "<hr /><label>生理性別：" + resultObj.selfData.gender.genderText + "</label>"
-						            						+ "<hr /><label>西元生日：" + resultObj.birthday + "</label>"
-						            						+ "<hr /><label>偏好食物：" + resultObj.selfData.fervor + "</label>"
-						            						+ "<hr /><label>聯絡信箱：" + resultObj.selfData.email + "</label>"
-						            						+ "<hr /><label>聯絡電話：" + resultObj.selfData.phone + "</label>"
-						            						+ "<hr /><label>是否願意接收促銷/優惠訊息：" + resultObj.selfData.getEmail.willingText + "</label>"
-						            						+ "<hr /><label>居住區域：" + resultObj.selfData.locationInfo.cityName + "</label>"
-						            						+ "<hr /><label>生活地點一：" + resultObj.selfData.addr0 + "</label>"
-						            						+ "<hr /><label>生活地點二：" + resultObj.selfData.addr1 + "</label>"
-						            						+ "<hr /><label>生活地點三：" + resultObj.selfData.addr2 + "</label>"
-						            						+ "<hr /><label>所擁有的橙幣：" + resultObj.selfData.zest + "</label>"
-						            						+ "<hr /><label>帳號狀態：" + accountStatus + "</label>"
-						            						+ "<hr />";
+						            		content += "<hr /><label>帳號名稱：" + resultObj.selfData.account + "</label>";
+						            		
+						            		content = (passwordLength == 0) ? content : content + "<hr /><label>帳號密碼：" + coveredPassword + "</label>"
+						            		
+						            		content += "<hr /><label>中文姓氏：" + resultObj.selfData.firstName + "</label>"
+				            						+ "<hr /><label>中文姓名：" + resultObj.selfData.lastName + "</label>"
+				            						+ "<hr /><label>稱呼方式：" + resultObj.selfData.nickname + "</label>"
+				            						+ "<hr /><label>生理性別：" + resultObj.selfData.gender.genderText + "</label>"
+				            						+ "<hr /><label>西元生日：" + resultObj.birthday + "</label>"
+				            						+ "<hr /><label>偏好食物：" + resultObj.selfData.fervor + "</label>"
+				            						+ "<hr /><label>聯絡信箱：" + resultObj.selfData.email + "</label>"
+				            						+ "<hr /><label>聯絡電話：" + resultObj.selfData.phone + "</label>"
+				            						+ "<hr /><label>是否願意接收促銷/優惠訊息：" + resultObj.selfData.getEmail.willingText + "</label>"
+				            						+ "<hr /><label>居住區域：" + resultObj.selfData.locationInfo.cityName + "</label>"
+				            						+ "<hr /><label>生活地點一：" + resultObj.selfData.addr0 + "</label>"
+				            						+ "<hr /><label>生活地點二：" + resultObj.selfData.addr1 + "</label>"
+				            						+ "<hr /><label>生活地點三：" + resultObj.selfData.addr2 + "</label>"
+				            						+ "<hr /><label>所擁有的橙幣：" + resultObj.selfData.zest + "</label>"
+				            						+ "<hr /><label>帳號狀態：" + accountStatus + "</label>"
+				            						+ "<hr />";
 						            						
 						            		dataContainer.innerHTML = content;
 						            	}

@@ -169,6 +169,12 @@
 								<hr />
 							</c:if>
 						</c:if>
+						<c:if test="${extraAccount != null}">
+							<c:if test="${id_token != null}">
+								<button type="button" name="showPassword" id="showPassword" style="font-size:18px;display:none;" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red;">visibility</i></button>
+								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
+							</c:if>
+						</c:if>
 						<label>中文姓氏：</label>
 						<c:out value="${reg_webUser.firstName}" />
 						<hr />

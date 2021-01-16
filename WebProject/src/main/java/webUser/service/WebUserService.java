@@ -49,6 +49,9 @@ public interface WebUserService {
 	/* 執行登入檢查 -1->異常、0->失敗、1->成功 */
 	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException;
 	
+	/* 執行第三方登入檢查 -1->異常、0->失敗、1->成功 */
+	public Integer checkExtraWebUserLogin(String inputAccount) throws SQLException;
+	
 	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
 	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException;
 	

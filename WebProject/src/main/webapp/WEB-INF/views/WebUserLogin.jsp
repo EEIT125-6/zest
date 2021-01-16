@@ -296,13 +296,17 @@
 									let typeObject = xhrObject.getResponseHeader("Content-Type");
 									if (typeObject.indexOf("application/json") === 0) {
 										let resultObj = JSON.parse(xhrObject.responseText);
-										if (resultObj.resultCode == 2) {
+										if (resultObj.resultCode == 3) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 2) {
 											loginStr = "驗證成功！將導向新畫面";
 											loginIsOk = true;
 											/* 顯示彈窗訊息 */
 						            		alert(loginStr);
-										}
-										if (resultObj.resultCode == 1) {
+										} else if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
 						            		let loginSucMsg = resultObj.resultMessage;

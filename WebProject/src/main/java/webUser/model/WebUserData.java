@@ -26,7 +26,7 @@ public class WebUserData implements Serializable{
 	private String userId;
 	@Column(nullable = false , unique = true , columnDefinition="varchar(30)")
 	private String account;
-	@Column(nullable = false , unique = false , columnDefinition="varchar(30)")
+	@Column(nullable = true , unique = false , columnDefinition="varchar(30)")
 	private String password;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(3)")
 	private String firstName;
