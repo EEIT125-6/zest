@@ -14,6 +14,8 @@
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <title>重設個人密碼</title>
     <style>
@@ -144,6 +146,7 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<c:if test="${userId == null}">
@@ -264,6 +267,7 @@
             
 <!-- -------------------------------------------------------------------- -->
            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:250px">
-           <%@include file = "../Footer-Include-prototype.jsp" %>
+               <%@include file = "../Footer-Include-prototype.jsp" %>
+           </div>
 </body>
 </html>

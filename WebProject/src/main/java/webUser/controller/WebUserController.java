@@ -250,13 +250,97 @@ public class WebUserController {
 	}
 
 	/* 執行使用者資料送出 */
-	@PostMapping(value = "/register/controller/DisplayWebUserInfo/confirm")
-	public String doInsertWebUserData (
+//	@PostMapping(value = "/register/controller/DisplayWebUserInfo/confirm")
+//	public String doInsertWebUserData (
+//				SessionStatus sessionStatus,
+//				RedirectAttributes redirectAttributes,
+//				Model model) {
+//		
+//		String destinationUrl = "";
+//		
+//		/* 取出物件 */
+//		WebUserData reg_webUser = (WebUserData) model.getAttribute("reg_webUser");
+//		String registerEmail = (String) model.getAttribute("registerEmail");
+//		
+//		/* 設定要顯示的訊息 */
+//		String insertResultMessage = "";
+//		
+//		/* 宣告欲回傳的參數 */
+//		Integer insertResult = -1;
+//		String insertResultPage = "WebUserRegisterForm";
+//		
+//		/* 驗證是否為第三方登入的註冊者 */
+//		if (model.getAttribute("id_token") != null && model.getAttribute("extraAccount") != null) {
+//			if (reg_webUser.getAccount().equals(model.getAttribute("extraAccount"))) {
+//				insertResultMessage = "";
+//			} else {
+//				insertResultMessage = "資料驗證失敗，請重新執行";
+//			}
+//		} 
+//		
+//		/* 預防性後端輸入檢查，正常時回傳空字串 */
+//		insertResultMessage = (insertResultMessage.equals(""))
+//				? doCheckRegisterInput(reg_webUser, model) 
+//				: insertResultMessage;
+//		
+//		/* 追加檢查項目 */
+//		if (!reg_webUser.getJoinDate().equals(Date.valueOf(LocalDate.now()))) {
+//			insertResultMessage = "加入時間異常";
+//		}
+//		
+//		if (!reg_webUser.getStatus().equals("active") && reg_webUser.getAccountLv().getLv() == 0) {
+//			insertResultMessage = "帳號狀態異常";
+//		} else if (!reg_webUser.getStatus().equals("inactive") 
+//				&& (reg_webUser.getAccountLv().getLv() == 1)) {
+//			insertResultMessage = "帳號狀態異常";
+//		}
+//		
+//		if (reg_webUser.getVersion() != 0) {
+//			insertResultMessage = "帳號資料狀態異常";
+//		}
+//		
+//		if (!reg_webUser.getEmail().equals(registerEmail)) {
+//			insertResultMessage = "信箱比對不一致";
+//		}
+//		
+//		if (insertResultMessage.equals("")) {
+//			/* 調用服務裡的方法 */
+//			try {
+//				insertResult = wus.insertWebUserData(reg_webUser);
+//			} catch (SQLException sqlE) {
+//				insertResultMessage = "發生錯誤！" + sqlE.getMessage();
+//			}
+//			
+//			if (insertResult > 0) {
+//				insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
+//				/* 清空SessionAttribute */
+//				sessionStatus.setComplete();
+//				insertResultPage = "WebUserLogin";
+//			} 
+//			
+//			/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
+//			redirectAttributes.addFlashAttribute("insertResultMessage", insertResultMessage);
+//			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
+//			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
+//			/* 前往註冊結束畫面 */
+//			destinationUrl = "redirect:/WebUserRegisterResult";
+//		} else {
+//			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
+//			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
+//			/* 返回註冊畫面 */
+//			destinationUrl = "redirect:/WebUserRegisterForm";
+//		}		
+//		
+//		return destinationUrl;
+//	}
+	
+	@PostMapping(value = "/register/controller/DisplayWebUserInfo/confirm", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
 				Model model) {
 		
-		String destinationUrl = "";
+		Map<String, String> map = new HashMap<>();
 		
 		/* 取出物件 */
 		WebUserData reg_webUser = (WebUserData) model.getAttribute("reg_webUser");
@@ -317,21 +401,12 @@ public class WebUserController {
 				sessionStatus.setComplete();
 				insertResultPage = "WebUserLogin";
 			} 
-			
-			/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
-			redirectAttributes.addFlashAttribute("insertResultMessage", insertResultMessage);
-			/* 將物件insertResultPage以"insertResultPage"的名稱放入flashAttribute中 */
-			redirectAttributes.addFlashAttribute("insertResultPage", insertResultPage);
-			/* 前往註冊結束畫面 */
-			destinationUrl = "redirect:/WebUserRegisterResult";
-		} else {
-			/* 將物件insertResultMessage以"submitMessage"的名稱放入flashAttribute中 */
-			redirectAttributes.addFlashAttribute("submitMessage", insertResultMessage);
-			/* 返回註冊畫面 */
-			destinationUrl = "redirect:/WebUserRegisterForm";
-		}		
+		} 
 		
-		return destinationUrl;
+		map.put("resultCode", insertResult.toString());
+		map.put("resultMessage", insertResultMessage);
+		map.put("nextPath", insertResultPage);
+		return map;
 	}
 	
 	/* 取消註冊 */
@@ -350,6 +425,7 @@ public class WebUserController {
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
 			HttpServletRequest request,
+			SessionStatus sessionStatus,
 			@RequestParam(value = "account", defaultValue="") String account,
 			@RequestParam(value = "password", required = false, defaultValue="") String password,
 			@RequestParam(value = "id_token", required = false, defaultValue="") String id_token) {
@@ -502,30 +578,52 @@ public class WebUserController {
 				/* 將sessionId、帳號、登入使用的物件存入servletContext */
 				context.setAttribute("userMap", userMap);
 			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
-			} else {
+			} else if (userMap != null && userMap.get(account) != null) {
 				Map<String, Object> userDataMap = (Map<String, Object>) userMap.get(account);
 				String oldSessionId = (String) userDataMap.get("currentSessionId");
-				HttpSession oldSession = (HttpSession) context.getAttribute(oldSessionId);
-				
-				/* 存在且有效 */
-				if (oldSession != null) {
+				if (oldSessionId != null) {
 					singleLogin = false;
-				/* 存在但過期或已無效 */
-				} else {
-					singleLogin = true;
-					/* 移除舊的 */
-					userMap.remove(account);
-					/* 插入當下的 */
-					userDataMap.put("userFullData", userFullData);
-					/* sessionId */
-					String currentSessionId = WebUtils.getSessionId(request);
-					userDataMap.put("currentSessionId", currentSessionId);
-					
-					/* 放入存所有使用者資料的map */
-					userMap.put(account, userDataMap);
-					/* 將sessionId、帳號、登入使用的物件存入servletContext */
-					context.setAttribute("userMap", userMap);
+					accountCheckResult = 4;
+					loginMessage = "本帳號已在使用中，請先登出其他地方的帳號";
 				}
+				
+//				HttpSession oldSession = (HttpSession) context.getAttribute(oldSessionId);
+//				
+//				/* 存在且有效 */
+//				if (oldSession != null) {
+//					singleLogin = true;
+//					/* 移除舊的 */
+//					userMap.remove(account);
+//					/* 無效舊的httpSession */
+//					oldSession.invalidate();
+//					/* 清空SessionAttribute */
+//					sessionStatus.setComplete();
+//					/* 登入使用的物件 */
+//					userDataMap.put("userFullData", userFullData);
+//					/* sessionId */
+//					String currentSessionId = WebUtils.getSessionId(request);
+//					userDataMap.put("currentSessionId", currentSessionId);
+//					
+//					/* 放入存所有使用者資料的map */
+//					userMap.put(account, userDataMap);
+//					/* 將sessionId、帳號、登入使用的物件存入servletContext */
+//					context.setAttribute("userMap", userMap);
+//				/* 存在但過期或已無效 */
+//				} else {
+//					singleLogin = true;
+//					/* 移除舊的 */
+//					userMap.remove(account);
+//					/* 插入當下的 */
+//					userDataMap.put("userFullData", userFullData);
+//					/* sessionId */
+//					String currentSessionId = WebUtils.getSessionId(request);
+//					userDataMap.put("currentSessionId", currentSessionId);
+//					
+//					/* 放入存所有使用者資料的map */
+//					userMap.put(account, userDataMap);
+//					/* 將sessionId、帳號、登入使用的物件存入servletContext */
+//					context.setAttribute("userMap", userMap);
+//				}
 			}
 			
 			if(singleLogin) {
@@ -558,21 +656,22 @@ public class WebUserController {
 		String nickname = (userData == null) ? "訪客" : userData.getNickname();
 		String logoutMessage = "謝謝您的使用，" + nickname + " !";
 		
-		/* 將servletContext中的物件裡的對應部分移除 */
-		Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
-		/* 移除本使用者 */
-		userMap.remove(userData.getAccount());
-		if (userMap.size() > 0) {
-			/* 回存 */
-			context.setAttribute("userMap", userMap);
-		} else if (userMap.size() == 0) {
-			/* 直接移除 */
-			context.removeAttribute("userMap");
-		}
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 無效httpSession */
 		session.invalidate();
+		/* 將servletContext中的物件裡的對應部分移除 */
+		Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
+		if (userMap != null) {
+			/* 移除本使用者 */
+			userMap.remove(userData.getAccount());
+			/* 回存 */
+			context.setAttribute("userMap", userMap);
+		} else if (userMap == null) {
+			/* 直接移除 */
+			context.removeAttribute("userMap");
+		}
+		
 		/* 將物件insertResultMessage以"insertResultMessage"的名稱放入flashAttribute中 */
 		redirectAttributes.addFlashAttribute("logoutMessage", logoutMessage);
 		/* 前往首頁 */
@@ -622,8 +721,79 @@ public class WebUserController {
 	}
 	
 	/* 執行修改密碼 */
-	@PostMapping(value = "/webUser/controller/WebUserModifyPassword")
-	public String doUpdateWebUserPassword(
+//	@PostMapping(value = "/webUser/controller/WebUserModifyPassword")
+//	public String doUpdateWebUserPassword(
+//			Model model,
+//			SessionStatus sessionStatus,
+//			HttpServletRequest request,
+//			RedirectAttributes redirectAttributes,
+//			@RequestParam(value = "password" ,required = false) String password,
+//			@RequestParam(value = "confirmPassword") String confirmPassword ) {	
+//		
+//		/* 宣告參數 */
+//		String updateResultMessage = "";
+//		Integer updateResult = -1;
+//		String destinationUrl = "";
+//		
+//		/* 從sessionAttribute中取出物件 */
+//		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+//		String oldPassword = userData.getPassword();
+//		
+//		/* 檢查是否為第三方登入-原密碼為空 */
+//		updateResultMessage = (userData.getPassword() == null) ? "第三方登入不支援本功能!" : "";
+//		
+//		if (updateResultMessage.equals("")) {
+//			/* 預防性後端檢查 */
+//			String tmpMessage = doCheckUpdatePasswordInput(userData, password, confirmPassword);
+//			updateResultMessage = (tmpMessage.equals("?")) ? "" : tmpMessage;
+//		}
+//		
+//		/* 成功才執行 */
+//		if (updateResultMessage.equals("")) {
+//			/* 調用服務裡的方法 */
+//			try {
+//				userData.setVersion(userData.getVersion() + 1);
+//				userData.setPassword(password);
+//				updateResult = wus.updateWebUserPassword(userData);
+//			} catch (SQLException sqlE) {
+//				updateResultMessage = sqlE.getMessage();
+//				/* 復原操作 */
+//				userData.setVersion(userData.getVersion() - 1);
+//				userData.setPassword(oldPassword);
+//			}
+//			
+//			/* 成功 */
+//			if (updateResult == 1) {
+//				/* 清空SessionAttribute */
+//				sessionStatus.setComplete();
+//				/* 無效HttpSession */
+//				request.getSession().invalidate();
+//			}
+//		}
+//		if (!updateResultMessage.equals("")) {
+//			if (updateResultMessage.indexOf(":") != -1) {	
+//				updateResultMessage = updateResultMessage.split(":")[1];
+//			}
+//		} else {
+//			updateResultMessage = userData.getAccount() + "的密碼變更成功！3秒後將返回登入畫面";
+//		}
+//		
+//		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
+//		redirectAttributes.addFlashAttribute("updateResultMessage", updateResultMessage);
+//		
+//		if (updateResult == 1) {
+//			/* 導向密碼修改結果畫面 */
+//			destinationUrl = "redirect:/WebUserChangeResult";
+//		} else {
+//			/* 導向修改個人密碼畫面 */
+//			destinationUrl = "redirect:/webUser/WebUserModifyPassword";
+//		}
+//		
+//		return destinationUrl;
+//	}
+	
+	@PostMapping(value = "/webUser/controller/WebUserModifyPassword", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, String> doUpdateWebUserPassword(
 			Model model,
 			SessionStatus sessionStatus,
 			HttpServletRequest request,
@@ -631,6 +801,7 @@ public class WebUserController {
 			@RequestParam(value = "password" ,required = false) String password,
 			@RequestParam(value = "confirmPassword") String confirmPassword ) {	
 		
+		Map<String, String> map = new HashMap<>();
 		/* 宣告參數 */
 		String updateResultMessage = "";
 		Integer updateResult = -1;
@@ -662,35 +833,24 @@ public class WebUserController {
 				userData.setVersion(userData.getVersion() - 1);
 				userData.setPassword(oldPassword);
 			}
-			
-			/* 成功 */
-			if (updateResult == 1) {
-				/* 清空SessionAttribute */
-				sessionStatus.setComplete();
-				/* 無效HttpSession */
-				request.getSession().invalidate();
-			}
 		}
 		if (!updateResultMessage.equals("")) {
 			if (updateResultMessage.indexOf(":") != -1) {	
 				updateResultMessage = updateResultMessage.split(":")[1];
 			}
 		} else {
-			updateResultMessage = userData.getAccount() + "的密碼變更成功！3秒後將返回登入畫面";
+			updateResultMessage = userData.getAccount() + "的密碼變更成功！將自動登出本帳號";
 		}
-		
-		/* 將物件updateResultMessage以"updateResultMessage"的名稱放入flashAttribute中 */
-		redirectAttributes.addFlashAttribute("updateResultMessage", updateResultMessage);
 		
 		if (updateResult == 1) {
-			/* 導向密碼修改結果畫面 */
-			destinationUrl = "redirect:/WebUserChangeResult";
-		} else {
-			/* 導向修改個人密碼畫面 */
-			destinationUrl = "redirect:/webUser/WebUserModifyPassword";
-		}
+			/* 密碼設定完後切換到登出狀態 */
+			destinationUrl = request.getContextPath() + "/webUser/controller/WebUserMain/Logout";
+		} 
 		
-		return destinationUrl;
+		map.put("resultCode", updateResult.toString());
+		map.put("resultMessage", updateResultMessage);
+		map.put("nextPath", destinationUrl);
+		return map;
 	}
 	
 	/* 準備前往修改其他資料畫面 */
@@ -1851,10 +2011,10 @@ public class WebUserController {
 	}
 	
 	/* 前往註冊結束畫面 */
-	@GetMapping(value = "/WebUserRegisterResult")
-	public String doGoRegisterResult() {
-		return "WebUserRegisterResult";
-	}
+//	@GetMapping(value = "/WebUserRegisterResult")
+//	public String doGoRegisterResult() {
+//		return "WebUserRegisterResult";
+//	}
 	
 	/* 前往登入畫面 */
 	@GetMapping(value = "/WebUserLogin")
@@ -1869,22 +2029,6 @@ public class WebUserController {
 		}
 		return "WebUserLogin";
 	}
-	
-	/* Tmp */
-	/* 前往Google登入畫面 */
-	@GetMapping(value = "/WebUserGoogleLogin")
-	public String doGoGoogleLogin(
-			HttpServletRequest request,
-			RedirectAttributes redirectAttributes) {
-		/* 檢查session是否逾時 */
-		Boolean isRequestedSessionIdValid = request.isRequestedSessionIdValid();
-		/* 逾時 */
-		if (!isRequestedSessionIdValid) {
-			redirectAttributes.addFlashAttribute("timeOut", "使用逾時，請重新登入");
-		}
-		return "WebUserGoogleLogin";
-	}
-	/* Tmp */
 	
 	/* 前往忘記密碼畫面 */
 	@GetMapping(value = "/WebUserForgetForm")
@@ -1907,10 +2051,10 @@ public class WebUserController {
 	}
 	
 	/* 前往登出畫面 */
-	@GetMapping(value = "/WebUserLogoutResult")
-	public String doGoLogOut() {
-		return "WebUserLogoutResult";
-	}
+//	@GetMapping(value = "/WebUserLogoutResult")
+//	public String doGoLogOut() {
+//		return "WebUserLogoutResult";
+//	}
 	
 	/* 前往修改個人密碼畫面 */
 	@GetMapping(value = "/webUser/WebUserModifyPassword")
@@ -1919,10 +2063,10 @@ public class WebUserController {
 	}
 	
 	/* 前往個人修改結束畫面 */
-	@GetMapping(value = "/WebUserChangeResult")
-	public String doGoWebUserChangeResult() {
-		return "WebUserChangeResult";
-	}
+//	@GetMapping(value = "/WebUserChangeResult")
+//	public String doGoWebUserChangeResult() {
+//		return "WebUserChangeResult";
+//	}
 	
 	/* 前往管理員用顯示個人資料畫面 */
 	@GetMapping(value = "/webUser/DisplayManagedUserData")
