@@ -4,12 +4,15 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import model.BookingBean;
-import utils.HibernateUtils;
 
+@Repository
 public class BookingDAO_Impl implements BookingDAO {
 	
-	SessionFactory factory = HibernateUtils.getSessionFactory();
+	@Autowired
+	SessionFactory factory;
 	
 	//新增insert
 	@Override
@@ -72,10 +75,10 @@ public class BookingDAO_Impl implements BookingDAO {
 	@Override
 	public boolean checkBooking(String bookingNo) {
 		
-		String hql ="from BookingBean b where b.bookingNo="+"'"+bookingNo+"'";
+		String hql ="from BookingBean b where b.bookingNo = :bookingNo";
 		Session session = factory.getCurrentSession();
 		Query<BookingBean> query = session.createQuery(hql);
-		List <BookingBean> list=query.getResultList();
+		List <BookingBean> list=query.setParameter("bookingNo", bookingNo).getResultList();
 		if (list.size()==0) {
 			return false;
 		}
