@@ -1190,6 +1190,7 @@ public class WebUserController {
 	}
 	
 	/* 根據輸入模式執行對應功能 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/webUser/ManageWebUser/{mode}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doAdminOperate(
 			Model model,
@@ -1220,9 +1221,12 @@ public class WebUserController {
 					Boolean runQuit = true;
 					/* 調用服務裡的方法 */
 					try {
-						/* 如果為管理員，先檢查是否仍有可登入的管理員帳號 */
+						/* 如果停用的對象為管理員帳號，先禁止"自己停用自己"的操作，再檢查是否仍有可登入的管理員帳號 */
 						if (quitUserLv == -1) {
-							if (wus.checkAdminAccess() - 1 == 0) {
+							if (userData.getAccount().equals(account)) {
+								runQuit = false;
+								operateMessage = "您無法停用當前正在使用的帳號！";
+							} else if (wus.checkAdminAccess() - 1 == 0) {
 								runQuit = false;
 								operateMessage = "無法停用本帳號！系統要求至少需要維持一個可登入的管理員帳號";
 							}
@@ -1235,6 +1239,26 @@ public class WebUserController {
 							operateResult = wus.adminChangeWebUserData(userId, status);
 							/* 寄送Email */
 							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
+						}
+						/* 將被停用的使用者離線 */
+						if (operateResult == 1) {
+							Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
+							System.out.println("test map size is null ? " + userMap.isEmpty());
+							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常強況 */
+							if (userMap.isEmpty()) {
+								operateResult = 0;
+								operateMessage = "發生異常！請考慮重新登入本系統或聯絡技術人員";
+							} else {
+								/* 透過帳號取得Session物件 */
+								HttpSession bannedSession = (HttpSession) userMap.get(account);
+								/* 檢查是否處於有效階段？ */
+								if (bannedSession != null) {
+									/* 無效該使用者的Session */
+									bannedSession.invalidate();
+								}
+								/* 沒異常就繼續維持resultCode */
+								operateResult = 1;
+							}
 						}
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();

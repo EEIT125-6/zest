@@ -376,9 +376,10 @@
 			        let CLIENT_ID = "669411837109-7e2a842ctg9ft9t6p9q8s8t3ic5gmp5k.apps.googleusercontent.com";
 			        let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/people/v1/rest"];
 			    </script>
-                <script async defer src="https://apis.google.com/js/api.js"
-		            onload="this.onload=function(){};GoogleClientInit()"
-		            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+                <script async="true" defer src="https://apis.google.com/js/api.js" 
+                	onload="this.onload=function(){};GoogleClientInit()"
+		            onreadystatechange="if (this.readyState === 'complete') this.onload()"
+		            >
 			    </script>
             </div>
 <!-- -------------------------------------------------------------------- -->

@@ -144,7 +144,7 @@ response.setContentType("text/html;charset=UTF-8");
    
 <body>
 <%@include file = "../Header-Include.jsp" %>
-<%@include file="../LoadingScreen.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 <div align="center">
 <h2><i>所有會員訂位資訊 :</i></h2>
@@ -170,7 +170,7 @@ response.setContentType("text/html;charset=UTF-8");
 		      		let data=booking[i];
 		      			
 		      		if (data.status==1){
-		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
 		      					
 		      		}else{
 		      			content+="<tr><td><a href=<c:url value='/booking/DisplayController?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
@@ -179,7 +179,6 @@ response.setContentType("text/html;charset=UTF-8");
 		      	}
 		      	content+="</table>";
 	      		aa.innerHTML=content;
-	      		
 		      	
 		      	}else{
 		      		aa.innerHTML="<h3>查無訂位資料</h3>";

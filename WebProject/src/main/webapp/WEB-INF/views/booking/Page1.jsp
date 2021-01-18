@@ -5,6 +5,8 @@
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <title>訂位查詢</title>
 <style>
         .aa{
@@ -152,30 +154,26 @@
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 
 <div class="h1"> 
-<form action="<c:url value='/booking/select'/>" method="post" >
-<center>
-<label class="aa">
-<input type="tel"  placeholder="請輸入手機號碼" name="phone" id="phone" >
-</label>
+	<form action="<c:url value='/booking/select'/>" method="post" >
+		<div align="center">
+			<label class="aa">
+				<input type="tel"  placeholder="請輸入手機號碼" name="phone" id="phone" >
+			</label>
 
-<label class="aa">
-<input type="submit" value="查詢訂位" name="select" id="select" >
-</label>
-<label class="aa">
-<c:if test="${line!=null}">
-<c:out value="${line }"/>
-</c:if> 
-</label>
-
-</center>
-<!-- <label class="aa">
-<input type="submit" value="取消訂位" name="cancel" id="cancel" >
-</label> -->
-
-</form>   
+			<label class="aa">
+				<input type="submit" value="查詢訂位" name="select" id="select" >
+			</label>
+			<label class="aa">
+				<c:if test="${line!=null}">
+					<c:out value="${line }"/>
+				</c:if> 
+			</label>
+		</div>
+	</form>   
 </div>
   <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>
