@@ -170,20 +170,17 @@
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
+						<label>記住帳密：</label>
+						<input type="checkbox" name="remember" id="remember"
+							<c:if test='${remember == true}'>
+								checked='checked'
+							</c:if> 
+							value=true>
+						<hr />
 						<span id="loginSpan">
 							<c:if test="${timeOut != null}">
 								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
 								<c:out value="${timeOut}" />
-								<hr />
-							</c:if>
-							<c:if test="${loginMessage.substring(0,2) == '歡迎'}">
-								<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>
-								<c:out value="${loginMessage}" />
-								<hr />
-							</c:if>
-							<c:if test="${loginMessage.substring(0,2) != '歡迎' && loginMessage != null}">
-								<i class='material-icons' style='font-size:18px;color:red'>cancel</i>
-								<c:out value="${loginMessage}" />
 								<hr />
 							</c:if>
 						</span>
@@ -194,6 +191,7 @@
                 		</a>
                			<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
 						<button type="button" style="font-size:18px" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
+						<button type="button" style="font-size:18px" id="cookieLogin" name="cookieLogin" >一鍵登入 <i class="material-icons" style="font-size:18px;color:blue">free_breakfast</i></button>
 						<a href="<c:url value='/WebUserRegisterForm' /> ">
 							<button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 						</a>
@@ -212,6 +210,7 @@
                 		let bossAutoInputBtn = document.getElementById("bossInput");
                 		let adminAutoInputBtn = document.getElementById("adminInput");
                 		let googleLoginBtn = document.getElementById("googleLogin");
+                		let cookieLoginBtn = document.getElementById("cookieLogin");
                 		
                 		submitBtn.onclick = function() {
                 			inputCheck();
@@ -231,6 +230,10 @@
                 		googleLoginBtn.onclick = function() {
                 			GoogleLogin();
                 		};
+                		cookieLoginBtn.onclick = function() {
+                			var remember = document.getElementById("remember").checked;
+                			autoLoginCheck(remember);
+                		}
                 	};
                 	
                 	function GoogleClientInit() {
@@ -257,7 +260,7 @@
                                 let inputEmail = res.result.emailAddresses[0].value;
                                 /* id */
                                 var account = inputEmail.substring(0, inputEmail.indexOf("@"));
-                                loginCheck(account, "", id_token)
+                                loginCheck(account, "", id_token, false)
                             });
                         },
                         function (error) {
@@ -269,14 +272,15 @@
                 	function inputCheck() {
 	                	var account = document.getElementById("account").value.trim();
 	                	var password = document.getElementById("password").value.trim();
+	                	var remember = document.getElementById("remember").checked;
 						if(!checkForm()) {
 	                		alert("帳號或密碼不符規範，請再檢查一次！");
 	                	} else {
-	                		loginCheck(account, password, "");	
+	                		loginCheck(account, password, "", remember);	
 	                	}
 	                }
                 	
-                	function loginCheck(account, password, id_token) {
+                	function autoLoginCheck(remember) {
 	                	let loginSpan = document.getElementById("loginSpan");
 						let loginStr = "...處理中，請稍後";
 						let loginIsOk = true;
@@ -289,7 +293,108 @@
 	            		if (xhrObject != null) {
 	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("account=" + account + "&password=" + password + "&id_token=" + id_token);
+							xhrObject.send("remember=" + remember);
+							
+							xhrObject.onreadystatechange = function() {
+								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+									let typeObject = xhrObject.getResponseHeader("Content-Type");
+									if (typeObject.indexOf("application/json") === 0) {
+										let resultObj = JSON.parse(xhrObject.responseText);
+										if (resultObj.resultCode == 6) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 5) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 4) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 3) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 2) {
+											loginStr = "驗證成功！將導向新畫面";
+											loginIsOk = true;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 1) {
+											loginStr = "登入成功！";
+						            		loginIsOk = true;
+						            		let loginSucMsg = resultObj.resultMessage;
+						            		if (resultObj.signInMessage != "") {
+						            			loginSucMsg += "\n" + resultObj.signInMessage;
+						            		} 
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginSucMsg);
+										} else if (resultObj.resultCode == 0) {
+											loginStr = "帳號或密碼錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if(resultObj.resultCode == -1) {
+						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+						            	} else if(resultObj.resultCode == -2) {
+						            		loginStr = "帳號錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+						            	} else if(resultObj.resultCode == -3) {
+						            		loginStr = "檢查途中遭遇錯誤！";
+						            		loginIsOk = false;
+						            		/* 顯示彈窗訊息 */
+						            		alert(resultObj.resultMessage);
+						            	}
+										if (!loginIsOk) {
+						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
+						            		loginSpan.style.color = "red";
+						            		loginSpan.style.fontStyle = "italic";
+						            	} else {
+						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
+						            		loginSpan.style.color = "black";
+						            		loginSpan.style.fontStyle = "normal";
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
+						            	}
+									} else {
+										loginStr = "發生錯誤，無法執行檢查";
+						            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
+						            	loginSpan.style.color = "red";
+					            		loginSpan.style.fontStyle = "italic";
+					            		/* 顯示彈窗訊息 */
+					            		alert(loginStr);
+									}
+								} 
+							};
+	            		} else {
+							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+						}
+                	}
+                	
+                	function loginCheck(account, password, id_token, remember) {
+	                	let loginSpan = document.getElementById("loginSpan");
+						let loginStr = "...處理中，請稍後";
+						let loginIsOk = true;
+						
+						loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
+	            		loginSpan.style.color = "black";
+	            		loginSpan.style.fontStyle = "normal";
+	            		
+	            		let xhrObject = new XMLHttpRequest();
+	            		if (xhrObject != null) {
+	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
+							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhrObject.send("account=" + account + "&password=" + password + "&id_token=" + id_token + "&remember=" + remember);
 							
 							xhrObject.onreadystatechange = function() {
 								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
