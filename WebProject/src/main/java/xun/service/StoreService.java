@@ -52,6 +52,8 @@ public interface StoreService {
 	
 	Integer setStorePrice(Integer price,Integer id);
 	
+	Integer setStoreRealPrice(Integer realprice,Integer id);
+	
 	Integer setStoreStar(Float avgStar,Integer id);
 	
 	List<String> getSclassCategory();

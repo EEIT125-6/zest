@@ -229,4 +229,10 @@ public class StoreServiceImpl implements StoreService {
 		return list;
 	}
 	
+	@Transactional
+	@Override
+	public Integer setStoreRealPrice(Integer realprice, Integer id) {
+		return dao.setStoreRealPrice(realprice, id);
+	}
+	
 }

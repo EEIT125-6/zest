@@ -38,4 +38,9 @@ public class TraceServiceImpl implements TraceService {
 		return tdao.StoreBeTrace(stId);
 	}
 
+	@Override
+	public void removeAllBeTraceStore(Integer stId) {
+		tdao.removeAllBeTraceStore(stId);
+	}
+
 }

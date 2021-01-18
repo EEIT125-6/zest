@@ -279,13 +279,13 @@ a.mobile-show {
             
             <c:if test="${userFullData.userId == userId && userId != null}">
             	<div style="margin-top: 8px;margin-left: 8px">
-<%-- 			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline"> --%>
-<%-- 				<input type="hidden" name="id" value="${id}"> --%>
-<%-- 				<input type="hidden" name="stname" value="${stname1}"> --%>
-<!-- 				<input type="submit" class="btn btn-danger" value="刪除店家" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
-<!-- 			</form> -->
+			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
+				<input type="hidden" name="id" value="${id}">
+				<input type="hidden" name="stname" value="${stname1}">
+				<input type="submit" class="btn btn-danger" value="刪除店家" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+			</form>
 			
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalOS" style="box-shadow: 1px 1px 1px rgb(75, 75, 75)" >下架商店</button>
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalOS" style="box-shadow: 1px 1px 1px rgb(75, 75, 75)" >下架商店</button>
 <!-- -----------------------------------Model----------------------------			 -->
 <div class="modal fade" id="myModalOS" role="dialog">
 	<div class="modal-dialog modal-sm">
@@ -392,7 +392,7 @@ function relocate_bannerURL()
 <%--         <h1 style="margin-bottom: 100px" ><%=request.getParameter("stname") %></h1> --%>
 <%-- 		<c:if test="判斷登入"> --%>
 <%-- ${userFullData.userId == userId && userId != null} --%>
-			<c:if test="${userFullData.userId == userId && userId != null}"> 
+			<c:if test="${userFullData.userId != null}"> <!-- 只要為登入狀態就可以 修改! -->
 				<c:set var="TR" value="false"/>
 <%-- 				${userFullData.userId} --%>
 <%-- 				${TR} --%>
@@ -400,21 +400,65 @@ function relocate_bannerURL()
 <%-- 				${list_beTrace.storeId} --%>
 			<c:forEach var="i" items="${list_beTrace}">
 <%-- 				${i.memberId} --%>
-				<c:if test="${userFullData.userId == i.memberId}">
+				<c:if test="${userFullData.userId == i.memberId}">  
 					<c:set var="TR" value="true"/>
 				</c:if>
 			</c:forEach>
-<%-- 				${TR} --%>
 				<c:if test="${TR == 'false'}">
-			<button type="button"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
-				<i class="far fa-heart" style="color:red;font-size: 35px;"></i>
+			<button type="button" class="traceBt" id="traceId1"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
+				<i class="far fa-heart" style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
 			</button>
+			
+			<button type="button" class="traceBt" id="traceId2"  style="float:right;display: none;background-color:Transparent;border: none;right:35px">
+	 			<i class="fas fa-heart " style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+	 		</button>
 				</c:if>
 				<c:if test="${TR == 'true'}">
-	 		<button type="button"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
-	 			<i class="fas fa-heart " style="color:red;font-size: 35px;"></i>
+	 		<button type="button" class="traceBt" id="traceId2"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
+	 			<i class="fas fa-heart " style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
 	 		</button>
+			
+			<button type="button" class="traceBt" id="traceId1"  style="float:right;display: none;background-color:Transparent;border: none;right:35px">
+				<i class="far fa-heart" style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+			</button>	
 	 			</c:if>
+	 <script type="text/javascript">
+	 		$(".traceBt").click(function(){
+	 			var stId = ${id};
+				var memberId = ${userFullData.userId};
+				
+				console.log(stId);
+				if($(this).attr("id")== 'traceId1'){
+	         		$.ajax({
+	         			type:"Get",
+	         			url:'<c:url value="/addTrace"/>',
+	         			data:{
+	         				'stId':stId,
+	         				'memberId':memberId
+	         			},
+	         			success:function(data){
+			 				$("#traceId1").toggle();
+			 				$("#traceId2").toggle();
+	         				console.log("success add");
+	         			}
+	         		})
+				}else if($(this).attr("id")== 'traceId2'){
+					$.ajax({
+	         			type:"Get",
+	         			url:'<c:url value="/removeTrace"/>',
+	         			data:{
+	         				'stId':stId,
+	         				'memberId':memberId
+	         			},
+	         			success:function(data){
+			 				$("#traceId1").toggle();
+			 				$("#traceId2").toggle();
+	         				console.log("success remove");
+	         			}
+					})
+				}
+	 		})
+	 </script>
  		</c:if>
         <h1 style="margin-bottom: 100px" >${stname1}</h1>
         <hr>
@@ -595,7 +639,7 @@ function initMap() {
           </div>
           
         <div id="div2" style="display:none;" class="ddiv">
-            <span style="font-size: 140%"> hello</span>
+            <span style="font-size: 140%"> coming soon</span>
         </div>
         <div id="div3" style="display:none;" class="ddiv">
 <!--              <span style="font-size: 140%">ho </span> -->
@@ -775,7 +819,7 @@ function initMap() {
 			</div>
         </div>
         <div id="div4" style="display:none;" class="ddiv">
-        	 <span style="font-size: 140%"><c:out value = "${stitddt }"></c:out></span>
+        	 <span style="font-size: 140%"><c:out value = "${stitddt}"></c:out></span>
         </div>
     </div>
         <script>

@@ -28,6 +28,7 @@ public class StoreBean {
 	String sclass;
 	String saddress;
 	Integer price;
+	Integer realprice;
 	String stitd;
 	String stitddt;
 	String tel;
@@ -44,6 +45,14 @@ public class StoreBean {
 	@Transient	
 	MultipartFile stfile;
 	
+	public Integer getRealprice() {
+		return realprice;
+	}
+
+	public void setRealprice(Integer realprice) {
+		this.realprice = realprice;
+	}
+
 	public Integer getClick() {
 		return click;
 	}

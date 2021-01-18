@@ -209,6 +209,7 @@ a.mobile-show {
   text-transform: uppercase;
   letter-spacing: 7px;
 }
+
 </style>
 </head>
 <body>
@@ -254,8 +255,8 @@ a.mobile-show {
             <div class="col-5" style="padding:0px;border-radius: 15px 15px 15px 15px;background-color: #F0F0F0;height: 300px;margin-bottom: 50px;border: 3px black solid;">
                 <div class="h-100 " style="color:9e3f22;align-items: center;">
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
-                    	<a href="<c:url value='/dashborad_order' />">
-                        	<span style="font-family: 'Noto Sans TC', sans-serif;">
+                    	<a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
+                        	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
                             	統計資料
                         	</span>
                         </a>
@@ -266,8 +267,8 @@ a.mobile-show {
             <div class="col-5" style="padding:0px;border-radius: 15px 15px 15px 15px;background-color: #F0F0F0;height: 300px;margin-bottom: 50px;border: 3px black solid;">
                 <div class="h-100 " style="color:9e3f22;align-items: center;">
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
-                        <a href="<c:url value='/dashborad_order' />">
-                        	<span style="font-family: 'Noto Sans TC', sans-serif;">
+                        <a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
+                        	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
                             		後臺管理
  	                       </span>
  	                    </a>
@@ -277,8 +278,8 @@ a.mobile-show {
             <div class="col-5" style="padding:0px;border-radius: 15px 15px 15px 15px;background-color: #F0F0F0;height: 300px;margin-bottom: 50px;border: 3px black solid;">
                 <div class="h-100 " style="color:9e3f22;align-items: center;">
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
-                    	<a href="<c:url value='/dashborad_order' />">
-                        	<span style="font-family: 'Noto Sans TC', sans-serif;">
+                    	<a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
+                        	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
                             	了解運作狀態
                         	</span>
                         </a>
@@ -289,8 +290,8 @@ a.mobile-show {
             <div class="col-5" style="padding:0px;border-radius: 15px 15px 15px 15px;background-color: #F0F0F0;height: 300px;margin-bottom: 50px;border: 3px black solid;">
                 <div class="h-100 " style="color:9e3f22;align-items: center;">
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
-	                    <a href="<c:url value='/dashborad_order' />">
-                        	<span style="font-family: 'Noto Sans TC', sans-serif;">
+	                    <a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
+                        	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
                         	    Unknow
                         	</span>
                         </a>

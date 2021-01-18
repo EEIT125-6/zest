@@ -58,4 +58,12 @@ public class TraceDaoImpl implements TraceDao {
 		return list;
 	}
 
+	@Override
+	public void removeAllBeTraceStore(Integer stId) {
+		Session session =factory.getCurrentSession();
+		String hql = "DELETE TraceBean tb WHERE tb.storeId = :stId";
+		session.createQuery(hql).setParameter("stId", stId).executeUpdate();
+		
+	}
+
 }

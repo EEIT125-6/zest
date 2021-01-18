@@ -66,6 +66,7 @@ public class StoreWhiteListC_Controller {
 //		啟動狀態
 		storeBean.setStatus("1");
 		storeBean.setClick(0);
+		storeBean.setRealprice(0);
 //		storeBean.setAvgStar((float) 0);
 //		寫入商家主人資訊
 		WebUserData userFullData = (WebUserData) model.getAttribute("userFullData");

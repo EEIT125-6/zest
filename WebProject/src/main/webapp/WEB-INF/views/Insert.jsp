@@ -154,6 +154,22 @@
                     	</div>
                     </div>
                 </form:form>
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入</button>
+                    	</div>
+                    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    	<script type="text/javascript">
+                    		$("#oneBt").click(function(){
+                    			$("#storename").val('203蘋果');
+                    			$("#storeAddress").val('330桃園市桃園區大業路二段4號');
+                    			$("#storeTel").val('033161218');
+                    			$("#storeItd").val('上菜快，好吃，價格公道。'
+                    					+'只經營早餐及午餐。'
+                    					+'老闆很有愛心，支持1919愛走動急難家庭救助活動。'
+                    					);
+                    			$("#storeItddt").val('POPO吃凱薩青醬雞柳義大利麵，套餐105元還有中杯飲料蠻大杯，但麵條不是喜歡的麵條，所以味道沒太大的記憶點，不過這間店餐點真的很多元，從中式蘿蔔糕、炒麵、拌飯、拌麵、蔥抓餅等等，和西式的沙拉、漢堡、鐵板麵、義大利麵等等，應有盡有，每天吃應該也不會膩！');
+                    		})
+                    	</script>
             </div>
         </div>
     </div>

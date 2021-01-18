@@ -70,6 +70,7 @@ public class StoreR_Controller {
 			tb11.setMemberId(-1);
 			list_beTrace.add(tb11);
 		}
+		
 		model.addAttribute("list_beTrace", list_beTrace);
 		System.out.println("--------------------------------------------------------------"+list_beTrace.get(0).getMemberId());
 		System.out.println("--------------------------------------------------------------"+list_beTrace);
@@ -148,7 +149,8 @@ public class StoreR_Controller {
 			@RequestParam String stname,
 			@RequestParam(value = "priceLimit" , required = false) Integer priceLimit,
 			@RequestParam(value = "star" , required = false) Float star,
-			@RequestParam Integer offset
+			@RequestParam Integer offset,
+			@RequestParam(value = "priceOrder") Integer priceOrder
 			) {
 //		System.out.println("sclass = "+sclass);
 		List<StoreBean> list = new ArrayList<StoreBean>();
@@ -196,7 +198,15 @@ public class StoreR_Controller {
 			System.out.println("what?? how do you do that shit");
 		}
 //		System.out.println("lastList"+list);
-//		Collections.sort(list, new ClickComparator());
+		if (priceOrder == 1) {
+			Collections.sort(list, new PriceComparatorA());
+		}else if(priceOrder == -1) {
+			Collections.sort(list, new PriceComparatorD());
+		}else {
+			//依照點擊數排序
+			Collections.sort(list, new ClickComparator());			
+		}
+		
 		Integer off3 = offset+3;
 		if(off3>list.size()) {
 			off3 = list.size();
@@ -235,6 +245,7 @@ class ClickComparator implements Comparator{
 	public int compare(Object o1, Object o2) {
 		StoreBean t1 = (StoreBean) o1;
 		StoreBean t2 = (StoreBean) o2;
+		//由多到少
 		if(t1.getClick()>t2.getClick()) {
 			return -1;
 		}else if(t1.getClick()==t2.getClick()) {
@@ -245,3 +256,34 @@ class ClickComparator implements Comparator{
 	}
 }
 
+class PriceComparatorA implements Comparator{
+	@Override
+	public int compare(Object o1, Object o2) {
+		StoreBean t1 = (StoreBean) o1;
+		StoreBean t2 = (StoreBean) o2;
+		//由少到多 
+		if(t1.getRealprice()>t2.getRealprice()) {
+			return 1;
+		}else if(t1.getRealprice()==t2.getRealprice()) {
+			return 0;
+		}else {				
+			return -1;
+		}
+	}
+}
+
+class PriceComparatorD implements Comparator{
+	@Override
+	public int compare(Object o1, Object o2) {
+		StoreBean t1 = (StoreBean) o1;
+		StoreBean t2 = (StoreBean) o2;
+		//由多到少
+		if(t1.getRealprice()>t2.getRealprice()) {
+			return -1;
+		}else if(t1.getRealprice()==t2.getRealprice()) {
+			return 0;
+		}else {				
+			return 1;
+		}
+	}
+}

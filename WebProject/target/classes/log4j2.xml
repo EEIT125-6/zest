@@ -53,7 +53,7 @@ private static final Logger logger = LogManager.getLogger(实际类名.class.get
         <Root level="ALL">
 <!--             <AppenderRef ref="Console" level="WARN" /> -->
             <AppenderRef ref="Console" level="WARN" />
-            <AppenderRef ref="RollingFile" level="INFO" />
+            <AppenderRef ref="RollingFile" level="DEBUG" />
         </Root>
     </loggers>
 </configuration>

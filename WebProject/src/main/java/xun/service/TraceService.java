@@ -14,4 +14,6 @@ public interface TraceService {
 	
 	List<TraceBean> StoreBeTrace(Integer stId);
 	
+	void removeAllBeTraceStore(Integer stId);
+	
 }

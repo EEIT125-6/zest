@@ -49,6 +49,14 @@ public class ProductCUD_Controller {
 		productInfoBean.setProduct_shop(sb.getStname());
 		model.addAttribute("stid", stid);
 		model.addAttribute("productInfoBean", productInfoBean);
+//		給值
+//		for (int i = 1; i < 62; i++) {
+//			if (ss.get(i) == null) {
+//				continue;
+//			}
+//		CalculateStoreRealPrice(i);	
+//		}
+		
 		return "InsertProduct";
 	}
 	
@@ -105,7 +113,7 @@ public class ProductCUD_Controller {
 		}
 //		建置商家price
 
-		CalculateStoreValue(sb.getId());
+		CalculateStoreRealPrice(sb.getId());
 		
 		
 //		轉跳
@@ -188,7 +196,7 @@ public class ProductCUD_Controller {
 //			System.out.println(productInfoBean);
 		}
 //		設置商店價值
-		CalculateStoreValue(stid);
+		CalculateStoreRealPrice(stid);
 //		轉跳
 		StoreBean sb = ss.get(stid);
 		Integer NewStoreId = sb.getId();
@@ -220,7 +228,7 @@ public class ProductCUD_Controller {
 		ps.deleteProduct(productInfoBean);
 
 //		設置商店價值
-		CalculateStoreValue(stid);
+		CalculateStoreRealPrice(stid);
 //		轉跳
 		StoreBean sb = ss.get(stid);
 		Integer NewStoreId = sb.getId();
@@ -245,31 +253,34 @@ public class ProductCUD_Controller {
 		ps.productReOnShelf(productId);
 	}
 //	設置商家價格區間
-	public void CalculateStoreValue(Integer stid) {
-//		轉入AOP
-//		StoreBean sb = ss.get(stid);
-//		
-//		
-//		List<Integer> productsprice = new ArrayList<Integer>() ;
-//		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
-//			Integer ss =  pi.getProduct_price();
-//			productsprice.add(ss);
-//		}
-//		
-//		Collections.sort(productsprice);
-//		Integer storeprice=null;
-//		if(productsprice.size()%2 !=0) {
-//			storeprice=productsprice.get((productsprice.size()+1)/2-1);
-//			System.out.println(storeprice);
-//			System.out.println("+++++++++++"+productsprice);
-//		}else if(productsprice.size()==0){
-//			storeprice=0;
-//		}else {
-//			storeprice=productsprice.get((productsprice.size()/2));
-//			
-//			System.out.println(storeprice);
-//			System.out.println("-----------"+productsprice);
-//		}
+	public void CalculateStoreRealPrice(Integer stid) {
+		
+		StoreBean sb = ss.get(stid);
+		
+//		Integer sumPrice = 0;
+		List<Integer> productsprice = new ArrayList<Integer>() ;
+		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
+			Integer ss =  pi.getProduct_price();
+//			sumPrice  = sumPrice + ss;
+			productsprice.add(ss);
+		}
+//		Integer avgPrice = sumPrice/productsprice.size();
+		
+		Collections.sort(productsprice);
+		Integer realprice=null;
+		if(productsprice.size()%2 !=0) {
+			realprice=productsprice.get((productsprice.size()+1)/2-1);
+			System.out.println(realprice);
+			System.out.println("+++++++++++"+productsprice);
+		}else if(productsprice.size()==0){
+			realprice=0;
+		}else {
+			realprice=productsprice.get((productsprice.size()/2));
+			
+			System.out.println(realprice);
+			System.out.println("-----------"+productsprice);
+		}
+		ss.setStoreRealPrice(realprice, sb.getId());
 //		if (storeprice < 150) {
 //			storeprice = 1;
 //		}else if(storeprice < 300) {
@@ -281,7 +292,6 @@ public class ProductCUD_Controller {
 //		}else {
 //			storeprice = 5;
 //		}
-//		
 //		Integer Result  = ss.setStorePrice(storeprice, sb.getId());
 //		System.out.println("成功修改STORE_PRICE是1:"+Result);
 	}

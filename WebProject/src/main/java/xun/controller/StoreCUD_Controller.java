@@ -29,6 +29,7 @@ import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
+import xun.service.TraceService;
 import xun.util.GlobalService;
 import xun.validators.StoreInsertVaildators;
 
@@ -45,6 +46,9 @@ public class StoreCUD_Controller {
 	
 	@Autowired
 	WebUserService ws;
+	
+	@Autowired
+	TraceService ts;
 	
 //	@GetMapping("/Insert") 暫時作廢
 	public String InsertPage(
@@ -162,6 +166,8 @@ public class StoreCUD_Controller {
 		for(ProductInfoBean pp : ps.getStoreProduct(sb)) {
 			ps.productOffShelf(pp.getProduct_id());
 		}
+		//移除所有追蹤狀態
+		ts.removeAllBeTraceStore(id);
 		return "redirect:/";
 	}
 	
@@ -172,6 +178,8 @@ public class StoreCUD_Controller {
 			) {
 		ps.deleteALLProduct(storeBean);
 		ss.deleteStore(storeBean);
+		//移除所有追蹤狀態
+		ts.removeAllBeTraceStore(storeBean.getId());
 		return "exDeleteStore";
 	}
 	

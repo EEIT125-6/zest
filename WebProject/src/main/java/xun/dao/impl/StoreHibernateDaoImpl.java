@@ -355,5 +355,15 @@ public class StoreHibernateDaoImpl implements StoreDao {
 				.getResultList();
 		return list;
 	}
+
+	@Override
+	public Integer setStoreRealPrice(Integer realprice, Integer id) {
+		Session session = factory.getCurrentSession();
+		String hql = "Update StoreBean sb set realprice = :realprice WHERE id = :id";
+		session.createQuery(hql).setParameter("realprice", realprice)
+			.setParameter("id", id)
+			.executeUpdate();
+		return realprice;
+	}
 	
 }

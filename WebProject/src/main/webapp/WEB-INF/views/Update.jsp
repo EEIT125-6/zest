@@ -162,6 +162,21 @@
                     	</div>
                     </div>
                 </form:form>
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入</button>
+                    	</div>
+                    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    	<script type="text/javascript">
+                    		$("#oneBt").click(function(){
+                    			$("#storename").val('204橘子');
+                    			$("#storeAddress").val('320桃園市中壢區新生路二段373巷57號');
+                    			$("#storeTel").val('034532459');
+                    			$("#storeItd").val('上菜快，好吃，價格公道。'
+                    					+'只經營早餐及午餐。'
+                    					);
+                    			$("#storeItddt").val('每天吃應該也不會膩！');
+                    		})
+                    	</script>
             </div>
         </div>
     </div>

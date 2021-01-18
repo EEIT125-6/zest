@@ -35,13 +35,16 @@ public class testJAVA {
 		testJAVA s1 = new testJAVA("sa",1);
 		testJAVA s2 = new testJAVA("ss",2);
 		testJAVA ss3 = new testJAVA("sb",3);
+		testJAVA s4 = new testJAVA("s4", 0);
 		List<testJAVA> list = new ArrayList<testJAVA>();
 		
 		list.add(s2);
 		list.add(ss3);
 		list.add(s1);
+		list.add(s4);
 		System.out.println(list);
 		Collections.sort(list, new TestJAVAComparator());
+		
 		System.out.println(list);
 		System.out.println(list.size());
 		System.out.println(list.get(list.size()-1));
@@ -54,8 +57,10 @@ public class testJAVA {
 		Float qq = (float) 3.2;
 		System.out.println(qq);
 		String sss = "h g f r <!--";
+		int sbm = 1;
+		System.out.println(Integer.valueOf(sbm));
 		System.out.println(sss.replace(" ",""));
-		System.out.println(sss.indexOf("g"));
+		System.out.println(sss.indexOf("u"));
 		System.out.println(sss.substring(sss.indexOf("g"),sss.indexOf("g")+3));
 		if ((sss.substring(sss.indexOf("g"),sss.indexOf("g")+3).equals("g f"))){
 			String ssd=sss.replace("<!--", "fuck");

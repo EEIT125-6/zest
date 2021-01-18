@@ -13,4 +13,6 @@ public interface TraceDao {
 	String DoITraceThisStore(Integer memberId,Integer stId);
 	
 	List<TraceBean> StoreBeTrace(Integer stId);
+	
+	void removeAllBeTraceStore(Integer stId);
 }

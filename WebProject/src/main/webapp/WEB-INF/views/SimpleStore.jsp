@@ -361,45 +361,63 @@ a.mobile-show {
 	</div>
 	<div class="row">
 	<div class="col-sm-3 ">
-	 <div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
-        <!-- 用container -->
-        <form action="############################" method="post" >
-            <fieldset style="width: auto;margin:1px auto;">
-                <legend>篩選條件</legend>
-                
-                
-				<br>
-           		  	<input type="radio" id="d1" name="dollar" value='1' >
-  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>   
-                   	<input type="radio" id="d2" name="dollar" value='2'>
-  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d3" name="dollar" value='3'>
-  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d4" name="dollar" value='4'>
-  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d5" name="dollar" value='5'>
-  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                <hr>
-                <label>欲查詢幾顆星以上店家
-                </label>
-				<br>
-					<input type="radio" id="star3.5" name="star" value='3.5' >
-  					<label for="star3.5">3.5+</label>
-  				<br>
-  					<input type="radio" id="star4" name="star" value='4'>
-  					<label for="star4">4.0+</label>
-  				<br>
- 
-            </fieldset>
-	            <div style="text-align: center;">
-            </div>
-        </form>
-    </div>
+		<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; margin-bottom:30px">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>排序:</legend>
+	                <label>依據價格排序
+	                </label>
+					<br>
+						<input type="radio" id="priceOrderH" name="priceOrder" value='-1' >
+	  					<label for="priceOrderH">由高至低</label>
+	  				<br>
+	  					<input type="radio" id="priceOrderL" name="priceOrder" value='1'>
+	  					<label for="priceOrderL">由低至高</label>
+	  				<br>
+	            </fieldset>
+	        </form>
+   		 </div>
+   		 
+	 	<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>篩選條件</legend>
+	                
+	                
+					<br>
+	           		  	<input type="radio" id="d1" name="dollar" value='1' >
+	  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>   
+	                   	<input type="radio" id="d2" name="dollar" value='2'>
+	  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d3" name="dollar" value='3'>
+	  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d4" name="dollar" value='4'>
+	  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d5" name="dollar" value='5'>
+	  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                <hr>
+	                <label>欲查詢幾顆星以上店家
+	                </label>
+					<br>
+						<input type="radio" id="star3.5" name="star" value='3.5' >
+	  					<label for="star3.5">3.5+</label>
+	  				<br>
+	  					<input type="radio" id="star4" name="star" value='4'>
+	  					<label for="star4">4.0+</label>
+	  				<br>
+	 
+	            </fieldset>
+		            <div style="text-align: center;">
+	            </div>
+	        </form>
+   		 </div>
 	</div>
 	<div class="col-sm-6" >
       
@@ -431,6 +449,7 @@ a.mobile-show {
 			var stopload = 0;
 			var priceLimit = "";
 			var star = "";
+			var priceOrder = 0;
 				$.ajax({
 						
 						type:"GET",
@@ -440,7 +459,8 @@ a.mobile-show {
 							'stname':"${stname}",
 							'priceLimit':priceLimit,
 							'star':star,
-							'offset':flag
+							'offset':flag,
+							'priceOrder':priceOrder
 						},
 						datatype:'json',
 // 						datatype:'html',
@@ -475,6 +495,66 @@ a.mobile-show {
 						}
 				})
 				
+				$('input[name="priceOrder"]').click(function(){
+					priceOrder = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
+					
+							}
+					})
+				});
+				
 				$('input[name="star"]').click(function(){
 					star = $(this).val()
 					flag = 0;
@@ -489,7 +569,8 @@ a.mobile-show {
 								'stname':"${stname}",
 								'priceLimit':priceLimit,
 								'star':star,
-								'offset':flag
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){
@@ -554,7 +635,8 @@ a.mobile-show {
 								'stname':"${stname}",
 								'priceLimit':priceLimit,
 								'star':star,
-								'offset':flag
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){
@@ -619,7 +701,8 @@ a.mobile-show {
 								'stname':"${stname}",
 								'priceLimit':priceLimit,
 								'star':star,
-								'offset':flag
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){

@@ -91,4 +91,6 @@ public class WebAppConfig implements WebMvcConfigurer {
 //		registry.addResourceHandler("/undefined")
 //				.addResourceLocations("/Images/LOGO1-removebg-preview.png");
 	}
+	
+	
 }
