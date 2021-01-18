@@ -145,7 +145,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
-<%@include file="../LoadingScreen.jsp" %>
+<%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
  <div class="container" align="center" style="margin-top: 20px;">  

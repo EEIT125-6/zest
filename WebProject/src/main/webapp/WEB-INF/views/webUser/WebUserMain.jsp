@@ -177,6 +177,9 @@
                 		</a>
                 			<a href="<c:url value='/orange/ShowComment' />">
                 		<button type="button" id="checkComment" name="checkComment" style="font-size:18px" >查詢留言 <i class="material-icons" style="font-size:18px;color:blue">forum</i></button>
+                		
+<!--                 		<button type="button" id="myFavorite" name="myFavorite" style="font-size:18px" >我的最愛 <i class="material-icons" style="font-size:18px;color:blue">favorite</i></button> -->
+                		
                 		</a>
                 		<c:if test="${userFullData.accountLv.lv == -1}" >
                 			<button type="button" id="manage" name="manage" style="font-size:18px" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
