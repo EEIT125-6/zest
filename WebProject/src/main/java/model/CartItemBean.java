@@ -1,111 +1,92 @@
 package model;
 
-import java.io.Serializable;
+import java.sql.Date;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import webUser.model.WebUserData;
 import xun.model.ProductInfoBean;
-//import org.springframework.data.annotation.Transient;
 
 @Entity
 @Table(name = "CartItem")
-public class CartItemBean implements Serializable {
-	private static final long serialVersionUID = 1L;	
+public class CartItemBean {	
 	
 	@Id
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "userId", columnDefinition = ("char(7)"))
-	private WebUserData product_User;//購買人資訊
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Integer purchase_Id;//交易代號
+	@JoinColumn(name = "userId")
 	@ManyToOne
-	@JoinColumn(name="ProductInfo",columnDefinition=("nvarchar(50)"))
-	private ProductInfoBean product_Info;//產品資訊
-	@Column(name="PurchaseQuantity", columnDefinition=("nvarchar(50)"))
-	private String product_Quantity;//購買數量
-	@Column(name="PurchaseTime",columnDefinition=("TIMESTAMP WITH TIME ZONE"))
-	private OffsetDateTime purchase_Time;//交易時間帶時區
-	@Column(name="PurchasePayment", columnDefinition=("nvarchar(10)"))
-	private Boolean purchase_Payment;//付款狀態
-	@Column(name="PurchaseTrans", columnDefinition=("nvarchar(10)"))
-	private String purchase_Trans; //運送狀態
+	WebUserData product_User;//購買人資訊
+	@ManyToOne
+	@JoinColumn(name="ProductInformation")
+	ProductInfoBean product_Information;//產品資訊
+	@Column(name="PurchaseQuantity")
+	String product_Quantity;//購買數量
+	@Column(name="PurchasePayment")
+	Boolean purchase_Payment;//付款狀態
+	@Column(name="PurchaseTransport")
+	String purchase_Transport; //運送狀態
+	@Column(name="PurchaseTime")
+	Date purchase_Time; //購買日期
 	
-	public CartItemBean(WebUserData product_User, ProductInfoBean product_Info, String product_Quantity,
-			OffsetDateTime purchase_Time, Boolean purchase_Payment, String purchase_Trans) {
+	public CartItemBean() {
 		super();
-		this.product_User = product_User;
-		this.product_Info = product_Info;
-		this.product_Quantity = product_Quantity;
-		this.purchase_Time = purchase_Time;
-		this.purchase_Payment = purchase_Payment;
-		this.purchase_Trans = purchase_Trans;
 	}
 
-	@Transient
+	public CartItemBean(WebUserData product_User, ProductInfoBean product_Info, String product_Quantity,
+			 Boolean purchase_Payment, String purchase_Trans) {
+		super();
+		this.product_User = product_User;
+		this.product_Information = product_Info;
+		this.product_Quantity = product_Quantity;
+		this.purchase_Payment = purchase_Payment;
+		this.purchase_Transport = purchase_Trans;
+	}
+
+	
 	public WebUserData getProduct_User() {
 		return product_User;
 	}
-	@Transient
+	
 	public void setProduct_User(WebUserData product_User) {
 		this.product_User = product_User;
 	}
-	@Transient
+	
 	public ProductInfoBean getProduct_Info() {
-		return product_Info;
+		return product_Information;
 	}
-	@Transient
+	
 	public void setProduct_Info(ProductInfoBean product_Info) {
-		this.product_Info = product_Info;
+		this.product_Information = product_Info;
 	}
-	@Transient
+	
 	public String getProduct_Quantity() {
 		return product_Quantity;
 	}
-	@Transient
+	
 	public void setProduct_Quantity(String product_Quantity) {
 		this.product_Quantity = product_Quantity;
 	}
-	@Transient
-	public OffsetDateTime getPurchase_Time() {
-		return purchase_Time;
-	}
-	@Transient
-	public void setPurchase_Time(OffsetDateTime purchase_Time) {
-		this.purchase_Time = purchase_Time;
-	}
-	@Transient
+	
 	public Boolean getPurchase_Payment() {
 		return purchase_Payment;
 	}
-	@Transient
+	
 	public void setPurchase_Payment(Boolean purchase_Payment) {
 		this.purchase_Payment = purchase_Payment;
 	}
-	@Transient
+	
 	public String getPurchase_Trans() {
-		return purchase_Trans;
+		return purchase_Transport;
 	}
-	@Transient
+	
 	public void setPurchase_Trans(String purchase_Trans) {
-		this.purchase_Trans = purchase_Trans;
+		this.purchase_Transport = purchase_Trans;
 	}
-	
-	public CartItemBean(List<ProductInfoBean> list, int id) {
-		super();
-	}
-	
-	
-
-	}
-	
-	
-
+}

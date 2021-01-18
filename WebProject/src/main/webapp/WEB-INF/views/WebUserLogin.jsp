@@ -95,7 +95,6 @@
             width:24px;
             height: 10px;
         }
-
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -266,7 +265,6 @@
                         function (error) {
                             alert("Google登入失敗");
                         });
-
                     }
                 	
                 	function inputCheck() {
@@ -401,7 +399,12 @@
 									let typeObject = xhrObject.getResponseHeader("Content-Type");
 									if (typeObject.indexOf("application/json") === 0) {
 										let resultObj = JSON.parse(xhrObject.responseText);
-										if (resultObj.resultCode == 5) {
+										if (resultObj.resultCode == 6) {
+											loginStr = resultObj.resultMessage;
+											loginIsOk = false;
+											/* 顯示彈窗訊息 */
+						            		alert(loginStr);
+										} else if (resultObj.resultCode == 5) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
 											/* 顯示彈窗訊息 */

@@ -32,6 +32,7 @@ public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 		contextPath = request.getContextPath();
 		requestURI  = request.getRequestURI();
 		HttpSession session = request.getSession();
+
 		/* 檢查session是否逾時 */
 		isRequestedSessionIdValid = request.isRequestedSessionIdValid();
 		/* 必須有註冊物件 */

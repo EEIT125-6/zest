@@ -5,11 +5,7 @@ import java.util.List;
 import model.CartItemBean;
 import xun.model.ProductInfoBean;
 
-
 public interface CartDAO {
-	
-
-
 	List<CartItemBean> getCartList(); // 取得目前所有的購物車列表
 	
 	List<ProductInfoBean> getProductList(); //取得商城所有商品列表

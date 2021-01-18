@@ -36,7 +36,6 @@
 						<span class="close-btn"><i class="fas fa-window-close"></i></span>
 						<div class="search-bar">
 							<div class="search-bar-tablecell">
-							
 								<form action="<c:url value='/StoreGetNamestore'/>" method="GET" enctype="UTF-8"  >
 									<h3>搜尋商家名稱:</h3>
 									<input type="text" name="nsrch" placeholder="搜尋商家">

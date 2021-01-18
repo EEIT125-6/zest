@@ -215,7 +215,7 @@ a.mobile-show {
 </head>
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<!--PreLoader-->
     <div class="loader">
         <div class="loader-inner">
@@ -276,45 +276,96 @@ a.mobile-show {
 <!-- -------------------------------------------------------------- -->
             <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
+            
             <c:if test="${userFullData.userId == userId && userId != null}">
-<%--             	<%if(true){ %> --%>
-			<c:url value="/Update" var="EDITURL">
-<%-- 			<c:param name="stname" value="${stname1}" /> --%>
-			<c:param name="id" value="${id}" />	
-			</c:url>
-			<a href="${EDITURL}">編輯</a>
-			<span>|</span>
-			<c:url value="/Insert" var="CEATEURL">
-			</c:url> 
-			<a href="${CEATEURL}">新增</a>
-			<span>|</span>
-<%-- 		<c:url value = '/DeleteStore'/> --%>
+            	<div style="margin-top: 8px;margin-left: 8px">
 			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="刪除" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+				<input type="submit" class="btn btn-danger" value="刪除店家" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
-			<span>|</span>
-		<c:url value="/UpdatePhoto" var="photoURL">
-		<c:param name="stname" value="${stname1}"></c:param>
-		<c:param name="id" value="${id}"></c:param>
-		<c:param name="photo" value="photo"></c:param>
-		</c:url>
-			<a href="${photoURL}">修改店家 封面的照片</a>
-			<span>|</span>
-		<c:url value="/UpdateBanner" var="bannerURL">
-		<c:param name="stname" value="${stname1}"></c:param>
-		<c:param name="id" value="${id}"/>
-		<c:param name="banner" value="banner"></c:param>
-		</c:url>
-			<a href="${bannerURL}">修改店家banner</a>
 			
-			<span>|</span>
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalOS" style="box-shadow: 1px 1px 1px rgb(75, 75, 75)" >下架商店</button>
+<!-- -----------------------------------Model----------------------------			 -->
+<div class="modal fade" id="myModalOS" role="dialog">
+	<div class="modal-dialog modal-sm">
+    	<div class="modal-content">
+        	<div class="modal-header">
+          		<h4 class="modal-title">下架商店</h4>
+	          		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        	</div>
+        	<div class="modal-body">
+         	 	<p>您確定要下架嗎</p>
+        	</div>
+        	<div class="modal-footer">
+				<form action="<c:url value = '/OffShelfStore'/>" method="post" style="display:inline">
+					<input type="hidden" name="id" value="${id}">
+					<input id = "sweetalert" type="submit" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+<!-- 					<input id = "sweetalert" type="button" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
+				</form>
+	        </div>
+      </div>
+    </div>
+</div>
+<!-- -----------------------------------Model----------------------------			 -->
+<script >
+	document.getElementById("sweetalert").addEventListener("click",function(){
+		  swal("下架 ! ", "已經成功下架商家 ! ", "success");
+		});
+</script>
+<%--             	<%if(true){ %> --%>
+			<c:url value="/Update" var="EDITURL">
+				<c:param name="stname" value="${stname1}" />
+				<c:param name="id" value="${id}" />	
+			</c:url>
+<%-- 			<a href="${EDITURL}" style="color:black;background-color:#00E3E3;border: 1px #00E3E3 solid;border-radius: 5px">編輯</a> --%>
+<input type="button" class="btn btn-info" value="修改店家" onclick=" relocate_home()" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+<script>
+function relocate_home()
+{
+     location.href = "${EDITURL}";
+} 
+</script>
+<!-- 			<span>|</span> -->
+			<c:url value="/Insert" var="CEATEURL">
+			</c:url> 
+<%-- 			<a href="${CEATEURL}">新增</a> --%>
+<!-- 			<span>|</span> -->
+<%-- 		<c:url value = '/DeleteStore'/> --%>
+<!-- 			<span>|</span> -->
+		<c:url value="/UpdatePhoto" var="photoURL">
+			<c:param name="stname" value="${stname1}"></c:param>
+			<c:param name="id" value="${id}"></c:param>
+			<c:param name="photo" value="photo"></c:param>
+		</c:url>
+<input type="button" class="btn btn-info" value="修改封面照片" onclick=" relocate_photoURL()" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+<script>
+function relocate_photoURL()
+{
+     location.href = "${photoURL}";
+}
+</script>
+<%-- 			<a href="${photoURL}">修改店家 封面的照片</a> --%>
+<!-- 			<span>|</span> -->
+		<c:url value="/UpdateBanner" var="bannerURL">
+			<c:param name="stname" value="${stname1}"></c:param>
+			<c:param name="id" value="${id}"/>
+			<c:param name="banner" value="banner"></c:param>
+		</c:url>
+<%-- 			<a href="${bannerURL}">修改店家banner</a> --%>
+<!-- 			<span>|</span> -->
+<input type="button" class="btn btn-info" value="修改Banner" onclick=" relocate_bannerURL()" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+<script>
+function relocate_bannerURL()
+{
+     location.href = "${bannerURL}";
+}
+</script>
 <%-- 			<c:url value="/InsertProduct"/> --%>
 			<form action="${pageContext.request.contextPath}/InsertProduct" method="GET" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
-				<input type="submit" value="新增商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)">
+				<input type="submit" class="btn btn-success" value="新增商品" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
 			<span>|</span>
 			<c:url value="newBookingTime" var="addBookingTime">
@@ -337,6 +388,7 @@ a.mobile-show {
 <!-- 				<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;background-color: rgb(235, 159, 18);color:rgb(38, 102, 240)"> -->
 <!-- 			</form> -->
 <%-- 	<%} %> --%>
+			</div>
 		</c:if>
 	<br>
 	
@@ -344,6 +396,76 @@ a.mobile-show {
     ;padding-top : 30px ">
         
 <%--         <h1 style="margin-bottom: 100px" ><%=request.getParameter("stname") %></h1> --%>
+<%-- 		<c:if test="判斷登入"> --%>
+<%-- ${userFullData.userId == userId && userId != null} --%>
+			<c:if test="${userFullData.userId != null}"> <!-- 只要為登入狀態就可以 修改! -->
+				<c:set var="TR" value="false"/>
+<%-- 				${userFullData.userId} --%>
+<%-- 				${TR} --%>
+<%-- 				${list_beTrace[0].memberId} --%>
+<%-- 				${list_beTrace.storeId} --%>
+			<c:forEach var="i" items="${list_beTrace}">
+<%-- 				${i.memberId} --%>
+				<c:if test="${userFullData.userId == i.memberId}">  
+					<c:set var="TR" value="true"/>
+				</c:if>
+			</c:forEach>
+				<c:if test="${TR == 'false'}">
+			<button type="button" class="traceBt" id="traceId1"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
+				<i class="far fa-heart" style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+			</button>
+			
+			<button type="button" class="traceBt" id="traceId2"  style="float:right;display: none;background-color:Transparent;border: none;right:35px">
+	 			<i class="fas fa-heart " style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+	 		</button>
+				</c:if>
+				<c:if test="${TR == 'true'}">
+	 		<button type="button" class="traceBt" id="traceId2"  style="float:right;display: inline;background-color:Transparent;border: none;right:35px">
+	 			<i class="fas fa-heart " style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+	 		</button>
+			
+			<button type="button" class="traceBt" id="traceId1"  style="float:right;display: none;background-color:Transparent;border: none;right:35px">
+				<i class="far fa-heart" style="color:red;font-size: 20px;"></i><span style="font-size: 20px;font-family: 'Noto Sans TC', sans-serif;">收藏</span>
+			</button>	
+	 			</c:if>
+	 <script type="text/javascript">
+	 		$(".traceBt").click(function(){
+	 			var stId = ${id};
+				var memberId = ${userFullData.userId};
+				
+				console.log(stId);
+				if($(this).attr("id")== 'traceId1'){
+	         		$.ajax({
+	         			type:"Get",
+	         			url:'<c:url value="/addTrace"/>',
+	         			data:{
+	         				'stId':stId,
+	         				'memberId':memberId
+	         			},
+	         			success:function(data){
+			 				$("#traceId1").toggle();
+			 				$("#traceId2").toggle();
+	         				console.log("success add");
+	         			}
+	         		})
+				}else if($(this).attr("id")== 'traceId2'){
+					$.ajax({
+	         			type:"Get",
+	         			url:'<c:url value="/removeTrace"/>',
+	         			data:{
+	         				'stId':stId,
+	         				'memberId':memberId
+	         			},
+	         			success:function(data){
+			 				$("#traceId1").toggle();
+			 				$("#traceId2").toggle();
+	         				console.log("success remove");
+	         			}
+					})
+				}
+	 		})
+	 </script>
+ 		</c:if>
         <h1 style="margin-bottom: 100px" >${stname1}</h1>
         <hr>
         <span style="font-size: 140%">地點:<c:out value = "${saddress}"></c:out></span>
@@ -523,11 +645,13 @@ function initMap() {
           </div>
           
         <div id="div2" style="display:none;" class="ddiv">
-            <span style="font-size: 140%"> hello</span>
+            <span style="font-size: 140%"> coming soon</span>
         </div>
         <div id="div3" style="display:none;" class="ddiv">
 <!--              <span style="font-size: 140%">ho </span> -->
 			<div class="row"  style="padding:10px">
+				<c:choose>
+					<c:when test="${userFullData.userId == userId && userId != null}">
 					<c:forEach var="row1" items="${Products}">
 						<div class="col-sm-4">
 <!-- 					       style="background: url('Images/LOGO1-removebg-preview.png')" -->
@@ -557,27 +681,151 @@ function initMap() {
 <%-- 				             		<c:url value='/updateProductpage'/> --%>
 
 							<c:if test="${userFullData.userId == userId && userId != null}">
-							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline">
+							<div style="margin-top: 2px">
+							<form action="<c:url value='/updateProductpage'/>" method="post" style="display:inline;margin-right: 1px">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
-								<input type="submit" value="修改商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+								<input type="submit" value="修改商品"  class="btn btn-warning"> 
+<!-- 								style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)"> -->
 							</form>
 							
-							<span>|</span>
+<!-- 							<span>|</span> -->
 <%-- 							<c:url value='/deleteProductpage'/> --%>
 							<form action="<c:url value='/deleteProductpage'/>" method="post" style="display:inline">
 								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="productid" value="${row1.product_id}">
-								<input type="submit" value="刪除商品" style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)">
+								<input type="submit" value="刪除商品" class="btn btn-danger"> 
+<!-- 								style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)"> -->
 							</form>
+							<c:choose>
+								<c:when test="${row1.product_status == 1}">
+									<input class="btn btn-danger" type = "button" value="下架商品" id="d${row1.product_id}" 							data-toggle="modal" data-target="#myDR1${row1.product_id}"/>
+									<input class="btn btn-success" type = "button" value="重新上架"  id="r${row1.product_id}" style="display:none"	data-toggle="modal" data-target="#myDR2${row1.product_id}"/> 
+								</c:when>
+								<c:when	test="${row1.product_status == 0}">
+									<input class="btn btn-danger" type = "button" value="下架商品" id="d${row1.product_id}"  style="display:none"	data-toggle="modal" data-target="#myDR1${row1.product_id}"/>
+									<input class="btn btn-success" type = "button" value="重新上架"  id="r${row1.product_id}"						data-toggle="modal" data-target="#myDR2${row1.product_id}"/>
+								</c:when>
+							</c:choose>
+							</div>
 						</c:if>
 				             		<br>
 			             </div>
-		            </c:forEach>
+<!-- ----------------------------------------下架MODEL----- -->
+<div class="modal fade" id="myDR1${row1.product_id}" role="dialog">
+	<div class="modal-dialog modal-sm">
+    	<div class="modal-content">
+        	<div class="modal-header">
+          		<h4 class="modal-title">下架商品</h4>
+	          		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        	</div>
+        	<div class="modal-body">
+         	 	<p>您確定要下架商品嗎</p>
+        	</div>
+        	<div class="modal-footer">
+<!--         		<button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button> -->
+				<input class="pds btn btn-danger" type = "button" value="確定下架" id="s${row1.product_id}" data-dismiss="modal"/>
+	        </div>
+      </div>
+    </div>
+</div>
+<!-- ----------------------------------------下架MODEL----- -->
+<!-- ----------------------------------------上架Model----------------------------			 -->
+<div class="modal fade" id="myDR2${row1.product_id}" role="dialog">
+	<div class="modal-dialog modal-sm">
+    	<div class="modal-content">
+        	<div class="modal-header">
+          		<h4 class="modal-title">重新上架商品</h4>
+	          		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        	</div>
+        	<div class="modal-body">
+         	 	<p>您確定要重新上架商品嗎</p>
+        	</div>
+        	<div class="modal-footer">
+        	
+				<input class="pds btn btn-success" type = "button" value="重新上架" id="h${row1.product_id}" data-dismiss="modal"/> 
+	        </div>
+      </div>
+    </div>
+</div>
+<!-- ----------------------------------------上架Model----------------------------			 -->
+		          </c:forEach>
+		         <script type="text/javascript">
+		         	$(".pds").click(function(){
+		         		var otherId = $(this).attr("id").substr(1);
+		         		var dv = '#d'+otherId;
+		         		var rv = '#r'+otherId;
+		         		var did = 's'+otherId;
+		         		var rid = 'h'+otherId;
+		         		if($(this).attr("id")==did){
+			         		$(dv).toggle();
+			         		$(rv).toggle();
+			         		console.log($(this).attr("id"));
+			         		$.ajax({
+			         			type:"Post",
+// 			         			<c:url value="/productOffShelfAjax"/>
+			         			url:'<c:url value="/productOffShelfAjax"/>',
+			         			data:{
+			         				'productId':otherId
+			         			},
+// 			         			datatype:'json'
+			         			success:function(data){
+// 			         				alert("hi");
+			         				console.log("success OFFshelf");
+			         			}
+			         		})
+		         		}else if($(this).attr("id")==rid){
+			         		$(dv).toggle();
+			         		$(rv).toggle();
+			         		console.log($(this).attr("id"));
+			         		$.ajax({
+			         			type:"Post",
+			         			url:'<c:url value="/productReOnShelfAjax"/>',
+			         			data:{
+			         				'productId':otherId
+			         			},
+			         			success:function(data){
+			         				console.log("success ONshelf");
+			         			}
+			         		})
+		         		}
+		         	})
+		         	
+		         </script>
+		            </c:when>
+		            <c:otherwise>
+						<c:forEach var="row1" items="${Products}">
+							<c:if test="${row1.product_status == 1}">
+								<div class="col-sm-4">
+								    <div class="card" style="background:#f28633;">
+								    <c:if test="${row1.product_picture != null}">
+								    	<div class="imgBx">
+				             				<img src="${pageContext.request.contextPath}/123/${row1.product_picture}" style="border-radius: 7 px;"/>
+				             			</div>	
+				             		</c:if>
+				             		<c:if test="${row1.product_picture == null }">
+								        <div class="imgBx" >
+				    	         			<img src="${pageContext.request.contextPath}/Images/LOGO1-removebg-preview.png" style="border-radius: 7 px;"/>
+								        </div>
+				             		</c:if>
+								        <div class="contentBx">
+								            <h3>${row1.product_name} </h3>
+								            <h2 class="price">$${row1.product_price}</h2>
+								            <a href="#" class="buy">Buy Now</a>
+								        </div>
+								    </div>
+				             		<br>
+			             		</div>
+			             	</c:if>
+		            	</c:forEach>
+		            </c:otherwise>
+		           </c:choose>
+		            <script type="text/javascript">
+		            </script>
 			</div>
         </div>
         <div id="div4" style="display:none;" class="ddiv">
-        	 <span style="font-size: 140%"><c:out value = "${stitddt }"></c:out></span>
+        	 <span style="font-size: 140%"><c:out value = "${stitddt}"></c:out></span>
         </div>
     </div>
         <script>
@@ -647,7 +895,7 @@ function initMap() {
          </script>
          
    	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px;">
-		<div style="style="font-size: 140%"">餐廳資訊</div>
+		<div style="font-size: 140%">餐廳資訊</div>
 		<h2 style="color:gray;margin-bottom:10px;margin-top:10px"><c:out value="${stname1}"></c:out></h2>
 		<hr>
 		<div >
@@ -661,7 +909,21 @@ function initMap() {
 		</button>
 		</div>
 	</div>
-
+	
+    <div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:20px;padding:5px 10px;padding-left:15px; padding-bottom:25px">
+    	<div style="font-size: 140%">猜你會喜歡</div>
+<!--     	<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;"> -->
+      		<c:forEach var="row" items="${ADP}">
+       		<c:url value="/StoreGetFullstore" var="GOURL">
+				<c:param name="id" value="${row.id}" />
+				<c:param name="stname" value="${row.stname}" />
+			</c:url>  
+				<c:set var="photo1" value="<c:url value='/${row.photourl}'/>"/>
+					<c:url var="hi"  value='/${row.photourl}'/>
+	             <a href="${GOURL}"><img src="${hi}" style="width:170px;height: 160px;margin-left:10px;border-radius:5px"></a>
+	         </c:forEach>
+<!--      	</div> -->
+     </div>
 <!-- ---------------------------------------- -->
 <a href="https://www.blogger.com/blogger.g?blogID=2031514508322140995#" id="gotop">
    <i class="fas fa-chevron-up"></i>

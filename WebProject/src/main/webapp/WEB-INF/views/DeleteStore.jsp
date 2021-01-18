@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <%@include file = "Link_Meta-Include.jsp" %>
     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/zestCss.css'  type="text/css" />
+    <link rel='stylesheet' href='${pageContext.request.contextPath}/css/zestform.css'  type="text/css" />
     <title>橙皮</title>
     <style>
         body{
@@ -47,36 +48,80 @@
 </head>
 <body>
     <%@include file = "Header-Include.jsp" %>
-
-<!--             <div class="container-fluid  header"  > -->
-<!--               <div class="container" > -->
-<!--               <a href="Index1.jsp"><img src="Images/LOGO1-removebg-preview.png" style="float: left; height: 70px;"></a> -->
-<!--               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar"> -->
-<!--             </p> -->
-<!--               </div> -->
-<!--             </div> -->
-            
-	<!-- <c:out value="${param.id}"></c:out> -->
-	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; ">
-        <!-- 用container -->
-        <form:form action="StoreDelete" method="post" modelAttribute="storeBean" >
-            <fieldset style="width: 400px;margin:1px auto;">
-                <legend>確定要刪除此資料嗎?</legend>
-                <form:input type="hidden" path="id" />
-                <label>商店名稱:
-                    <form:input type="hidden"  path="stname"/>
-                    ${storeBean.stname}
-                </label>
-            </fieldset>
-                    <div style="text-align: center;">
-                        <input type="submit" value="確定">
+<!-- ------------------------------------------------------ -->
+    <div style="height: 100px;"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8 containerHeaderCard">
+                <div class="h-100 containerHeaderFontCard">
+                    <div class="containerHeaderFontDiv">
+                       <span class="containerHeaderFontSpan">刪除店家</span>
                     </div>
-        </form:form>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
     </div>
+    <div class="container" style="margin-bottom:15px;">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8 containerBodyCardOutside">
+                <form:form action="StoreDelete" method="post" modelAttribute="storeBean" >
+                
+                <form:input type="hidden" path="id" />
+                
+                    <div class="form-row containerBodyCard" >
+                        <div class="col-md-4 containerBodyCardDiv">
+                          <label class="containerBodyCardLabelFont" for="storename">商店名稱：</label>
+                        </div>
+                        <div class="col-md-8" style="padding-top: 8px">
+                        	<span class="containerBodyCardLabelFont" style="text-align: center;">
+                           			${storeBean.stname}
+                        		<form:input type="hidden"  path="stname"/>
+                        	</span>
+                        </div>
+                    </div>
+                    <div class = "form-row">
+						<div class = "col-md-12" style="text-align: center;">
+                    		<span>您確定要刪除嗎? 此舉動將永久不能回復</span>
+                    	</div>
+                    </div>
+                    
+
+					<div class = "form-row">
+						<div class = "col-md-12" style="text-align: center;">
+                    		<button class="btn btn-primary" type="submit" >確定</button>
+                    	</div>
+                    </div>
+                </form:form>
+            </div>
+        </div>
+    </div>
+                <div style="height: 450px"></div>
+<!-- ----------------------------------------------- -->
+	<!-- <c:out value="${param.id}"></c:out> -->
+        <!-- 用container -->
+<!-- 	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px; "> -->
+<%--         <form:form action="StoreDelete" method="post" modelAttribute="storeBean" > --%>
+<!--             <fieldset style="width: 400px;margin:1px auto;"> -->
+<!--                 <legend>確定要刪除此資料嗎?</legend> -->
+<%--                 <form:input type="hidden" path="id" /> --%>
+<!--                 <label>商店名稱: -->
+<%--                     <form:input type="hidden"  path="stname"/> --%>
+<%--                     ${storeBean.stname} --%>
+<!--                 </label> -->
+<!--             </fieldset> -->
+<!--                     <div style="text-align: center;"> -->
+<!--                         <input type="submit" value="確定"> -->
+<!--                     </div> -->
+<%--         </form:form> --%>
+<!--     </div> -->
 
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:230px">
-<%@include file = "Footer-Include-prototype.jsp" %>
+<%@include file = "Footer-Include.jsp" %>
+<!--             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:230px"> -->
+<%-- <%@include file = "Footer-Include-prototype.jsp" %> --%>
 <!--                 Footer -->
 <!--                 <footer class="page-footer font-small mdb-color lighten-3 pt-4"> -->
                 

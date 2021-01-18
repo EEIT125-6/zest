@@ -43,6 +43,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import util.CipherMsg;
+import util.GlobalService;
 import webUser.model.CityInfo;
 import webUser.model.FoodFervor;
 import webUser.model.Gender;
@@ -55,7 +56,6 @@ import webUser.service.IdentityService;
 import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import webUser.service.WillingService;
-import xun.util.GlobalService;
 
 @SessionAttributes({
 		"registerEmail", 
@@ -378,19 +378,6 @@ public class WebUserController {
 		WebUserData userFullData = new WebUserData();
 		String ckFinPassword = "";
 		
-		/* 將Cookie中的密碼解密 */
-		if (!ckPassword.equals("")) {			
-			try {
-				ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
-			} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException | BadPaddingException
-					| IllegalBlockSizeException | IOException e) {
-				loginMessage = e.getMessage();
-				accountCheckResult = 6;
-			}
-		}
-		
-		System.out.println("accountCheckResult:"+accountCheckResult+", ckFinPassword:"+ckFinPassword);
-		
 		if (loginMessage.equals("")) {
 			/* 判定是否為第三方登入，非第三方需要進行輸入檢查 */
 			if (!id_token.equals("") && password.equals("")) {
@@ -548,7 +535,7 @@ public class WebUserController {
 				/* 清空timeOut物件 */
 				model.addAttribute("timeOut", null);
 				/* 依據使用者的設定，決定是否要儲存Cookie */
-				if (!ckAccount.equals("") && !(ckFinPassword.equals("") || ckPassword.equals(""))) {
+				if (!ckAccount.equals("") && !ckFinPassword.equals("")) {
 					doWriteUserCookie(request, response, ckAccount, ckFinPassword, remember);
 					if (remember) {
 						model.addAttribute("remember", remember);
@@ -556,23 +543,17 @@ public class WebUserController {
 						model.addAttribute("remember", ckRemember);
 					}
 				} else if (ckAccount.equals("") && (ckFinPassword.equals("") || ckPassword.equals(""))) {
-					System.out.println("--Cookie無--");
 					/* 加密原本輸入的密碼 */
 					String finPassword = "";
-
 					try {
-						System.out.println("--in try--");
 						finPassword = CipherMsg.encryptMsg(password);
-						System.out.println("--accountCheckResult:"+accountCheckResult+", finPassword:"+finPassword+"--");
 						doWriteUserCookie(request, response, account, finPassword, remember);
 					} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
 							| BadPaddingException | IllegalBlockSizeException | IOException e) {
 						loginMessage = e.getMessage();
 						e.printStackTrace();
 						accountCheckResult = 6;
-						System.out.println("--error--");
 					}
-					model.addAttribute("remember", remember);
 				}
 			}
 		} 
@@ -592,25 +573,19 @@ public class WebUserController {
 			SessionStatus sessionStatus,
 			HttpSession session,
 			HttpServletRequest request, 
-			HttpServletResponse response
+			HttpServletResponse response,
+			@CookieValue(value = "ckAccount", required = false, defaultValue="") String ckAccount,
+			@CookieValue(value = "ckPassword", required = false, defaultValue="") String ckPassword,
+			@CookieValue(value = "ckRemember", required = false, defaultValue="false") Boolean ckRemember
 			) {
 		
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
-		Boolean remember = (Boolean) model.getAttribute("remember");
-		String finPassword="";
-//		/* 加解密搞定前的暫時處置 */
-//		finPassword = userData.getPassword();
-//		/* 加解密搞定前的暫時處置 */
-		
-		try {
-			finPassword = CipherMsg.encryptMsg(userData.getPassword());
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException | BadPaddingException
-				| IllegalBlockSizeException | IOException e) {
-			e.printStackTrace();
+
+		/* 確認有無Cookie */
+		if (!ckAccount.equals("") && !ckPassword.equals("") && !ckRemember.equals("")) {
+			/* 移除Cookie */
+			doRemoveUserCookie(request, response, ckAccount, ckPassword, ckRemember);
 		}
-		
-		/* 移除Cookie */
-		doRemoveUserCookie(request, response, userData.getAccount(), finPassword, remember);
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 無效httpSession */
@@ -626,7 +601,6 @@ public class WebUserController {
 			/* 直接移除 */
 			context.removeAttribute("userMap");
 		}
-		
 
 		/* 前往首頁 */
 		return "redirect:/";
@@ -1336,7 +1310,6 @@ public class WebUserController {
 						/* 將被停用的使用者離線 */
 						if (operateResult == 1) {
 							Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
-							System.out.println("test map size is null ? " + userMap.isEmpty());
 							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常強況 */
 							if (userMap.isEmpty()) {
 								operateResult = 0;
@@ -1584,7 +1557,6 @@ public class WebUserController {
 				try {
 					updatedData.setIconUrl(newIconUrl);
 					updatedData.setVersion(updatedData.getVersion() + 1);
-					System.out.println("url is: " + updatedData.getIconUrl() + "version is :" + updatedData.getVersion());
 					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
 				} catch (SQLException sqlE) {
 					String getDataMessageTmp = sqlE.getMessage();
@@ -1952,12 +1924,6 @@ public class WebUserController {
 	public String doGoWebUserMain() {
 		return "webUser/WebUserMain";
 	}
-	
-	/* 前往登出畫面 */
-//	@GetMapping(value = "/WebUserLogoutResult")
-//	public String doGoLogOut() {
-//		return "WebUserLogoutResult";
-//	}
 	
 	/* 前往修改個人密碼畫面 */
 	@GetMapping(value = "/webUser/WebUserModifyPassword")
@@ -2354,8 +2320,6 @@ public class WebUserController {
 			}
 		}
 		
-		System.out.println("cityCode check result is " + updateResultMessage);
-		
 		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
 			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
@@ -2384,8 +2348,6 @@ public class WebUserController {
 		}
 		
 		updateResultMessage = (updateResultMessage.equals("")) ? "?" : updateResultMessage;
-		
-		System.out.println("final check result is " + updateResultMessage);
 		/* 結算有效變動項目 */
 		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
@@ -2857,8 +2819,6 @@ public class WebUserController {
 	public String doCheckCityCode(Integer cityCode, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
-		
-		System.out.println("cityCode is " + cityCode);
 		
 		switch(cityCode) {
 			case 1:
