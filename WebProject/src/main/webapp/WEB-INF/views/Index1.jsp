@@ -338,7 +338,7 @@ a.mobile-show {
 		</div>
 <!-- end search arewa -->
             <div class="container"  style="margin-top: 20px;">
-            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">分類找餐廳 Restaurant category</div>
+            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">
    <c:url value="StoreGetClassstore" var="riceURL">
    <c:param name="sclass" value="中式"/>
@@ -392,7 +392,7 @@ a.mobile-show {
 <%-- <sql:query dataSource="${ds}" var="rsbanner"> --%>
 <!--          select top(4) bannerurl,stname,id  from Store  ORDER BY NEWID() -->
 <%-- </sql:query> --%>
-		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">美食跑馬燈 Recommended carousel</div>
+		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Recommended carousel</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;">
                 	    <div id="wrapper1" class="wrapper">
         <ul class="slides">
@@ -543,6 +543,9 @@ $(function() {
 });
 </script>   
 <!-- -------------------------------------------------------------------- -->
+<!--     <div class="wrapper"> -->
+
+<!--     </div> -->
 <%@include file = "Footer-Include.jsp" %>
 <!--             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white"> -->
 <!--                 Footer -->

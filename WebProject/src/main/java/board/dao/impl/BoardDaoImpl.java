@@ -98,4 +98,14 @@ public class BoardDaoImpl implements BoardDao {
 		list=session.createQuery(HQL).setParameter("acount", acount).getResultList();
 		return list;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BoardBean> getStoreStar(StoreBean sb) {
+		String hql = "FROM BoardBean bb WHERE bb.storebean = :storebean";
+		List<BoardBean> list = factory.getCurrentSession().createQuery(hql)
+				.setParameter("storebean", sb)
+				.getResultList();
+		return list;
+	}
 }

@@ -4,6 +4,7 @@ package xun.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import webUser.model.WebUserData;
 import webUser.service.WebUserService;
-
+import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
@@ -45,7 +46,7 @@ public class StoreCUD_Controller {
 	@Autowired
 	WebUserService ws;
 	
-//	@GetMapping("/Insert")
+//	@GetMapping("/Insert") 暫時作廢
 	public String InsertPage(
 			Model model
 //			,@RequestParam(value = "userId",required = false) String userId
@@ -63,14 +64,6 @@ public class StoreCUD_Controller {
 			Model model,
 			BindingResult result
 			) {
-//		進行白名單檢查
-		
-//		String[] suppressedFields = result.getSuppressedFields();
-//		if(suppressedFields.length>0) {
-//			throw new RuntimeException("有輸入不允許存入的欄位"+
-//		StringUtils.arrayToCommaDelimitedString(suppressedFields));
-//		}
-		
 //		檢查
 		StoreInsertVaildators validator =  new StoreInsertVaildators();
 		System.out.println(storeBean.getStname());
@@ -136,9 +129,6 @@ public class StoreCUD_Controller {
 
 		ss.updateStore(storeBean);
 
-
-
-		
 		Integer NewStoreId = storeBean.getId();
 		String NewStoreName = storeBean.getStname();
 		System.out.println("MODEL.getId():"+NewStoreId+"storeBean.getStname():"+NewStoreName);
@@ -156,6 +146,23 @@ public class StoreCUD_Controller {
 		StoreBean sb = ss.get(id);
 		model.addAttribute("storeBean", sb);
 		return "DeleteStore";
+	}
+	
+	@PostMapping("/OffShelfStore")
+	public String storeOffShelf(
+			Model model,
+			@RequestParam Integer id
+			) {
+//		StoreBean sb = ss.get(id);
+//		model.addAttribute("storeBean", sb);
+		ss.storeOffShelf(id);
+//		ss.getRenameStore(id); //似乎用不到
+		//把下架店家的所有商品改成下架狀態
+		StoreBean sb = ss.get(id);
+		for(ProductInfoBean pp : ps.getStoreProduct(sb)) {
+			ps.productOffShelf(pp.getProduct_id());
+		}
+		return "redirect:/";
 	}
 	
 	@PostMapping("/StoreDelete")
@@ -203,7 +210,7 @@ public class StoreCUD_Controller {
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
 		
-		FileName = storeBean.getId()+"!_!"+storeBean.getStname()+"."+FileFormat;
+		FileName = storeBean.getId()+"!_!photo"+storeBean.getStname().replace(" ", "")+"."+FileFormat;
 		File fkf = new File(fakePath+""+FileName);
 		try {
 //			file2.transferTo(writeFile);
@@ -256,7 +263,7 @@ public class StoreCUD_Controller {
 		
 		File writeFile = new File(filePath+"Images\\"+FileName);
 		
-		FileName = storeBean.getId()+"!_!"+storeBean.getStname()+"."+FileFormat;
+		FileName = storeBean.getId()+"!_banner!"+storeBean.getStname().replace(" ", "")+"."+FileFormat;
 		File fkf = new File(fakePath+""+FileName);
 		try {
 			file.transferTo(fkf);
@@ -275,5 +282,10 @@ public class StoreCUD_Controller {
 		model.addAttribute("id", id);
 		model.addAttribute("stname", stname);
 		return "redirect:/StoreGetFullstore";
+	}
+	
+	@ModelAttribute("sclassCategory")
+	public List<String> getSclassCategory(){
+		return ss.getSclassCategory();
 	}
 }

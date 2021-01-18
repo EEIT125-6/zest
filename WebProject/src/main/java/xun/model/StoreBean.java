@@ -33,6 +33,9 @@ public class StoreBean {
 	String tel;
 	String bannerurl;
 	String photourl;
+	Integer click;
+	Float avgStar;
+	String status;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")
@@ -41,6 +44,30 @@ public class StoreBean {
 	@Transient	
 	MultipartFile stfile;
 	
+	public Integer getClick() {
+		return click;
+	}
+
+	public void setClick(Integer click) {
+		this.click = click;
+	}
+
+	public Float getAvgStar() {
+		return avgStar;
+	}
+
+	public void setAvgStar(Float avgStar) {
+		this.avgStar = avgStar;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public Integer getPrice() {
 		return price;
 	}

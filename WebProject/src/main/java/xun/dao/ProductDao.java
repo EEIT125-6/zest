@@ -21,4 +21,7 @@ public interface ProductDao {
 	
 	Integer getLastProductId();
 	
+	void productOffShelf(Integer productid);
+	
+	void productReOnShelf(Integer productid);
 }

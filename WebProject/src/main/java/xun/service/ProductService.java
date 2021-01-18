@@ -19,4 +19,8 @@ public interface ProductService {
 	List<ProductInfoBean> getStoreProduct(StoreBean sb);
 	
 	Integer getLastProductId();
+	
+	void productOffShelf(Integer productid);
+	
+	void productReOnShelf(Integer productid);
 }

@@ -15,7 +15,7 @@ import xun.model.BoardBean;
 import xun.model.StoreBean;
 import xun.service.StoreService;
 
-//整理 By George017 2020-12-26
+//整理 By George017 2020-12-26  //你好棒
 @Service
 public class StoreServiceImpl implements StoreService {
 
@@ -148,6 +148,85 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public List<StoreBean> getStoreByClassAndPrice(String sclass, Integer price) {
 		return dao.getStorebyClassandPrice(sclass, price);
+	}
+
+	@Transactional
+	@Override
+	public Integer setStoreStar(Float avgStar, Integer id) {
+		return dao.setStoreStar(avgStar, id);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getStorebyClassandStar(String sclass, Float star) {
+		return dao.getStorebyClassandStar(sclass, star);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getStorebyClassandStarandPrice(String sclass, Integer price, Float star) {
+		return dao.getStorebyClassandStarandPrice(sclass, price, star);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getNamestoreandPrice(String stname, Integer price) {
+		return dao.getNamestoreandPrice(stname, price);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getNamestoreandStar(String stname, Float star) {
+		return dao.getNamestoreandStar(stname, star);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getNamestoreandPriceandStar(String stname, Integer price, Float star) {
+		return dao.getNamestoreandPriceandStar(stname, price, star);
+	}
+
+	@Transactional
+	@Override
+	public List<String> getSclassCategory() {
+		return dao.getSclassCategory();
+	}
+
+	@Override
+	public String getSclassCategoryTag() {
+		return dao.getSclassCategoryTag();
+	}
+
+	@Transactional
+	@Override
+	public Integer setClickCount(Integer stid) {
+		return dao.setClickCount(stid);
+	}
+
+	@Transactional
+	@Override
+	public List<String> getRenameStore(Integer stid) {
+		return dao.getRenameStore(stid);
+	}
+
+	@Transactional
+	@Override
+	public void storeOffShelf(Integer stid) {
+		dao.storeOffShelf(stid);
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> guessYouLike(String sclass) {
+		List<StoreBean> list = null;
+		List<StoreBean> list1 = dao.guessYouLike(sclass);
+		Collections.shuffle(list1);
+		if (list1.size()<6) {
+			list = list1.subList(0, list1.size());
+		}else {
+			list = list1.subList(0, 6);
+		}
+		return list;
 	}
 	
 }

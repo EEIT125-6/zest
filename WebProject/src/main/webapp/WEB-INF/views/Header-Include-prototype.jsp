@@ -82,14 +82,14 @@
 			</a>
 			<span>|</span>
 				<c:if test="${userFullData.accountLv.lv == -1}">
-					<a href="<c:url value='/dashborad_order'/>">
+					<a href="<c:url value='/adminBack'/>">
 						<i class="fas fa-building" style="font-size: 25px; color: yellow"></i>
 						<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">後台</span>
 					</a>
 					<span>|</span>
 				</c:if>
 				<c:if test="${userFullData.accountLv.lv == 1}">
-					<a href="<c:url value='/dashborad_order'/>">
+					<a href="<c:url value='/storeBack'/>">
 						<i class="fas fa-building" style="font-size: 25px; color: yellow"></i>
 						<span style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">後台</span>
 					</a>

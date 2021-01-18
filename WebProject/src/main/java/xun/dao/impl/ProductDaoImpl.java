@@ -95,4 +95,24 @@ public class ProductDaoImpl implements ProductDao{
 		return pb.getProduct_id();
 	}
 
+	@Override
+	public void productOffShelf(Integer productid) {
+		Session session = factory.getCurrentSession();
+		String hql = "Update ProductInfoBean pib set product_status = :status WHERE product_id = :id";
+		session.createQuery(hql)
+			.setParameter("status", "0")
+			.setParameter("id", productid)
+			.executeUpdate();
+	}
+
+	@Override
+	public void productReOnShelf(Integer productid) {
+		Session session = factory.getCurrentSession();
+		String hql = "Update ProductInfoBean pib set product_status = :status WHERE product_id = :id";
+		session.createQuery(hql)
+			.setParameter("status", "1")
+			.setParameter("id", productid)
+			.executeUpdate();
+	}
+
 }

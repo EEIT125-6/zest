@@ -21,6 +21,7 @@ public class ProductInfoBean {
 	Integer product_price;
 	String product_picture;
 	Integer product_quantity;
+	String product_status;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "Store_Id")
 	private StoreBean storebean;
@@ -28,6 +29,17 @@ public class ProductInfoBean {
 	public ProductInfoBean() {
 		super();
 	}
+
+	
+	
+	public String getProduct_status() {
+		return product_status;
+	}
+	public void setProduct_status(String product_status) {
+		this.product_status = product_status;
+	}
+
+
 
 	public ProductInfoBean(Integer product_id, String product_name, String product_shop, Integer product_price,
 			String product_picture, Integer product_quantity) {

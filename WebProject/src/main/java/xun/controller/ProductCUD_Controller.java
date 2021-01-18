@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import xun.model.ProductInfoBean;
@@ -23,6 +24,7 @@ import xun.model.StoreBean;
 import xun.service.ProductService;
 import xun.service.StoreService;
 import xun.util.GlobalService;
+import xun.validators.ProductVaildators;
 
 @Controller
 public class ProductCUD_Controller {
@@ -52,15 +54,20 @@ public class ProductCUD_Controller {
 	
 	@PostMapping("/InsertProduct")
 	public String InsertProduct(
-			Model model
-//			,BindingResult result
-			,@ModelAttribute ("productInfoBean") ProductInfoBean productInfoBean
+			@ModelAttribute ("productInfoBean") ProductInfoBean productInfoBean
+			,Model model
+			,BindingResult result
 			,@RequestParam(value="stid") Integer stid
 			,@RequestParam(value = "forAOP" , required = false) String forAOP
 			,@RequestParam("photo") MultipartFile file
 			) {
 //		檢查
-		
+		ProductVaildators validator = new ProductVaildators();
+		validator.validate(productInfoBean, result);
+		if (result.hasErrors()) {
+			System.out.println("商品中有不合邏輯的錯誤 並退回新增頁面");
+			return "InsertProduct";
+		}
 //		新增
 		StoreBean sb = ss.get(stid);
 		productInfoBean.setStorebean(sb);
@@ -75,7 +82,7 @@ public class ProductCUD_Controller {
 			
 			String newProductId = String.valueOf(ps.getLastProductId()+1); 
 //			FileName = productInfoBean.getProduct_id()+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
-			FileName = newProductId+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = newProductId+"!_PD!"+productInfoBean.getProduct_name()+"."+FileFormat;
 //		File productphoto = new File(context.getRealPath("/")+FileName);
 			File productphoto = new File(fakePath+FileName);
 		
@@ -90,8 +97,10 @@ public class ProductCUD_Controller {
 			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
 		
 //		執行新增
+			productInfoBean.setProduct_status("1");
 			ps.save(productInfoBean);
 		}else {
+			productInfoBean.setProduct_status("1");
 			ps.save(productInfoBean);
 		}
 //		建置商家price
@@ -123,14 +132,19 @@ public class ProductCUD_Controller {
 	
 	@PostMapping("/exupdateProduct")
 	public String updateProduct(
-			Model model
-			,@ModelAttribute ("productInfoBean") ProductInfoBean productInfoBean
+			@ModelAttribute ("productInfoBean") ProductInfoBean productInfoBean
+			,Model model
+			,BindingResult result
 			,@RequestParam(value="stid") Integer stid
 			,@RequestParam("file") MultipartFile file
 			) {
 //		檢查
-		
-		
+		ProductVaildators validator = new ProductVaildators();
+		validator.validate(productInfoBean, result);
+		if (result.hasErrors()) {
+			System.out.println("商品中有不合邏輯的錯誤 並退回更新頁面");
+			return "updateProduct";
+		}
 //		確認圖片有無更改
 
 		if(file.isEmpty() && productInfoBean.getProduct_picture().isEmpty()) {
@@ -138,14 +152,16 @@ public class ProductCUD_Controller {
 //			if(productInfoBean.getProduct_picture().isEmpty())
 			productInfoBean.setProduct_picture(null);
 			ps.updateProduct(productInfoBean);
+			System.out.println("空ㄉ");
 //			System.out.println(productInfoBean);
 //			else {
 //				
 //			}
 		}else if (file.isEmpty() && !productInfoBean.getProduct_picture().isEmpty()) {
 			ps.updateProduct(productInfoBean);
-			
+			System.out.println("沒動");
 			}else {
+			System.out.println("我想換照片");
 //			String fakePath = "C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\";
 			String fakePath = GlobalService.getUploadProductPhotoPath();
 //			C:\JavaMVCWorkspace\WebProject\src\main\webapp\WEB-INF\views\images\productInfo\images
@@ -153,7 +169,7 @@ public class ProductCUD_Controller {
 
 			String FileFormat = FileName.split("\\.")[1];
 
-			FileName = productInfoBean.getProduct_id()+"!_!"+productInfoBean.getProduct_name()+"."+FileFormat;
+			FileName = productInfoBean.getProduct_id()+"!_PD!"+productInfoBean.getProduct_name()+"."+FileFormat;
 //			File productphoto = new File(context.getRealPath("/")+FileName);
 			File productphoto = new File(fakePath+FileName);
 			
@@ -165,6 +181,7 @@ public class ProductCUD_Controller {
 				e.printStackTrace();
 			}
 //		執行更新
+			System.out.println("+++++++++++++++++++"+FileName);
 			productInfoBean.setProduct_picture("..\\productInfo\\images\\"+FileName);
 			
 			ps.updateProduct(productInfoBean);
@@ -213,6 +230,20 @@ public class ProductCUD_Controller {
 		return "redirect:/StoreGetFullstore";
 	}
 	
+	@PostMapping(value="/productOffShelfAjax",produces = "application/json; charset=utf-8")
+	public @ResponseBody void productOffShelf(
+			@RequestParam Integer productId
+			) {
+		System.out.println("尼瑪有傳到下架");
+		ps.productOffShelf(productId);
+	}
+	@PostMapping(value="/productReOnShelfAjax",produces = "application/json; charset=utf-8")
+	public @ResponseBody void productReOnShelf(
+			@RequestParam Integer productId
+			) {
+		System.out.println("尼瑪有傳到上架");
+		ps.productReOnShelf(productId);
+	}
 //	設置商家價格區間
 	public void CalculateStoreValue(Integer stid) {
 //		轉入AOP

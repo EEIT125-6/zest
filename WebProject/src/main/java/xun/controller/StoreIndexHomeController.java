@@ -36,8 +36,8 @@ public class StoreIndexHomeController {
 			Model model
 			) {
 		List<StoreBean> list_ADP = ss.getAdvertisementphotostore();
-		List<StoreBean> list_AD = ss.getAdvertisementstore();
 		model.addAttribute("ADP", list_ADP);
+		List<StoreBean> list_AD = ss.getAdvertisementstore();
 		model.addAttribute("AD", list_AD);
 		return "Index1";
 	}
