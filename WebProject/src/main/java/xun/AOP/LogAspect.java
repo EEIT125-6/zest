@@ -185,7 +185,7 @@ public class LogAspect {
 			}
 			System.out.println("al:"+al);
 		}
-		if(nimasb == false) {
+		if(nimasb == false || asd.isEmpty()) {
 			return;
 		}
 		System.out.println("TureAnswer:"+asd);

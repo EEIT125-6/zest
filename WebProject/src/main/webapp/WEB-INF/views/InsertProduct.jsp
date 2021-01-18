@@ -146,6 +146,17 @@ body {
                     	</div>
                     </div>
                 </form:form>
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入</button>
+                    	</div>
+                    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    	<script type="text/javascript">
+                    		$("#oneBt").click(function(){
+                    			$("#produceName").val('牛肉拌麵<!--');
+                    			$("#producePrice").val('320');
+                    			$("#productQuantity").val('-8');
+                    		})
+                    	</script>
             </div>
         </div>
     </div>

@@ -70,6 +70,7 @@ public class ProductCUD_Controller {
 			,@RequestParam("photo") MultipartFile file
 			) {
 //		檢查
+		System.out.println("---------------------------------------------------------------********************");
 		ProductVaildators validator = new ProductVaildators();
 		validator.validate(productInfoBean, result);
 		if (result.hasErrors()) {
