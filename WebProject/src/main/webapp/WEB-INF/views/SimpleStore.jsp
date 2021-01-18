@@ -10,8 +10,7 @@
 <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-    <%@include file = "Link_Meta-Include.jsp" %>
-
+<%@include file = "Link_Meta-Include.jsp" %>
 <title>橙皮</title>
 <style>
 body {
@@ -269,12 +268,20 @@ a.mobile-show {
 	<div class="container" style="margin-top:10px">
 	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
 	<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
+			<c:set var="storeClass" value="${sclass}"></c:set>
 
 		<c:url value="StoreGetClassstore" var="riceURL">
 			<c:param name="sclass" value="中式" />
 		</c:url>
 		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid;text-align: center">
-			<a href="${riceURL}"><img class = "classimg" src="Images/S1.jpg"></a><br>中式
+			<a href="${riceURL}"><img class = "classimg" src="Images/S1.jpg"></a><br>
+			<span 
+			<c:if test="${storeClass == '中式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			中式
+			</span>
 		</div>
 
 
@@ -282,7 +289,14 @@ a.mobile-show {
 			<c:param name="sclass" value="日式" />
 		</c:url>
 		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
-			<a href="${JPURL}"><img src="Images/S2.jpg" class = "classimg"/></a><br>日式
+			<a href="${JPURL}"><img src="Images/S2.jpg" class = "classimg"/></a><br>
+			<span 
+			<c:if test="${storeClass == '日式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			日式
+			</span>
 		</div>
 
 
@@ -290,14 +304,28 @@ a.mobile-show {
 			<c:param name="sclass" value="下午茶" />
 		</c:url>
 		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
-			<a href="${TEAURL}"><img src="Images/S3.jpg" class = "classimg"></a><br>下午茶
+			<a href="${TEAURL}"><img src="Images/S3.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '下午茶'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			下午茶
+			</span>
 		</div>
 
 		<c:url value="StoreGetClassstore" var="WESTURL">
 			<c:param name="sclass" value="西式" />
 		</c:url>
 		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
-			<a href="${WESTURL}"><img src="Images/S4.jpg" class = "classimg"></a><br>西式
+			<a href="${WESTURL}"><img src="Images/S4.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '西式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>			
+			西式
+			</span>
 		</div>
 		
 		
@@ -305,59 +333,91 @@ a.mobile-show {
 			<c:param name="sclass" value="快餐" />
 		</c:url>
 		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${fastURL}"><img src="Images/S5.jpg" class = "classimg"></a><br>快餐
+			<a href="${fastURL}"><img src="Images/S5.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '快餐'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			快餐
+			</span>
 		</div>
 
 		<c:url value="StoreGetClassstore" var="metURL">
 			<c:param name="sclass" value="燒肉" />
 		</c:url>
 		<div class="col-sm-2 " style="text-align: center">
-			<a href="${metURL}"><img src="Images/S6.jpg" class = "classimg"	></a><br>燒肉
+			<a href="${metURL}"><img src="Images/S6.jpg" class = "classimg"	></a><br>
+			<span 
+			<c:if test="${storeClass == '燒肉'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			燒肉
+			</span>
 		</div>
 
 		</div>
 	</div>
 	<div class="row">
 	<div class="col-sm-3 ">
-	 <div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
-        <!-- 用container -->
-        <form action="############################" method="post" >
-            <fieldset style="width: auto;margin:1px auto;">
-                <legend>篩選條件</legend>
-                
-                
-				<br>
-           		  	<input type="radio" id="d1" name="dollar" value='1' >
-  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>   
-                   	<input type="radio" id="d2" name="dollar" value='2'>
-  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d3" name="dollar" value='3'>
-  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d4" name="dollar" value='4'>
-  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d5" name="dollar" value='5'>
-  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                <hr>
-                <label>欲查詢幾顆星以上店家
-                </label>
-				<br>
-					<input type="radio" id="star3.5" name="star" >
-  					<label for="star3.5">3.5+</label>
-  				<br>
-  					<input type="radio" id="star4" name="star" >
-  					<label for="star4">4.0+</label>
-  				<br>
- 
-            </fieldset>
-	            <div style="text-align: center;">
-            </div>
-        </form>
-    </div>
+		<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; margin-bottom:30px">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>排序:</legend>
+	                <label>依據價格排序
+	                </label>
+					<br>
+						<input type="radio" id="priceOrderH" name="priceOrder" value='-1' >
+	  					<label for="priceOrderH">由高至低</label>
+	  				<br>
+	  					<input type="radio" id="priceOrderL" name="priceOrder" value='1'>
+	  					<label for="priceOrderL">由低至高</label>
+	  				<br>
+	            </fieldset>
+	        </form>
+   		 </div>
+   		 
+	 	<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>篩選條件</legend>
+	                
+	                
+					<br>
+	           		  	<input type="radio" id="d1" name="dollar" value='1' >
+	  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>   
+	                   	<input type="radio" id="d2" name="dollar" value='2'>
+	  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d3" name="dollar" value='3'>
+	  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d4" name="dollar" value='4'>
+	  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d5" name="dollar" value='5'>
+	  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                <hr>
+	                <label>欲查詢幾顆星以上店家
+	                </label>
+					<br>
+						<input type="radio" id="star3.5" name="star" value='3.5' >
+	  					<label for="star3.5">3.5+</label>
+	  				<br>
+	  					<input type="radio" id="star4" name="star" value='4'>
+	  					<label for="star4">4.0+</label>
+	  				<br>
+	 
+	            </fieldset>
+		            <div style="text-align: center;">
+	            </div>
+	        </form>
+   		 </div>
 	</div>
 	<div class="col-sm-6" >
       
@@ -388,6 +448,8 @@ a.mobile-show {
 			var flag = 0;
 			var stopload = 0;
 			var priceLimit = "";
+			var star = "";
+			var priceOrder = 0;
 				$.ajax({
 						
 						type:"GET",
@@ -396,7 +458,9 @@ a.mobile-show {
 							'sclass':"${sclass}",
 							'stname':"${stname}",
 							'priceLimit':priceLimit,
-							'offset':flag
+							'star':star,
+							'offset':flag,
+							'priceOrder':priceOrder
 						},
 						datatype:'json',
 // 						datatype:'html',
@@ -406,7 +470,7 @@ a.mobile-show {
 					context +=
 						"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"' id=a"+data[i].id+"  style='text-decoration:none;color:black'> "+ 
 						    "<div class='outside' >"+
-			       				 	"<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+		
+			       				 	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+		
 			      				  	"</div>"+
 							        	"<div class='textdiv' style='font-size: 135%'>"+
 							            "<h1 class='h11' >"+
@@ -431,9 +495,8 @@ a.mobile-show {
 						}
 				})
 				
-				
-				$('input[name="dollar"]').click(function(){
-					priceLimit = $(this).val()
+				$('input[name="priceOrder"]').click(function(){
+					priceOrder = $(this).val()
 					flag = 0;
 					context="";
 					$("#ajax").html("")
@@ -445,16 +508,22 @@ a.mobile-show {
 								'sclass':"${sclass}",
 								'stname':"${stname}",
 								'priceLimit':priceLimit,
-								'offset':flag
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)
 								for(var i = 0; i < data.length;i++){
 									context +=
 										
 										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
 										    "<div class='outside' >"+
-							       				 "<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+
+										    	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
 							      				  	"</div>"+
 											        	"<div class='textdiv' style='font-size: 135%'>"+
 											            "<h1 class='h11' >"+
@@ -486,6 +555,133 @@ a.mobile-show {
 					})
 				});
 				
+				$('input[name="star"]').click(function(){
+					star = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
+					
+							}
+					})
+				});				
+				
+				
+				$('input[name="dollar"]').click(function(){
+					
+					console.log('before priceLimit')
+					console.log(priceLimit)
+					console.log('before star')
+					console.log(star)
+					priceLimit = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)								
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    "<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
+					
+							}
+					})
+				});
+				
+
 				
 				$(window).scroll(function(){
 
@@ -504,15 +700,20 @@ a.mobile-show {
 								'sclass':"${sclass}",
 								'stname':"${stname}",
 								'priceLimit':priceLimit,
-								'offset':flag
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){
+								console.log(priceLimit)
+								console.log(star)
+							
 								for(var i = 0; i < data.length;i++){
 									context +=
 										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
 										    "<div class='outside' >"+
-							       				 "<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+
+										    "<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
 							      				  	"</div>"+
 											        	"<div class='textdiv' style='font-size: 135%'>"+
 											            "<h1 class='h11' >"+

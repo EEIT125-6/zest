@@ -1,5 +1,7 @@
 package xun.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,7 +63,11 @@ public class StoreWhiteListC_Controller {
 			System.out.println("Result是有錯誤的 應該要返回");
 			return "Insert";
 		}
-
+//		啟動狀態
+		storeBean.setStatus("1");
+		storeBean.setClick(0);
+		storeBean.setRealprice(0);
+//		storeBean.setAvgStar((float) 0);
 //		寫入商家主人資訊
 		WebUserData userFullData = (WebUserData) model.getAttribute("userFullData");
 //		WebUserData wud = new WebUserData();
@@ -90,5 +96,9 @@ public class StoreWhiteListC_Controller {
 	    "stitddt", 
 	    "tel" 
 	    );
+	}
+	@ModelAttribute("sclassCategory")
+	public List<String> getSclassCategory(){
+		return ss.getSclassCategory();
 	}
 }

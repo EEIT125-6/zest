@@ -45,20 +45,20 @@
                         <span class="navbar-toggler-bar burger-lines"></span>
                         <span class="navbar-toggler-bar burger-lines"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
-                                    <span class="no-icon">Account</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
-                                    <span class="no-icon">Log out</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+<!--                     <div class="collapse navbar-collapse justify-content-end" id="navigation"> -->
+<!--                         <ul class="navbar-nav ml-auto"> -->
+<!--                             <li class="nav-item"> -->
+<!--                                 <a class="nav-link" href="#pablo"> -->
+<!--                                     <span class="no-icon">Account</span> -->
+<!--                                 </a> -->
+<!--                             </li> -->
+<!--                             <li class="nav-item"> -->
+<!--                                 <a class="nav-link" href="#pablo"> -->
+<!--                                     <span class="no-icon">Log out</span> -->
+<!--                                 </a> -->
+<!--                             </li> -->
+<!--                         </ul> -->
+<!--                     </div> -->
                 </div>
             </nav>
             <!-- End Navbar -->

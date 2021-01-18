@@ -381,17 +381,6 @@ public class WebUserController {
 		ckFinPassword = ckPassword;
 		/* 加解密搞定前的暫時處置 */
 		
-		/* 將Cookie中的密碼解密 */
-//		if (!ckPassword.equals("")) {			
-//			try {
-//				ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
-//			} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException | BadPaddingException
-//					| IllegalBlockSizeException | IOException e) {
-//				loginMessage = e.getMessage();
-//				accountCheckResult = 6;
-//			}
-//		}
-		
 		System.out.println("accountCheckResult:"+accountCheckResult+", ckFinPassword:"+ckFinPassword);
 		
 		if (loginMessage.equals("")) {
@@ -564,13 +553,7 @@ public class WebUserController {
 					/* 加解密搞定前的暫時處置 */
 					finPassword = password;
 					/* 加解密搞定前的暫時處置 */
-//					try {
-//						finPassword = CipherMsg.encryptMsg(password);
-//					} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
-//							| BadPaddingException | IllegalBlockSizeException | IOException e) {
-//						loginMessage = e.getMessage();
-//						accountCheckResult = 6;
-//					}
+
 					System.out.println("accountCheckResult:"+accountCheckResult+", finPassword:"+finPassword);
 					doWriteUserCookie(request, response, account, finPassword, remember);
 					model.addAttribute("remember", remember);
@@ -602,14 +585,7 @@ public class WebUserController {
 		/* 加解密搞定前的暫時處置 */
 		finPassword = userData.getPassword();
 		/* 加解密搞定前的暫時處置 */
-//		
-//		try {
-//			finPassword = CipherMsg.encryptMsg(userData.getPassword());
-//		} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException | BadPaddingException
-//				| IllegalBlockSizeException | IOException e) {
-//			e.printStackTrace();
-//		}
-//		
+
 		/* 移除Cookie */
 		doRemoveUserCookie(request, response, userData.getAccount(), finPassword, remember);
 		/* 清空SessionAttribute */
@@ -627,7 +603,6 @@ public class WebUserController {
 			/* 直接移除 */
 			context.removeAttribute("userMap");
 		}
-		
 
 		/* 前往首頁 */
 		return "redirect:/";
@@ -1953,12 +1928,6 @@ public class WebUserController {
 	public String doGoWebUserMain() {
 		return "webUser/WebUserMain";
 	}
-	
-	/* 前往登出畫面 */
-//	@GetMapping(value = "/WebUserLogoutResult")
-//	public String doGoLogOut() {
-//		return "WebUserLogoutResult";
-//	}
 	
 	/* 前往修改個人密碼畫面 */
 	@GetMapping(value = "/webUser/WebUserModifyPassword")

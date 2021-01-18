@@ -88,5 +88,9 @@ public class WebAppConfig implements WebMvcConfigurer {
 		// By Brandon-Chen1122
 		registry.addResourceHandler("/star/**")
 		.addResourceLocations("/WEB-INF/views/orange/images/");
+//		registry.addResourceHandler("/undefined")
+//				.addResourceLocations("/Images/LOGO1-removebg-preview.png");
 	}
+	
+	
 }

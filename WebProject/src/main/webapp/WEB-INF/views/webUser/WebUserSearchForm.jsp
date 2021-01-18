@@ -254,7 +254,36 @@ ul.slides li img {
 			<hr />
 		</div>
 		
+		<div align="center" id="dataTableContainer"> 
+			<table id="userDataTable" class="display">
+				<thead>
+					<tr>
+ 						<th>項次</th> 
+ 						<c:if test="${userFullData.accountLv.lv == -1}"> 
+ 							<th>刪除</th>
+ 							<th>其他</th> 
+ 							<th>查看</th> 
+						</c:if> 
+ 						<th>帳號名稱</th> 
+ 						<th>稱呼</th> 
+						<th>偏好食物</th> 
+						<th>居住區域</th> 
+ 						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}"> 
+ 							<th>帳號身分</th> 
+ 						</c:if> 
+ 						<c:if test="${userFullData.accountLv.lv == -1}"> 
+ 							<th>帳號狀態</th> 
+ 						</c:if> 
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+		
 		<div align="center" id="dataContainer"></div>
+		
 		<!-- 引用本地jQuery -->
 		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 		<!-- 引用本頁檢查用js -->
@@ -573,7 +602,9 @@ ul.slides li img {
 											+ "</tr>";
 								}
 
-								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
+								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
+
+								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"

@@ -69,6 +69,18 @@ public class ProductServiceImpl implements ProductService {
 	public Integer getLastProductId() {
 		return pDao.getLastProductId();
 	}
+
+	@Transactional
+	@Override
+	public void productOffShelf(Integer productid) {
+		pDao.productOffShelf(productid);
+	}
+
+	@Transactional
+	@Override
+	public void productReOnShelf(Integer productid) {
+		pDao.productReOnShelf(productid);
+	}
 	
 	
 }
