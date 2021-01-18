@@ -21,9 +21,9 @@ import org.springframework.util.Base64Utils;
 /* ref:https://www.cnblogs.com/dingmy/p/9467429.html */
 
 public class CipherMsg {
-	/* 256bit Key */
-	static final SecretKeySpec sKey = new SecretKeySpec(getUTF8Bytes("5tsaoBrandonGeorgeMimicker0903mp4056"), "AES");
-	/* 128bit */
+	/* 256bit Key(32) */
+	static final SecretKeySpec sKey = new SecretKeySpec(getUTF8Bytes("tsao1Brandon2George3Mimicker4mp5"), "AES");
+	/* 128bit(16) */
 	static final IvParameterSpec ips = new IvParameterSpec(getUTF8Bytes("103125130EEIT125"));
 	/* 加密模式 */
 	static final String transform = "AES/CBC/PKCS5Padding";

@@ -33,7 +33,8 @@ public class BoardController {
 	StoreService storeService;
 
 	@PostMapping("/insertboard")
-	public @ResponseBody Map<String, Object> insertboard(@RequestParam(value = "name") String name,
+	public @ResponseBody Map<String, Object> insertboard(
+			@RequestParam(value = "name") String name,
 			@RequestParam(value = "comment") String comment,
 			@RequestParam(value = "photo", required = false) String photo,
 			@RequestParam(value = "star") Integer star,
@@ -63,19 +64,33 @@ public class BoardController {
 		model.addAttribute("boardBean", boardBean);
 		return "/orange/DisPlayComment";
 	}
-
-//	@GetMapping("orange/ShowComment")
-//	public String Show(Model model) {
-//
-//		return "/orange/ShowComment";
-//	}
+	
+	@PostMapping("/updateReply")
+	public @ResponseBody Map<String, Object> updateReply(
+			@RequestParam(value = "id") Integer id,
+			@RequestParam(value = "reply") String reply) {
+		BoardBean boardBean = boardService.getBoardById(id);
+		boardBean.setReply(reply);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (boardService.updateBoard(boardBean) > 0) {
+			map.put("message", "success");
+			map.put("boardBean", boardBean);
+		} else {
+			map.put("message", "fail");
+		}
+		return map;
+	}
 
 	@GetMapping("/updateboard")
-	public String updateboard(@RequestParam(value = "id") Integer id, @RequestParam(value = "name") String name,
+	public String updateboard(
+			@RequestParam(value = "id") Integer id, 
+			@RequestParam(value = "name") String name,
 			@RequestParam(value = "comment") String comment,
-			@RequestParam(value = "photo", required = false) String photo, @RequestParam(value = "star") Integer star,
+			@RequestParam(value = "photo", required = false) String photo, 
+			@RequestParam(value = "star") Integer star,
 			@RequestParam(value = "storeId") Integer storeId,
-			@RequestParam(value = "status", defaultValue = "0") Integer status, Model model) {
+			@RequestParam(value = "status", defaultValue = "0") Integer status, 
+			Model model) {
 		Date utilDate = new Date();
 		Date date = utilDate;
 

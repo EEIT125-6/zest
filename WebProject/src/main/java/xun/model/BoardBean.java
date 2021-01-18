@@ -21,6 +21,7 @@ public class BoardBean {
 	private Integer star;
 	private Date date;
 	private String context;
+	private String reply;
 	private String photo;
 	private Integer status;
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -44,6 +45,17 @@ public class BoardBean {
 		this.star = pstars;
 		this.date = pdate;
 		this.context = pcontext;
+		this.photo=pphoto;
+		this.storebean=storebean;
+	}
+	
+	public BoardBean(Integer boardid, String pname,Integer pstars,Date pdate,String pcontext,String reply,String pphoto, StoreBean storebean) {
+		this.boardid = boardid;
+		this.name = pname;
+		this.star = pstars;
+		this.date = pdate;
+		this.context = pcontext;
+		this.reply = reply;
 		this.photo=pphoto;
 		this.storebean=storebean;
 	}
@@ -90,6 +102,12 @@ public class BoardBean {
 	}
 	public void setContext(String context) {
 		this.context = context;
+	}
+	public String getReply() {
+		return reply;
+	}
+	public void setReply(String reply) {
+		this.reply = reply;
 	}
 	public String getPhoto() {
 		return photo;
