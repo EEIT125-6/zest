@@ -168,6 +168,49 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     background:#0099CC;
 }
     </style>
+<script>
+// 	window.onload = function() {
+// 		/* 載入後先執行一次預設查詢 */
+// 		seating();
+// 	};
+// 	function seating(){
+// 	let showSpan = document.getElementById("seating");
+// 		$.ajax({
+// 			type : "POST",
+// 			url : "<c:url value='/booking/seating'/>",
+// 			data : {
+// 				'bookingdate':bookingdate,
+// 				'time':time,
+// 				'number':number,
+// 				'restaurant':restaurant,
+				
+// 			},
+// 			dataType : "json",
+// 			success : function(resultObj) {
+// 				let show=resultObj.line;
+				
+// 	      		if(resultObj.code==-1){
+// 	      			showSpan=show;
+// 	      			showSpan.style.color = "red";
+// 	      			showSpan.style.fontStyle = "italic";
+// 	      		}else if(resultObj.code==0){	
+// 	      			showSpan=show;
+// 	      			showSpan.style.color = "red";
+// 	      			showSpan.style.fontStyle = "italic";
+//   				}else if(resultObj.code==1){
+//   					showSpan=show;
+//   					showSpan.style.color = "red";
+// 	      			showSpan.style.fontStyle = "italic";
+//   				}else if(resultObj.code==2){
+//   					showSpan=show;
+//   				}
+		
+// 				showSpan.innerHTML;
+	      		
+// 			}
+// 		});
+// 	}
+</script>	
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
@@ -178,7 +221,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <fieldset>
 <input type="hidden" id="nameX" value="${userFullData.firstName}">
 <input type="hidden" id="nameY" value="${userFullData.lastName}">
-
 <input type="hidden" id="phoneX" value="${userFullData.phone}">
 <input type="hidden" id="mailX"  value="${userFullData.email}">
         <legend>填寫訂位資料</legend>
@@ -191,13 +233,14 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         
         <div class="st1">
             <label for="" class="st3">訂位日期:</label>
-            <input id="datepicker1" type="text" name="bookingdate" > 
+            <input id="datepicker1" type="text" name="bookingdate" class="bookingdate" placeholder="請選擇(不能訂當天唷)"> 
    
         </div>
    
         <div class="st1">
             <label for="" class="st3">時間:</label>
-            <select name="time">
+            <select name="time" id="time">
+            	<option value="">請選擇</option>
             	<option value="11:30">11:30</option>
                 <option value="12:00">12:00</option>
                 <option value="12:30">12:30</option>
@@ -211,7 +254,8 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         </div>
         <div class="st1">
             <label for="" class="st3">人數:</label>
-            <select name="number">
+            <select name="number" id="number" onChange="beforeAjax()">
+            	<option value="">請選擇</option>
                 <option value="1">1人</option>
                 <option value="2">2人</option>
                 <option value="3">3人</option>
@@ -219,6 +263,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
                 <option value="5">5人</option>
                 <option value="6">6人</option>
             </select>
+            <span id="seating"></span>
         </div>
         <div class="st1">
             <label for="name"  class="st3">姓名:</label>
@@ -244,7 +289,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
         </div>
         <div class="st1">
             <label for="cm"  class="st3">特殊需求:</label> 
-            <textarea name="needs" id="cm" cols="40" rows="5" placeholder="（如有會過敏的食物請在此填入）"></textarea>
+            <textarea name="needs" id="cm" cols="40" rows="5" placeholder="（如有會過敏的食物請在此填入...）"></textarea>
         </div>
         <div class="st2">
             <a href="javascript:history.back()"><input type="button" name="back" value="上一步"></a>
@@ -257,7 +302,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript">
-		 function checkPhone( strPhone ) { 
+		function checkPhone( strPhone ) { 
 	 	    var cellphone = /^09[0-9]{8}$/; 
 	 	 
 	 	    if (!cellphone.test( strPhone )) { 
@@ -269,6 +314,14 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 			if($("#datepicker1").val()==""){
 				alert("請選擇訂位日期");
 				return false;
+			}else if($("#time").val()==""){
+				alert("請選擇用餐時間");
+				eval("document.form['time'].focus()");	
+				return false;
+			}else if($("#number").val()==""){
+				alert("請選擇用餐人數");
+				eval("document.form['number'].focus()");	
+				return false;	
 			}else if($("#name").val()==""){
 				alert("姓名不得為空白");
 				eval("document.form['name'].focus()");	
@@ -305,9 +358,68 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 				document.getElementById("name").value =$("#nameX").val()+$("#nameY").val();
 				document.getElementById("phone").value = $("#phoneX").val();
 				document.getElementById("email").value = $("#mailX").val();	
-			});  
+			});  			
 	      });
-  </script>
+	</script>
+	<script>	
+	     function beforeAjax(){
+	    	 /* alert("aaa"); */
+	    	if($("#datepicker1").val()!="" && $("#time").val()!="" && $("#number").val()!=""){
+	    		seating();	
+	    	}else{
+	    		alert("error");
+	    	}
+	    } 
+		
+		function seating(){
+			/* alert("aaaajjjjaaaxxx") */
+		var showSpan = document.getElementById("seating");
+		var bookingdate = document.getElementById("datepicker1").value;
+		var time = document.getElementById("time").value;
+		var number = document.getElementById("number").value;
+		var restaurant = document.getElementById("restaurant").value;
+		
+			$.ajax({
+				type : "POST",
+				url : "<c:url value='/booking/seating'/>",
+				data : {
+					'bookingdate':bookingdate,
+					'time':time,
+					'number':number,
+					'restaurant':restaurant
+				},
+				dataType : "json",
+				success : function(resultObj) {
+					/* alert("gooood") */
+					let show=resultObj.line;
+					
+		      		if(resultObj.code==-1){
+		      			
+		      			showSpan.style = "color:red";
+		      			showSpan.style = "fontStyle:italic";
+		  
+		      		}else if(resultObj.code==0){	
+		      			
+		      			showSpan.style = "color:red";
+		      			showSpan.style = "fontStyle:italic";
+	  				}else if(resultObj.code==1){
+	  					
+	  					showSpan.style = "color:red";
+	  					showSpan.style = "fontStyle:italic";
+	  				}else if(resultObj.code==2){
+	  					showSpan.style = "color:black";
+	  					showSpan.style = "fontStyle:normal";
+	  					
+	  				}
+			
+					showSpan.innerHTML=show;
+		      		
+				}
+			});
+	    }
+		
+	</script>
+  
 <!--   </div> -->
  <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>
