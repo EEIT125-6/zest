@@ -189,12 +189,14 @@
                 			<button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button>
                 		</a>
                			<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="button" style="font-size:18px" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
 						<button type="button" style="font-size:18px" id="cookieLogin" name="cookieLogin" >一鍵登入 <i class="material-icons" style="font-size:18px;color:blue">free_breakfast</i></button>
 						<a href="<c:url value='/WebUserRegisterForm' /> ">
 							<button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 						</a>
 						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+					        <br /><br />
+						<button type="button" style="font-size:18px" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
+						<button type="button" style="font-size:18px" id="googleQuit" name="googleQuit" >Google斷連 <i class="material-icons" style="font-size:18px;color:blue">people_outline</i></button>
 					</div>
 					<hr />
                 </form>
@@ -209,6 +211,7 @@
                 		let bossAutoInputBtn = document.getElementById("bossInput");
                 		let adminAutoInputBtn = document.getElementById("adminInput");
                 		let googleLoginBtn = document.getElementById("googleLogin");
+				let googleQuitBtn = document.getElementById("googleQuit");
                 		let cookieLoginBtn = document.getElementById("cookieLogin");
                 		
                 		submitBtn.onclick = function() {
@@ -228,6 +231,9 @@
                 		};
                 		googleLoginBtn.onclick = function() {
                 			GoogleLogin();
+                		};
+				googleQuitBtn.onclick = function() {
+                			Google_disconnect()
                 		};
                 		cookieLoginBtn.onclick = function() {
                 			var remember = document.getElementById("remember").checked;
@@ -266,6 +272,13 @@
                             alert("Google登入失敗");
                         });
                     }
+		
+			function Google_disconnect() {
+                        let auth2 = gapi.auth2.getAuthInstance(); //取得GoogleAuth物件
+                        auth2.disconnect().then(function () {
+                            alert("使用者已斷開帳號");
+                        });
+                    } 
                 	
                 	function inputCheck() {
 	                	var account = document.getElementById("account").value.trim();
