@@ -203,18 +203,22 @@ a.mobile-show {
 
 
 
-.card-title{
-  color:#191970;
-  font-style:italic;
-  font-weight:bold;
+.comment-card{
+	background: #F0F0F0
 }
-.card-text{
-  font-size:large;
+
+.comment-card-title{
+	color:#191970;
+	font-style:italic;
+	font-weight:bold;
 }
-.card-date{
-  color:gray;
-  font-size:small;
+.comment-card-text{
+	font-size:large;
 }
+.comment-card-date{
+	color:gray;
+	font-size:small;
+} 
     </style>
 </head>
 <body>
@@ -643,13 +647,12 @@ function initMap() {
 			    	<!--產生所有留言板  -->
 			    	<c:forEach var="row" items="${Comments}">
 			    		<!-- 產生卡片 -->
-			    		<div class="card w-100">
-
-			    			<div class="card-body">
-			    				<h4 class="card-title">${row.name}</h4>
-			    				<p class="card-date">${fn:substring(row.date, 0, 19)}</p>
-	    						<p class="card-text">
-	    						
+			    		<div class="comment-card w-100">
+						  <div class="comment-card-body"  style="background: #F0F0F0">
+						    <h4 class="comment-card-title">${row.name}</h4>
+						    <p class="comment-card-date">${fn:substring(row.date, 0, 19)}</p>
+						    <p class="comment-card-text">
+	
 	    						<!-- 產生星星 -->
 	    						<c:forEach var="x" begin="1" end="5">
 	    							<c:choose>
@@ -717,21 +720,26 @@ function initMap() {
 			        	map['id'] =  id;
 			        	map['reply'] = $(e).siblings('textarea').val();
 			        	$.ajax({
-			      		  url:'<c:url value="/updateReply"/>',
-			    		  type:'POST',
-			    		  data:map,
-			    		  success:function(res){
-			    				console.log(res);
-			    				swal('執行回覆','已成功進行了回覆','success')
-			    				$(e).siblings('textarea').remove();
-			    				$(e).closest('p').before($('<hr>'));
-			    				$(e).closest('p').append($('<span>',{'style': 'color:#008000;font-size: 22px;'}).text(res.boardBean.reply));
-			    				$(e).remove();
-			    	      },error:function(err){
-			    				console.log(err);
-			    				alert('回覆失敗');
-			    		  }
-			    		});
+			        	  url:'<c:url value="/updateReply"/>',
+			      		  type:'POST',
+			      		  data:map,
+			      		  success:function(res){
+			      				console.log(res);
+			      				Swal.fire(
+			      	 				      '回覆成功',
+			      	 				      "",
+			      	 				      'success'
+			      	 				    )
+//			       				alert('回覆成功');
+			      				$(e).siblings('textarea').remove();
+			      				$(e).closest('p').before($('<hr>'));
+			      				$(e).closest('p').append($('<span>',{'style': 'color:#008000;font-size: 22px;'}).text(res.boardBean.reply));
+			      				$(e).remove();
+			      	      },error:function(err){
+			      				console.log(err);
+			      				alert('回覆失敗');
+			      		  }
+			      		});
 			        }
 			    	
 			    	function doInsert(){

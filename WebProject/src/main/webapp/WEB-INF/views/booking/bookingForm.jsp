@@ -208,6 +208,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
                 <option value="18:30">18:30</option>
                 <option value="19:00">19:00</option>
             </select>
+            <span id="seating"></span>
         </div>
         <div class="st1">
             <label for="" class="st3">人數:</label>
@@ -220,7 +221,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
                 <option value="5">5人</option>
                 <option value="6">6人</option>
             </select>
-            <span id="seating"></span>
         </div>
         <div class="st1">
             <label for="name"  class="st3">姓名:</label>

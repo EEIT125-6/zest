@@ -153,7 +153,7 @@ public class BookingDAO_Impl implements BookingDAO {
 		Session session = factory.getCurrentSession();
 		Query<BookingData> query = session.createQuery(hql);
 		List<BookingData> list = query.setParameter("store", stname).getResultList();
-		if (list.size()==1) {
+		if (list.size()>=1) {
 			return list.get(0).getSeating();
 		}
 		return 0;
