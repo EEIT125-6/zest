@@ -1,6 +1,8 @@
 package xun.test;
 
 import java.io.File;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -72,6 +74,36 @@ public class testJAVA {
 		}
 		
 		System.out.println(sss.contains("<!--"));
+		
+		
+		Timestamp t1 = new Timestamp(System.currentTimeMillis());
+		java.sql.Time st = new Time(300);
+		System.out.println(st);
+		Timestamp t2 = new Timestamp(9999);
+		System.out.println(t1);
+		System.out.println(t2);
+		List<Timestamp> timeOrderTest = new ArrayList<Timestamp>();
+		timeOrderTest.add(t1);
+		timeOrderTest.add(t2);
+		Collections.sort(timeOrderTest, new TestJavaTimeComparator());
+		System.out.println(timeOrderTest);
+		
+	}
+	
+}
+class TestJavaTimeComparator implements Comparator{
+
+	@Override
+	public int compare(Object o1, Object o2) {
+		Timestamp t1 = (Timestamp)o1;
+		Timestamp t2 = (Timestamp)o2;
+		if(t1.before(t2)) {
+			return 1;
+		}else if(t1.equals(t2)) {
+			return 0;
+		}else {
+			return -1;
+		}
 	}
 	
 }

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ import service.CartService;
 
 @Controller
 @RequestMapping("/controller")
-@SessionAttributes({ "userFullData","cart", "itemQuantity", "itemTotalValue" })
+@SessionAttributes({ "userFullData","cart" })
 public class ShoppingCartController {
 
 	@Autowired

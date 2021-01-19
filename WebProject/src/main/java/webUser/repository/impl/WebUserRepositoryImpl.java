@@ -354,6 +354,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
                 .setMaxResults(avPage).getResultList();
 	}
 	
+<<<<<<< HEAD
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -370,6 +371,8 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return getSession().createQuery(hql).setParameter("year", year).getResultList();
 	}
 	
+=======
+>>>>>>> testMaster
 	/* 取得查詢的總筆數 */
 	@Override
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {

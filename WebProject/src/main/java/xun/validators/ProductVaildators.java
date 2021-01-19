@@ -24,7 +24,7 @@ public class ProductVaildators implements Validator{
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "product_quantity", "","商品庫存不能為空白");
 		if(pib.getProduct_name()!=null) {
 			if(pib.getProduct_name().contains("<!--")) {
-				errors.rejectValue("product_name", "", "請不要搞事");
+				errors.rejectValue("product_name", "", "包含不合理字串請修正");
 			}
 		}
 		if(pib.getProduct_price()!=null) {

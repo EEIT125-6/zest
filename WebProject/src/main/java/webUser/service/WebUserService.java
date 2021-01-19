@@ -68,6 +68,7 @@ public interface WebUserService {
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException;
 	
+<<<<<<< HEAD
 	/* 取得所有有效的使用者資料 */
 	public List<WebUserData> getAllWebUserData() throws SQLException;
 	
@@ -77,6 +78,11 @@ public interface WebUserService {
 	/* 取得可查詢到總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
+=======
+	/* 取得可查詢到總筆數 */
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
+	
+>>>>>>> testMaster
 	/* 取得可查詢到的總頁數 */
 	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException;
 	

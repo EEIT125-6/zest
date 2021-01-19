@@ -290,7 +290,6 @@ ul.slides li img {
 					let value3 = $(this).children("td").eq(1).html();
 					
 					if (row == 8) {
-						s += value2+","	
 						s += value1+":"+value2+","
 					} else if (row == 2) {
 						m += value3;

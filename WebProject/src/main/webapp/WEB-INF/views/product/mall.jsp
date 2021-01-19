@@ -21,7 +21,14 @@ response.setCharacterEncoding("UTF-8");
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/LoadingScreen.css' type="text/css" />
 <title>Product Page</title>
 <!-- 商城頁面 -->
+<<<<<<< HEAD
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+=======
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script> 
+	
+>>>>>>> testMaster
 <style>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
 *, *:before, *:after { 
@@ -251,12 +258,18 @@ ul.slides li img {
 					width="120px"></td>
 				<td>${product.product_shop}</td>
 				<td>${product.product_name}</td>
+<<<<<<< HEAD
 				<td>${product.product_price}</td>
 				<td class="addtocart"
 					style="margin-top: 66px; display: block; text-align: center;">
 					<button id="addItem" onclick="itemAdd(${product.product_id});">加入購物車</button>
 				</td>
 			</tr>
+=======
+				<td>${product.product_price}</td>		 
+				<td class="addtocart" style="margin-top:66px; display:block;text-align:center;"><button id="addItem" onclick="itemAdd(${product.product_id});">加入購物車</button></td>	
+				</tr>
+>>>>>>> testMaster
 		</c:forEach>
 	</table>
 	<script>
