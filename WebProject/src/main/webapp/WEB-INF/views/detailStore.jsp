@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
 	request.setCharacterEncoding("UTF-8");
 %>
@@ -9,18 +9,10 @@
 	response.setContentType("text/html;charset=UTF-8");
 %>
 
-<%-- <sql:setDataSource var="ds" dataSource="jdbc/zest" /> --%>
-
 <c:set var="ss" value="${param.stname}"/>
 <c:if test="${!(empty stname)}">
   <c:set var="ss" value="${stname}"/>
 </c:if>
-
-<%-- <sql:query dataSource="${ds}" var="rs"> --%>
-<!--          SELECT * FROM store WHERE stname = ?  -->
-<%--          <sql:param value="${ss}" /> --%>
-<%-- </sql:query> --%>
-
 
 <c:forEach var="row" items="${Results}">
 	<c:set var = "id" value = "${row.id}"/>
@@ -35,8 +27,6 @@
 		<c:set var = "userId" value = "${row.webUserData.userId}"/>
 	</c:if>
 </c:forEach>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,10 +47,7 @@
     <style>
         body{
          background-color: 		rgb(235, 159, 18);
-        
-        
        }
-
        .header{
             height: 100px;
             border-bottom: 3px solid #e76f51;height: 90px;
@@ -210,6 +197,23 @@ a.mobile-show {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 7px;
+  
+
+}
+
+
+
+.card-title{
+  color:#191970;
+  font-style:italic;
+  font-weight:bold;
+}
+.card-text{
+  font-size:large;
+}
+.card-date{
+  color:gray;
+  font-size:small;
 }
     </style>
 </head>
@@ -262,14 +266,6 @@ a.mobile-show {
     <!--PreLoader Ends-->
     
     <%@include file = "Header-Include.jsp" %>
-
-<!--             <div class="container-fluid  header" > -->
-<!--               <div class="container" > -->
-<!--               <a href="Index1.jsp"  style="float: left;font-size:37px; text-decoration:none;color:orange"><img src="Images/LOGO1-removebg-preview.png" style="height: 70px;"></a> -->
-<!--               <p style="text-align: right;font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;"><br>登入 | 註冊  |<img src="Images/PLZPLZ-removebg-preview.png" class="shopcar"> -->
-<!--             </p> -->
-<!--               </div> -->
-<!--             </div> -->
 
 <!-- search area -->
 		<div class="search-area">
@@ -350,10 +346,6 @@ function relocate_home()
 <!-- 			<span>|</span> -->
 			<c:url value="/Insert" var="CEATEURL">
 			</c:url> 
-<%-- 			<a href="${CEATEURL}">新增</a> --%>
-<!-- 			<span>|</span> -->
-<%-- 		<c:url value = '/DeleteStore'/> --%>
-<!-- 			<span>|</span> -->
 		<c:url value="/UpdatePhoto" var="photoURL">
 			<c:param name="stname" value="${stname1}"></c:param>
 			<c:param name="id" value="${id}"></c:param>
@@ -600,43 +592,104 @@ function initMap() {
 			        </div>
 		        </c:if>
 		        <br>
-			    <div class="box2" style="text-align:center ;margin: auto;">
-			       <form id="form1" method="get" action="<c:url value='/pack'/>">
-			       		<fieldset>
-			       			<legend>留言</legend>
-			       			<input type="hidden" name="storeId" value="${id}">
-			       			<div class="st1">
-						       <label class="t1" for="name">名字:</label>
-						       <input readonly type="text" id="name" name="name" value="${userFullData.nickname}"><br>
-						    </div>
-						    <div class="st1">
-						        <label for="star" class="t1"></label>
-						        <input type="hidden" id="star" name="star" ><br>
-						    </div>
-						    
-					 <div class="d2">
-			            <span>評價:  </span>
-			            <img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-			            <br>
-			            <label id = "startPcs"></label>
-			        </div>
-						    <div class="st1">
-							    <label class="t1" for="pwd1">留言:</label>
-							    <textarea name="comment" id="comment" cols="33" rows="5" ></textarea><br>
-							</div>
-							<div class="sub">
-						        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
-						        <input type="reset" value="清除"> 
-						    </div>
-			       		</fieldset>
-			       </form>
+		        <!-- 判斷是否(本店)是店家 -->
+				<c:set var="isR" value="N"/>
+				<c:forEach var="row" items="${Results}">
+					<c:if test="${row.webUserData.userId == userFullData.userId}">
+						<c:set var="isR" value="Y"/>
+					</c:if>
+				</c:forEach>
+				
+				<c:if test="${isR ne 'Y'}">      <!-- 不是商家，就無法留言 -->
+					<div class="box2" style="text-align:center ;margin: auto;  ">
+						<form id="form1" method="get" action="<c:url value='/pack'/>">
+							<fieldset>
+								<legend>留言</legend>
+								<input type="hidden" name="storeId" value="${id}">
+								<div class="st1">
+									<label class="t1" for="name">名字:</label>
+						       		<input readonly type="text" id="name" name="name" value="${userFullData.nickname}"><br>
+								</div>
+								<div class="st1">
+							        <label for="star" class="t1"></label>
+							        <input type="hidden" id="star" name="star" ><br>
+							    </div>
+							    <div class="d2" id="startContent">
+							    	<span>評價:  </span>
+							    	<img id="img1" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+						            <img id="img2" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+						            <img id="img3" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+						            <img id="img4" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+						            <img id="img5" class="i" src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+						            <br>
+						            <label id = "startPcs"></label>
+							    </div>
+							    <div class="st1">
+							    	<label class="t1" for="pwd1">留言:</label>
+							    	<textarea name="comment" id="comment" cols="33" rows="5" >
+							    	</textarea>
+							    	<br>
+							    </div>
+							    <div class="sub">
+							        <input type="button" name="submit" onclick="doInsert();" value="傳送"  >
+							        <input type="reset" value="清除"> 
+							    </div>
+							</fieldset>
+						</form>
+					</div>
+				</c:if>
+			    
+			    <div id="detail" border="1" class="div1 container" style="background-color:#FFD382;padding:10px;margin-bottom:5px;">
+			    	<!--產生所有留言板  -->
+			    	<c:forEach var="row" items="${Comments}">
+			    		<!-- 產生卡片 -->
+			    		<div class="card w-100">
+
+			    			<div class="card-body">
+			    				<h4 class="card-title">${row.name}</h4>
+			    				<p class="card-date">${fn:substring(row.date, 0, 19)}</p>
+	    						<p class="card-text">
+	    						
+	    						<!-- 產生星星 -->
+	    						<c:forEach var="x" begin="1" end="5">
+	    							<c:choose>
+	    								<c:when test="${row.star >= x}">
+	    									<img src="<c:url value='/star/s3.png'/>" height="25px" width="25px"/>
+	    								</c:when>
+	    								<c:otherwise>
+	    									<img src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+	    								</c:otherwise>
+	    							</c:choose>
+	    						</c:forEach>
+	    						
+	    						</p>
+							    <p class="card-text">${row.context}</p>
+							    
+							    <!-- 若有回覆內容，產生<hr> -->
+						   		<c:if test="${fn:length(row.reply)>0}">
+						   			<hr/>
+						   		</c:if>
+						   		
+						   		<p class="card-text">
+						   			<c:choose>
+						   				<c:when test="${isR eq 'Y' and fn:length(row.reply)>0}"> <!-- 1. 如果我是商家，也回覆過了，-->
+						   					<span style="color:#008000;font-size: 22px;">${row.reply} </span>
+						   				</c:when>
+						   				<c:when test="${isR eq 'Y'}"> <!-- 2.如果我是商家  -->
+						   					<textarea cols="45" rows="5" >${row.reply}</textarea>
+						   					<input type="button" onclick="doReply(this,${row.boardid});" value="回覆"  />
+						   				</c:when>
+						   				<c:otherwise>
+						   					<span style="color:#808080;font-size: 22px;">${row.reply} </span>
+						   				</c:otherwise>
+						   			</c:choose>
+						   		</p> 
+			    			</div>
+			    		</div>
+			    	</c:forEach>
 			    </div>
+			    
 			    <br />
-<!-- 			    <script src="js/jquery-3.5.1.min.js"></script> -->
 			    <script >
 			    	$(".i").mousedown(function() {
 			    		let starts = $(this).attr("id").split("img")[1];
@@ -649,29 +702,103 @@ function initMap() {
 			    		$(this).nextAll().attr("src","<c:url value='/star/s1.png'/>");
 			    		let starts = $(this).attr("id").split("img")[1];
 			    	});
+			    	$("#startContent").mouseout(function() {
+			    		if(!$("#star").val()){
+			    			$('.i').attr("src","<c:url value='/star/s1.png'/>");
+			    		}
+			    	});
+			    	
+			    	function doReply(e,id){
+			        	if(!$(e).siblings('textarea').val()){
+			        		alert('請輸入回覆內容');
+			        		return;
+			        	}
+			    		var map = {};
+			        	map['id'] =  id;
+			        	map['reply'] = $(e).siblings('textarea').val();
+			        	$.ajax({
+			      		  url:'<c:url value="/updateReply"/>',
+			    		  type:'POST',
+			    		  data:map,
+			    		  success:function(res){
+			    				console.log(res);
+			    				swal('執行回覆','已成功進行了回覆','success')
+			    				$(e).siblings('textarea').remove();
+			    				$(e).closest('p').before($('<hr>'));
+			    				$(e).closest('p').append($('<span>',{'style': 'color:#008000;font-size: 22px;'}).text(res.boardBean.reply));
+			    				$(e).remove();
+			    	      },error:function(err){
+			    				console.log(err);
+			    				alert('回覆失敗');
+			    		  }
+			    		});
+			        }
+			    	
+			    	function doInsert(){
+			        	if(!$("#star").val()){
+			        		alert('請選擇評價');
+			        		return;
+			        	}
+			        	if(!$('#comment').val()){
+			        		alert('請輸入留言內容');
+			        		return;
+			        	}
+			    		var storeId = $('input[name="storeId"]').val();
+			    		var comment = $('textarea[name="comment"]').val();
+			    		var name = $('input[name="name"]').val();
+			    		var star = $("#star").val();
+			    		var map = {};
+			    		map['storeId'] = storeId;
+			    		map['comment'] = comment;
+			    		map['name'] = name;
+			    		map['star'] = star;
+			    		map['photo'] = '';
+			        	$.ajax({
+		        		  url:'<c:url value="/insertboard"/>',
+		        		  type:'POST',
+		        		  data:map,
+		        		  success:function(res){
+	        				console.log(res);
+	        				if(typeof res.boardBean !== 'undefined'){
+	        					//星星還原
+	            				$('.i').attr("src","<c:url value='/star/s1.png'/>");
+	        					//建造卡片
+	            				var startContent = $('#startContent').find('.i').clone();
+	            				var content = $('<div>',{'class':'card w-100'});
+	        					var _body =$('<div>',{'class':'card-body'});
+	        					content.append(_body);
+	        					_body.append($('<h4>',{'class':'card-title'}).html(res.boardBean.name));
+	        					_body.append($('<p>',{'class':'card-date'}).html(formatedTimestamp(res.boardBean.date)));
+	        					
+	        					for(var i = 0; i < res.boardBean.star; i++){
+	        						$(startContent[i]).attr("src","<c:url value='/star/s3.png'/>");
+	        					}
+	        					
+	        					_body.append($('<p>',{'class':'card-text'}).html(startContent));
+	    						_body.append($('<p>',{'class':'card-text'}).html(res.boardBean.context));
+	    						//卡片擺第一個
+	        					$('#detail').prepend(content);
+	        					swal('新增成功','已成功新增您的留言','success')
+	            				$('#comment').val("");
+	        				}else{
+	            				alert('新增異常');
+	        				}
+		        	      },error:function(err){
+	        				console.log(err);
+	        				alert('新增失敗');
+		        		  }
+		        		});
+			        }
+			    	
+			    	function formatedTimestamp(str){
+			   		   var d = new Date(str)
+			   		   var date = d.toISOString().split('T')[0];
+			   		   var time = d.toTimeString().split(' ')[0];
+			   		   return date+' '+time;
+			        }
 			    </script>
             </span>
-            <table id="detail" border="1" class="tb1 container">
-            	<thead>
-            		<tr>
-            			<th>名字</th>
-			    		<th>日期</th>
-			    		<th>評分</th>
-			    		<th>內容</th>
-            		</tr>
-            	</thead>
-            	<tbody>
-            		<c:forEach var="row" items="${Comments}">
-            			<tr>
-				    		<td>${row.name} </td>
-				    		<td>${row.date}</td>
-				    		<td>${row.star}</td>
-				    		<td>${row.context}</td>
-				    	</tr>
-            		</c:forEach>
-            	</tbody>
-            </table>
-          </div>
+         </div>
           
         <div id="div2" style="display:none;" class="ddiv">
             <span style="font-size: 140%"> coming soon</span>
@@ -858,43 +985,6 @@ function initMap() {
         </div>
     </div>
         <script>
-        function doInsert(){
-			var storeId = $('input[name="storeId"]').val();
-			var comment = $('textarea[name="comment"]').val();
-			var name = $('input[name="name"]').val();
-			var star = $("#star").val();
-			var map = {};
-			map['storeId'] = storeId;
-			map['comment'] = comment;
-			map['name'] = name;
-			map['star'] = star;
-			map['photo'] = '';
-        	$.ajax({
-        		  url:'<c:url value="/insertboard"/>',
-        		  type:'POST',
-        		  data:map,
-        		  success:function(res){
-        				console.log(res);
-        				if(typeof res.boardBean !== 'undefined'){
-        					var tr = $('<tr>');
-        					tr.append($('<td>').text(res.boardBean.name));
-        					tr.append($('<td>').text(new Date(res.boardBean.date).toLocaleString()));
-        					tr.append($('<td>').text(res.boardBean.star));
-        					tr.append($('<td>').text(res.boardBean.context));
-        					$('#detail').find('tbody').append(tr);
-            				alert('新增成功');
-            				$('#name').val("");
-            				$('#comment').val("");
-            				$('.i').attr("src","<c:url value='/star/s1.png'/>")
-        				}else{
-            				alert('新增異常');
-        				}
-        	      },error:function(err){
-        				console.log(err);
-        				alert('新增失敗');
-        		  }
-        		});
-        }
         $("#sp1").click(function(){
             $(".ddiv").css("display","none")
             $("#div1").css("display","inline")

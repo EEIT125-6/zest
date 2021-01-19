@@ -383,7 +383,7 @@ public class WebUserController {
 			if (!id_token.equals("") && password.equals("")) {
 				inputCheckResult = "";
 				/* 判定是否為Cookie自動登入 */
-			} else if (account.equals("") && password.equals("") && !ckAccount.equals("") && !ckFinPassword.equals("") && ckRemember) {
+			} else if (account.equals("") && password.equals("") && !ckAccount.equals("") && !ckPassword.equals("") && ckRemember) {
 				inputCheckResult = doCheckLoginInput(ckAccount, ckPassword);
 			} else {
 				/* 預防性後端檢查，正常時回傳1 */
@@ -407,6 +407,12 @@ public class WebUserController {
 						/* 一般登入使用者或已註冊的第三方登入 */
 					} else {
 						if (!ckAccount.isEmpty() && !ckPassword.isEmpty()) {
+							try {
+								ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
+							} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
+									| BadPaddingException | IllegalBlockSizeException | IOException e) {
+								loginMessage = e.getMessage();
+							}
 							/* 檢查Cookie登入 */
 							accountCheckResult = wus.checkWebUserLogin(ckAccount, ckFinPassword);
 						} else if (id_token.equals("")) {
