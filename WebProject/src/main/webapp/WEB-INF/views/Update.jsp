@@ -154,6 +154,9 @@
                     </div>
                     <div class="form-group containerBodyCard">
                     	<form:textarea path="stitddt" class="form-control" id="storeItddt" rows="5"></form:textarea>
+                    	<div>
+                    		<form:errors path="stitddt" cssClass="error"/>
+                    	</div>
                     </div>
 
 					<div class = "form-row">

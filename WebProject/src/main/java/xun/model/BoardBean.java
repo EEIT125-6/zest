@@ -49,7 +49,7 @@ public class BoardBean {
 		this.storebean=storebean;
 	}
 	
-	public BoardBean(Integer boardid, String pname,Integer pstars,Date pdate,String pcontext,String reply,String pphoto, StoreBean storebean) {
+	public BoardBean(Integer boardid, String pname,Integer pstars,Date pdate,String pcontext,String reply,String pphoto, StoreBean storebean,Integer status) {
 		this.boardid = boardid;
 		this.name = pname;
 		this.star = pstars;
@@ -58,6 +58,7 @@ public class BoardBean {
 		this.reply = reply;
 		this.photo=pphoto;
 		this.storebean=storebean;
+		this.status = status;
 	}
 	
 	public BoardBean(Integer boardid, String name, Integer star, Date date, String context, String photo,

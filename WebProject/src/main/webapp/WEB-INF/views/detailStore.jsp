@@ -367,13 +367,21 @@ function relocate_bannerURL()
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" class="btn btn-success" value="新增商品" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
-			<span>|</span>
-			<c:url value="newBookingTime" var="addBookingTime">
-				<c:param name="storeId" value="${id}" />
-			</c:url>
-			<a href="${addBookingTime}">
-				<span>新增店家訂位時間</span>
-			</a>
+<!-- -------------------------方宣舊版--- -->			
+<!-- 			<span>|</span> -->
+<%-- 			<c:url value="newBookingTime" var="addBookingTime"> --%>
+<%-- 				<c:param name="storeId" value="${id}" /> --%>
+<%-- 			</c:url> --%>
+<%-- 			<a href="${addBookingTime}"> --%>
+<!-- 				<span>新增店家訂位時間</span> -->
+<!-- 			</a> -->
+<!-- -------------------------方宣舊版--- -->
+
+			<form action="${pageContext.request.contextPath}/newBookingTime" method="GET" style="display:inline">
+				<input type="hidden" name = "storeId" value="${id}">
+				<input type="submit" class="btn btn-success" value="新增訂位數" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+			</form>
+
 <!-- 			<span>|</span> -->
 <!-- 			<form action="#" method="post" style="display:inline"> -->
 <%-- 				<input type="hidden" name="id" value="${id}"> --%>

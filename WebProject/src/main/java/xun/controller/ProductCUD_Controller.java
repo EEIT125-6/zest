@@ -70,10 +70,10 @@ public class ProductCUD_Controller {
 			,@RequestParam("photo") MultipartFile file
 			) {
 //		檢查
-		System.out.println("---------------------------------------------------------------********************");
 		ProductVaildators validator = new ProductVaildators();
 		validator.validate(productInfoBean, result);
 		if (result.hasErrors()) {
+			model.addAttribute("stid", stid);
 			System.out.println("商品中有不合邏輯的錯誤 並退回新增頁面");
 			return "InsertProduct";
 		}
@@ -151,6 +151,7 @@ public class ProductCUD_Controller {
 		ProductVaildators validator = new ProductVaildators();
 		validator.validate(productInfoBean, result);
 		if (result.hasErrors()) {
+			model.addAttribute("stid", stid);
 			System.out.println("商品中有不合邏輯的錯誤 並退回更新頁面");
 			return "updateProduct";
 		}
