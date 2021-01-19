@@ -67,4 +67,7 @@ public interface StoreDao {
 	void storeOffShelf(Integer stid);
 	
 	List<StoreBean> guessYouLike(String sclass);
+	
+	/* 取得全部商店列表 By George017 2021/01/19 */
+	List<StoreBean> getAllStore();
 }

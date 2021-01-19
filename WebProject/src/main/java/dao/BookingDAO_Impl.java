@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import model.BookingBean;
+import model.BookingData;
 
 @Repository
 public class BookingDAO_Impl implements BookingDAO {
@@ -119,5 +120,42 @@ public class BookingDAO_Impl implements BookingDAO {
 			return false;
 		}
 		return true;
+	}
+	
+	//查詢目前總訂位數
+	@SuppressWarnings("unchecked")
+	@Override
+	public int nowBooking(String bookingdate,String time,String restaurant) {
+		String hql = "FROM BookingBean b WHERE b.restaurant= :restaurant AND b.bookingdate= :bookingdate AND b.time= :time";
+		Session session = factory.getCurrentSession();
+		Query<BookingBean> query = session.createQuery(hql);
+		List<BookingBean> list = query.setParameter("bookingdate", bookingdate)
+									.setParameter("time", time)
+									.setParameter("restaurant", restaurant).getResultList();
+		int sum=0;
+		int count;
+		if (list.size()>=1) {
+			for (int i = 0; i < list.size(); i++) {
+				count=list.get(i).getNumber();
+				sum+=count;
+			}
+			return sum;
+		}else {
+			return 0;
+		}
+	}
+	
+	//查詢最大可訂位數
+	@SuppressWarnings("unchecked")
+	@Override
+	public int maxBooking(String stname) {
+		String hql = "FROM BookingData b where b.storeBean.stname= :store";
+		Session session = factory.getCurrentSession();
+		Query<BookingData> query = session.createQuery(hql);
+		List<BookingData> list = query.setParameter("store", stname).getResultList();
+		if (list.size()==1) {
+			return list.get(0).getSeating();
+		}
+		return 0;
 	}
 }
