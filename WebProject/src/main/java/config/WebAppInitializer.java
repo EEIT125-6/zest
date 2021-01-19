@@ -49,6 +49,5 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 //        if(!done) throw new RuntimeException();
     
 //        registration.setInitParameter("throwException", "true");
-    }
-    
+    } 
 }

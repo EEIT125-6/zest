@@ -190,7 +190,6 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public List<WebUserData> getAllWebUserData() throws SQLException {
 		return webUserDAO.getAllWebUserData();
 	}
@@ -201,8 +200,6 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
-=======
->>>>>>> testMaster
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
 		return webUserDAO.getUserRecordCounts(selectedParameters);
 	}

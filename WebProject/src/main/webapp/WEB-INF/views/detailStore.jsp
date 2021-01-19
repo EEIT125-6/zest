@@ -227,6 +227,25 @@ a.mobile-show {
         jQuery(".loader").fadeOut(1000);
     });
     
+    function itemAdd(id){
+        console.log('ajax initialized id='+id)
+        $.ajax({
+         url:"/WebProject/controller/itemadd",
+         data:{
+          "id":id //id向後端發送
+         },
+         type:"Get",
+         dataType:"JSON",
+         success:function(obj){ 
+          window.alert('商品已加入購物車!');
+         },
+         error: function(xhr,ajaxOptions,thrownError){
+          console.log(xhr.status);
+          console.log(thrownError);
+         }
+      })
+    }
+    
 	$(document).ready(function(){
 		$("#lazyload").hide();
 		
@@ -821,7 +840,7 @@ function initMap() {
 								        <div class="contentBx">
 								            <h3>${row1.product_name} </h3>
 								            <h2 class="price">$${row1.product_price}</h2>
-								            <a href="#" class="buy">Buy Now</a>
+								            <span class="buy" onclick="itemAdd(${row1.product_id})">立刻購買 </span>
 								        </div>
 								    </div>
 				             		<br>

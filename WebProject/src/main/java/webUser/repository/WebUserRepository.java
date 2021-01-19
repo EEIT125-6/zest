@@ -71,15 +71,12 @@ public interface WebUserRepository {
 	/* 取得查詢的使用者資料 */
 	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException;
 	
-<<<<<<< HEAD
 	/* 取得所有有效的使用者資料 */
 	public List<WebUserData> getAllWebUserData() throws SQLException;
 	
 	/* 取得所有特定年份註冊的使用者資料 */
 	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException;
 	
-=======
->>>>>>> testMaster
 	/* 取得查詢到的總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
@@ -97,10 +94,7 @@ public interface WebUserRepository {
 	
 	/* 檢查有多少可登入的管理員帳號(回傳整數或0) */
 	public Integer checkAdminAccess() throws SQLException;
-<<<<<<< HEAD
 	
 	/* 取回所有可用使用者的註冊日期 */
 	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException;
-=======
->>>>>>> testMaster
 }

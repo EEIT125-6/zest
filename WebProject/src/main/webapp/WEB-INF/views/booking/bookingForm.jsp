@@ -178,10 +178,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <fieldset>
 <input type="hidden" id="nameX" value="${userFullData.firstName}">
 <input type="hidden" id="nameY" value="${userFullData.lastName}">
-<<<<<<< HEAD
-=======
-
->>>>>>> testMaster
 <input type="hidden" id="phoneX" value="${userFullData.phone}">
 <input type="hidden" id="mailX"  value="${userFullData.email}">
         <legend>填寫訂位資料</legend>
@@ -261,11 +257,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript">
-<<<<<<< HEAD
 		function checkPhone( strPhone ) { 
-=======
-		 function checkPhone( strPhone ) { 
->>>>>>> testMaster
 	 	    var cellphone = /^09[0-9]{8}$/; 
 	 	 
 	 	    if (!cellphone.test( strPhone )) { 
@@ -277,7 +269,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 			if($("#datepicker1").val()==""){
 				alert("請選擇訂位日期");
 				return false;
-<<<<<<< HEAD
 			}else if($("#time").val()==""){
 				alert("請選擇用餐時間");
 				eval("document.form['time'].focus()");	
@@ -286,8 +277,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 				alert("請選擇用餐人數");
 				eval("document.form['number'].focus()");	
 				return false;	
-=======
->>>>>>> testMaster
 			}else if($("#name").val()==""){
 				alert("姓名不得為空白");
 				eval("document.form['name'].focus()");	
@@ -324,7 +313,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 				document.getElementById("name").value =$("#nameX").val()+$("#nameY").val();
 				document.getElementById("phone").value = $("#phoneX").val();
 				document.getElementById("email").value = $("#mailX").val();	
-<<<<<<< HEAD
 			});
 	      });
   </script>
@@ -385,11 +373,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 			});
 	    }
 	</script>
-=======
-			});  
-	      });
-  </script>
->>>>>>> testMaster
 <!--   </div> -->
  <!-- -------------------------------------------------------------- -->
  <%@include file = "../Footer-Include.jsp" %>

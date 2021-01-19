@@ -26,10 +26,7 @@ public interface BookingService {
 
 	//管理員查詢
 	List<BookingBean> allBooking();
-<<<<<<< HEAD
 	
 	//檢查剩餘可訂位數
 	int showSeating(String bookingdate, String time, String restaurant, String stname);
-=======
->>>>>>> testMaster
 }

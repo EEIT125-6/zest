@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -80,16 +79,16 @@ public class CartServiceImpl implements CartService {
 		return remap;
 	}
 
-	@Override
-	public Map<String, String> setProductAmount(StringTokenizer st) {
-		Map<String,String> remap = new HashMap<String,String>();
-		System.out.println("Result inside service="+st);
-		while(st.hasMoreTokens()) {
-			System.out.println(st.nextToken());
-		}
-		
-		return null;
-	}
+//	@Override
+//	public Map<String, String> setProductAmount(StringTokenizer st) {
+//		Map<String,String> remap = new HashMap<String,String>();
+//		System.out.println("Result inside service="+st);
+//		while(st.hasMoreTokens()) {
+//			System.out.println(st.nextToken());
+//		}
+//		
+//		return null;
+//	}
 
 //	@Override
 //	public Map<String, String> CurrentCartItemDetail(Model model) {

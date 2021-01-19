@@ -582,11 +582,7 @@ public class WebUserController {
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 
 		/* 確認有無Cookie */
-<<<<<<< HEAD
 		if (!ckAccount.equals("") && !ckPassword.equals("")) {
-=======
-		if (!ckAccount.equals("") && !ckPassword.equals("") && !ckRemember.equals("")) {
->>>>>>> testMaster
 			/* 移除Cookie */
 			doRemoveUserCookie(request, response, ckAccount, ckPassword, ckRemember);
 		}
