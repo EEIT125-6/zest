@@ -146,6 +146,9 @@
                     </div>
                     <div class="form-group containerBodyCard">
                     	<form:textarea path="stitddt" class="form-control" id="storeItddt" rows="5"></form:textarea>
+                    	<div>
+                    		<form:errors path="stitddt" cssClass="error"/>
+                    	</div>
                     </div>
 
 					<div class = "form-row">
@@ -167,7 +170,8 @@
                     					+'只經營早餐及午餐。'
                     					+'老闆很有愛心，支持1919愛走動急難家庭救助活動。'
                     					);
-                    			$("#storeItddt").val('POPO吃凱薩青醬雞柳義大利麵，套餐105元還有中杯飲料蠻大杯，但麵條不是喜歡的麵條，所以味道沒太大的記憶點，不過這間店餐點真的很多元，從中式蘿蔔糕、炒麵、拌飯、拌麵、蔥抓餅等等，和西式的沙拉、漢堡、鐵板麵、義大利麵等等，應有盡有，每天吃應該也不會膩！');
+                    			$("#storeItddt").val('POPO吃凱薩青醬雞柳義大利麵，套餐105元還有中杯飲料蠻大杯，但麵條不是喜歡的麵條，所以味道沒太大的記憶點，不過這間店餐點真的很多元，從中式蘿蔔糕、炒麵、拌飯、拌麵、蔥抓餅等等，和西式的沙拉、漢堡、鐵板麵、義大利麵等等，應有盡有'
+                    					+'，每天吃應該也不會膩！營業時間:平日 早上6點到下午3點');
                     		})
                     	</script>
             </div>

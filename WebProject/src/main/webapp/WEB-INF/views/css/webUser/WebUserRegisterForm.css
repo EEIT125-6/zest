@@ -2,6 +2,10 @@ form {
 	width: 800px;
 	margin: 20px auto;
 }
+legend {
+	padding: 2px; 
+	margin-left: calc(50% - 60px);
+}
 #checkAccount {
  	display: none;
 }

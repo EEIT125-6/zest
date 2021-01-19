@@ -13,13 +13,11 @@ import webUser.model.WebUserData;
 
 public class CheckLoginInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
-			"/webUser/DisplayWebUserData",
 			"/webUser/WebUserMain",
 			"/webUser/WebUserModifyData",
 			"/webUser/WebUserModifyPassword",
 			"/webUser/WebUserSearchForm",
 			"/webUser/controller/WebUserMain/Logout",
-			"/webUser/controller/WebUserMain/Quit",
 			"/webUser/controller/DisplaySelfData",
 			"/webUser/controller/WebUserMain/Modify",
 			"/webUser/controller/WebUserModifyPassword",

@@ -16,7 +16,6 @@ import webUser.model.WebUserData;
 @Repository
 public class CartDAOImpl implements CartDAO {
 
-
 	SessionFactory sessionFactory;
 
 	@Autowired
@@ -24,14 +23,11 @@ public class CartDAOImpl implements CartDAO {
 		this.sessionFactory = factory;
 	}
 
-	
-
-
 	@Override
 	@Transactional
 	public CartItemBean getCartByUser(String inputId) {
 		System.out.println("DAOLayerIdCheck="+inputId);
-		CartItemBean CIB = new CartItemBean(null, 0);
+		CartItemBean CIB = new CartItemBean();
 		try {
 			CIB = sessionFactory.getCurrentSession().get(CartItemBean.class, inputId);
 		}
@@ -61,7 +57,6 @@ public class CartDAOImpl implements CartDAO {
 		return list;
 	}
 
-	
 	@Override
 	@Transactional
 	@SuppressWarnings("unchecked")
@@ -82,7 +77,6 @@ public class CartDAOImpl implements CartDAO {
 		return checkResult;
 	}
 
-	
 	@Override
 	@Transactional
 	@SuppressWarnings("unchecked")
@@ -95,9 +89,6 @@ public class CartDAOImpl implements CartDAO {
 		 System.out.println("DAO則安低能");
 		 return list;
 	}
-
-
-
 
 //	@Override
 //	public String addProduct(Integer addItem) {
@@ -113,6 +104,4 @@ public class CartDAOImpl implements CartDAO {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-
-	
 }

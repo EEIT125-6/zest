@@ -33,7 +33,8 @@ public class BoardController {
 	StoreService storeService;
 
 	@PostMapping("/insertboard")
-	public @ResponseBody Map<String, Object> insertboard(@RequestParam(value = "name") String name,
+	public @ResponseBody Map<String, Object> insertboard(
+			@RequestParam(value = "name") String name,
 			@RequestParam(value = "comment") String comment,
 			@RequestParam(value = "photo", required = false) String photo,
 			@RequestParam(value = "star") Integer star,
@@ -42,7 +43,8 @@ public class BoardController {
 		StoreBean storebean = storeService.get(storeId);
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.MILLISECOND, 0);
-		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, photo, 0, storebean);
+		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, "", photo, storebean,0);
+//		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, photo, 0, storebean);
 		if (boardService.insertBoard(boardBean) > 0) {
 			map.put("message", "success");
 			map.put("boardBean", boardBean);
@@ -63,19 +65,33 @@ public class BoardController {
 		model.addAttribute("boardBean", boardBean);
 		return "/orange/DisPlayComment";
 	}
-
-//	@GetMapping("orange/ShowComment")
-//	public String Show(Model model) {
-//
-//		return "/orange/ShowComment";
-//	}
+	
+	@PostMapping("/updateReply")
+	public @ResponseBody Map<String, Object> updateReply(
+			@RequestParam(value = "id") Integer id,
+			@RequestParam(value = "reply") String reply) {
+		BoardBean boardBean = boardService.getBoardById(id);
+		boardBean.setReply(reply);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (boardService.updateBoard(boardBean) > 0) {
+			map.put("message", "success");
+			map.put("boardBean", boardBean);
+		} else {
+			map.put("message", "fail");
+		}
+		return map;
+	}
 
 	@GetMapping("/updateboard")
-	public String updateboard(@RequestParam(value = "id") Integer id, @RequestParam(value = "name") String name,
+	public String updateboard(
+			@RequestParam(value = "id") Integer id, 
+			@RequestParam(value = "name") String name,
 			@RequestParam(value = "comment") String comment,
-			@RequestParam(value = "photo", required = false) String photo, @RequestParam(value = "star") Integer star,
+			@RequestParam(value = "photo", required = false) String photo, 
+			@RequestParam(value = "star") Integer star,
 			@RequestParam(value = "storeId") Integer storeId,
-			@RequestParam(value = "status", defaultValue = "0") Integer status, Model model) {
+			@RequestParam(value = "status", defaultValue = "0") Integer status, 
+			Model model) {
 		Date utilDate = new Date();
 		Date date = utilDate;
 
@@ -115,7 +131,7 @@ public class BoardController {
 		Integer allStars = 0;
 		Float avgStar = (float)0;
 		List<Integer> storeStars= new ArrayList<Integer>();
-		if (!boardService.getStoreStar(sb).isEmpty()) {			
+		if (boardService.getStoreStar(sb).get(0).getStar()!=null) {			
 			for(BoardBean bb : boardService.getStoreStar(sb)) {
 //				if (boardService.getStoreStar(sb).size()==0) {
 //					

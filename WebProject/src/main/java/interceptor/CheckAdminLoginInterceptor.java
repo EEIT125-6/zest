@@ -20,7 +20,7 @@ public class CheckAdminLoginInterceptor extends HandlerInterceptorAdapter {
 			"/webUser/controller/WebUserAdminModifyIcon",
 			"/webUser/controller/WebUserAdminResetModifyIcon",
 			"/webUser/controller/WebUserAdminModifyData",
-			"/webUser/DisplayManagedUserData"
+			"/dashboard-*"
 			);
 	
 	String servletPath;

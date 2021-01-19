@@ -12,13 +12,17 @@ public interface BookingDAO {
 	int cancelBooking(BookingBean bean);
 
 	//查詢query
-	List<BookingBean> findBooking(String phone);
+	List<BookingBean> findBooking(String user_id);
 
 	//更新update
 	int updateBooking(BookingBean bean);
 	
 	//check BookingNo
 	boolean checkBooking(String bookingNo);
-
+	
+	//查詢單筆
 	BookingBean singleBooking(String bookingNo);
+	
+	//管理員查詢
+	List<BookingBean> allBooking();
 }

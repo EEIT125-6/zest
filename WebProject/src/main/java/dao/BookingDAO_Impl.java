@@ -1,6 +1,9 @@
 package dao;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -34,17 +37,60 @@ public class BookingDAO_Impl implements BookingDAO {
 		return count;
 	}
 	
+	//update
+	@Override
+	public int updateBooking(BookingBean bean) {
+		int count = 0;
+		Session session = factory.getCurrentSession();
+		session.saveOrUpdate(bean);
+		count++;
+		return count;
+	}
+	
 	//查詢
 	@SuppressWarnings("unchecked")
 	@Override
-	public List <BookingBean> findBooking(String phone) {
-		String hql = "FROM BookingBean b where b.phone= :phone";
+	public List <BookingBean> findBooking(String user_id) {
+		String hql = "FROM BookingBean b where b.user_id.userId= :user_id";
 		Session session = factory.getCurrentSession();
 		Query<BookingBean> query = session.createQuery(hql);
-		List<BookingBean> list = query.setParameter("phone", phone).getResultList();
+		List<BookingBean> list = query.setParameter("user_id", user_id).getResultList();
 		System.out.println(list.size()+"筆");
+		for (int i = 0; i < list.size(); i++) {
+			String date=list.get(i).getBookingdate();
+			Date booking = Date.valueOf(date);
+			Date today = Date.valueOf(LocalDate.now());        
+				
+			if (booking.compareTo(today)<0) {
+				list.get(i).setStatus(2);
+				updateBooking(list.get(i));
+			}
+		}
 		return list;
 	}
+	
+	//管理員查詢
+		@SuppressWarnings("unchecked")
+		@Override
+		public List <BookingBean> allBooking() {
+			String hql = "FROM BookingBean";
+			Session session = factory.getCurrentSession();
+			Query<BookingBean> query = session.createQuery(hql);
+			List<BookingBean> list = query.getResultList();
+			System.out.println(list.size()+"筆");
+			for (int i = 0; i < list.size(); i++) {
+				String date=list.get(i).getBookingdate();
+				System.out.println("test "+list.get(i).getUser_id().getUserId());
+				Date booking = Date.valueOf(date);
+				Date today = Date.valueOf(LocalDate.now());        
+					
+				if (booking.compareTo(today)<0) {
+					list.get(i).setStatus(2);
+					updateBooking(list.get(i));
+				}
+			}
+			return list;
+		}
 	
 	//查詢單筆
 	@SuppressWarnings("unchecked")
@@ -58,16 +104,6 @@ public class BookingDAO_Impl implements BookingDAO {
 			return list.get(0);
 		}
 		return null;
-	}
-	
-	//update
-	@Override
-	public int updateBooking(BookingBean bean) {
-		int count = 0;
-		Session session = factory.getCurrentSession();
-		session.saveOrUpdate(bean);
-		count++;
-		return count;
 	}
 	
 	//check BookingNo

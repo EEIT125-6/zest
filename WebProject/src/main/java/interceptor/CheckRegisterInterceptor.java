@@ -31,6 +31,8 @@ public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 		servletPath = request.getServletPath();  
 		contextPath = request.getContextPath();
 		requestURI  = request.getRequestURI();
+		HttpSession session = request.getSession();
+
 		/* 檢查session是否逾時 */
 		isRequestedSessionIdValid = request.isRequestedSessionIdValid();
 		/* 必須有註冊物件 */
@@ -38,6 +40,10 @@ public class CheckRegisterInterceptor extends HandlerInterceptorAdapter {
 			/* 註冊階段 */
 			if (checkRegister(request) && isRequestedSessionIdValid) {   
 				byPass = true;
+			/* 非註冊階段+來自第三方登入 */
+			} else if (session.getAttribute("id_token") != null && session.getAttribute("extraAccount") != null) {
+				response.sendRedirect(contextPath + "/WebUserExtraRegisterForm");
+				byPass = false;
 			/* 非註冊階段 */
 			} else {				
 				response.sendRedirect(contextPath + "/WebUserRegisterForm");

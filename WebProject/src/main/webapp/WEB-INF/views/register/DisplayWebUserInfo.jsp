@@ -14,6 +14,8 @@
 <head>
     <%@include file = "../Link_Meta-Include.jsp" %> 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserRegisterForm.css">
     <title>註冊資料確認</title>
     <style>
@@ -144,9 +146,10 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
-				<form action="<c:url value='/register/controller/DisplayWebUserInfo/confirm' />" method="post" onSubmit="return checkForm();">
+				<form method="post">
 					<fieldset>
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
 						<hr />
@@ -156,15 +159,25 @@
 						<label>帳號名稱：</label>
 						<c:out value="${reg_webUser.account}" />
 						<hr />
-						<label>帳號密碼：</label>
-						<c:if test="${reg_webUser.password.length() > 0}">
-							<c:forEach var="passwordChar" begin="0" end="${reg_webUser.password.length()-1}">
-								<c:out value = "*" />
-							</c:forEach>
+						<c:if test="${extraAccount == null}">
+							<c:if test="${id_token == null}">
+								<label>帳號密碼：</label>
+								<c:if test="${reg_webUser.password.length() > 0}">
+									<c:forEach var="passwordChar" begin="0" end="${reg_webUser.password.length()-1}">
+										<c:out value = "*" />
+									</c:forEach>
+								</c:if>
+								<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
+								<hr />
+							</c:if>
 						</c:if>
-						<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
-						<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
-						<hr />
+						<c:if test="${extraAccount != null}">
+							<c:if test="${id_token != null}">
+								<button type="button" name="showPassword" id="showPassword" style="font-size:18px;display:none;" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red;">visibility</i></button>
+								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
+							</c:if>
+						</c:if>
 						<label>中文姓氏：</label>
 						<c:out value="${reg_webUser.firstName}" />
 						<hr />
@@ -217,15 +230,17 @@
 						<hr />
 					</fieldset>
 					<div align="center">
-						<button type="submit" name="register" id="registerConfirm" style="font-size:18px" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button type="button" name="register" id="registerConfirm" style="font-size:18px" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
 						<a href="<c:url value='/register/controller/DisplayWebUserInfo/undo' />"><button type="button" name="register" id="registerCancel" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 					</div>
 					<hr />
+					<span id="confirmSpan"></span>
 				</form>
 				<script src="<c:url value='/js/webUser/DisplayWebUserInfo.js' />"></script>
 				<script>
 					window.onload = function() {
 						let showPasswordBtn = document.getElementById("showPassword");
+						let confirmBtn = document.getElementById("registerConfirm");
 						
 						showPasswordBtn.onclick = function() {
 							document.getElementById("password").type = (document.getElementById("password").type == "hidden") ? "text" : "hidden";
@@ -234,11 +249,66 @@
 							? "隱藏密碼 "+"<i class='material-icons' style='font-size:18px;color:green'>visibility_off</i>" 
 							: "顯示密碼 "+"<i class='material-icons' style='font-size:18px;color:red'>visibility</i>"; 
 						}
+						confirmBtn.onclick = function() {
+							let confirmSpan = document.getElementById("confirmSpan");
+							let confirmStr = "...處理中，請稍後";
+							let confirmIsOk = true;
+							
+							confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
+							confirmSpan.style.color = "black";
+							confirmSpan.style.fontStyle = "normal";
+							
+							let xhrObject = new XMLHttpRequest();
+							if (xhrObject != null) {
+								xhrObject.open("POST", "<c:url value='/register/controller/DisplayWebUserInfo/confirm' />", true);
+								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+								
+								xhrObject.onreadystatechange = function() {
+									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
+										let typeObject = xhrObject.getResponseHeader("Content-Type");
+										if (typeObject.indexOf("application/json") === 0) {
+											if (resultObj.resultCode == 1) {
+												confirmStr = resultObj.resultMessage;
+												confirmIsOk = true;
+												/* 顯示彈窗訊息 */
+							            		alert(confirmStr);
+											} else if (resultObj.resultCode != 1) {
+												confirmStr = resultObj.resultMessage;
+												confirmIsOk = false;
+												/* 顯示彈窗訊息 */
+							            		alert(confirmStr);
+											} 
+											if (!confirmIsOk) {
+												confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
+												confirmSpan.style.color = "red";
+												confirmSpan.style.fontStyle = "italic";
+							            	} else {
+							            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
+							            		confirmSpan.style.color = "black";
+							            		confirmSpan.style.fontStyle = "normal";
+							            		/* 跳轉 */
+							            		window.location.href = resultObj.nextPath;
+							            	}
+										} else {
+											confirmStr = "發生錯誤，無法執行檢查";
+											confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
+											confirmSpan.style.color = "red";
+											confirmSpan.style.fontStyle = "italic";
+						            		/* 顯示彈窗訊息 */
+						            		alert(confirmStr);
+										}
+									}
+								}
+							} else {
+								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+							}
+						}
 					}
 				</script>
             </div>         
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>    
+            	<%@include file = "../Footer-Include-prototype.jsp" %>  
+            </div>  
 </body>
 </html>

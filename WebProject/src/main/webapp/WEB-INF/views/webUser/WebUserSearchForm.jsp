@@ -15,8 +15,8 @@ response.setDateHeader("Expires", -1); // 防止proxy server進行快取
 <%@include file="../Link_Meta-Include.jsp"%>
 <!-- Google Icon -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- dataTables用css -->
-<!-- <link rel="https//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"> -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/WebUserSearchForm.css">
 <title>進行搜索</title>
 <style>
@@ -164,11 +164,9 @@ ul.slides li img {
 </head>
 <body>
 	<%@include file="../Header-Include.jsp"%>
+	<%@include file="../LoadingScreen.jsp" %>
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
-		<c:if test="${userFullData.password == null}">
-			<c:redirect url="/WebUserLogin" />
-		</c:if>
 		<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 		<input type="hidden" id="pageNo" value="1" />
 		<input type="hidden" id="maxPage" value="1" />
@@ -184,11 +182,11 @@ ul.slides li img {
 				</c:if>
 				<hr />
 				<label>帳號名稱：</label> <input type="text" name="selectedAccount"
-					id="account" size="40" maxlength="20" onblur="checkAccountName()"
-					placeholder="請輸入要查詢的帳號，8~20個字" /> 
+					id="usrAccount" size="30" maxlength="30" onblur="checkAccountName()"
+					placeholder="請輸入要查詢的帳號，6~30個字" /> 
 				<span id="accountSpan"></span>
 				<label>用戶暱稱：</label> <input type="text" name="selectedNickname"
-					id="nickname" size="40" maxlength="20" onblur="checkNickname()"
+					id="nickname" size="30" maxlength="25" onblur="checkNickname()"
 					placeholder="請輸入要查詢的暱稱" /> 
 				<span id="nicknameSpan"></span>
 				<hr />
@@ -233,10 +231,17 @@ ul.slides li img {
 				<hr />
 			</fieldset>
 			<div align="center">
+				<label>顯示筆數：</label>
+				<select id=avPage onblur="specSearch()">
+					<option value="3" label="3">
+					<option value="5" label="5">
+					<option value="10" label="10">
+					<option value="20" label="20">
+				</select>
 				<a href="WebUserMain">
-				<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+					<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
 				</a> 
-				<button type="button" id="search" name="select" style="font-size:18px" onclick="clearMessage()">執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+				<button type="button" id="search" name="select" style="font-size:18px" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
 				<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 				<c:if test="${userFullData.accountLv.lv == -1}" >
 					<a href="WebUserAddForm"><button type="button" id="adminAdd" name="adminAdd" style="font-size:18px" onclick="clearMessage()">新增帳號 <i class="material-icons" style="font-size:18px;color:green">add</i></button></a>
@@ -246,6 +251,7 @@ ul.slides li img {
 		</form>
 		<div align="center">
 			<span id="searchSpan"></span>
+			<hr />
 		</div>
 		
 		<div align="center" id="dataTableContainer"> 
@@ -280,23 +286,12 @@ ul.slides li img {
 		
 		<!-- 引用本地jQuery -->
 		<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
-		<!-- 引用dataTables.js -->
-<!-- 		<script src ="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
 		<!-- 引用本頁檢查用js -->
 		<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 		<script>
 			window.onload = function() {
 				/* 載入後先執行一次預設查詢 */
 				selectAllUser();
-				/* 綁定刪除按鈕 */
-				$("#dataContainer").on("click", ".deleteBtn", function() {
-					let selectedDelBtnInfo = this.id.substring(6);
-					var userId = selectedDelBtnInfo.split("_")[0];
-					var account = selectedDelBtnInfo.split("_")[1];
-					var status = selectedDelBtnInfo.split("_")[2];
-					var mode = 'delete';
-					lastCheck(userId, account, status, mode);
-				});
 				/* 綁定啟用按鈕 */
 				$("#dataContainer").on("click", ".activeBtn", function() {
 					let selectedActBtnInfo = this.id.substring(6);
@@ -322,7 +317,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pFirstBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -346,7 +341,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pPrevBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -370,7 +365,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pNextBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -394,7 +389,7 @@ ul.slides li img {
 					selectAllUser();
 				});
 				$("#dataContainer").on("click", ".pLastBtn", function() {
-					var accountObjValue = document.getElementById("account").value.trim();
+					var accountObjValue = document.getElementById("usrAccount").value.trim();
 					var nicknameObjValue = document.getElementById("nickname").value.trim();
 					var fervorObj = document.getElementsByClassName("fervor");
 					var fervorObjValue = "";
@@ -411,97 +406,17 @@ ul.slides li img {
 					document.getElementById("pageNo").value = maxPage;
 					selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 				});
-				
-				/* dataTable測試區 */
-// 				let table = $("#userDataTable").DataTable({
-// 					processing: false, //關閉預設"顯示處理中"的效果
-// 					searching: false, //關閉內建搜尋
-// 					serverSide: true, //啟用ServerSide模式
-// 					order: [[0, "asc"]], //預設排序(由第0個資料行、升覓排序)
-// 					orderMulti: false, //關閉多欄位排序
-// 					autoWidth: false, //自動調整寬度
-// 					lengthMenu: [5, 10, 20], //設定每頁顯示筆數
-// 					/* 本地化 */
-// 					language: {
-// 				        processing: "處理中...",
-// 				        loadingRecords: "載入中...",
-// 				        lengthMenu: "顯示 _MENU_ 項結果",
-// 				        zeroRecords: "沒有符合的結果",
-// 				        info: "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
-// 				        infoEmpty: "顯示第 0 至 0 項結果，共 0 項",
-// 				        infoFiltered: "(從 _MAX_ 項結果中過濾)",
-// 				        infoPostFix: "",
-// 				        search: "搜尋:",
-// 				        paginate: {
-// 				            first: "第一頁",
-// 				            previous: "上一頁",
-// 				            next: "下一頁",
-// 				            last: "最後一頁"
-// 				        },
-// 				        aria: {
-// 				            sortAscending: ": 升冪排列",
-// 				            sortDescending: ": 降冪排列"
-// 				        }
-// 				    },
-// 				    /* ajax */
-// 					ajax: {
-// 						url: "<c:url value='/webUser/controller/WebUserSearchForm' />",
-// 						type: "POST",
-// 						dataType: "json",
-// 						success: function(resultObj) {
-// 							if (resultObj.resultCode == 1) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "black";
-// 								searchSpan.style.fontStyle = "normal";
-
-// 								let content = "";
-// 								if (resultObj.userDataList.length != 0) {
-									
-// 								} 
-// 							} else if (resultObj.resultCode == 0) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "black";
-// 								searchSpan.style.fontStyle = "normal";
-// 							} else if (resultObj.resultCode == -1) {
-// 								searchStr = resultObj.resultMessage;
-// 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 										+ searchStr;
-// 								searchSpan.style.color = "red";
-// 								searchSpan.style.fontStyle = "italic";
-// 								dataContainer.innerHTML = "";
-// 								/* 顯示彈窗異常訊息 */
-// 								alert(resultObj.resultMessage);
-// 							}
-// 						},
-// 						error : function(err) {
-// 							searchStr = "發生錯誤，無法載入使用者資料";
-// 							searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
-// 									+ searchStr;
-// 							searchSpan.style.color = "red";
-// 							searchSpan.style.fontStyle = "italic";
-// 							dataContainer.innerHTML = "";
-// 							/* 顯示彈窗異常訊息 */
-// 							alert(searchStr);
-// 						}
-// 					},
-// 					/* 欄位定義 */
-// 					columns:[
-// 						{data: 'account'},
-// 						{data: 'nickname'},
-// 						{data: 'fervor'}
-// 					]
-// 				});
- 			};
-		
+			};
+			
 			$("#search").click(function() {
+				specSearch();
+	    	});
+			
+			function specSearch() {
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
-				var account = document.getElementById("userAccount").value.trim();
-				var accountObjValue = document.getElementById("account").value.trim();
+ 				var account = document.getElementById("userAccount").value.trim();
+				var accountObjValue = document.getElementById("usrAccount").value.trim();
 				var nicknameObjValue = document.getElementById("nickname").value.trim();
 				var fervorObj = document.getElementsByClassName("fervor");
 				var fervorObjValue = "";
@@ -548,11 +463,13 @@ ul.slides li img {
 						} 
 					}
 				}
-	    	});
+			};
 			
 			function lastCheck(userId, account, status, mode) {
 				let choice=confirm("是否要執行特定的操作？");
 				if (choice) {
+					document.getElementById("pageNo").value = 1;
+					document.getElementById("maxPage").value = 1;
 					let operateResultSpan = document.getElementById("searchSpan");
 					let operateResultStr = "...處理中，請稍後";
 					let operateResultIsOk = true;
@@ -616,7 +533,7 @@ ul.slides li img {
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-				let avgPage = 3;
+				let avgPage = document.getElementById("avPage").value;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 					+ searchStr;
@@ -633,6 +550,8 @@ ul.slides li img {
 						'selectedLocationCode':locationCodeObjValue,
 						'selectedStatus':selectedStatus,
 						'selectedIdentity':selectedIdentity,
+						'avPage':avgPage,
+						'startPage':startPage
 					},
 					dataType : "json",
 					success : function(resultObj) {
@@ -647,15 +566,12 @@ ul.slides li img {
 							if (resultObj.userDataList.length != 0) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
-										+ "<legend>以下為使用者列表：</legend>"
-										+ "<hr />"
 										+ "<table border='1'>";
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>圖示</th>"
-											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -710,18 +626,7 @@ ul.slides li img {
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<button type='button' class='deleteBtn' id='delBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status 
-												+ "' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</button>"
-												+ "</td>"
-												+ "<td>";				
+										content += "<td>";				
 
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
@@ -759,7 +664,9 @@ ul.slides li img {
 													+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
 													+ userData.account 
 													+ "'>"
+													+ "<button type='button' style='background-color:#ffc107'>"
 													+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
+													+ "</button>"
 													+ "</a>"
 													+ "</td>"
 													+ "<td>"
@@ -803,24 +710,28 @@ ul.slides li img {
 										+ "</fieldset>" 
 										+ "</form>";
 										
-								document.getElementById("pageNo").value = startPage;
-								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
-								
-								if (startPage - 1 > 0) {
+								document.getElementById("maxPage").value = resultObj.totalDataPages;		
+										
+								if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
 									content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
 											+ "第一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+											+ "</button>";
+								}
+								
+								if (startPage - 1 > 0) {
+									content +="<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
 											+ "上一頁"
 											+ "</button>";
-											
 								} 
 								
-								if (resultObj.userDataList.length > startPage * avgPage) {
+								if (resultObj.totalDataNums > startPage * avgPage) {
 									content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
 											+ "下一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+											+ "</button>";
+								}
+								
+								if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+									content += "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
 											+ "最末頁"
 											+ "</button>";
 								}
@@ -863,7 +774,7 @@ ul.slides li img {
 				let searchStr = "...處理中，請稍後";
 				let searchIsOk = true;
 				let dataContainer = document.getElementById("dataContainer");
-				let avgPage = 3;
+				let avgPage = document.getElementById("avPage").value;
 				
 				searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 						+ searchStr;
@@ -873,6 +784,10 @@ ul.slides li img {
 				$.ajax({
 					type : "POST",
 					url : "<c:url value='/webUser/controller/WebUserSearchForm' />",
+					data : {
+						'avPage':avgPage,
+						'startPage':startPage
+					},
 					dataType : "json",
 					success : function(resultObj) {
 						if (resultObj.resultCode == 1) {
@@ -886,15 +801,12 @@ ul.slides li img {
 							if (resultObj.userDataList != null) {
 								content = "<form method='post'>"
 										+ "<fieldset>"
-										+ "<legend>以下為使用者列表：</legend>"
-										+ "<hr />"
 										+ "<table border='1'>";
 										
 								if (document.getElementById("userLv").value == -1) {
 									content += "<tr>"
 											+ "<th>項次</th>"
 											+ "<th>圖示</th>"
-											+ "<th>刪除</th>"
 											+ "<th>權限</th>"
 											+ "<th>查看</th>"
 											+ "<th>帳號名稱</th>"
@@ -925,9 +837,7 @@ ul.slides li img {
 											+ "</tr>";
 								}
 								
-								let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
-
-								for (let dataIndex = (startPage - 1) * avgPage; dataIndex < endPage; dataIndex++) {
+								for (let dataIndex = 0; dataIndex < resultObj.userDataList.length; dataIndex++) {
 									let userData = resultObj.userDataList[dataIndex];
 									
 									content += "<tr>"
@@ -949,18 +859,7 @@ ul.slides li img {
 									}
 									
 									if (document.getElementById("userLv").value == -1) {
-										content += "<td>"
-												+ "<button type='button' class='deleteBtn' id='delBtn" 
-												+ userData.userId 
-												+ "_" 
-												+ userData.account 
-												+ "_" 
-												+ userData.status 
-												+ "' style='background-color:#ffc107'>"
-												+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-												+ "</button>"
-												+ "</td>"
-												+ "<td>";				
+										content += "<td>";				
 
 										if (userData.status == 'active') {
 											content += "<button type='button' class='quitBtn' id='qutBtn" 
@@ -1041,25 +940,31 @@ ul.slides li img {
 										+ "<hr />"
 										+ "</fieldset>" 
 										+ "</form>";
-										
-								document.getElementById("pageNo").value = startPage;
-								document.getElementById("maxPage").value = parseInt(Math.ceil(resultObj.userDataList.length / avgPage));
 								
-								if (startPage - 1 > 0) {
+								document.getElementById("maxPage").value = resultObj.totalDataPages;
+										
+								if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
 									content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
 											+ "第一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+											+ "</button>";
+											
+								} 
+								
+								if (startPage - 1 > 0) {
+									content += "<button type='button' style='background-color:#ffc107' class='pPrev'>"
 											+ "上一頁"
 											+ "</button>";
 											
 								} 
 								
-								if (resultObj.userDataList.length > startPage * avgPage) {
+								if (resultObj.totalDataNums > startPage * avgPage) {
 									content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
 											+ "下一頁"
-											+ "</button>"
-											+ "<button type='button' style='background-color:#ffc107' class='pLast'>"
+											+ "</button>";
+								}
+								
+								if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+									content += "<button type='button' style='background-color:#ffc107' class='pLast'>"
 											+ "最末頁"
 											+ "</button>";
 								}
@@ -1101,8 +1006,8 @@ ul.slides li img {
 		</script>
 	</div>
 	<!-- -------------------------------------------------------------------- -->
-	<div
-		style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
+	<div style="background-color: #003049; border-top: 3px #e76f51 solid; color: white; margin-top: 20px">
 		<%@include file="../Footer-Include-prototype.jsp"%>
+	</div>
 </body>
 </html>

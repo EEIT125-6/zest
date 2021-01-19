@@ -66,6 +66,12 @@ public class testJAVA {
 			String ssd=sss.replace("<!--", "fuck");
 			System.out.println(ssd);
 		}
+		Object obj = 2;
+		if(obj!=null && String.valueOf(obj).getClass().equals(String.class)) {
+			System.out.println(obj.getClass().equals(Float.class));			
+		}
+		
+		System.out.println(sss.contains("<!--"));
 	}
 	
 }

@@ -12,7 +12,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%@include file = "../Link_Meta-Include.jsp" %>    
+    <%@include file = "../Link_Meta-Include.jsp" %>   
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" /> 
     <title>即將導向新畫面</title>
     <style>
         .classimg{
@@ -142,10 +144,11 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
                 <p>${recoveryResult}</p>
-                <p>5秒後將移至</p>
+                <p>3秒後將移至</p>
                 <p id = "pPage">${redirectPage}</p>
                 <script>
                 	let directPage = "";
@@ -163,11 +166,12 @@
                 	setTimeout(function () {
 	                	   window.location.href = directPage;
                	  	}
-	                , 5000);
+	                , 3000);
                 </script>
             </div>
 <!-- -------------------------------------------------------------------- -->
             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:500px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>
