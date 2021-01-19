@@ -277,14 +277,16 @@ a.mobile-show {
             <div class="container-fluid photo" style="background-image: url('${pageContext.request.contextPath}/${bannerurl}');background-size:100% 100%">
             </div>
             
-            <c:if test="${userFullData.userId == userId && userId != null}">
+            <c:if test="${userFullData.userId == userId && userId != null || userFullData.accountLv.lv == -1}">
             	<div style="margin-top: 8px;margin-left: 8px">
+            	
+            	<c:if test="${userFullData.accountLv.lv == -1 && userId != null}">
 			<form action="<c:url value = '/DeleteStore'/>" method="post" style="display:inline">
 				<input type="hidden" name="id" value="${id}">
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" class="btn btn-danger" value="刪除店家" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
-			
+				</c:if>
 			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalOS" style="box-shadow: 1px 1px 1px rgb(75, 75, 75)" >下架商店</button>
 <!-- -----------------------------------Model----------------------------			 -->
 <div class="modal fade" id="myModalOS" role="dialog">
