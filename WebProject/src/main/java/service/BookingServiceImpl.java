@@ -84,6 +84,8 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public int showSeating(String bookingdate,String time,String restaurant,String stname) {
 		int seating = dao.maxBooking(stname)-dao.nowBooking(bookingdate, time, restaurant);
+		System.out.println(seating);
+		System.out.println(dao.maxBooking(stname));
 		return seating;		
 	}
 }
