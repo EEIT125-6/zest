@@ -55,31 +55,5 @@ public class GlobalService {
 		}
 		return null;	
 	}
-	
-	/* 取得UserIcon的實體路徑 By George017 */
-	public static String getUploadUserIconPath() {
-		List<String> photourl =	Arrays.asList(
-				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
-				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\views\\"
-				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
-//				addby xun 組長電腦的圖片路徑
-				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\views\\"
-				);
-		for(String pUrl : photourl) {
-			File pUF = new File(pUrl);
-			if(pUF.exists()) {
-				return pUrl;			
-			}else {
-				String failUrl = "C:/photoTemp";
-				File fail = new File(failUrl);
-				if(!fail.exists()) {
-						fail.mkdirs();
-				failUrl = failUrl + "/";
-				return failUrl;
-				}
-			}
-		}
-		return null;	
-	}
 }
 

@@ -499,7 +499,6 @@ public class WebUserController {
 		if (accountCheckResult == 1) {
 			Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
 			Boolean singleLogin = false;
-			System.out.println("Map Size:"+context.getAttribute("userMap") == null);
 			/* 第一位登入系統的使用者 */
 			if (userMap == null) {
 				singleLogin = true;
