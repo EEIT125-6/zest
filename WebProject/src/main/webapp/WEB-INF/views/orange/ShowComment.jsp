@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <sql:setDataSource var="ds" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
-url="jdbc:sqlserver://localhost;databaseName=WebProject" user="scott" password="tiger"/>  
+url="jdbc:sqlserver://10.31.25.130;databaseName=WebProject" user="scott" password="tiger"/>  
 
 <sql:query var="rs" dataSource="${ds}">
 	SELECT * FROM Board where status = 0  AND name = '${userFullData.nickname}'  ;

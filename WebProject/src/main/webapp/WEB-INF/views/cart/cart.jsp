@@ -248,6 +248,7 @@ ul.slides li img {
 			onclick="mallRedirector()">繼續購物</button>
 		<button type="button" class="checkOut" onclick="checkCart()">結帳</button>
 	    <button style="float:left" onclick="clearCart()">清除購物車</button>
+	    <div class="wrapper "></div>
 		<!-- 向後端送值用 -->
 		<form method="Post" action=""
 			style="display: none"></form>

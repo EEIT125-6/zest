@@ -59,6 +59,7 @@ public class GlobalService {
 				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
 				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\views\\"
 				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\views\\"
+				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\views\\"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);
