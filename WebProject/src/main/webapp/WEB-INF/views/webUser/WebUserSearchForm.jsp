@@ -385,6 +385,8 @@ ul.slides li img {
 	    	});
 			
 			function specSearch() {
+				document.getElementById("pageNo").value = 1;
+				document.getElementById("maxPage").value = 1;
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
  				var account = document.getElementById("userAccount").value.trim();
@@ -440,8 +442,6 @@ ul.slides li img {
 			function lastCheck(userId, account, status, mode) {
 				let choice=confirm("是否要執行特定的操作？");
 				if (choice) {
-					document.getElementById("pageNo").value = 1;
-					document.getElementById("maxPage").value = 1;
 					let operateResultSpan = document.getElementById("searchSpan");
 					let operateResultStr = "...處理中，請稍後";
 					let operateResultIsOk = true;

@@ -65,7 +65,6 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public List <ProductInfoBean> find(String id) {
-		System.out.println("Service則安低能");
 		return DAO.find(id);
 	}
 
