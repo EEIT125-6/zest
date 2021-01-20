@@ -30,12 +30,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import model.BookingBean;
 import service.BookingService;
 import webUser.model.WebUserData;
+import xun.model.StoreBean;
+import xun.service.StoreService;
 
  
 @Controller
 @RequestMapping("/booking")
 @SessionAttributes({"userFullData", "reg_booking"})
 public class BookingController {
+	
+	@Autowired
+	BookingService service;
+	@Autowired
+	StoreService storeService;
+
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
 	final static String mailHost = "smtp.gmail.com";
@@ -45,9 +53,7 @@ public class BookingController {
 	final static String mailUser = "projectzesteeit1256@gmail.com";
 	/* 寄件者密碼或應用程式密碼 */
 	final static String mailPassword = "EEIT1256PZest";
-	
-	@Autowired
-	BookingService service;
+
 	
 	//檢查訂位日期
 	public boolean checkDate(String bookingdate) {
@@ -286,9 +292,10 @@ public class BookingController {
 	public @ResponseBody Map<String, Object> admin(Model model) {
 		List<BookingBean> bean = service.allBooking();
 		System.out.println("筆數="+bean.size());
-		
+		List<StoreBean> store=storeService.getAllStore();
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("data", bean);
+	    map.put("store", store);
 		return map;
 	}
 	//刪

@@ -163,10 +163,16 @@ response.setContentType("text/html;charset=UTF-8");
 			dataType : "json",
 			success : function(resultObj) {
 				let booking=resultObj.data;	
+				let storeName=resultObj.store;	
 				let content="";
 				if (booking !=null){
 		      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
-		      				+"<tr><th>訂單編號</th><th>訂位狀態</th><th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
+		      				+"<tr><th>訂單編號</th><th>訂位狀態</th><th><select>";
+		      		for(let i=0;i<storeName.length;i++){
+		      			let store = storeName[i];
+	      				content +="<option value="+store+">"+store+"</option>";
+		      		}		
+      				content +="</select></th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
 		      	for(let i=0;i<booking.length;i++){
 		      		let data=booking[i];
 		      			
