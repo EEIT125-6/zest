@@ -307,10 +307,10 @@
                 			document.getElementById("password").value = "Geo1rge6";
                 			document.getElementById("firstName").value = "王";
                 			document.getElementById("lastName").value = "小明";
-                			document.getElementById("nickname").value = "小明";
+                			document.getElementById("nickname").value = "大明";
                 			document.getElementById("birth").value = "2000-10-20";
-                			document.getElementById("email").value = "georgecycuphy@cycu.org.tw";
-                			document.getElementById("phone").value = "0911773355";
+                			document.getElementById("email").value = "projectzesteeit1256@gmail.com";
+                			document.getElementById("phone").value = "0911773322";
                 			document.getElementById("locationCode").value = 13;
                 			document.getElementById("addr0").value = "桃園市中壢區中大路300號";
                 			document.getElementById("addr1").value = "宜蘭縣大同鄉太平巷58之1號";

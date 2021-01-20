@@ -78,5 +78,12 @@ public class BookingServiceImpl implements BookingService {
 		result=dao.checkBooking(bookingNo);		
 		
 		return result;
-	}		
+	}
+	
+	//檢查剩餘可訂位數
+	@Override
+	public int showSeating(String bookingdate,String time,String restaurant,String stname) {
+		int seating = dao.maxBooking(stname)-dao.nowBooking(bookingdate, time, restaurant);
+		return seating;		
+	}
 }

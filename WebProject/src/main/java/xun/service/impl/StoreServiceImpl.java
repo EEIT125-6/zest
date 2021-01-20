@@ -235,4 +235,10 @@ public class StoreServiceImpl implements StoreService {
 		return dao.setStoreRealPrice(realprice, id);
 	}
 	
+	/* 取得全部商店列表 By George017 2021/01/19 */ 
+	@Transactional
+	@Override
+	public List<StoreBean> getAllStore() {
+		return dao.getAllStore();
+	}
 }

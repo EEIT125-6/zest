@@ -205,14 +205,14 @@ public class UserInfoController {
 				String userId = recoveryUserData.getUserId();
 				
 				/* 產生驗證連結 */
-				recoveryUrl = request.getContextPath()
+				recoveryUrl = "http://127.0.0.1:8080/" + request.getContextPath()
 						+ "/recovery/RecoveryAccount?ts=" + nowTimeStamp 
 						+ "&key=" + checkCode
 						+ "&userId=" + userId;
 				
 				/* 寄送到指定email */
 				try {
-					sendResult = doSendEmail(newAccount, email, recoveryUrl, "forget", contextPath);
+					sendResult = doSendEmail(recoveryUserData.getAccount(), email, recoveryUrl, "forget", contextPath);
 				} catch (Exception e) {
 					recoveryMessage = e.getMessage();
 				}
@@ -238,7 +238,8 @@ public class UserInfoController {
 			@RequestParam(value = "ts", required = false, defaultValue = "") String timeRecord,
 			@RequestParam(value = "key", required = false, defaultValue = "") String checkCode,
 			@RequestParam(value = "userId", required = false, defaultValue = "") String userId,
-			Model model
+			Model model,
+			HttpServletRequest request
 			) 
 	{
 		/* 參數 */
@@ -252,6 +253,7 @@ public class UserInfoController {
 			infoIsOk = true;
 		} else {
 			recoveryResult = "請使用個人管理功能來變更密碼！";
+			destinationUrl = "/WebUserMain";
 			infoIsOk = false;
 		}
 		
@@ -357,7 +359,7 @@ public class UserInfoController {
 					infoIsOk = true;
 				} else if (checkIdResult1 == 1 && checkIdResult2 == 0){
 					infoIsOk = false;
-					recoveryResult = "驗證失敗，該帳號已停用";
+					recoveryResult = "驗證失敗，該帳號已停用或尚未啟用";
 				} else if (checkIdResult1 == 0) {
 					infoIsOk = false;
 					recoveryResult = "驗證失敗，無效的帳號";

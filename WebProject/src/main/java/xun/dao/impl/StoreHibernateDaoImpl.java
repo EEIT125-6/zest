@@ -366,4 +366,13 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return realprice;
 	}
 	
+	/* 取得全部商店列表 By George017 2021/01/19 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getAllStore() {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StoreBean";
+		List<StoreBean> list = session.createQuery(hql).getResultList();
+		return list;
+	}
 }

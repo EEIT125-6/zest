@@ -2,6 +2,7 @@ package webUser.service.impl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,6 +190,16 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
+	public List<WebUserData> getAllWebUserData() throws SQLException {
+		return webUserDAO.getAllWebUserData();
+	}
+	
+	@Override
+	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
+		return webUserDAO.getAllYearWebUserData(year);
+	}
+	
+	@Override
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
 		return webUserDAO.getUserRecordCounts(selectedParameters);
 	}
@@ -226,5 +237,10 @@ public class WebUserServiceImpl implements WebUserService {
 	@Override
 	public Integer checkAdminAccess() throws SQLException {
 		return webUserDAO.checkAdminAccess();
+	}
+	
+	@Override
+	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
+		return webUserDAO.getAllWebUserJoinDate(year);
 	}
 }

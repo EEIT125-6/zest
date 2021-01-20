@@ -25,4 +25,10 @@ public interface BookingDAO {
 	
 	//管理員查詢
 	List<BookingBean> allBooking();
+	
+	//查詢目前總訂位數
+	int nowBooking(String bookingdate, String time, String restaurant);
+
+	//查詢最大可訂位數
+	int maxBooking(String stname);
 }

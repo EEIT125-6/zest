@@ -14,10 +14,10 @@ public class ErrorController {
     	return "e404";
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleException(final Exception e) {
-        return "e500";
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public String handleException(final Exception e) {
+//        return "e500";
+//    }
     
 //    @RequestMapping(value = {"/404"}, method = RequestMethod.GET)
 //    public String NotFoudPage() {
