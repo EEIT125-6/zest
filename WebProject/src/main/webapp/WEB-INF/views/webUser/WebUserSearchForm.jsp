@@ -581,7 +581,7 @@ ul.slides li img {
 									
 									content += "<tr>"
 											+ "<td>"
-											+ (dataIndex + 1)
+											+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
 											+ "</td>"
 											+ "<td>"
 											+ "<img src='"
@@ -814,7 +814,7 @@ ul.slides li img {
 									
 									content += "<tr>"
 											+ "<td>"
-											+ (dataIndex + 1)
+											+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
 											+ "</td>"
 											+ "<td>"
 											+ "<img src='"

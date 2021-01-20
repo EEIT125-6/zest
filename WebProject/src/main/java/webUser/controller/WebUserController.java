@@ -259,6 +259,8 @@ public class WebUserController {
 	public @ResponseBody Map<String, String> doInsertWebUserData (
 				SessionStatus sessionStatus,
 				RedirectAttributes redirectAttributes,
+				HttpServletRequest request,
+				HttpSession session,
 				Model model) {
 		
 		Map<String, String> map = new HashMap<>();
@@ -318,11 +320,15 @@ public class WebUserController {
 			
 			if (insertResult > 0) {
 				insertResultMessage = "恭喜！" + reg_webUser.getAccount() + "，您的帳號已成功建立";
+				/* 無效httpSession */
+				session.invalidate();
 				/* 清空SessionAttribute */
 				sessionStatus.setComplete();
-				insertResultPage = "WebUserLogin";
+				insertResultPage = request.getContextPath() + "/WebUserLogin";
 			} 
 		} 
+		
+		System.out.println("resultCode is:"+insertResult.toString());
 		
 		map.put("resultCode", insertResult.toString());
 		map.put("resultMessage", insertResultMessage);
@@ -333,7 +339,10 @@ public class WebUserController {
 	/* 取消註冊 */
 	@GetMapping(value = "/register/controller/DisplayWebUserInfo/undo")
 	public String doRegisterUndo(
-			SessionStatus sessionStatus) {
+			SessionStatus sessionStatus,
+			HttpSession session) {
+		/* 無效httpSession */
+		session.invalidate();
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
 		/* 返回註冊畫面 */
@@ -490,6 +499,7 @@ public class WebUserController {
 		if (accountCheckResult == 1) {
 			Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
 			Boolean singleLogin = false;
+			System.out.println("Map Size:"+context.getAttribute("userMap") == null);
 			/* 第一位登入系統的使用者 */
 			if (userMap == null) {
 				singleLogin = true;
@@ -520,6 +530,7 @@ public class WebUserController {
 			} else if (userMap != null && (userMap.get(account) == null) || userMap.get(ckAccount) == null) {
 				singleLogin = true;
 				HttpSession oldSession = (ckAccount.equals("")) ? (HttpSession) userMap.get(account) : (HttpSession) userMap.get(ckAccount);
+				System.out.println("測試："+oldSession != null);
 				if (oldSession != null) {
 					/* 清除舊連線 */
 					oldSession.invalidate();
@@ -1382,6 +1393,7 @@ public class WebUserController {
 	/* 執行密碼重設 */
 	@PostMapping(value = "/recovery/controller/WebUserResetPassword", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doResetWebUserPassword(
+			HttpServletRequest request,
 			@RequestParam(value = "inputUserId", required = false, defaultValue = "") String userId,
 			@RequestParam(value = "inputPassword", required = false, defaultValue = "") String password) {
 		
@@ -1390,6 +1402,7 @@ public class WebUserController {
 		/* 宣告參數 */
 		Integer resetResult = -3;
 		String resetMessage = "";
+		String loginPage =  request.getContextPath() + "/WebUserLogin";
 		
 		/* 預防性後端檢查，正常時回傳1 */
 		resetMessage = doCheckResetInput(userId, password);
@@ -1406,6 +1419,7 @@ public class WebUserController {
 		
 		map.put("resultCode", resetResult.toString());
 		map.put("resultMessage", resetMessage);
+		map.put("nextPath", loginPage);
 		return map;
 	}
 	
@@ -2459,6 +2473,7 @@ public class WebUserController {
 		checkMessage = doCheckUserId(userId);
 		/* 檢查密碼 */
 		checkMessage = (checkMessage.equals("")) ? doCheckPassword(password) : checkMessage;
+		checkMessage = (checkMessage.startsWith("?")) ? "" : checkMessage;
 		return checkMessage;
 	}
 	
@@ -2482,7 +2497,6 @@ public class WebUserController {
 			}
 			checkMessage = (userIdCheckResult == 0) ? "Id不存在" : checkMessage;
 		}
-		
 		return checkMessage;
 	}
 	

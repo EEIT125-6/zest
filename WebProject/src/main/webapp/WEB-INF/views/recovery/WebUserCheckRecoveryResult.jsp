@@ -155,11 +155,14 @@
                 	if (document.getElementById("pPage").innerHTML == "") {
                 		document.getElementById("pPage").innerHTML = "首頁";
                 		directPage = "../";
-                	} else if (document.getElementById("pPage").innerHTML == "/WebUserResetPassword") {
+                	} else if (document.getElementById("pPage").innerHTML == "/recovery/WebUserResetPassword") {
                 		document.getElementById("pPage").innerHTML = "重設密碼";
-                		directPage = "../recovery/WebUserResetPassword";
-                	} else if (document.getElementById("pPage").innerHTML == "/webUser/WebUserMain") {
-                		document.getElementById("pPage").innerHTML = "主畫面";
+                		directPage = "WebUserResetPassword";
+                	} else if (document.getElementById("pPage").innerHTML == "/WebUserLogin") {
+                		document.getElementById("pPage").innerHTML = "登入畫面";
+                		directPage = "../WebUserLogin";
+                	} else if (document.getElementById("pPage").innerHTML == "/WebUserMain") {
+                		document.getElementById("pPage").innerHTML = "個人主畫面";
                 		directPage = "../webUser/WebUserMain";
                 	}
         

@@ -25,14 +25,35 @@ function checkAccountPassword() {
 	if (passwordObjValue == "" || passwordObjValue.length == 0) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("&") != -1) {
+		passwordStr = "密碼不可以包含&符號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("=") != -1) {
+		passwordStr = "密碼不可以包含等號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("_") != -1) {
+		passwordStr = "密碼不可以包含底線";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("-") != -1) {
+		passwordStr = "密碼不可以包含破折號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("+") != -1) {
+		passwordStr = "密碼不可以包含加號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(",") != -1 || passwordObjValue.indexOf("，") != -1) {
+		passwordStr = "密碼不可以包含逗號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(".") != -1 || passwordObjValue.indexOf("。") != -1) {
+		passwordStr = "密碼不可以包含句號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
+		passwordStr = "密碼不可以包含問號";
 		passwordIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
@@ -76,14 +97,35 @@ function checkConfirmPassword() {
 	if (confirmPasswordObjValue == "" || confirmPasswordObjValue.length == 0) {
 		confirmPasswordStr = "密碼不可為空白";
 		confirmPasswordIsOk = false;
-	} else if (confirmPasswordObjValue.length < 8) {
-		confirmPasswordStr = "密碼長度不足，至少需8個字元";
-		confirmPasswordIsOk = false;
-	} else if (confirmPasswordObjValue.length > 20) {
-		confirmPasswordStr = "密碼長度過長，最多僅20個字元";
+	} else if (confirmPasswordObjValue.length < 6 || confirmPasswordObjValue.length > 30) {
+		confirmPasswordStr = "密碼長度錯誤，需6~30個字元";
 		confirmPasswordIsOk = false;
 	} else if (confirmPasswordObjValue.charAt(0).match(startCharReg)) {
 		confirmPasswordStr = "密碼不可以數字開頭";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("&") != -1) {
+		confirmPasswordStr = "密碼不可以包含&符號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("=") != -1) {
+		confirmPasswordStr = "密碼不可以包含等號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("_") != -1) {
+		confirmPasswordStr = "密碼不可以包含底線";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("-") != -1) {
+		confirmPasswordStr = "密碼不可以包含破折號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("+") != -1) {
+		confirmPasswordStr = "密碼不可以包含加號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf(",") != -1 || confirmPasswordObjValue.indexOf("，") != -1) {
+		confirmPasswordStr = "密碼不可以包含逗號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf(".") != -1 || confirmPasswordObjValue.indexOf("。") != -1) {
+		passwordStr = "密碼不可以包含句號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
+		confirmPasswordStr = "密碼不可以包含問號";
 		confirmPasswordIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;

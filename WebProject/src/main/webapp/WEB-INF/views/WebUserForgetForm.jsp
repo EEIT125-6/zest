@@ -203,9 +203,9 @@
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserForgetForm.js"></script>
                 <script>
 	                $("#userInput").click(function () {
-	                	document.getElementById("email").value = "georgecycuphy@cycu.org.tw";
-	                	document.getElementById("phone").value = "0911954504";
-	                	document.getElementById("birth").value = "1992-01-16";
+	                	document.getElementById("email").value = "projectzesteeit1256@gmail.com";
+	                	document.getElementById("phone").value = "0911773322";
+	                	document.getElementById("birth").value = "2000-10-20";
 				    });
 	                $("#recovery").click(function () {
 	                	checkRecoveryRequest();

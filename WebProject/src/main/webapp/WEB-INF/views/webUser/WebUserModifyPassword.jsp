@@ -163,14 +163,14 @@
 						<input type="hidden" name="originalPassword" id="originalPassword" value="${userFullData.password}" readonly>
                 		<hr />
 						<label>帳號新密碼：</label> 
-						<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
+						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
+							placeholder="請輸入密碼，6~30個字" required="required" />
 						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>確認新密碼：</label> 
-						<input type="password" name="confirmPassword" id="confirmPassword" size="40" maxlength="20" onblur="checkConfirmPassword()"
-							placeholder="請輸入密碼，8~20個字" required="required" />
+						<input type="password" name="confirmPassword" id="confirmPassword" size="30" maxlength="30" onblur="checkConfirmPassword()"
+							placeholder="請輸入密碼，6~30個字" required="required" />
 						<button type="button" style="font-size:18px" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="confirmPasswordSpan"></span>
                 	</fieldset>
@@ -209,6 +209,7 @@
     									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
     										let typeObject = xhrObject.getResponseHeader("Content-Type");
     										if (typeObject.indexOf("application/json") === 0) {
+    											let resultObj = JSON.parse(xhrObject.responseText);
     											if (resultObj.resultCode == 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = true;
@@ -220,7 +221,7 @@
     												/* 顯示彈窗訊息 */
     							            		alert(confirmPasswordStr);
     											} 
-    											if (!confirmIsOk) {
+    											if (!confirmPasswordIsOk) {
     												confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmPasswordStr;
     												confirmPasswordSpan.style.color = "red";
     												confirmPasswordSpan.style.fontStyle = "italic";

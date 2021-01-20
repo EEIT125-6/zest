@@ -173,9 +173,11 @@ response.setContentType("text/html;charset=UTF-8");
 		      		if (data.status==1){
 		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
 		      					
-		      		}else{
+		      		}else if (data.status==0){
 		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
-		      		}
+		      		}else{
+						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
+					}
 		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
 		      	}
 		      	content+="</table>";
