@@ -7,28 +7,10 @@
 <%@include file = "../Link_Meta-Include.jsp" %>
 <title>訂位紀錄</title>
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
-   <script >
-    $(document).ready(function(){
-      $.datepicker.regional['zh-TW']={
-        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
-        dayNamesMin:["日","一","二","三","四","五","六"],
-        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        prevText:"上月",
-        nextText:"次月",
-        weekHeader:"週"
-        };
-      $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
-      $("#datepicker1").datepicker({
-    	  minDate: new Date(),
-    	  dateFormat:'yy-mm-dd' });
-      });
  
-  </script>
       <style>
       	/* Table cellpadding */
     	th, td { padding: 1; }
@@ -239,6 +221,26 @@
 	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel" style="border-radius: 3px; border: none; outline: none;">
 </label>
 </form>
+  <script >
+    $(document).ready(function(){
+      $.datepicker.regional['zh-TW']={
+        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
+        dayNamesMin:["日","一","二","三","四","五","六"],
+        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+        prevText:"上月",
+        nextText:"次月",
+        weekHeader:"週"
+        };
+      $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
+      $("#datepicker1").datepicker({
+    	  minDate: new Date(),
+    	  dateFormat:'yy-mm-dd' });
+      });
+ 
+  </script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
 	function egg() {
 			var dateTime=new Date();
