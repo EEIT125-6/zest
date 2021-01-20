@@ -254,34 +254,6 @@ ul.slides li img {
 			<hr />
 		</div>
 		
-		<div align="center" id="dataTableContainer"> 
-			<table id="userDataTable" class="display">
-				<thead>
-					<tr>
- 						<th>項次</th> 
- 						<c:if test="${userFullData.accountLv.lv == -1}"> 
- 							<th>刪除</th>
- 							<th>其他</th> 
- 							<th>查看</th> 
-						</c:if> 
- 						<th>帳號名稱</th> 
- 						<th>稱呼</th> 
-						<th>偏好食物</th> 
-						<th>居住區域</th> 
- 						<c:if test="${userFullData.accountLv.lv == -1 || userFullData.accountLv.lv == 1}"> 
- 							<th>帳號身分</th> 
- 						</c:if> 
- 						<c:if test="${userFullData.accountLv.lv == -1}"> 
- 							<th>帳號狀態</th> 
- 						</c:if> 
-					</tr>
-				</thead>
-				<tbody>
-					
-				</tbody>
-			</table>
-		</div>
-		
 		<div align="center" id="dataContainer"></div>
 		
 		<!-- 引用本地jQuery -->
@@ -413,6 +385,8 @@ ul.slides li img {
 	    	});
 			
 			function specSearch() {
+				document.getElementById("pageNo").value = 1;
+				document.getElementById("maxPage").value = 1;
 				var counter = 0;
 				var userLv = document.getElementById("userLv").value.trim();
  				var account = document.getElementById("userAccount").value.trim();
@@ -468,8 +442,6 @@ ul.slides li img {
 			function lastCheck(userId, account, status, mode) {
 				let choice=confirm("是否要執行特定的操作？");
 				if (choice) {
-					document.getElementById("pageNo").value = 1;
-					document.getElementById("maxPage").value = 1;
 					let operateResultSpan = document.getElementById("searchSpan");
 					let operateResultStr = "...處理中，請稍後";
 					let operateResultIsOk = true;
@@ -609,7 +581,7 @@ ul.slides li img {
 									
 									content += "<tr>"
 											+ "<td>"
-											+ (dataIndex + 1)
+											+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
 											+ "</td>"
 											+ "<td>"
 											+ "<img src='"
@@ -842,7 +814,7 @@ ul.slides li img {
 									
 									content += "<tr>"
 											+ "<td>"
-											+ (dataIndex + 1)
+											+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
 											+ "</td>"
 											+ "<td>"
 											+ "<img src='"

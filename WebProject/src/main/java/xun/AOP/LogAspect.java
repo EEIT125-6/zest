@@ -104,6 +104,13 @@ public class LogAspect {
         }
 		String methodName = joinPoint.getSignature().getName();
 		List<Object> args = Arrays.asList(joinPoint.getArgs());
+		//test
+			for(Object i:args) {
+				if(i!=null && String.valueOf(i).getClass().equals(String.class)) {
+					String.valueOf(i).replaceAll(" ", "");
+				}
+			}
+		//
 		System.out.println("methodName:"+methodName);
 //		System.out.println("args:"+args);
 //		-----------------------------------------
@@ -132,7 +139,7 @@ public class LogAspect {
     		String newcontent = 
     				"執行時間 : "+  sdf.format(date)
     				+"  methodName:"+methodName
-//    				+"  args:"+args
+    				+"  args:"+args
     				;
     		buf.append(newcontent);
 //    		System.out.println(buf.toString());

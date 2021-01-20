@@ -65,7 +65,7 @@ body {
             <div class="col-2"></div>
             <div class="col-8 containerBodyCardOutside">
                 <form:form  method="POST" modelAttribute="productInfoBean" enctype='multipart/form-data'>
-                
+<%--                 	${stid} --%>
 	                <input type="hidden" name="stid" value="${stid}">
 	                <input type="hidden" name="forAOP" value="stid=${stid}">
 	                
@@ -99,6 +99,12 @@ body {
                         </div>
                         <div class="col-md-8">
                         	<form:input class="form-control" id="producePrice" path="product_price"/>
+                        	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        	<script type="text/javascript">
+                        		$("#producePrice").focus(function(){
+                        			$(this).attr("type","number")                        			
+                        		})
+                        	</script>
                         	<div>
                         		<form:errors path="product_price" cssClass="error"/>
                         	</div>	
@@ -111,6 +117,11 @@ body {
                         </div>
                         <div class="col-md-8">
                         	<form:input class="form-control" id="productQuantity" path="product_quantity"/>
+                        	<script type="text/javascript">
+                        		$("#productQuantity").focus(function(){
+                        			$(this).attr("type","number")                        			
+                        		})
+                        	</script>
                         	<div>
                         		<form:errors path="product_quantity" cssClass="error"/>
                         	</div>	
@@ -149,7 +160,7 @@ body {
                     	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
                     		<button class="btn btn-success" >一鍵輸入</button>
                     	</div>
-                    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    	
                     	<script type="text/javascript">
                     		$("#oneBt").click(function(){
                     			$("#produceName").val('牛肉拌麵<!--');

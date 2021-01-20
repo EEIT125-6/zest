@@ -37,12 +37,18 @@ private static final Logger logger = LogManager.getLogger(实际类名.class.get
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
         
-        <RollingFile name="infoFile" fileName="${backupFilePatch}info.log"
-                     filePattern="${backupFilePatch}info.log.%d{yyyyMMdd}">
-            <PatternLayout charset="utf-8" pattern="[ %-5p]:%d{YYYY-MM-dd HH:mm:ss} [%t] %c{1}:%L - %msg%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy modulate="true"/>
-            </Policies>
+        <RollingFile name="WarnFile" fileName="${backupFilePatch}info.log"
+                     filePattern="${backupFilePatch}$${date:yyyy-MM}/app-%d{yyyyMMddHHmmssSSS}.Warnlog.gz">
+<!--             <PatternLayout charset="utf-8" pattern="[ %-5p]:%d{YYYY-MM-dd HH:mm:ss} [%t] %c{1}:%L - %msg%n"/> -->
+            <PatternLayout   pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n" />
+<!--             <Policies> -->
+<!--                 <TimeBasedTriggeringPolicy modulate="true"/> -->
+<!--             </Policies> -->
+            
+            <!-- 日志文件大小 -->
+            <SizeBasedTriggeringPolicy size="20MB" />
+            <!-- 最多保留文件数 -->
+            <DefaultRolloverStrategy max="20"/>
         </RollingFile>        
     </Appenders>
     
@@ -55,7 +61,8 @@ private static final Logger logger = LogManager.getLogger(实际类名.class.get
         <Root level="ALL">
 <!--             <AppenderRef ref="Console" level="WARN" /> -->
             <AppenderRef ref="Console" level="WARN" />
-            <AppenderRef ref="RollingFile" level="DEBUG" />
+            <AppenderRef ref="RollingFile" level="INFO" />
+            <AppenderRef ref="WarnFile" level="WARN" />            
         </Root>
     </loggers>
 </configuration>

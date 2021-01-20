@@ -238,26 +238,23 @@ ul.slides li img {
 				</tr>
 			</c:forEach>
 			<tr>
-				
 				<td colspan="7" align="right">總計</td>
 				<td id="tot">0</td>
 			</tr>
 		</table>
-
-
 
 		<br>
 		<button type="button" class="continueShopping"
 			onclick="mallRedirector()">繼續購物</button>
 		<button type="button" class="checkOut" onclick="checkCart()">結帳</button>
 	    <button style="float:left" onclick="clearCart()">清除購物車</button>
+	    <div class="wrapper "></div>
 		<!-- 向後端送值用 -->
 		<form method="Post" action=""
 			style="display: none"></form>
 
 
 		<script>	
-		
 			function clearCart(){
 				$.ajax({
 					url:"/WebProject/controller/clearCart",
@@ -284,36 +281,35 @@ ul.slides li img {
 							
 				var K = document.getElementById('tot').innerHTML;
 				let s = "";
+				let m = "";
 				$("table").eq(0).children("tbody").eq(0).children("tr").each(function(){
 					console.log("$(this).children('td').length="+$(this).children("td").length)
 					
 					let row = $(this).children('td').length;
 					let value1 = $(this).children("td").eq(1).html();
 					let value2 = $(this).children("td").eq(6).children("input").val();
+					let value3 = $(this).children("td").eq(1).html();
 					
-					if(row==8){
-					s+=value2+","	
-// 					s+=value1+":"+value2+","
-					}else{
-					s+="" 
+					if (row == 8) {
+						s += value1+":"+value2+","
+					} else if (row == 2) {
+						m += value3;
+					} else {
+						s += "" 
 					}
 				})
 				console.log("s="+s);
+				console.log("m="+m);
 				if (K > 0) {													
 					let r = confirm('是否結帳');
 					if(r==true){
 						console.log('AJAX initialized');
-						$("form").eq(1).attr("action","/WebProject/controller/checkout?purchaseInfo="+s).submit();						
+						$("form").eq(1).attr("action","/WebProject/controller/checkout?purchaseInfo="+s+"&totalValue="+m).submit();						
 					}else{
-					window.alert('您的購物車為空，請繼續購物後再結帳');
-						}
+						window.alert('您的購物車為空，請繼續購物後再結帳');
+					}
+				}
 			}
-			}
-			
-			
-			
-				
-			
 			
 // 			購物車總價值計算
 			$(".qu").change(function()  {
@@ -330,25 +326,28 @@ ul.slides li img {
 			})
 			
 			function itemRemove(id) {
-				$.ajax({
-					url : "/WebProject/controller/itemremove",
-					data : {
-						"id":id //id向後端發送
-					},
-					type:"Get",			
-					dataType:"JSON",
-					success:function(obj) {
-						$("table").eq(0).children("tbody").children("tr").each(function(){
-							if($(this).children("td").eq(1).html() == id){
-								$(this).html("");
-							}
-						})
-					},
-					error : function(xhr, ajaxOptions, thrownError) {
-						console.log(xhr.status);
-						console.log(thrownError);
-					}
-				})
+		        var K =confirm('是否確定刪除所選項目?')
+				if (K==true) {
+					$.ajax({
+						url : "/WebProject/controller/itemremove",
+						data : {
+							"id":id //id向後端發送
+						},
+						type:"Get",			
+						dataType:"JSON",
+						success:function(obj) {
+							$("table").eq(0).children("tbody").children("tr").each(function(){
+								if($(this).children("td").eq(1).html() == id){
+									$(this).html("");
+								}
+							})
+						},
+						error : function(xhr, ajaxOptions, thrownError) {
+							console.log(xhr.status);
+							console.log(thrownError);
+						}
+					});
+				}
 			}
 		</script>
 	</div>

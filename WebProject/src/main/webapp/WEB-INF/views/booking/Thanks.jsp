@@ -152,6 +152,9 @@ setTimeout(function(){
   
 <div align="center">            
 <h2>訂位完成！</h2>
+<h4>將會發送訂位資訊至您的e-mail</h4>
+<h4>也可至會員中心查看</h4>
+<br><br><br>
 5秒後將自動轉跳回首頁
 <%-- <a href="<c:url value='bookingForm.jsp'/>"></a> --%>
 <form action="<c:url value='/'/>" >

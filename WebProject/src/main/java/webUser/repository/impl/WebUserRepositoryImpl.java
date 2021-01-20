@@ -2,6 +2,8 @@ package webUser.repository.impl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -352,6 +354,22 @@ public class WebUserRepositoryImpl implements WebUserRepository {
                 .setMaxResults(avPage).getResultList();
 	}
 	
+	/* 取得查詢的使用者資料 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<WebUserData> getAllWebUserData() throws SQLException {
+		String hql = "FROM WebUserData AS wu WHERE wu.status='active'";
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return getSession().createQuery(hql).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
+		String hql = "FROM WebUserData AS wu WHERE wu.status='active' AND wu.joinDate LIKE :year";
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return getSession().createQuery(hql).setParameter("year", year).getResultList();
+	}
+	
 	/* 取得查詢的總筆數 */
 	@Override
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
@@ -490,5 +508,19 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		String hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = -1 AND wu.status = 'active'";
 		/* 回傳符合條件的比數 */
 		return getSession().createQuery(hql).getResultList().size();
+	}
+	
+	/* 取回所有可用使用者的註冊日期 */
+	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
+		List<LocalDate> joinDateList = new ArrayList<>();
+		List<WebUserData> userList = getAllYearWebUserData(year);
+		
+		for (WebUserData user: userList) {
+			/* List中沒有才加入，避免重複日期 */
+			if (!joinDateList.contains(user.getJoinDate().toLocalDate())) {
+				joinDateList.add(user.getJoinDate().toLocalDate());
+			}
+		}
+		return joinDateList;
 	}
 }

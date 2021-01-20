@@ -204,7 +204,8 @@ public class StoreR_Controller {
 			Collections.sort(list, new PriceComparatorD());
 		}else {
 			//依照點擊數排序
-			Collections.sort(list, new ClickComparator());			
+			Collections.sort(list, new ClickComparator());	
+			System.out.println("*************************************************依照點擊數排序依照點擊數排序依照點擊數排序依照點擊數排序");
 		}
 		
 		Integer off3 = offset+3;

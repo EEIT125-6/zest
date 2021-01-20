@@ -240,6 +240,39 @@ public class BookingController {
 		return map;
 	}
 	
+	//剩餘座位數
+	@PostMapping(value ="/seating", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> seating(
+			Model model,
+			@RequestParam(value="bookingdate") String bookingdate,
+			@RequestParam(value="time") String time,
+			@RequestParam(value="number") Integer number,
+			@RequestParam(value="restaurant") String restaurant
+			) {
+		String stname = restaurant;
+		System.out.println(">>>"+restaurant);
+		Map<String, Object> map = new HashMap<>();
+		int left = service.showSeating(bookingdate, time, restaurant, stname);
+		if (left <0) {
+			map.put("line", "此餐廳目前不開放訂位～");
+			map.put("code", -1);
+		}
+		if (left ==0) {
+			map.put("line", "此時段目前訂位已額滿～");
+			map.put("code", 0);
+		}
+		if (left>0) {
+			if (number>left) {
+				map.put("line", "此時段可訂位數不足"+number+"位～");
+				map.put("code", 1);
+			}
+			map.put("line", "此時段剩餘座位數："+left);
+			map.put("code", 2);
+		}
+
+		return map;
+	}
+	
 	//查
 	@PostMapping("/select")
 	public String query(Model model) {

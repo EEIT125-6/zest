@@ -3,17 +3,14 @@ package controller;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpSession;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,21 +90,27 @@ public class ShoppingCartController {
 		return productQuantity;
 	}
 
-	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/checkout") // 導向至購物車結帳頁面
-	public String checkOuter(@RequestParam String purchaseInfo,Model model) {
+	@SuppressWarnings("unused")
+	public String checkOuter(
+			@RequestParam String purchaseInfo,
+			@RequestParam String totalValue,
+			Model model) {
 		System.out.println("checkout function initialized");
 		System.out.println("id="+purchaseInfo);
-		StringTokenizer st = new StringTokenizer(purchaseInfo,",");
-		while(st.hasMoreTokens()) {
-			System.out.println("result="+st.nextToken());
-		}		
-		
-		Map<String,String> list = service.setProductAmount(st);
+		System.out.println("totalValue="+totalValue);
+		String[] allItemQuantity = purchaseInfo.split(",");
+		Map<Integer,Integer> list = new HashMap<Integer,Integer>();
+		for(String s:allItemQuantity) {
+			s.split(":");
+			list.put(Integer.parseInt(s.split(":")[0]), Integer.parseInt(s.split(":")[1]));
+		}
 		
 		if (list == null) {
 			return "cart/cart";
 		} else {
+			model.addAttribute("itemQuantity",list);
+			model.addAttribute("itemTotalValue",totalValue);
 			return "checkout/checkout";
 		}
 	}

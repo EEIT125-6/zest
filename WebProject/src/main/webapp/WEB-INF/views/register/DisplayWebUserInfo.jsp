@@ -236,11 +236,12 @@
 					<hr />
 					<span id="confirmSpan"></span>
 				</form>
+				<!-- 引用本地jQuery -->
+				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 				<script src="<c:url value='/js/webUser/DisplayWebUserInfo.js' />"></script>
 				<script>
 					window.onload = function() {
 						let showPasswordBtn = document.getElementById("showPassword");
-						let confirmBtn = document.getElementById("registerConfirm");
 						
 						showPasswordBtn.onclick = function() {
 							document.getElementById("password").type = (document.getElementById("password").type == "hidden") ? "text" : "hidden";
@@ -249,7 +250,7 @@
 							? "隱藏密碼 "+"<i class='material-icons' style='font-size:18px;color:green'>visibility_off</i>" 
 							: "顯示密碼 "+"<i class='material-icons' style='font-size:18px;color:red'>visibility</i>"; 
 						}
-						confirmBtn.onclick = function() {
+						$("#registerConfirm").click(function() {
 							let confirmSpan = document.getElementById("confirmSpan");
 							let confirmStr = "...處理中，請稍後";
 							let confirmIsOk = true;
@@ -258,51 +259,44 @@
 							confirmSpan.style.color = "black";
 							confirmSpan.style.fontStyle = "normal";
 							
-							let xhrObject = new XMLHttpRequest();
-							if (xhrObject != null) {
-								xhrObject.open("POST", "<c:url value='/register/controller/DisplayWebUserInfo/confirm' />", true);
-								xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								
-								xhrObject.onreadystatechange = function() {
-									if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-										let typeObject = xhrObject.getResponseHeader("Content-Type");
-										if (typeObject.indexOf("application/json") === 0) {
-											if (resultObj.resultCode == 1) {
-												confirmStr = resultObj.resultMessage;
-												confirmIsOk = true;
-												/* 顯示彈窗訊息 */
-							            		alert(confirmStr);
-											} else if (resultObj.resultCode != 1) {
-												confirmStr = resultObj.resultMessage;
-												confirmIsOk = false;
-												/* 顯示彈窗訊息 */
-							            		alert(confirmStr);
-											} 
-											if (!confirmIsOk) {
-												confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
-												confirmSpan.style.color = "red";
-												confirmSpan.style.fontStyle = "italic";
-							            	} else {
-							            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
-							            		confirmSpan.style.color = "black";
-							            		confirmSpan.style.fontStyle = "normal";
-							            		/* 跳轉 */
-							            		window.location.href = resultObj.nextPath;
-							            	}
-										} else {
-											confirmStr = "發生錯誤，無法執行檢查";
-											confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
-											confirmSpan.style.color = "red";
-											confirmSpan.style.fontStyle = "italic";
-						            		/* 顯示彈窗訊息 */
-						            		alert(confirmStr);
-										}
+							$.ajax({
+								type : "POST",
+								url : "<c:url value='/register/controller/DisplayWebUserInfo/confirm' />",
+								dataType : "json",
+								success : function(resultObj) {
+									if (resultObj.resultCode == 1) {
+										confirmStr = resultObj.resultMessage;
+										confirmIsOk = true;
+										/* 顯示彈窗訊息 */
+					            		alert(confirmStr);
+									} else if (resultObj.resultCode != 1) {
+										confirmStr = resultObj.resultMessage;
+										confirmIsOk = false;
+										/* 顯示彈窗訊息 */
+					            		alert(confirmStr);
 									}
+									if (!confirmIsOk) {
+										confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
+										confirmSpan.style.color = "red";
+										confirmSpan.style.fontStyle = "italic";
+					            	} else {
+					            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
+					            		confirmSpan.style.color = "black";
+					            		confirmSpan.style.fontStyle = "normal";
+					            		/* 跳轉 */
+					            		window.location.href = resultObj.nextPath;
+					            	}
+								},
+								error : function(err) {
+									confirmStr = "發生錯誤，無法執行檢查";
+									confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
+									confirmSpan.style.color = "red";
+									confirmSpan.style.fontStyle = "italic";
+				            		/* 顯示彈窗訊息 */
+				            		alert(confirmStr);
 								}
-							} else {
-								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-							}
-						}
+							});
+						});
 					}
 				</script>
             </div>         

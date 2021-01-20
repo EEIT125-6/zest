@@ -9,10 +9,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @ControllerAdvice
 public class ErrorController {
 	
-//    @ExceptionHandler(NoHandlerFoundException.class)
-//    public String handle(Exception ex) {
-//    	return "e404";
-//    }
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public String handle(Exception ex) {
+    	return "e404";
+    }
 
 //    @ExceptionHandler(RuntimeException.class)
 //    public String handleException(final Exception e) {

@@ -168,6 +168,30 @@ function checkPassword() {
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
 		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("&") != -1) {
+		passwordStr = "密碼不可以包含&符號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("=") != -1) {
+		passwordStr = "密碼不可以包含等號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("_") != -1) {
+		passwordStr = "密碼不可以包含底線";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("-") != -1) {
+		passwordStr = "密碼不可以包含破折號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("+") != -1) {
+		passwordStr = "密碼不可以包含加號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(",") != -1 || passwordObjValue.indexOf("，") != -1) {
+		passwordStr = "密碼不可以包含逗號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(".") != -1 || passwordObjValue.indexOf("。") != -1) {
+		passwordStr = "密碼不可以包含句號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
+		passwordStr = "密碼不可以包含問號";
+		passwordIsOk = false;
 	} else if (passwordObjValue == oldPasswordObjValue) {
 		passwordStr = "";
 		passwordIsOk = true;

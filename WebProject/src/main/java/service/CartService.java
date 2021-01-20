@@ -3,7 +3,6 @@ package service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.springframework.ui.Model;
 
@@ -26,6 +25,6 @@ public interface CartService {
     List<ProductInfoBean> find(String id); //搜尋購物車內特定物件id是否存在
     
     Map<String, String> findCurrentMemberData(Model model);//結帳時(checkout.jsp)自動帶入會員資料用 
-
-	Map<String,String> setProductAmount(StringTokenizer st);//結帳時(checkout.jsp)自動帶入選擇商品數量;
-	}
+//
+//	Map<String,String> setProductAmount(StringTokenizer st);//結帳時(checkout.jsp)自動帶入選擇商品數量;
+}

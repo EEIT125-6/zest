@@ -27,9 +27,36 @@ public class StoreInsertVaildators  implements Validator{
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "saddress", "", "地址不能空白");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "tel", "", "電話不能空白");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "stitd","", "寫點介紹吧");
+		if(sb.getStname()!=null) {
+			if(sb.getStname().contains("<!--")) {
+				errors.rejectValue("stname", "", "包含不合理字串請修正");
+			}
+		}
+		if(sb.getSaddress()!=null) {
+			if(sb.getSaddress().contains("<!--")) {
+				errors.rejectValue("saddress", "", "包含不合理字串請修正");
+			}
+		}
+		if(sb.getTel()!=null) {
+			if(sb.getTel().contains("<!--")) {
+				errors.rejectValue("tel", "", "包含不合理字串請修正");
+			}
+		}
+		if(sb.getStitd()!=null) {
+			if(sb.getStitd().contains("<!--")) {
+				errors.rejectValue("stitd", "", "包含不合理字串請修正");
+			}
+		}
+		if(sb.getStitddt()!=null) {
+			if(sb.getStitddt().contains("<!--")) {
+				errors.rejectValue("stitddt", "", "包含不合理字串請修正");
+			}
+		}
+		
 		if (sb.getTel().length()>11) {
 			errors.rejectValue("tel", "","請確定輸入是否正確");
 		}
+		
 //		for(int i = 0 ; i == sb.getTel().length() ; i++) {
 //			Telnum.add(sb.getTel().substring(i, i+1));
 //		}
