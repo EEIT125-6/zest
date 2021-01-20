@@ -399,12 +399,28 @@ public class UserInfoController {
 		/* 允許空白 */
 		if (account.equals("") || account.length() == 0) {
 			checkResult = "";
-		} else if (account.length() < 8) {
-			checkResult = "帳號長度不足";
-		} else if (account.length() > 20) {
-			checkResult = "帳號長度過長";
+		} else if (account.length() < 6 || account.length() > 30) {
+			checkResult = "帳號長度錯誤，需6~30個字元";
 		} else if (account.substring(0,1).matches("[0-9]{1}")) {
 			checkResult = "帳號不可以數字開頭";
+		} else if (account.indexOf("&") != -1) {
+			checkResult = "帳號不可以包含&符號";
+		} else if (account.indexOf("=") != -1) {
+			checkResult = "帳號不可以包含等號";
+		} else if (account.indexOf("_") != -1) {
+			checkResult = "帳號不可以包含底線";
+		} else if (account.indexOf("-") != -1) {
+			checkResult = "帳號不可以包含破折號";
+		} else if (account.indexOf("+") != -1) {
+			checkResult = "帳號不可以包含加號";
+		} else if (account.indexOf(",") != -1 || account.indexOf("，") != -1) {
+			checkResult = "帳號不可以包含逗號";
+		} else if (account.indexOf(".") != -1 || account.indexOf("。") != -1) {
+			checkResult = "帳號不可以包含句號";
+		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
+			checkResult = "帳號不可以包含問號";
+		} else if (account.indexOf("<") != -1 || account.indexOf(">") != -1) {
+			checkResult = "帳號不可以包含<、>";
 		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
 			checkResult = "帳號不符合格式";
 		} 
@@ -413,13 +429,29 @@ public class UserInfoController {
 			/* 允許空白 */
 			if (password.equals("") || password.length() == 0) {
 				checkResult = "";
-			} else if (password.length() < 8) {
-				checkResult = "密碼長度不足";
-			} else if (password.length() > 20) {
-				checkResult = "密碼長度過長";
+			} else if (password.length() < 6 || password.length() > 30) {
+				checkResult = "密碼長度錯誤，需6~30個字元";
 			} else if (password.substring(0,1).matches("[0-9]{1}")) {
 				checkResult = "密碼不可以數字開頭";
-			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{7,19}")) {
+			} else if (password.indexOf("&") != -1) {
+				checkResult = "密碼不可以包含&符號";
+			} else if (password.indexOf("=") != -1) {
+				checkResult = "密碼不可以包含等號";
+			} else if (password.indexOf("_") != -1) {
+				checkResult = "密碼不可以包含底線";
+			} else if (password.indexOf("-") != -1) {
+				checkResult = "密碼不可以包含破折號";
+			} else if (password.indexOf("+") != -1) {
+				checkResult = "密碼不可以包含加號";
+			} else if (password.indexOf(",") != -1 || password.indexOf("，") != -1) {
+				checkResult = "密碼不可以包含逗號";
+			} else if (password.indexOf(".") != -1 || password.indexOf("。") != -1) {
+				checkResult = "密碼不可以包含句號";
+			} else if (password.indexOf("?") != -1 || password.indexOf("？") != -1) {
+				checkResult = "密碼不可以包含問號";
+			} else if (password.indexOf("<") != -1 || password.indexOf(">") != -1) {
+				checkResult = "密碼不可以包含<、>";
+			} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 				checkResult = "密碼不符合格式";
 			} 
 		}

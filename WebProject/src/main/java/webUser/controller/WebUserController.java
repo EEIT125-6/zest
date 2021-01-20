@@ -1020,15 +1020,15 @@ public class WebUserController {
 					selfData.getPassword(), 
 					newFirstName, 
 					newLastName, 
-					newNickname.replace('<', ' ').replace('>', ' ').trim(),
+					newNickname.trim(),
 					selfData.getBirth(),
 					fervor,
-					newEmail.replace('<', ' ').replace('>', ' ').trim(),
+					newEmail.trim(),
 					newPhone,
 					selfData.getJoinDate(),
-					newAddr0.replace('<', ' ').replace('>', ' ').trim(),
-					newAddr1.replace('<', ' ').replace('>', ' ').trim(),
-					newAddr2.replace('<', ' ').replace('>', ' ').trim(),
+					newAddr0.trim(),
+					newAddr1.trim(),
+					newAddr2.trim(),
 					selfData.getZest(),
 					selfData.getVersion() + 1,
 					selfData.getStatus(),
@@ -1170,15 +1170,15 @@ public class WebUserController {
 			}
 			
 			if (lv != -1) {	
-				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
-								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+				selectedParameters = selectedAccount.trim() + ":" 
+								+ selectedNickname.trim() + ":" 
 								+ selectedFervor + ":" 
 								+ selectedLocationCode + ":" 
 								+ String.valueOf(lv) + ":" 
 								+ status + ":?:-2";
 			} else {
-				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
-								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+				selectedParameters = selectedAccount.trim() + ":" 
+								+ selectedNickname.trim() + ":" 
 								+ selectedFervor + ":" 
 								+ selectedLocationCode + ":" 
 								+ String.valueOf(lv) + ":" 
@@ -1809,15 +1809,15 @@ public class WebUserController {
 				newPassword, 
 				newFirstName, 
 				newLastName, 
-				newNickname.replace('<', ' ').replace('>', ' ').trim(),
+				newNickname.trim(),
 				newBirth,
 				fervor,
-				newEmail.replace('<', ' ').replace('>', ' ').trim(),
+				newEmail.trim(),
 				newPhone,
 				managedUserData.getJoinDate(),
-				newAddr0.replace('<', ' ').replace('>', ' ').trim(),
-				newAddr1.replace('<', ' ').replace('>', ' ').trim(),
-				newAddr2.replace('<', ' ').replace('>', ' ').trim(),
+				newAddr0.trim(),
+				newAddr1.trim(),
+				newAddr2.trim(),
 				managedUserData.getZest(),
 				managedUserData.getVersion() + 1,
 				managedUserData.getStatus(),
@@ -2537,6 +2537,9 @@ public class WebUserController {
 		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
 			submitMessage = "帳號不可以包含問號";
 			inputIsOk = false;
+		} else if (account.indexOf("<") != -1 || account.indexOf(">") != -1) {
+			submitMessage = "帳號不可以包含<、>";
+			inputIsOk = false;
 		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
@@ -2574,6 +2577,33 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
 			submitMessage = "密碼不可以數字開頭";
+			inputIsOk = false;
+		} else if (password.indexOf("&") != -1) {
+			submitMessage = "密碼不可以包含&符號";
+			inputIsOk = false;
+		} else if (password.indexOf("=") != -1) {
+			submitMessage = "密碼不可以包含等號";
+			inputIsOk = false;
+		} else if (password.indexOf("_") != -1) {
+			submitMessage = "密碼不可以包含底線";
+			inputIsOk = false;
+		} else if (password.indexOf("-") != -1) {
+			submitMessage = "密碼不可以包含破折號";
+			inputIsOk = false;
+		} else if (password.indexOf("+") != -1) {
+			submitMessage = "密碼不可以包含加號";
+			inputIsOk = false;
+		} else if (password.indexOf(",") != -1 || password.indexOf("，") != -1) {
+			submitMessage = "密碼不可以包含逗號";
+			inputIsOk = false;
+		} else if (password.indexOf(".") != -1 || password.indexOf("。") != -1) {
+			submitMessage = "密碼不可以包含句號";
+			inputIsOk = false;
+		} else if (password.indexOf("?") != -1 || password.indexOf("？") != -1) {
+			submitMessage = "密碼不可以包含問號";
+			inputIsOk = false;
+		} else if (password.indexOf("<") != -1 || password.indexOf(">") != -1) {
+			submitMessage = "密碼不可以包含<、>";
 			inputIsOk = false;
 		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
@@ -2980,19 +3010,19 @@ public class WebUserController {
 			/* 建立物件 */
 			reg_webUser = new WebUserData(
 					"", 
-					account, 
-					password, 
+					account.trim(), 
+					password.trim(), 
 					firstName, 
 					lastName, 
-					nickname.replace('<', ' ').replace('>', ' ').trim(), 
+					nickname.trim(), 
 					birth, 
 					"",
-					email.replace('<', ' ').replace('>', ' ').trim(), 
+					email.trim(), 
 					phone, 
 					Date.valueOf(today), 
-					addr0.replace('<', ' ').replace('>', ' ').trim(), 
-					addr1.replace('<', ' ').replace('>', ' ').trim(), 
-					addr2.replace('<', ' ').replace('>', ' ').trim(), 
+					addr0.trim(), 
+					addr1.trim(), 
+					addr2.trim(), 
 					BigDecimal.ZERO, 
 					0, 
 					"inactive", 
@@ -3010,15 +3040,15 @@ public class WebUserController {
 					null, 
 					firstName, 
 					lastName, 
-					nickname.replace('<', ' ').replace('>', ' ').trim(), 
+					nickname.trim(), 
 					birth, 
 					"",
-					email.replace('<', ' ').replace('>', ' ').trim(), 
+					email.trim(), 
 					phone, 
 					Date.valueOf(today), 
-					addr0.replace('<', ' ').replace('>', ' ').trim(), 
-					addr1.replace('<', ' ').replace('>', ' ').trim(), 
-					addr2.replace('<', ' ').replace('>', ' ').trim(), 
+					addr0.trim(), 
+					addr1.trim(), 
+					addr2.trim(), 
 					BigDecimal.ZERO, 
 					0, 
 					"inactive", 
