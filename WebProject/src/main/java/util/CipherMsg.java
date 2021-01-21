@@ -45,8 +45,10 @@ public class CipherMsg {
     }
 	
 	/* 加密 */
-	public static String encryptMsg(String message) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
+	public static String encryptMsg(String message) {
 		Properties properties = new Properties();
+		/* 錯誤訊息 */
+		String errorMsg = "";
 		/* 輸出用buffer */
 		final ByteBuffer outputBuffer;
 		/* buffer大小 */
@@ -67,19 +69,36 @@ public class CipherMsg {
             updateBytes = encipher.update(inputBuffer, outputBuffer);
             /* 結束 */
             finalBytes = encipher.doFinal(inputBuffer, outputBuffer);
-        } 
-        /* 準備好做解密 */
-        outputBuffer.flip();
-        byte[] encodedResult = new byte[updateBytes + finalBytes];
-        outputBuffer.duplicate().get(encodedResult);
-        /* 使用Base64編碼 */
-        String encodedMessage = Base64Utils.encodeToString(encodedResult);
-		return encodedMessage;
+            /* 準備好做解密 */
+            outputBuffer.flip();
+            byte[] encodedResult = new byte[updateBytes + finalBytes];
+            outputBuffer.duplicate().get(encodedResult);
+            /* 使用Base64編碼 */
+            String encodedMessage = Base64Utils.encodeToString(encodedResult);
+            /* 正常結束時回傳加密後字串 */
+    		return encodedMessage;
+        } catch (InvalidAlgorithmParameterException iapE) {
+        	errorMsg = "error！"+iapE.getMessage();
+        } catch (InvalidKeyException ikE) {
+        	errorMsg = "error！"+ikE.getMessage();
+        } catch (ShortBufferException sbE) {
+        	errorMsg = "error！"+sbE.getMessage();
+        } catch (BadPaddingException bpE) {
+        	errorMsg = "error！"+bpE.getMessage();
+        } catch (IllegalBlockSizeException ibsE) {
+        	errorMsg = "error！"+ibsE.getMessage();
+        } catch (IOException ioE) {
+        	errorMsg = "error！"+ioE.getMessage();
+        }
+        /* 異常結束時回傳error!開頭的字串 */
+		return errorMsg;
 	}
 	
 	/* 解密 */
-	public static String dencryptMsg(String encodedMessage) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
+	public static String dencryptMsg(String encodedMessage) {
 		Properties properties = new Properties();
+		/* 錯誤訊息 */
+		String errorMsg = "";
 		final ByteBuffer outputBuffer;
         final int bufferSize = 1024;
         ByteBuffer decodedMessage = ByteBuffer.allocateDirect(bufferSize);
@@ -96,8 +115,21 @@ public class CipherMsg {
             decipher.doFinal(outputBuffer, decodedMessage);
             /* 準備好可用 */
             decodedMessage.flip();
+            /* 將ByteBuffer轉回String */
+    		return toBeString(decodedMessage);
+        } catch (InvalidAlgorithmParameterException iapE) {
+        	errorMsg = "error！"+iapE.getMessage();
+        } catch (InvalidKeyException ikE) {
+        	errorMsg = "error！"+ikE.getMessage();
+        } catch (ShortBufferException sbE) {
+        	errorMsg = "error！"+sbE.getMessage();
+        } catch (BadPaddingException bpE) {
+        	errorMsg = "error！"+bpE.getMessage();
+        } catch (IllegalBlockSizeException ibsE) {
+        	errorMsg = "error！"+ibsE.getMessage();
+        } catch (IOException ioE) {
+        	errorMsg = "error！"+ioE.getMessage();
         }
-        /* 將ByteBuffer轉回String */
-		return toBeString(decodedMessage);
+        return errorMsg;
 	}
 }

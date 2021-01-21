@@ -11,11 +11,12 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import util.CipherMsg;
 import webUser.model.WebUserData;
 import webUser.repository.WebUserRepository;
 
 @Repository
-public class WebUserRepositoryImpl implements WebUserRepository {
+public class WebUserRepositoryImplCipher implements WebUserRepository {
 	/* 產生SessionFactory */
 	@Autowired
 	SessionFactory factory;
@@ -466,12 +467,19 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		WebUserData changedUserData = (WebUserData) getSession().get(WebUserData.class, userId);
 		/* 設定狀態 */
 		changedUserData.setStatus(status);
-		/* 更新版本 */
-		changedUserData.setVersion(changedUserData.getVersion() + 1);
-		/* 執行變更 */
-		getSession().saveOrUpdate(changedUserData);
-		quitResult++;
-		return quitResult;
+		/* 進DB前對密碼加密 */
+		String realPassword = CipherMsg.encryptMsg(changedUserData.getPassword());
+		/* 成功 */
+		if (!realPassword.startsWith("error!")) {
+			/* 更新版本 */
+			changedUserData.setVersion(changedUserData.getVersion() + 1);
+			/* 執行變更 */
+			getSession().saveOrUpdate(changedUserData);
+			quitResult++;
+			return quitResult;
+		} 
+		/* 失敗 */
+		return -1;
 	}
 	
 	/* 重設使用者密碼 -1->異常、0->失敗、1->成功 */

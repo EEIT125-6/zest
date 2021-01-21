@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -16,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -392,13 +387,13 @@ public class WebUserController {
 			/* 判定是否為Cookie自動登入 */
 			if (!ckAccount.equals("") && !ckPassword.equals("") && isCookie) {
 				/* 解密Cookie中的密碼 */
-				try {
-					ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
-				} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
-						| BadPaddingException | IllegalBlockSizeException | IOException e) {
-					loginMessage = e.getMessage();
+				ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
+				if (ckFinPassword.startsWith("error!")) {
+					loginMessage = "對Cookie進行解密時失敗";
+					inputCheckResult = loginMessage;
+				} else {					
+					inputCheckResult = doCheckLoginInput(ckAccount, ckFinPassword);
 				}
-				inputCheckResult = doCheckLoginInput(ckAccount, ckFinPassword);
 			/* 如果選擇Cookie登入但已無有效Cookie */
 			} else if (ckAccount.equals("") && ckPassword.equals("") && isCookie) {
 				inputCheckResult = "已無有效的Cookie，無法使用一鍵登入！";
@@ -493,11 +488,15 @@ public class WebUserController {
 								}
 							} else {
 								signInMessage = "您今日已經簽到過了！";
+								
 							}
 						}
 					}
 				} catch (SQLException sqlE) {
 					String loginMessageTmp = sqlE.getMessage();
+					loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
+				} catch (Exception e) {
+					String loginMessageTmp = e.getMessage();
 					loginMessage = (loginMessageTmp.indexOf(":") != -1) ? loginMessageTmp.split(":")[1]: loginMessageTmp;
 				}
 			} 
@@ -561,16 +560,13 @@ public class WebUserController {
 				/* 依據使用者的設定，決定是否要儲存Cookie */
 				if (ckAccount.equals("") && ckPassword.equals("")) {
 					/* 加密原本輸入的密碼 */
-					String finPassword = "";
-					try {
-						finPassword = CipherMsg.encryptMsg(password);
+					String finPassword = CipherMsg.encryptMsg(password);
+					if (finPassword.startsWith("error！")) {
+						loginMessage = "加密密碼時失敗";
+						accountCheckResult = 5;
+					} else {
 						/* 寫入Cookie */
 						doWriteUserCookie(request, response, account, finPassword, remember);
-					} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
-							| BadPaddingException | IllegalBlockSizeException | IOException e) {
-						loginMessage = e.getMessage();
-						e.printStackTrace();
-						accountCheckResult = 5;
 					}
 				} else if (!ckAccount.equals("") && !ckPassword.equals("")) {
 					/* 寫入Cookie */
@@ -709,7 +705,7 @@ public class WebUserController {
 			try {
 				userData.setVersion(userData.getVersion() + 1);
 				userData.setPassword(password);
-				updateResult = wus.updateWebUserPassword(userData);
+				updateResult = wus.updateWebUserData(userData);
 			} catch (SQLException sqlE) {
 				updateResultMessage = sqlE.getMessage();
 				/* 復原操作 */
@@ -824,7 +820,7 @@ public class WebUserController {
 					updatedData.setIconUrl(newIconUrl);
 					updatedData.setVersion(updatedData.getVersion() + 1);
 					/* 執行DB端更新 */
-					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					updateIconUrlResult = (wus.updateWebUserData(updatedData) == 1) ? true : false;
 				} catch (SQLException sqlE) {
 					String getDataMessageTmp = sqlE.getMessage();
 					message = getDataMessageTmp.split(":")[1];
@@ -911,7 +907,7 @@ public class WebUserController {
 					updatedData.setIconUrl("");
 					updatedData.setVersion(updatedData.getVersion() + 1);
 					/* 執行DB端更新 */
-					resetIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					resetIconUrlResult = (wus.updateWebUserData(updatedData) == 1) ? true : false;
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
@@ -1586,7 +1582,7 @@ public class WebUserController {
 				try {
 					updatedData.setIconUrl(newIconUrl);
 					updatedData.setVersion(updatedData.getVersion() + 1);
-					updateIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					updateIconUrlResult = (wus.updateWebUserData(updatedData) == 1) ? true : false;
 				} catch (SQLException sqlE) {
 					String getDataMessageTmp = sqlE.getMessage();
 					message = getDataMessageTmp.split(":")[1];
@@ -1681,7 +1677,7 @@ public class WebUserController {
 					updatedData.setIconUrl("");
 					updatedData.setVersion(updatedData.getVersion() + 1);
 					/* 執行DB端更新 */
-					resetIconUrlResult = (wus.updateWebUserIconUrl(updatedData) == 1) ? true : false;
+					resetIconUrlResult = (wus.updateWebUserData(updatedData) == 1) ? true : false;
 					/* 更新圖片、更新DB都成功 */
 					if (resetIconUrlResult) {
 						/* 刪除舊檔暫存檔 */
