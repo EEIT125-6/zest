@@ -2562,7 +2562,7 @@ public class WebUserController {
 		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
-		} else {
+		} else if (account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			Integer accountCheckResult = -1;
 			/* 調用服務裡的方法 */
 			try {
@@ -2577,7 +2577,10 @@ public class WebUserController {
 					submitMessage = "帳號已存在，請挑選別的名稱作為帳號";
 					inputIsOk = false;
 				}
-			}
+			} 
+		} else {
+			submitMessage = "無效的帳號名稱";
+			inputIsOk = false;
 		}
 		
 		return submitMessage + "," + inputIsOk.toString();
@@ -2627,7 +2630,13 @@ public class WebUserController {
 		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
 			inputIsOk = false;
-		} 
+		} else if (password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
+			submitMessage = "";
+			inputIsOk = true;
+		} else {
+			submitMessage = "無效的輸入密碼";
+			inputIsOk = false;
+		}
 		
 		return submitMessage + "," + inputIsOk.toString();
 	}
