@@ -202,6 +202,8 @@ public class StoreR_Controller {
 			Collections.sort(list, new PriceComparatorA());
 		}else if(priceOrder == -1) {
 			Collections.sort(list, new PriceComparatorD());
+		}else if(priceOrder == 2) {
+			Collections.sort(list, new TimePriceComparatorH());
 		}else {
 			//依照點擊數排序
 			Collections.sort(list, new ClickComparator());	
@@ -285,6 +287,21 @@ class PriceComparatorD implements Comparator{
 			return 0;
 		}else {				
 			return 1;
+		}
+	}
+}
+class TimePriceComparatorH implements Comparator{
+	@Override
+	public int compare(Object o1, Object o2) {
+		StoreBean t1 = (StoreBean) o1;
+		StoreBean t2 = (StoreBean) o2;
+		//由多到少
+		if(t1.getTimestamp().before(t2.getTimestamp())) {
+			return 1;
+		}else if(t1.getTimestamp().equals(t2.getTimestamp())) {
+			return 0;
+		}else {				
+			return -1;
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package xun.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.CascadeType;
 
 import javax.persistence.Entity;
@@ -37,6 +39,16 @@ public class StoreBean {
 	Integer click;
 	Float avgStar;
 	String status;
+	Timestamp timestamp;
+
+	
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")

@@ -7,39 +7,46 @@
                         	橙皮 Zest
                     </a>
                 </div>
-                <ul class="nav">
-                    <li class="nav-item ">
-                        <a class="nav-link" href="<c:url value='/dashborad_order'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>訂單分析</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="<c:url value='/dashborad_user'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>使用者分析</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="<c:url value='/dashborad_comment'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>留言分析</p>
-                        </a>
-                    </li>
-                    <li>
-                         <a class="nav-link" href="<c:url value='/dashborad_book'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>訂位分析</p>
-                        </a>
-                    </li>
+                <ul class = "nav">
+                <c:forEach var = "row" items="${listAllStore}">
+	                	<li class="nav-item">
+	                	<c:url value="#" var="go">
+	                		<c:param name="stId" value="${row.id}"/>
+	                	</c:url>
+	                		<a class="nav-link" href="${go}">
+<!-- 	                			<i class="fas fa-archive"></i><br> -->
+	                			<p> ${row.stname}</p>
+	                		</a>
+	                	</li>
+                </c:forEach>
                 </ul>
+<!--                 <ul class="nav"> -->
+<!--                     <li class="nav-item "> -->
+<%--                         <a class="nav-link" href="<c:url value='#'/>"> --%>
+<!--                             <i class="fas fa-archive"></i> -->
+<!--                             <p>全商家管理</p> -->
+<!--                         </a> -->
+<!--                     </li> -->
+<!--                     <li> -->
+<%--                         <a class="nav-link" href="<c:url value='#'/>"> --%>
+<!--                             <i class="fas fa-archive"></i> -->
+<!--                             <p>全商品管理</p> -->
+<!--                         </a> -->
+<!--                     </li> -->
+<!--                     <li> -->
+<%--                         <a class="nav-link" href="<c:url value='#'/>"> --%>
+<!--                             <i class="fas fa-archive"></i> -->
+<!--                             <p>全會員管理</p> -->
+<!--                         </a> -->
+<!--                     </li> -->
+<!--                 </ul> -->
             </div>
         </div>
         <div class="main-panel">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg " color-on-scroll="500">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#pablo"> Dashboard </a>
+                    <a class="navbar-brand" href="#pablo"> Statistics </a>
                     <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar burger-lines"></span>
                         <span class="navbar-toggler-bar burger-lines"></span>
@@ -60,7 +67,7 @@
 <!--                         </ul> -->
 <!--                     </div> -->
 					<div>
-						<a href="<c:url value='/adminBack'/>" style="text-decoration: none; color:wheat">回目錄</a>
+						<a href="<c:url value='/storeBack'/>" style="text-decoration: none; color:wheat">回目錄</a>
 					</div> 
                 </div>
             </nav>
