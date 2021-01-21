@@ -238,7 +238,8 @@
                 		};
                 		cookieLoginBtn.onclick = function() {
                 			var remember = document.getElementById("remember").checked;
-                			autoLoginCheck(remember);
+                			var isCookie = true;
+                			loginCheck(null, null, null, remember, isCookie);
                 		}
                 	};
                 	
@@ -266,7 +267,7 @@
                                 let inputEmail = res.result.emailAddresses[0].value;
                                 /* id */
                                 var account = inputEmail.substring(0, inputEmail.indexOf("@"));
-                                loginCheck(account, "", id_token, false)
+                                loginCheck(account, "", id_token, false, false)
                             });
                         },
                         function (error) {
@@ -288,11 +289,11 @@
 						if(!checkForm()) {
 	                		alert("帳號或密碼不符規範，請再檢查一次！");
 	                	} else {
-	                		loginCheck(account, password, "", remember);	
+	                		loginCheck(account, password, "", remember, false);	
 	                	}
 	                }
                 	
-                	function autoLoginCheck(remember) {
+                	function loginCheck(account, password, id_token, remember, isCookie) {
 	                	let loginSpan = document.getElementById("loginSpan");
 						let loginStr = "...處理中，請稍後";
 						let loginIsOk = true;
@@ -305,114 +306,15 @@
 	            		if (xhrObject != null) {
 	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
 							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("remember=" + remember);
+							xhrObject.send("account=" + account + "&password=" + password + "&id_token=" + id_token + "&remember=" + remember + "&isCookie=" + isCookie);
 							
 							xhrObject.onreadystatechange = function() {
 								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
 									let typeObject = xhrObject.getResponseHeader("Content-Type");
 									if (typeObject.indexOf("application/json") === 0) {
 										let resultObj = JSON.parse(xhrObject.responseText);
-										if (resultObj.resultCode == 6) {
-											loginStr = resultObj.resultMessage;
-											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if (resultObj.resultCode == 5) {
-											loginStr = resultObj.resultMessage;
-											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if (resultObj.resultCode == 4) {
-											loginStr = resultObj.resultMessage;
-											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if (resultObj.resultCode == 3) {
-											loginStr = resultObj.resultMessage;
-											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if (resultObj.resultCode == 2) {
-											loginStr = "驗證成功！將導向新畫面";
-											loginIsOk = true;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if (resultObj.resultCode == 1) {
-											loginStr = "登入成功！";
-						            		loginIsOk = true;
-						            		let loginSucMsg = resultObj.resultMessage;
-						            		if (resultObj.signInMessage != "") {
-						            			loginSucMsg += "\n" + resultObj.signInMessage;
-						            		} 
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginSucMsg);
-										} else if (resultObj.resultCode == 0) {
-											loginStr = "帳號或密碼錯誤！";
-						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-										} else if(resultObj.resultCode == -1) {
-						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
-						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-						            	} else if(resultObj.resultCode == -2) {
-						            		loginStr = "帳號錯誤！";
-						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
-						            	} else if(resultObj.resultCode == -3) {
-						            		loginStr = "檢查途中遭遇錯誤！";
-						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(resultObj.resultMessage);
-						            	}
-										if (!loginIsOk) {
-						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-						            		loginSpan.style.color = "red";
-						            		loginSpan.style.fontStyle = "italic";
-						            	} else {
-						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
-						            		loginSpan.style.color = "black";
-						            		loginSpan.style.fontStyle = "normal";
-						            		/* 跳轉 */
-						            		window.location.href = resultObj.nextPath;
-						            	}
-									} else {
-										loginStr = "發生錯誤，無法執行檢查";
-						            	loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
-						            	loginSpan.style.color = "red";
-					            		loginSpan.style.fontStyle = "italic";
-					            		/* 顯示彈窗訊息 */
-					            		alert(loginStr);
-									}
-								} 
-							};
-	            		} else {
-							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
-						}
-                	}
-                	
-                	function loginCheck(account, password, id_token, remember) {
-	                	let loginSpan = document.getElementById("loginSpan");
-						let loginStr = "...處理中，請稍後";
-						let loginIsOk = true;
-						
-						loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
-	            		loginSpan.style.color = "black";
-	            		loginSpan.style.fontStyle = "normal";
-	            		
-	            		let xhrObject = new XMLHttpRequest();
-	            		if (xhrObject != null) {
-	            			xhrObject.open("POST", "<c:url value='/controller/WebUserLogin' />", true);
-							xhrObject.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhrObject.send("account=" + account + "&password=" + password + "&id_token=" + id_token + "&remember=" + remember);
-							
-							xhrObject.onreadystatechange = function() {
-								if (xhrObject.readyState === 4 && xhrObject.status === 200) {
-									let typeObject = xhrObject.getResponseHeader("Content-Type");
-									if (typeObject.indexOf("application/json") === 0) {
-										let resultObj = JSON.parse(xhrObject.responseText);
+										/* -3異常、-2帳號錯、-1帳號停用、0->密碼錯、
+										1->成功、2->第三方登入成功、3->第三方登入失敗、4->單一登入異常、5->Cookie寫入失敗、6->已無有效的Cookie */
 										if (resultObj.resultCode == 6) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
