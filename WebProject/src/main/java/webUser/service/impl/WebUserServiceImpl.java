@@ -61,21 +61,21 @@ public class WebUserServiceImpl implements WebUserService {
 	public WebUserData checkRecoveryInfo(String account, String email, String phone, Date birth) throws SQLException {
 		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, email, phone, birth);
 		/* 如果為Google第三方登入，則不允許進行帳號重設 */
-		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, email, phone, birth);
+		return (requestedUserData.getPassword() == null) ? null : requestedUserData;
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException {
 		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
 		/* 如果為Google第三方登入，則不允許進行帳號重設 */
-		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
+		return (requestedUserData.getPassword() == null) ? null : requestedUserData;
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException {
 		WebUserData requestedUserData = webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
 		/* 如果為Google第三方登入，則不允許進行帳號重設 */
-		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
+		return (requestedUserData.getPassword() == null) ? null : requestedUserData;
 	}
 	
 	@Override
@@ -124,10 +124,9 @@ public class WebUserServiceImpl implements WebUserService {
 			checkLoginResult++;
 		}
 		
-		/* 檢查密碼 */
 		checkPasswordResult = webUserDAO.checkPassword(inputAccount, inputPassword);
 		/* 密碼錯誤 */
-		if (checkPasswordResult != 1) {
+		if (checkPasswordResult == 0) {
 			throw new SQLException("密碼錯誤，請檢查之後再次輸入");
 		} else {
 			checkLoginResult++;
@@ -171,7 +170,7 @@ public class WebUserServiceImpl implements WebUserService {
 	
 	@Override
 	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
-		return webUserDAO.runWebUserSignIn(userData);
+		return webUserDAO.updateWebUserData(userData);
 	}
 	
 	@Override
@@ -208,19 +207,9 @@ public class WebUserServiceImpl implements WebUserService {
 	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException {
 		return webUserDAO.getTotalUserRecordCounts(selectedParameters, avPage);
 	}
-
-	@Override
-	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
-		return webUserDAO.updateWebUserData(updatedUserData);
-	}
 	
 	@Override
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException {
-		return webUserDAO.updateWebUserData(updatedUserData);
-	}
-
-	@Override
-	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
 		return webUserDAO.updateWebUserData(updatedUserData);
 	}
 	

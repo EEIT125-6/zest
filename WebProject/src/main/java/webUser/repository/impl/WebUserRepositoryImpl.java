@@ -125,16 +125,6 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return (list.size() > 0) ? 1 : 0;
 	}
 	
-	/* 執行簽到 -1->異常、0->錯誤、1->正確 */
-	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
-		/* 變數宣告 */
-		Integer updateResult = 0;
-		/* 取得當前Session以執行變更 */
-		getSession().saveOrUpdate(userData);
-		updateResult++;
-		return updateResult;
-	}
-	
 	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
 	@SuppressWarnings("unchecked")
 	@Override
