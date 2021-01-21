@@ -361,6 +361,7 @@ public class WebUserController {
 			@RequestParam(value = "password", required = false, defaultValue="") String password,
 			@RequestParam(value = "id_token", required = false, defaultValue="") String id_token,
 			@RequestParam(value = "remember", required = false, defaultValue="false") Boolean remember,
+			@RequestParam(value = "isCookie") Boolean isCookie,
 			@CookieValue(value = "ckAccount", required = false, defaultValue="") String ckAccount,
 			@CookieValue(value = "ckPassword", required = false, defaultValue="") String ckPassword,
 			@CookieValue(value = "ckRemember", required = false, defaultValue="false") Boolean ckRemember
@@ -383,17 +384,29 @@ public class WebUserController {
 		Integer accountCheckResult = -3;
 		String loginMessage = "";
 		String signInMessage = "";
-		
-		WebUserData userFullData = new WebUserData();
 		String ckFinPassword = "";
 		
+		WebUserData userFullData = new WebUserData();
+		
 		if (loginMessage.equals("")) {
+			/* 判定是否為Cookie自動登入 */
+			if (!ckAccount.equals("") && !ckPassword.equals("") && isCookie) {
+				/* 解密Cookie中的密碼 */
+				try {
+					ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
+				} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
+						| BadPaddingException | IllegalBlockSizeException | IOException e) {
+					loginMessage = e.getMessage();
+				}
+				inputCheckResult = doCheckLoginInput(ckAccount, ckFinPassword);
+			/* 如果選擇Cookie登入但已無有效Cookie */
+			} else if (ckAccount.equals("") && ckPassword.equals("") && isCookie) {
+				inputCheckResult = "已無有效的Cookie，無法使用一鍵登入！";
+				loginMessage = inputCheckResult;
+				accountCheckResult = 6;
 			/* 判定是否為第三方登入，非第三方需要進行輸入檢查 */
-			if (!id_token.equals("") && password.equals("")) {
+			} else if (!id_token.equals("") && password.equals("")) {
 				inputCheckResult = "";
-				/* 判定是否為Cookie自動登入 */
-			} else if (account.equals("") && password.equals("") && !ckAccount.equals("") && !ckPassword.equals("") && ckRemember) {
-				inputCheckResult = doCheckLoginInput(ckAccount, ckPassword);
 			} else {
 				/* 預防性後端檢查，正常時回傳1 */
 				inputCheckResult = doCheckLoginInput(account, password);
@@ -401,30 +414,24 @@ public class WebUserController {
 			if (inputCheckResult.equals("")) {
 				/* 調用服務裡的方法 */
 				try {
+					/* Cookie登入 */
+					if (!ckAccount.isEmpty() && !ckPassword.isEmpty()) {
+						accountCheckResult = wus.checkWebUserLogin(ckAccount, ckFinPassword);
 					/* 第三方登入的使用者未註冊過時 */
-					if (!id_token.equals("") && wus.checkAccountExist(account) == 0) {
+					} else if (!id_token.equals("") && wus.checkAccountExist(account) == 0) {
 						accountCheckResult = 2;
 						/* 導向第三方登入用註冊頁 */
 						nextPath = request.getContextPath() + "/WebUserExtraRegisterForm";
 						/* 將登入時使用的資訊送往註冊頁 */
 						model.addAttribute("id_token",id_token);
 						model.addAttribute("extraAccount",account);
-						/* 第三方登入的使用者已註冊過時，排除碰撞的情況 */
+					/* 第三方登入的使用者已註冊過時，排除碰撞的情況 */
 					} else if (!id_token.equals("") && wus.checkAccountExist(account) == 1 && wus.getWebUserData(account).getPassword() != null) {
 						accountCheckResult = 3;
 						loginMessage = "本系統已有與你帳號同名的使用者帳號，建議您可以考慮改建立一個專屬帳號";
-						/* 一般登入使用者或已註冊的第三方登入 */
+					/* 一般登入使用者或已註冊的第三方登入 */
 					} else {
-						if (!ckAccount.isEmpty() && !ckPassword.isEmpty()) {
-							try {
-								ckFinPassword = CipherMsg.dencryptMsg(ckPassword);
-							} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
-									| BadPaddingException | IllegalBlockSizeException | IOException e) {
-								loginMessage = e.getMessage();
-							}
-							/* 檢查Cookie登入 */
-							accountCheckResult = wus.checkWebUserLogin(ckAccount, ckFinPassword);
-						} else if (id_token.equals("")) {
+						if (id_token.equals("")) {
 							/* 檢查正常登入 */
 							accountCheckResult = wus.checkWebUserLogin(account, password);
 						} else {
@@ -434,7 +441,7 @@ public class WebUserController {
 					}
 					if (accountCheckResult != 2 && accountCheckResult != 3) {
 						/* 存取使用者個人資料 */
-						userFullData = (!ckAccount.isEmpty() && !ckFinPassword.isEmpty()) ? wus.getWebUserData(ckAccount) : wus.getWebUserData(account);
+						userFullData = (ckAccount.equals("")) ? wus.getWebUserData(account) : wus.getWebUserData(ckAccount);
 						if (userFullData != null) {
 							/* 取出上次簽到日備用 */
 							Date oldSignIn = userFullData.getSignIn();
@@ -504,32 +511,31 @@ public class WebUserController {
 				singleLogin = true;
 				/* 放入存所有使用者資料的map */
 				Map<String, Object> zeroUserMap = new HashMap<>(); 
-				if (ckAccount.equals("")) {
-					/* 存Session */
+				/* 存Session */
+				if (ckAccount.equals("")) {					
 					zeroUserMap.put(account, session);
 				} else {
-					/* 存Session */
 					zeroUserMap.put(ckAccount, session);
 				}
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", zeroUserMap);
 			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
-			} else if (userMap != null && (userMap.get(account) == null) || userMap.get(ckAccount) == null) {
+			} else if (userMap != null && userMap.get(account) == null) {
 				singleLogin = true;
-				if (ckAccount.equals("")) {
-					/* 放入存所有使用者資料的map */
-					userMap.put(account, session);
-				} else {
-					/* 放入存所有使用者資料的map */
-					userMap.put(ckAccount, session);
-				}
+				/* 放入存所有使用者資料的map */
+				userMap.put(account, session);
+				/* 將帳號、對應的Session物件存入servletContext */
+				context.setAttribute("userMap", userMap);
+			} else if (userMap != null && userMap.get(ckAccount) == null) {
+				singleLogin = true;
+				/* 放入存所有使用者資料的map */
+				userMap.put(ckAccount, session);
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", userMap);
 			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
-			} else if (userMap != null && (userMap.get(account) == null) || userMap.get(ckAccount) == null) {
+			} else if (userMap != null && userMap.get(account) == null) {
 				singleLogin = true;
-				HttpSession oldSession = (ckAccount.equals("")) ? (HttpSession) userMap.get(account) : (HttpSession) userMap.get(ckAccount);
-				System.out.println("測試："+oldSession != null);
+				HttpSession oldSession = (HttpSession) userMap.get(account);
 				if (oldSession != null) {
 					/* 清除舊連線 */
 					oldSession.invalidate();
@@ -538,8 +544,19 @@ public class WebUserController {
 				userMap.put(account, session);
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", userMap);
+			} else if (userMap != null && userMap.get(ckAccount) == null) {
+				singleLogin = true;
+				HttpSession oldSession = (HttpSession) userMap.get(ckAccount);
+				if (oldSession != null) {
+					/* 清除舊連線 */
+					oldSession.invalidate();
+				} 
+				/* 直接放入新Session物件取代舊的 */
+				userMap.put(ckAccount, session);
+				/* 將帳號、對應的Session物件存入servletContext */
+				context.setAttribute("userMap", userMap);
 			} else {
-				accountCheckResult = 5;
+				accountCheckResult = 4;
 				singleLogin = false;
 				loginMessage = "發生異常，無法登入！";
 			}
@@ -551,24 +568,26 @@ public class WebUserController {
 				/* 清空timeOut物件 */
 				model.addAttribute("timeOut", null);
 				/* 依據使用者的設定，決定是否要儲存Cookie */
-				if (!ckAccount.equals("") && !ckFinPassword.equals("")) {
-					doWriteUserCookie(request, response, ckAccount, ckFinPassword, remember);
-					if (remember) {
-						model.addAttribute("remember", remember);
-					} else {
-						model.addAttribute("remember", ckRemember);
-					}
-				} else if (ckAccount.equals("") && (ckFinPassword.equals("") || ckPassword.equals(""))) {
+				if (ckAccount.equals("") && ckPassword.equals("")) {
 					/* 加密原本輸入的密碼 */
 					String finPassword = "";
 					try {
 						finPassword = CipherMsg.encryptMsg(password);
+						/* 寫入Cookie */
 						doWriteUserCookie(request, response, account, finPassword, remember);
 					} catch (InvalidKeyException | InvalidAlgorithmParameterException | ShortBufferException
 							| BadPaddingException | IllegalBlockSizeException | IOException e) {
 						loginMessage = e.getMessage();
 						e.printStackTrace();
-						accountCheckResult = 6;
+						accountCheckResult = 5;
+					}
+				} else if (!ckAccount.equals("") && !ckPassword.equals("")) {
+					/* 寫入Cookie */
+					doWriteUserCookie(request, response, ckAccount, ckFinPassword, remember);
+					if (remember) {
+						model.addAttribute("remember", remember);
+					} else {
+						model.addAttribute("remember", ckRemember);
 					}
 				}
 			}
@@ -1020,15 +1039,15 @@ public class WebUserController {
 					selfData.getPassword(), 
 					newFirstName, 
 					newLastName, 
-					newNickname.replace('<', ' ').replace('>', ' ').trim(),
+					newNickname.trim(),
 					selfData.getBirth(),
 					fervor,
-					newEmail.replace('<', ' ').replace('>', ' ').trim(),
+					newEmail.trim(),
 					newPhone,
 					selfData.getJoinDate(),
-					newAddr0.replace('<', ' ').replace('>', ' ').trim(),
-					newAddr1.replace('<', ' ').replace('>', ' ').trim(),
-					newAddr2.replace('<', ' ').replace('>', ' ').trim(),
+					newAddr0.trim(),
+					newAddr1.trim(),
+					newAddr2.trim(),
 					selfData.getZest(),
 					selfData.getVersion() + 1,
 					selfData.getStatus(),
@@ -1170,15 +1189,15 @@ public class WebUserController {
 			}
 			
 			if (lv != -1) {	
-				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
-								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+				selectedParameters = selectedAccount.trim() + ":" 
+								+ selectedNickname.trim() + ":" 
 								+ selectedFervor + ":" 
 								+ selectedLocationCode + ":" 
 								+ String.valueOf(lv) + ":" 
 								+ status + ":?:-2";
 			} else {
-				selectedParameters = selectedAccount.replace('<', ' ').replace('>', ' ').trim() + ":" 
-								+ selectedNickname.replace('<', ' ').replace('>', ' ').trim() + ":" 
+				selectedParameters = selectedAccount.trim() + ":" 
+								+ selectedNickname.trim() + ":" 
 								+ selectedFervor + ":" 
 								+ selectedLocationCode + ":" 
 								+ String.valueOf(lv) + ":" 
@@ -1809,15 +1828,15 @@ public class WebUserController {
 				newPassword, 
 				newFirstName, 
 				newLastName, 
-				newNickname.replace('<', ' ').replace('>', ' ').trim(),
+				newNickname.trim(),
 				newBirth,
 				fervor,
-				newEmail.replace('<', ' ').replace('>', ' ').trim(),
+				newEmail.trim(),
 				newPhone,
 				managedUserData.getJoinDate(),
-				newAddr0.replace('<', ' ').replace('>', ' ').trim(),
-				newAddr1.replace('<', ' ').replace('>', ' ').trim(),
-				newAddr2.replace('<', ' ').replace('>', ' ').trim(),
+				newAddr0.trim(),
+				newAddr1.trim(),
+				newAddr2.trim(),
 				managedUserData.getZest(),
 				managedUserData.getVersion() + 1,
 				managedUserData.getStatus(),
@@ -2537,6 +2556,9 @@ public class WebUserController {
 		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
 			submitMessage = "帳號不可以包含問號";
 			inputIsOk = false;
+		} else if (account.indexOf("<") != -1 || account.indexOf(">") != -1) {
+			submitMessage = "帳號不可以包含<、>";
+			inputIsOk = false;
 		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "帳號不符合格式";
 			inputIsOk = false;
@@ -2574,6 +2596,33 @@ public class WebUserController {
 			inputIsOk = false;
 		} else if (password.matches("[1-9]{1}.")) {
 			submitMessage = "密碼不可以數字開頭";
+			inputIsOk = false;
+		} else if (password.indexOf("&") != -1) {
+			submitMessage = "密碼不可以包含&符號";
+			inputIsOk = false;
+		} else if (password.indexOf("=") != -1) {
+			submitMessage = "密碼不可以包含等號";
+			inputIsOk = false;
+		} else if (password.indexOf("_") != -1) {
+			submitMessage = "密碼不可以包含底線";
+			inputIsOk = false;
+		} else if (password.indexOf("-") != -1) {
+			submitMessage = "密碼不可以包含破折號";
+			inputIsOk = false;
+		} else if (password.indexOf("+") != -1) {
+			submitMessage = "密碼不可以包含加號";
+			inputIsOk = false;
+		} else if (password.indexOf(",") != -1 || password.indexOf("，") != -1) {
+			submitMessage = "密碼不可以包含逗號";
+			inputIsOk = false;
+		} else if (password.indexOf(".") != -1 || password.indexOf("。") != -1) {
+			submitMessage = "密碼不可以包含句號";
+			inputIsOk = false;
+		} else if (password.indexOf("?") != -1 || password.indexOf("？") != -1) {
+			submitMessage = "密碼不可以包含問號";
+			inputIsOk = false;
+		} else if (password.indexOf("<") != -1 || password.indexOf(">") != -1) {
+			submitMessage = "密碼不可以包含<、>";
 			inputIsOk = false;
 		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			submitMessage = "密碼不符合格式";
@@ -2980,19 +3029,19 @@ public class WebUserController {
 			/* 建立物件 */
 			reg_webUser = new WebUserData(
 					"", 
-					account, 
-					password, 
+					account.trim(), 
+					password.trim(), 
 					firstName, 
 					lastName, 
-					nickname.replace('<', ' ').replace('>', ' ').trim(), 
+					nickname.trim(), 
 					birth, 
 					"",
-					email.replace('<', ' ').replace('>', ' ').trim(), 
+					email.trim(), 
 					phone, 
 					Date.valueOf(today), 
-					addr0.replace('<', ' ').replace('>', ' ').trim(), 
-					addr1.replace('<', ' ').replace('>', ' ').trim(), 
-					addr2.replace('<', ' ').replace('>', ' ').trim(), 
+					addr0.trim(), 
+					addr1.trim(), 
+					addr2.trim(), 
 					BigDecimal.ZERO, 
 					0, 
 					"inactive", 
@@ -3010,15 +3059,15 @@ public class WebUserController {
 					null, 
 					firstName, 
 					lastName, 
-					nickname.replace('<', ' ').replace('>', ' ').trim(), 
+					nickname.trim(), 
 					birth, 
 					"",
-					email.replace('<', ' ').replace('>', ' ').trim(), 
+					email.trim(), 
 					phone, 
 					Date.valueOf(today), 
-					addr0.replace('<', ' ').replace('>', ' ').trim(), 
-					addr1.replace('<', ' ').replace('>', ' ').trim(), 
-					addr2.replace('<', ' ').replace('>', ' ').trim(), 
+					addr0.trim(), 
+					addr1.trim(), 
+					addr2.trim(), 
 					BigDecimal.ZERO, 
 					0, 
 					"inactive", 
@@ -3304,9 +3353,12 @@ public class WebUserController {
 		Cookie cookieAccount = new Cookie("ckAccount", account);
 		Cookie cookiePassword = new Cookie("ckPassword", password);
 		Cookie cookieRemember = new Cookie("ckRemember", remember.toString());
-		cookieAccount.setMaxAge(0);       
-		cookiePassword.setMaxAge(0);       
-		cookieRemember.setMaxAge(0);       
+		cookieAccount.setMaxAge(0);
+		cookieAccount.setPath(request.getContextPath());
+		cookiePassword.setMaxAge(0);
+		cookiePassword.setPath(request.getContextPath());
+		cookieRemember.setMaxAge(0);
+		cookieRemember.setPath(request.getContextPath());
 		response.addCookie(cookieAccount);
 		response.addCookie(cookiePassword);
 		response.addCookie(cookieRemember);

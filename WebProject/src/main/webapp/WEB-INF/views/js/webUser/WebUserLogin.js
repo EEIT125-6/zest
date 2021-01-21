@@ -25,6 +25,33 @@ function checkAccountName() {
 	} else if (accountObjValue.charAt(0).match(startCharReg)) {
 		accountStr = "帳號不可以數字開頭";
 		accountIsOk = false;
+	} else if (accountObjValue.indexOf("&") != -1) {
+		accountStr = "帳號不可以包含&符號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("=") != -1) {
+		accountStr = "帳號不可以包含等號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("_") != -1) {
+		accountStr = "帳號不可以包含底線";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("-") != -1) {
+		accountStr = "帳號不可以包含破折號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("+") != -1) {
+		accountStr = "帳號不可以包含加號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf(",") != -1 || accountObjValue.indexOf("，") != -1) {
+		accountStr = "帳號不可以包含逗號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf(".") != -1 || accountObjValue.indexOf("。") != -1) {
+		accountStr = "帳號不可以包含句號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("?") != -1 || accountObjValue.indexOf("？") != -1) {
+		accountStr = "帳號不可以包含問號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("<") != -1 || accountObjValue.indexOf(">") != -1) {
+		accountStr = "帳號不可以包含<、>";
+		accountIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;
 
@@ -65,6 +92,33 @@ function checkAccountPassword() {
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("&") != -1) {
+		passwordStr = "密碼不可以包含&符號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("=") != -1) {
+		passwordStr = "密碼不可以包含等號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("_") != -1) {
+		passwordStr = "密碼不可以包含底線";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("-") != -1) {
+		passwordStr = "密碼不可以包含破折號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("+") != -1) {
+		passwordStr = "密碼不可以包含加號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(",") != -1 || passwordObjValue.indexOf("，") != -1) {
+		passwordStr = "密碼不可以包含逗號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf(".") != -1 || passwordObjValue.indexOf("。") != -1) {
+		passwordStr = "密碼不可以包含句號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
+		passwordStr = "密碼不可以包含問號";
+		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("<") != -1 || passwordObjValue.indexOf(">") != -1) {
+		passwordStr = "密碼不可以包含<、>";
 		passwordIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5,29}/;

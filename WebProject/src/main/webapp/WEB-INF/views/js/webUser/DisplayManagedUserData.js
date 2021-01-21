@@ -192,6 +192,9 @@ function checkPassword() {
 	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
 		passwordStr = "密碼不可以包含問號";
 		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("<") != -1 || passwordObjValue.indexOf(">") != -1) {
+		passwordStr = "密碼不可以包含<、>";
+		passwordIsOk = false;
 	} else if (passwordObjValue == oldPasswordObjValue) {
 		passwordStr = "";
 		passwordIsOk = true;
@@ -339,6 +342,9 @@ function checkNickname() {
 		}
 	} else if (nicknameObjValue.length > 25) {
 		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
+	} else if (nicknameObjValue.indexOf("<") != -1 || nicknameObjValue.indexOf(">") != -1) {
+		nicknameStr = "稱呼不可以包含<、>";
 		nicknameIsOk = false;
 	} else if (nicknameObjValue == oldNicknameObjValue) {
 		nicknameStr = "";
@@ -521,6 +527,9 @@ function checkEmail() {
 	} else if(emailObjValue.indexOf("@") == emailObjValue.length - 1 || emailObjValue.lastIndexOf(".") == emailObjValue.length - 1) {
 		emailStr = "信箱資訊格式錯誤";
 		emailIsOk = false;
+	} else if (emailObjValue.indexOf("<") != -1 || emailObjValue.indexOf(">") != -1) {
+		emailStr = "信箱資訊不可以包含<、>";
+		emailIsOk = false;
 	} else if (emailObjValue == oldEmailObjValue) {
 		emailStr = "信箱資訊已填寫完成";
 		emailIsOk = true;
@@ -680,6 +689,9 @@ function checkAddr0() {
 	} else if ((addr0ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr2ObjValue) || (addr0ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr1ObjValue)) {
 		addr0Str = "生活地點重複填寫";
 		addr0IsOk = false;
+	} else if (addr0ObjValue.indexOf("<") != -1 || addr0ObjValue.indexOf(">") != -1) {
+		addr0Str = "生活地點一不可以包含<、>";
+		addr0IsOk = false;
 	} else if (addr0ObjValue == oldAddr0ObjValue) {
 		addr0Str = "";
 		addr0IsOk = true;
@@ -722,6 +734,9 @@ function checkAddr1() {
 	} else if ((addr1ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr2ObjValue) || (addr1ObjValue == oldAddr2ObjValue && oldAddr2ObjValue == addr0ObjValue)) {
 		addr1Str = "生活地點重複填寫";
 		addr1IsOk = false;
+	} else if (addr1ObjValue.indexOf("<") != -1 || addr1ObjValue.indexOf(">") != -1) {
+		addr1Str = "生活地點二不可以包含<、>";
+		addr1IsOk = false;
 	} else if (addr1ObjValue == oldAddr1ObjValue) {
 		addr1Str = "";
 		addr1IsOk = true;
@@ -763,6 +778,9 @@ function checkAddr2() {
 		addr2IsOk = false;
 	} else if ((addr2ObjValue == oldAddr0ObjValue && oldAddr0ObjValue == addr1ObjValue) || (addr2ObjValue == oldAddr1ObjValue && oldAddr1ObjValue == addr0ObjValue)) {
 		addr2Str = "生活地點重複填寫";
+		addr2IsOk = false;
+	} else if (addr2ObjValue.indexOf("<") != -1 || addr2ObjValue.indexOf(">") != -1) {
+		addr2Str = "生活地點三不可以包含<、>";
 		addr2IsOk = false;
 	} else if (addr2ObjValue == oldAddr2ObjValue) {
 		addr2Str = "";

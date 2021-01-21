@@ -424,9 +424,10 @@ public class dashborad_Controller {
 		return map;
 	}
 	
-	/* 查詢個人花費金額，按年齡分組(15歲一個區間，從0開始逐個區間+1) */
+	/* 查詢個人花費金額，按年齡分組(15歲一個區間，從0開始逐個區間+1，第一個為0~15) */
 	@PostMapping(value = "/controller/usrAvgCostByAge", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> getUserAvgCostByAge(Model model) {
+		Map<String, Object> map = new HashMap<>();
 		/* 年紀Map */
 		Map<String, Object> ageMap = new HashMap<>();
 		/* 使用者Map */
@@ -444,13 +445,6 @@ public class dashborad_Controller {
 				WebUserData user = cartData.getProduct_User();
 				/* 取出購買產品的總價 */
 				Integer price = cartData.getProduct_Info().getProduct_price() * Integer.parseInt(cartData.getProduct_Quantity());
-				/* 放入userMap */
-				if (userMap.get(user.getAccount()) == null) {
-					userMap.put(user.getAccount(), price);
-				} else {
-					int tmp = (int) userMap.get(user.getAccount());
-					userMap.put(user.getAccount(), tmp + price);
-				}
 				/* 算出年齡 */
 				Integer age = caculateAge(user.getBirth());
 				/* 進行區間分類 */
@@ -462,12 +456,27 @@ public class dashborad_Controller {
 					int tmp = (int) ageMap.get(ageRange.toString());
 					ageMap.put(ageRange.toString(), tmp + price);
 				}
+				/* 放入userMap */
+				if (userMap.get(ageRange.toString()) == null) {
+					userMap.put(ageRange.toString(), 1);
+				} else {
+					int tmp = (int) userMap.get(ageRange.toString());
+					userMap.put(ageRange.toString(), tmp + 1);
+				}
+				/* 計算平均 */
+				String realRange = String.valueOf(ageRange*15 + 0) + "~" + String.valueOf(ageRange*15 + 14);
+				if (map.get(realRange) == null) {
+					map.put(realRange, price);
+				} else {
+					int totalCost = (int) map.get(realRange) * ((int) userMap.get(ageRange.toString()) - 1);
+					map.put(realRange, totalCost / (int) userMap.get(ageRange.toString()));
+				}
 			}
 		}
 		message = (message.equals("")) ? "成功" : message;
 		
-		ageMap.put("message", message);
-		return ageMap;
+		map.put("message", message);
+		return map;
 	}
 	
 	/* 驗證身分 */
