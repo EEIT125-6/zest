@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import util.CipherMsg;
 import webUser.model.WebUserData;
 import webUser.repository.WebUserRepository;
-import webUser.service.WebUserService;
+import webUser.service.WebUserServiceCipher;
 
 @Transactional
 @Service
-public class WebUserServiceImplCipher implements WebUserService {
+public class WebUserServiceImplCipher implements WebUserServiceCipher {
 	/* 產生實作物件 */
 	@Autowired
 	WebUserRepository webUserDAO;

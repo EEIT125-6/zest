@@ -13,10 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import util.CipherMsg;
 import webUser.model.WebUserData;
-import webUser.repository.WebUserRepository;
+import webUser.repository.WebUserRepositoryCipher;
 
 @Repository
-public class WebUserRepositoryImplCipher implements WebUserRepository {
+public class WebUserRepositoryImplCipher implements WebUserRepositoryCipher {
 	/* 產生SessionFactory */
 	@Autowired
 	SessionFactory factory;
