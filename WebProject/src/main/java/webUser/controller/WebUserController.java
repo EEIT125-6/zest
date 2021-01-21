@@ -520,39 +520,30 @@ public class WebUserController {
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", zeroUserMap);
 			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
-			} else if (userMap != null && userMap.get(account) == null) {
+			} else if (userMap != null && (userMap.get(account) == null) || (userMap.get(ckAccount) == null && !ckAccount.equals(""))) {
 				singleLogin = true;
 				/* 放入存所有使用者資料的map */
-				userMap.put(account, session);
-				/* 將帳號、對應的Session物件存入servletContext */
-				context.setAttribute("userMap", userMap);
-			} else if (userMap != null && userMap.get(ckAccount) == null) {
-				singleLogin = true;
-				/* 放入存所有使用者資料的map */
-				userMap.put(ckAccount, session);
+				if (ckAccount.equals("")) {
+					userMap.put(account, session);
+				} else {
+					userMap.put(ckAccount, session);
+				}
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", userMap);
 			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
-			} else if (userMap != null && userMap.get(account) == null) {
+			} else if (userMap != null && (userMap.get(account) != null) || (userMap.get(ckAccount) != null && !ckAccount.equals(""))) {
 				singleLogin = true;
-				HttpSession oldSession = (HttpSession) userMap.get(account);
+				HttpSession oldSession = (ckAccount.equals("")) ? (HttpSession) userMap.get(account) : (HttpSession) userMap.get(ckAccount);
 				if (oldSession != null) {
 					/* 清除舊連線 */
 					oldSession.invalidate();
 				} 
 				/* 直接放入新Session物件取代舊的 */
-				userMap.put(account, session);
-				/* 將帳號、對應的Session物件存入servletContext */
-				context.setAttribute("userMap", userMap);
-			} else if (userMap != null && userMap.get(ckAccount) == null) {
-				singleLogin = true;
-				HttpSession oldSession = (HttpSession) userMap.get(ckAccount);
-				if (oldSession != null) {
-					/* 清除舊連線 */
-					oldSession.invalidate();
-				} 
-				/* 直接放入新Session物件取代舊的 */
-				userMap.put(ckAccount, session);
+				if (ckAccount.equals("")) {
+					userMap.put(account, session);
+				} else {
+					userMap.put(ckAccount, session);
+				}
 				/* 將帳號、對應的Session物件存入servletContext */
 				context.setAttribute("userMap", userMap);
 			} else {
