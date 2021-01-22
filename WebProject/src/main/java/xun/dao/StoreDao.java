@@ -2,6 +2,7 @@ package xun.dao;
 
 import java.util.List;
 
+import webUser.model.WebUserData;
 import xun.model.BoardBean;
 import xun.model.StoreBean;
 import xun.model.ProductInfoBean;
@@ -70,4 +71,6 @@ public interface StoreDao {
 	
 	/* 取得全部商店列表 By George017 2021/01/19 */
 	List<StoreBean> getAllStore();
+	
+	List<StoreBean> getMemberAllStore(WebUserData webUserData);
 }

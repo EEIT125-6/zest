@@ -319,10 +319,11 @@ a.mobile-show {
          	 	<p>您確定要下架嗎</p>
         	</div>
         	<div class="modal-footer">
-				<form action="<c:url value = '/OffShelfStore'/>" method="post" style="display:inline">
+				<form action="<c:url value = '/OffShelfStore'/>" method="post" style="display:inline" id = "sbmaform">
+<%-- 				<form action="<c:url value = '/'/>" method="get" style="display:inline"  id = "sbmaform"> --%>
 					<input type="hidden" name="id" value="${id}">
-					<input id = "sweetalert" type="submit" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
-<!-- 					<input id = "sweetalert" type="button" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
+					<input id = "sweetalert" type="button" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+<!-- 					<input id = "sweetalert" type="submit" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
 				</form>
 	        </div>
       </div>
@@ -331,8 +332,29 @@ a.mobile-show {
 <!-- -----------------------------------Model----------------------------			 -->
 <script >
 	document.getElementById("sweetalert").addEventListener("click",function(){
-		  swal("下架 ! ", "已經成功下架商家 ! ", "success");
-		});
+	  swal("下架 ! ", "已經成功下架商家 ! ", "success");
+	  setTimeout("mooy()",1500);
+	  
+	});
+	function mooy(){
+		sbmaform.submit();
+	}
+// 			$(function(){
+// 				$('#sbmaform').delay(3000).submit();
+// 			});
+// 	function waitAlertSubmit(){
+// 		return true;
+// 	}
+	
+// 	document.getElementById("sweetalert").addEventListener("click",
+// 			function(){
+// 		swal("下架 ! ", "已經成功下架商家 ! ", "success");
+// 				setTimeout(
+// 						function waitAlertSubmit(){
+// 							return true;
+// 						}, 3000)
+// 			}
+// 	);
 </script>
 <%--             	<%if(true){ %> --%>
 			<c:url value="/Update" var="EDITURL">
@@ -817,6 +839,7 @@ function initMap() {
 				<c:choose>
 					<c:when test="${userFullData.userId == userId && userId != null}">
 					<c:forEach var="row1" items="${Products}">
+						
 						<div class="col-sm-4">
 <!-- 					       style="background: url('Images/LOGO1-removebg-preview.png')" -->
 								    <div class="card" style="background:#f28633;">
@@ -913,6 +936,7 @@ function initMap() {
     </div>
 </div>
 <!-- ----------------------------------------上架Model----------------------------			 -->
+					
 		          </c:forEach>
 		         <script type="text/javascript">
 		         	$(".pds").click(function(){

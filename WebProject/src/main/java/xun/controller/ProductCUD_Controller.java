@@ -162,7 +162,7 @@ public class ProductCUD_Controller {
 //			if(productInfoBean.getProduct_picture().isEmpty())
 			productInfoBean.setProduct_picture(null);
 			ps.updateProduct(productInfoBean);
-			System.out.println("空ㄉ");
+			System.out.println("空的");
 //			System.out.println(productInfoBean);
 //			else {
 //				
@@ -244,14 +244,14 @@ public class ProductCUD_Controller {
 	public @ResponseBody void productOffShelf(
 			@RequestParam Integer productId
 			) {
-		System.out.println("尼瑪有傳到下架");
+		System.out.println("有傳到下架");
 		ps.productOffShelf(productId);
 	}
 	@PostMapping(value="/productReOnShelfAjax",produces = "application/json; charset=utf-8")
 	public @ResponseBody void productReOnShelf(
 			@RequestParam Integer productId
 			) {
-		System.out.println("尼瑪有傳到上架");
+		System.out.println("有傳到上架");
 		ps.productReOnShelf(productId);
 	}
 //	設置商家價格區間

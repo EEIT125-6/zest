@@ -24,4 +24,6 @@ public interface ProductDao {
 	void productOffShelf(Integer productid);
 	
 	void productReOnShelf(Integer productid);
+	
+	void productRemoveByStore(Integer productid);
 }

@@ -12,7 +12,7 @@ private static final Logger logger = LogManager.getLogger(实际类名.class.get
 
 <configuration status="INFO">
     <Properties>
-        <Property name="fileName">front.log</Property>
+        <Property name="fileName">InfoLv.log</Property>
         <Property name="backupFilePatch">C:/log/</Property>
       </Properties>
     <!--先定义所有的appender-->
@@ -37,7 +37,7 @@ private static final Logger logger = LogManager.getLogger(实际类名.class.get
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
         
-        <RollingFile name="WarnFile" fileName="${backupFilePatch}info.log"
+        <RollingFile name="WarnFile" fileName="${backupFilePatch}WarnLv.log"
                      filePattern="${backupFilePatch}$${date:yyyy-MM}/app-%d{yyyyMMddHHmmssSSS}.Warnlog.gz">
 <!--             <PatternLayout charset="utf-8" pattern="[ %-5p]:%d{YYYY-MM-dd HH:mm:ss} [%t] %c{1}:%L - %msg%n"/> -->
             <PatternLayout   pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n" />
