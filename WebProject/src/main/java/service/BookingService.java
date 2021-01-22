@@ -29,4 +29,7 @@ public interface BookingService {
 	
 	//檢查剩餘可訂位數
 	int showSeating(String bookingdate, String time, String restaurant, String stname);
+	
+	//設定座位數
+	int insertSeat(Integer storeId,Integer seating);
 }

@@ -366,6 +366,13 @@ a.mobile-show {
 	        <form action="############################" method="post" >
 	            <fieldset style="width: auto;margin:1px auto;">
 	                <legend>排序:</legend>
+	                <label>依據時間排序
+	                </label>
+	                <br>
+	                	<input type="radio" id="timeOrderH" name="priceOrder" value='2'>
+	                	<label for="timeOrderH">新上架商家</label>
+	                <br>
+	                <br>
 	                <label>依據價格排序
 	                </label>
 					<br>
