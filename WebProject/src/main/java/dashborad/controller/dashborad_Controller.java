@@ -32,6 +32,7 @@ import webUser.service.GenderService;
 import webUser.service.LocationService;
 import webUser.service.WebUserService;
 import xun.model.BoardBean;
+import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
 import xun.service.StoreService;
 
@@ -41,6 +42,11 @@ import xun.service.StoreService;
 	"userYearList"
 })
 public class dashborad_Controller {
+	/* By Mimicker0903 */
+	/* Store Service */
+	@Autowired
+	StoreService ss;
+	
 	/* By George017 2021/01/20 */
 	/* ServletContext */
 	@Autowired
@@ -62,10 +68,6 @@ public class dashborad_Controller {
 	@Autowired
 	BookingService bks;
 	
-	/* Store Service */
-	@Autowired
-	StoreService sts;
-	
 	/* Board Service */
 	@Autowired
 	BoardService bds;
@@ -74,18 +76,19 @@ public class dashborad_Controller {
 	@Autowired
 	CartService cts;
 	
+	//去管理員後台目錄
 	@GetMapping("/adminBack")
 	public String adminBack(
 			) {
 		return "adminBack";
 	}
+	
 	//去商家後台目錄
 	@GetMapping("/storeBack")
 	public String storeBack(
 			) {
 		return "storeBack";
 	}
-	
 	
 	//以下管理員統計資料//
 	@GetMapping("/dashborad_order")
@@ -119,9 +122,7 @@ public class dashborad_Controller {
 	}
 	//以上管理員統計資料//
 	
-	
 	//以下管理員管理資料//
-	
 	@GetMapping("/adminStore")
 	public String adminStore(
 			Model model
@@ -144,9 +145,7 @@ public class dashborad_Controller {
 	}
 	//以上管理員管理資料//
 	
-	
 	//以下商家統計資料//
-	
 	@GetMapping("/storeSt")
 	public String storeSt(
 			Model model
@@ -156,7 +155,6 @@ public class dashborad_Controller {
 	//以上商家統計資料//
 	
 	//以下商家管理資料//
-	
 	@GetMapping("/storeAd")
 	public String storeAd(
 			Model model
@@ -193,14 +191,14 @@ public class dashborad_Controller {
 	
 	/* 後臺用資料 By George017 2021/01/20 */
 	/* 將使用者資料按縣市區域分組統計 */
-	@PostMapping(value = "/controller/usrLocalCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserLocationCharData(Model model) {
+	@PostMapping(value = "/controller/localCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getLocationCharData(Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -233,14 +231,14 @@ public class dashborad_Controller {
 	}
 	
 	/* 將使用者資料按生理性別分組統計 */
-	@PostMapping(value = "/controller/usrGenderCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserGenderCharData (Model model) {
+	@PostMapping(value = "/controller/genderCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getGenderCharData (Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -273,8 +271,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 將使用者資料按加入時段分組統計(一次僅會顯示一個年度的資料，預設值為2020) */
-	@PostMapping(value = "/controller/usrJoinDateCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserJoinDateCharData (
+	@PostMapping(value = "/controller/joinDateCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getJoinDateCharData (
 			Model model, 
 			@RequestParam(value = "year", defaultValue = "2020") String year) {
 		/* 參數宣告 */
@@ -282,7 +280,7 @@ public class dashborad_Controller {
 		String message = "";
 		
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -315,8 +313,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 將使用者按有無使用過訂位系統來分組統計(used/not used) */
-	@PostMapping(value = "/controller/usrUseBookingCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBookingUsageCharData(Model model) {
+	@PostMapping(value = "/controller/bookingUsageCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingUsageCharData(Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		Map<String, Object> resultMap = new HashMap<>();
@@ -324,7 +322,7 @@ public class dashborad_Controller {
 		Integer totalUser = 0;
 		
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -360,13 +358,13 @@ public class dashborad_Controller {
 	}
 	
 	/* 將非取消的訂單資料按用途分組統計 */
-	@PostMapping(value = "/controller/usrBookingGoalCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBookingGoalCharData(Model model) {
+	@PostMapping(value = "/controller/bookingGoalCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingGoalCharData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有訂單資料 */
@@ -392,18 +390,18 @@ public class dashborad_Controller {
 	}
 	
 	/* 將非取消的訂單資料裡的人數按餐廳分類分組統計(*未排除已下線的商店) */
-	@PostMapping(value = "/controller/usrBookingTypeCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBookingTypeCharData(Model model) {
+	@PostMapping(value = "/controller/bookingTypeCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingTypeCharData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有訂單資料 */
 			List<BookingBean> bookingList = bks.allBooking();
 			/* 取出所有店家資料 */
-			List<StoreBean> storeList = sts.getAllStore();
+			List<StoreBean> storeList = ss.getAllStore();
 			/* 遍歷 */
 			for (BookingBean bookingData: bookingList) {
 				for (StoreBean storeData: storeList) {
@@ -431,8 +429,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢各分類的有效評分(將排除空值)，平均數為float型別 */
-	@PostMapping(value = "/controller/usrBoardStarCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBoardStarCharData(Model model) {
+	@PostMapping(value = "/controller/boardStarCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBoardStarCharData(Model model) {
 		Map<String, Object> resultMap = new HashMap<>();
 		/* 總分 */
 		Map<String, Object> map = new HashMap<>();
@@ -440,7 +438,7 @@ public class dashborad_Controller {
 		Map<String, Object> countMap = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有評論資料 */
@@ -475,12 +473,12 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢各分類的有效評分(將排除空值)，統計其留言數 */
-	@PostMapping(value = "/controller/usrBoardCountsCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBoardCountsCharData(Model model) {
+	@PostMapping(value = "/controller/boardCountsCharData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBoardCountsCharData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有評論資料 */
@@ -508,8 +506,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢個人花費金額，按年齡分組(15歲一個區間，從0開始逐個區間+1，第一個為0~15)，僅計算已付款的 */
-	@PostMapping(value = "/controller/usrAvgCostByAge", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserAvgCostByAge(Model model) {
+	@PostMapping(value = "/controller/avgCostByAge", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getAvgCostByAge(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		/* 年紀Map */
 		Map<String, Object> ageMap = new HashMap<>();
@@ -517,7 +515,7 @@ public class dashborad_Controller {
 		Map<String, Object> userMap = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有購物車訂單資料 */
@@ -566,8 +564,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢平均每筆花費金額，按年+月分組(預設為2020)，僅計算已付款的 */
-	@PostMapping(value = "/controller/usrAvgCostByMonth", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserAvgCostByMonth(Model model,
+	@PostMapping(value = "/controller/avgCostByMonth", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getAvgCostByMonth(Model model,
 			@RequestParam(value = "year", defaultValue = "2020") String year) {
 		Map<String, Object> map = new HashMap<>();
 		/* 統計Map */
@@ -576,7 +574,7 @@ public class dashborad_Controller {
 		Map<String, Object> totalMap = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有購物車訂單資料 */
@@ -621,8 +619,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢已付款的購物車清單中，按餐廳分類分組顯示比例，僅計算已付款的 */
-	@PostMapping(value = "/controller/usrBuyCountsByType", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getUserBuyCountsByType(Model model) {
+	@PostMapping(value = "/controller/buyCountsByType", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBuyCountsByType(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		/* 各類筆數 */
 		Map<String, Object> countMap = new HashMap<>();
@@ -630,7 +628,7 @@ public class dashborad_Controller {
 		Map<String, Object> totalMap = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
-		message = checkIdentity(model);
+		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有購物車訂單資料 */
@@ -662,6 +660,125 @@ public class dashborad_Controller {
 		}
 		message = (message.equals("")) ? "成功" : message;
 		
+		map.put("message", message);
+		return map;
+	}
+	
+	/* 取得留言列表 */
+	@PostMapping(value = "/controller/getCommentList", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getCommnetList(
+			Model model
+			) {
+		Map<String, Object> map = new HashMap<>();
+		String message = "";
+		/* 留言列表 */
+		List<BoardBean> boardList = new ArrayList<>();
+		/* 驗證身分 */
+		message = checkAdminIdentity(model);
+		/* 驗證通過 */
+		if (message.equals("") || checkBossIdentity(model).equals("")) {
+			/* 確認使用者身分 */
+			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
+			/* 管理員 */
+			if (nowUser.getAccountLv().getLv() == -1) {
+				boardList = bds.getAllcomment();
+				map.put("boardList", boardList);
+			/* 店家 */
+			} else if (nowUser.getAccountLv().getLv() == 1) {
+				List<BoardBean> personalBoardList = new ArrayList<>();
+				boardList = bds.getAllcomment();
+				/* 遍歷 */
+				for (BoardBean boardData: boardList) {
+					/* 僅放入自己所擁有的商店 */
+					if (boardData.getStorebean().getWebUserData().getUserId().equals(nowUser.getUserId())) {
+						personalBoardList.add(boardData);
+					}
+				}
+				map.put("boardList", personalBoardList);
+				message = (personalBoardList.size() == 0) ? "您尚未在本平台擁有任何一個商店！" : message;
+			} 
+		}
+		message = (message.equals("")) ? "成功" : message;
+		
+		map.put("message", message);
+		return map;
+	}
+	
+	/* 取得店家列表 */
+	@PostMapping(value = "/controller/getStoreList", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getStoreList(
+			Model model,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "type", required = false) String type) {
+		Map<String, Object> map = new HashMap<>();
+		String message = "";
+		/* 回傳的商家資料 */
+		List<StoreBean> storeList = new ArrayList<>();
+		/* 驗證身分 */
+		message = checkAdminIdentity(model);
+		/* 驗證通過 */
+		if (message.equals("") || checkBossIdentity(model).equals("")) {
+			/* 確認使用者身分 */
+			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
+			/* 管理員 */
+			if (nowUser.getAccountLv().getLv() == -1) {
+				storeList = ss.getAllStore();
+				switch(status) {
+					case "1":
+					case "0":
+						/* 遍歷 */
+						for (int index = 0; index < storeList.size(); index++) {
+							if (!storeList.get(index).getStatus().equals(status)) {
+								storeList.remove(index);
+							}
+						}
+						break;
+					default:
+						break;
+				}
+				switch(type) {
+					case "中式":
+					case "快餐":
+					case "燒肉":
+					case "西式":
+					case "下午茶":
+					case "日式":
+						/* 遍歷 */
+						for (int index = 0; index < storeList.size(); index++) {
+							if (!storeList.get(index).getSclass().equals(type)) {
+								storeList.remove(index);
+							}
+						}
+						break;
+					default:
+						break;
+			}
+				map.put("storeList", storeList);
+			/* 店家 */
+			} else if (nowUser.getAccountLv().getLv() == 1) {
+				
+			}
+		} 
+		message = (message.equals("")) ? "成功" : message;
+		
+		map.put("message", message);
+		return map;
+	}
+	
+	/* 刪除店家 */
+	@PostMapping(value = "/controller/adminDeleteStore", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> adminDeleteStore(
+			Model model,
+			@RequestParam("storeId") Integer storeId) {
+		Map<String, Object> map = new HashMap<>();
+		String message = "";
+		/* 驗證身分 */
+		message = checkAdminIdentity(model);
+		/* 驗證成功 */
+		if (message.equals("")) {
+			
+		}
+		message = (message.equals("")) ? "成功" : message;
 		map.put("message", message);
 		return map;
 	}
@@ -701,8 +818,8 @@ public class dashborad_Controller {
 		return null;
 	}
 	
-	/* 驗證身分 */
-	private String checkIdentity(Model model) {
+	/* 驗證管理員身分 */
+	private String checkAdminIdentity(Model model) {
 		String message = "";
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		if (userData == null) {
@@ -710,6 +827,20 @@ public class dashborad_Controller {
 		} else if (!userData.getStatus().equals("active")) {
 			message = "本帳號已被停用，無法使用此功能！";
 		} else if (userData.getAccountLv().getLv() != -1) {
+			message = "本帳號無法使用此功能！";
+		}
+		return message;
+	}
+	
+	/* 驗證店家身分 */
+	private String checkBossIdentity(Model model) {
+		String message = "";
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		if (userData == null) {
+			message = "請登入後再執行此動作！";
+		} else if (!userData.getStatus().equals("active")) {
+			message = "本帳號已被停用，無法使用此功能！";
+		} else if (userData.getAccountLv().getLv() != 1) {
 			message = "本帳號無法使用此功能！";
 		}
 		return message;

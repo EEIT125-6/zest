@@ -272,7 +272,6 @@
 		    <artifactId>commons-crypto</artifactId>
 		    <version>1.1.0</version>
 		</dependency>
-	<!-- for websocket -->
-		
+	
   </dependencies>
 </project>
