@@ -264,7 +264,7 @@ public class BookingController {
 			map.put("code", -1);
 		}
 		if (left ==0) {
-			map.put("line", "此時段目前訂位已額滿～");
+			map.put("line", "此時段目前訂位已額滿～or 未提供可訂位數");
 			map.put("code", 0);
 		}
 		if (left>0) {
@@ -337,6 +337,7 @@ public class BookingController {
 	    map.put("store", storeEqual);
 		return map;
 	}
+
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
 	public String cancel(Model model,
