@@ -395,8 +395,8 @@ function relocate_bannerURL()
 <!-- -------------------------方宣舊版--- -->
 
 			<form action="${pageContext.request.contextPath}/newBookingTime" method="GET" style="display:inline">
-				<input type="hidden" name = "storeId" value="${id}">
-				<input type="submit" class="btn btn-success" value="新增訂位數" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+				<input type="hidden" name = "id" value="${id}">
+				<input type="submit" class="btn btn-success" value="新增/修改訂位數" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
 
 <!-- 			<span>|</span> -->

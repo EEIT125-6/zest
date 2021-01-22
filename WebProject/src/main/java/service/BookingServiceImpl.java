@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dao.BookingDAO;
 import model.BookingBean;
+import model.BookingData;
 
 @Transactional
 @Service
@@ -16,6 +17,15 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	BookingDAO dao;
 	
+	//設定座位數
+	@Override
+	public int insertSeat(Integer storeId,Integer seating) {
+		int count = 0;
+		dao.insertSeat(storeId,seating);
+		count++;
+			
+		return count;
+	}
 	//新增insert
 	@Override
 	public int insertBooking(BookingBean bookingData) {

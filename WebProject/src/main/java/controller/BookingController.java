@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
@@ -33,7 +34,6 @@ import webUser.model.WebUserData;
 import xun.model.StoreBean;
 import xun.service.StoreService;
 
- 
 @Controller
 @RequestMapping("/booking")
 @SessionAttributes({"userFullData", "reg_booking"})
@@ -289,13 +289,52 @@ public class BookingController {
 	}
 	//管理員＿訂單管理
 	@PostMapping(value ="/admin", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> admin(Model model) {
+	public @ResponseBody Map<String, Object> admin(Model model,@RequestParam(value = "eating",required = false) String storeName
+															,@RequestParam(value = "status",required = false,defaultValue = "-1") String status) {
+		Integer statusX=-1;
+		if (status.equals("有效")) {
+			statusX=1;
+		}else if (status.equals("已取消")) {
+			statusX=0;
+		}else if(status.equals("用餐過")){
+			statusX=2;
+		}
 		List<BookingBean> bean = service.allBooking();
 		System.out.println("筆數="+bean.size());
 		List<StoreBean> store=storeService.getAllStore();
+		List<BookingBean> storeSelected=new ArrayList<>();
+		List<BookingBean> statusSelected=new ArrayList<>();
+		List<String> storeEqual=new ArrayList<>();
+		if (storeName!=null&&!storeName.equals("")) {
+			for(BookingBean xyz:bean) { 		//xyz為bean裡任一個元素
+				if (xyz.getRestaurant().equals(storeName)) {
+					storeSelected.add(xyz);
+				}
+			}
+		}
+		if(statusX!=-1) {
+			for(BookingBean xyz:bean) {
+				if (xyz.getStatus()==statusX) {
+					statusSelected.add(xyz);
+				}
+			}
+		}else {
+			for(BookingBean xyz:bean) { 		
+				for (StoreBean asd:store) {
+					if (asd.getStname().equals(xyz.getRestaurant())) {
+						if (!storeEqual.contains(asd.getStname())) {
+							storeEqual.add(asd.getStname());
+						}
+					}
+				}
+			}
+		}
 	    Map<String, Object> map = new HashMap<>();
+	    if (storeName!=null&&!storeName.equals("")) {
+			bean=storeSelected;
+		}
 	    map.put("data", bean);
-	    map.put("store", store);
+	    map.put("store", storeEqual);
 		return map;
 	}
 	//刪

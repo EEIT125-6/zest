@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 
 import model.BookingBean;
+import model.BookingData;
 
 public interface BookingService {
 
@@ -29,4 +30,7 @@ public interface BookingService {
 	
 	//檢查剩餘可訂位數
 	int showSeating(String bookingdate, String time, String restaurant, String stname);
+
+	//設定座位數
+	int insertSeat(Integer storeId,Integer seating);
 }

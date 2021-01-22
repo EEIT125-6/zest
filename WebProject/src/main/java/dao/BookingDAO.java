@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 import model.BookingBean;
+import model.BookingData;
 
 public interface BookingDAO {
 
@@ -31,4 +32,7 @@ public interface BookingDAO {
 
 	//查詢最大可訂位數
 	int maxBooking(String stname);
+
+	//設定座位數
+	int insertSeat(Integer storeId,Integer seating);
 }
