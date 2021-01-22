@@ -148,7 +148,6 @@ response.setContentType("text/html;charset=UTF-8");
 <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
 <div align="center">
-<h2><i>所有會員訂位資訊 :</i></h2>
 <div id="aa"></div>
 <script>
 	window.onload = function() {
@@ -163,21 +162,12 @@ response.setContentType("text/html;charset=UTF-8");
 			dataType : "json",
 			success : function(resultObj) {
 				let booking=resultObj.data;	
-				let storeName=resultObj.store;	
 				let content="";
 				if (booking !=null){
 		      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
-		      				+"<tr><th>訂單編號</th><th>訂位狀態"
-// 		      				+"<select id='status' onChange='status()'><option value=''>訂位狀態</option><option value='有效'>有效</option><option value='用餐過'>用餐過</option><option value='已取消'>已取消</option></select></th>"
-		      				+"<th><select id='eat' onChange='eating()'><option value=''>餐廳名</option>";
-		      		for(let i=0;i<storeName.length;i++){
-		      			let store = storeName[i];
-	      				content +="<option value="+store+">"+store+"</option>";
-		      		}		
-      				content +="</select></th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
+		      				+"<tr><th>訂單編號</th><th>訂位狀態<th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th></tr>";
 		      	for(let i=0;i<booking.length;i++){
 		      		let data=booking[i];
-		      			
 		      		if (data.status==1){
 		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
 		      					
@@ -186,7 +176,7 @@ response.setContentType("text/html;charset=UTF-8");
 		      		}else{
 						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
 					}
-		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
+		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td></tr>";
 		      	}
 		      	content+="</table>";
 	      		aa.innerHTML=content;
@@ -201,73 +191,7 @@ response.setContentType("text/html;charset=UTF-8");
 		
 		}); 
 	}
- 	function status(){
- 		var status=document.getElementById("status").value;
- 		if(status==""){
- 			showAll();
- 		}else{
- 			eating(status, null);
- 		}
- 	}
- 	function eating(){
- 		var eating=document.getElementById("eat").value;
- 		if(eating==""){
- 			showAll();	
- 		}else{
- 			eatingAjax(null, eating);
- 			
- 		}
- 	}
- 	
-	function eatingAjax(status,eating){
-		$.ajax({
-			type : "POST",
-			url : "<c:url value='/booking/admin'/>",
-			data : {
-				'eating':eating,
-				'status':status
-			},
-			dataType : "json",
-			success : function(resultObj) {
-				let booking=resultObj.data;	
-				let storeName=resultObj.store;	
-				let content="";
-				if (booking !=null){
-					content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
-	      					+"<tr><th>訂單編號</th><th>訂位狀態"
-//		      				+"<select id='status' onChange='status()'><option value=''>訂位狀態</option><option value='有效'>有效</option><option value='用餐過'>用餐過</option><option value='已取消'>已取消</option></select></th>"
-	      					+"<th><select id='eat' onChange='eating()'><option value=''>餐廳名</option>";
-		      		for(let i=0;i<storeName.length;i++){
-		      			let store = storeName[i] + "";
-	      				content +="<option value="+store+">"+store+"</option>";
-		      		}		
-      				content +="</select></th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
-		      	for(let i=0;i<booking.length;i++){
-		      		let data=booking[i];
-		      			
-		      		if (data.status==1){
-		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
-		      					
-		      		}else if (data.status==0){
-		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
-		      		}else{
-						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
-					}
-		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
-		      	}
-		      	content+="</table>";
-	      		aa.innerHTML=content;
-	      		
-		      	
-		      	}else{
-		      		aa.innerHTML="<h3>查無訂位資料</h3>";
-		      		
-		      	} 
-		      	
-			}
-		
-		}); 
-    }	
+
 </script>
 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery.js"></script>

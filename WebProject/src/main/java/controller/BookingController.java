@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -28,6 +29,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
+import ecpay.payment.integration.domain.AioCheckOutCVS;
+import ecpay.payment.integration.domain.InvoiceObj;
 import model.BookingBean;
 import service.BookingService;
 import webUser.model.WebUserData;
@@ -85,6 +90,24 @@ public class BookingController {
 	
 	return true;
 }
+	//綠界
+	public static String genAioCheckOutALL(){
+		int r=(int)(Math.random()*1000+1);
+		java.util.Date date=new java.util.Date();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		AllInOne all=new AllInOne("");
+		AioCheckOutALL obj = new AioCheckOutALL();
+		obj.setMerchantTradeNo("tuk004"+r);
+		obj.setMerchantTradeDate(sdf.format(date));
+		obj.setTotalAmount("50");
+		obj.setTradeDesc("test Description");
+		obj.setItemName("TestItem");
+		obj.setReturnURL("/booking/Thanks");
+		obj.setClientBackURL("http://localhost:8080/WebProject/booking/Thanks");
+		obj.setNeedExtraPaidInfo("N");
+		String form = all.aioCheckOut(obj, null);
+		return form;
+	}
 	
 	//確認資料
 	@PostMapping("/next")
@@ -216,7 +239,8 @@ public class BookingController {
 		} catch (Exception e) {
 			;
 		}
-		return "redirect:/booking/Thanks";
+		model.addAttribute("obj",genAioCheckOutALL());
+		return "/booking/Thanks";
 	}
 	
 	@GetMapping("/Thanks")
@@ -339,7 +363,29 @@ public class BookingController {
 	    map.put("store", storeEqual);
 		return map;
 	}
-	
+	//商家＿訂單管理
+	@PostMapping(value ="/adminStore", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> adminStore(Model model) {
+		WebUserData userData=(WebUserData)model.getAttribute("userFullData");		
+		List<StoreBean> storeList = ss.getMemberAllStore(userData);
+		System.out.println("筆數="+storeList.size());
+		List<BookingBean> booked=service.allBooking();
+		List<BookingBean> show =new ArrayList<>();
+		for (StoreBean sb:storeList) {
+			System.out.println(sb.getStname());
+			for (BookingBean bb:booked) {
+				if (bb.getRestaurant().equals(sb.getStname())) {
+					show.add(bb);
+				}
+			}
+		}
+		
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", show);
+		return map;
+		
+	}	
+
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
 	public String cancel(Model model,
@@ -513,7 +559,10 @@ public class BookingController {
 	public String admin1() {
 		return "booking/admin";
 	}
-
+	@GetMapping("/admin2")
+	public String admin2() {
+		return "booking/adminStore";
+	}
 	@GetMapping("/updateResult2")
 	public String good() {
 		return "booking/updateResult2";
