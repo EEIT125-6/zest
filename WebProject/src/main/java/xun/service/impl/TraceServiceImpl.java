@@ -43,4 +43,11 @@ public class TraceServiceImpl implements TraceService {
 		tdao.removeAllBeTraceStore(stId);
 	}
 
+	@Override
+	public List<Integer> StoreBeTraceQueryByMemberId(Integer stId) {
+		return tdao.StoreBeTraceQueryByMemberId(stId);
+	}
+	
+	
+
 }

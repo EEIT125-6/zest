@@ -18,6 +18,9 @@
 		<%@include file = "storeAdminSystem-side-header.jsp" %>
 			<div class="content">
 				<div class="container-fluid">
+					<div style="text-align: center;">
+						<h1>商家名稱：${stname}</h1>
+					</div>
 					<div class="row">
 						<div class = "col-md-1">
 						</div>
@@ -59,7 +62,10 @@
 						<div class = "col-md-4"  style="padding:0px;border-radius: 15px 15px 15px 15px;background-color: #a5a58d;height: 200px;margin-bottom: 50px;">
 			                <div class="h-100 " style="color:9e3f22;align-items: center;">
 			                    <div style="line-height: 200px;text-align: center;font-size: 300%;">
-				                    <a href="<c:url value='#' />" style="text-decoration:none;">
+			                    	<c:url value="/storeAdTrace" var="storeAdTrace">
+			                    		<c:param name="id" value="${id}"></c:param>
+			                    	</c:url>
+				                    <a href="${storeAdTrace}" style="text-decoration:none;">
 			                        	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
 			                        	    	誰追蹤該商家
 			                        	</span>

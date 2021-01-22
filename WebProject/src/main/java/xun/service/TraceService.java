@@ -16,4 +16,5 @@ public interface TraceService {
 	
 	void removeAllBeTraceStore(Integer stId);
 	
+	List<Integer> StoreBeTraceQueryByMemberId(Integer stId);
 }

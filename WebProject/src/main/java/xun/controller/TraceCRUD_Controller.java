@@ -32,7 +32,7 @@ public class TraceCRUD_Controller {
 			,@RequestParam Integer memberId
 			) {
 		ts.removeTrace(memberId, stId);
-		System.out.println("死去");
+		System.out.println("退出");
 	}
 	
 }

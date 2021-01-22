@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-@ControllerAdvice
-public class GetAllErrorController implements HandlerExceptionResolver {
+//@ControllerAdvice
+//public class GetAllErrorController implements HandlerExceptionResolver {
 
 //     private ExceptionLogDao exceptionLogDao;
 
@@ -24,10 +24,10 @@ public class GetAllErrorController implements HandlerExceptionResolver {
 //         return modelAndView;
 //     }
 
-	@Override
-	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
-			Exception ex) {
-		ModelAndView modelAndView = new ModelAndView("e500");
-		return modelAndView;
-	}
- }
+//	@Override
+//	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
+//			Exception ex) {
+//		ModelAndView modelAndView = new ModelAndView("e500");
+//		return modelAndView;
+//	}
+// }

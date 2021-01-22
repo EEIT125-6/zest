@@ -15,4 +15,7 @@ public interface TraceDao {
 	List<TraceBean> StoreBeTrace(Integer stId);
 	
 	void removeAllBeTraceStore(Integer stId);
+	
+	List<Integer> StoreBeTraceQueryByMemberId(Integer stId);
+	
 }

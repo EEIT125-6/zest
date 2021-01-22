@@ -1,19 +1,27 @@
 package dashborad.controller;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 //import org.springframework.web.bind.annotation.PostMapping;
 
 import webUser.model.WebUserData;
+import webUser.service.WebUserService;
 import xun.model.ProductInfoBean;
 import xun.model.StoreBean;
+import xun.model.TraceBean;
 import xun.service.StoreService;
+import xun.service.TraceService;
 
 @Controller
 @SessionAttributes({"userFullData","listAllStore"})
@@ -22,7 +30,11 @@ public class dashborad_Controller {
 	@Autowired
 	StoreService ss;
 	
+	@Autowired
+	TraceService ts;
 	
+	@Autowired
+	WebUserService wus;
 	//去管理員後台目錄
 	@GetMapping("/adminBack")
 	public String adminBack(
@@ -124,6 +136,9 @@ public class dashborad_Controller {
 			,@RequestParam Integer stId
 			) {
 		model.addAttribute("id", stId);
+		StoreBean sb = ss.get(stId);
+		model.addAttribute("stname", sb.getStname());
+		
 		return "storeAdminSystem-storeClick";
 	}
 	
@@ -137,6 +152,41 @@ public class dashborad_Controller {
 		model.addAttribute("id", stId);
 		return "storeAdminSystem-storeClick-product";
 	}
+	
+	@GetMapping("/storeAdTrace")
+	public String storeAdTrace(
+			Model model
+			,@RequestParam(value = "id") Integer stId
+			) throws SQLException {
+		List<Integer> Tracelist = ts.StoreBeTraceQueryByMemberId(stId);
+		List<WebUserData> memberList = new ArrayList<WebUserData>();
+				
+		for(Integer memberId :Tracelist) {
+			memberList.add(wus.getWebUserDataById(String.valueOf(memberId)));
+		}
+		
+		model.addAttribute("memberList", memberList);
+		model.addAttribute("stId", stId);
+		System.out.println(memberList);
+		return "storeAdminSystem-storeTrace";
+	}
+	
+	@GetMapping("/storeGetTraceMember")
+	public @ResponseBody List<Map<String, Object>> iWantLearnMore(
+			@RequestParam Integer stId
+			) throws SQLException{
+		List<Integer> Tracelist = ts.StoreBeTraceQueryByMemberId(stId);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		List<Map<String, Object>> TraceListmap  = new ArrayList<Map<String,Object>>();
+		for(Integer memberId:Tracelist) {
+			WebUserData wud = wus.getWebUserDataById(String.valueOf(memberId));
+			map1.put("memberId", wud.getUserId());
+			map1.put("memberNickname",wud.getNickname());
+			TraceListmap.add(map1);
+		}
+		return TraceListmap;
+	}
+	
 	//以上商家管理資料//
 	
 }

@@ -66,4 +66,14 @@ public class TraceDaoImpl implements TraceDao {
 		
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> StoreBeTraceQueryByMemberId(Integer stId) {
+		Session session = factory.getCurrentSession();
+		String hql = "select memberId From TraceBean tb Where tb.storeId = :storeId";
+		List<Integer> list = session.createQuery(hql).setParameter("storeId", stId)
+								.getResultList();
+		return list;
+	}
+
 }
