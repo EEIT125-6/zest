@@ -182,18 +182,18 @@
 <!--                 	<button type="button" id="myFavorite" name="myFavorite" style="font-size:18px" >我的最愛 <i class="material-icons" style="font-size:18px;color:blue">favorite</i></button> -->
                 		
                 		<c:if test="${userFullData.accountLv.lv == -1}" >
-                			<button type="button" id="manage" name="manage" style="font-size:18px" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
+<!--                 			<button type="button" id="manage" name="manage" style="font-size:18px" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button> -->
                 			<a href="<c:url value='/booking/admin1'/>">
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
-                			<a href="">
+                			<a href="<c:url value='/booking/adminStore'/>">
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
                 		<c:if test="${userFullData.accountLv.lv != -1}" >
-                			<button type="button" id="manage" name="manage" style="font-size:18px;display:none;" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
+<!--                 			<button type="button" id="manage" name="manage" style="font-size:18px;display:none;" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button> -->
                 		</c:if>
                 		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />">
                 			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
@@ -213,14 +213,14 @@
                 
                 <script>
                 	window.onload = function () {
-                		let manageBtn = document.getElementById("manage");
+//                 		let manageBtn = document.getElementById("manage");
                 		let logOutBtn = document.getElementById("logout");
                 		
-                		manageBtn.onclick = function() {
-        					if(doubleCheck()) {
-        						window.location.href = "controller/WebUserMain/Search";
-        					}
-        				};
+//                 		manageBtn.onclick = function() {
+//         					if(doubleCheck()) {
+//         						window.location.href = "controller/WebUserMain/Search";
+//         					}
+//         				};
                 		logOutBtn.onclick = function() {
         					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
         					alert("謝謝您的使用，" + account + " ！");
