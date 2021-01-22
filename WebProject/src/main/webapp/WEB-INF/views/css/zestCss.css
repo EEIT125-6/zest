@@ -1,0 +1,14 @@
+/* <link rel='stylesheet' href='${pageContext.request.contextPath}/css/zestCss.css'  type="text/css" /> */
+span.error {
+	color: red;
+	display: inline-block;
+	font-size: 5pt;
+}
+.wrapper{
+    position: relative;
+    width:1000px;
+    height:400px;
+    overflow: hidden;
+    margin:0 auto;
+    border-radius:5px;   
+}
