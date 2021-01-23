@@ -1,16 +1,21 @@
 function checkForm() {
 	let counter = 0;
+	let userLv = document.getElementById("userLv").value.trim();
 	let stnameObjValue = document.getElementById("selectedStname").value.trim();
 	let ownerObjValue = document.getElementById("selectedOwner").value.trim();
-	let sclassObjValue = document.getElementById("selectedSclass").value;
+	let sclassObjValue = document.getElementById("sSclass").value;
+	let statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
 	if (choice) {
 		if (!checkStname()) {
+			alert("fail 1");
 			return false;
 		} else if (!checkOwner()) {
+			alert("fail 2");
 			return false;
-		} else if (!checkSclass()) {
+		} else if (!checkSelectedSclass()) {
+			alert("fail 3");
 			return false;
 		} else {
 			if (stnameObjValue == "" && stnameObjValue.length == 0) {
@@ -145,31 +150,39 @@ function checkOwner() {
 	}
 }
 
-function checkSclass() {
-	let sclassObjValue = document.getElementById("selectedSclass").value;
+function checkSelectedSclass() {
+	let sclassObjValue = document.getElementById("sSclass").value;
 	let sclassSpan = document.getElementById("sclassSpan");
 	
 	let sclassIsOk = true;
 	let sclassStr;
 	
-	if (sclassObjValue != "" || sclassObjValue.length > 0) {
-		sclassStr = "店家類型填寫完成";
+	if (sclassObjValue == "" || sclassObjValue.length == 0) {
+		sclassStr = "";
 		sclassIsOk = true;
 	} else {
-		sclassStr = "";
-		sclassIsOk = false;
+		sclassStr = "店家類型選擇完成";
+		sclassIsOk = true;
 	} 
-	if (sclassIsOk) {
-		sclassSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + sclassStr;
-		sclassSpan.style.color = "black";
-		sclassSpan.style.fontStyle = "normal";
-	} else {
-		sclassSpan.innerHTML = "";
+	if (!sclassIsOk) {
+		sclassSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + sclassStr;
+		sclassSpan.style.color = "red";
+		sclassSpan.style.fontStyle = "italic";
+		return false;
+	}  else {
+		if (sclassObjValue == "" || sclassObjValue.length == 0) {
+			sclassSpan.innerHTML = "";
+		} else {
+			sclassSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + sclassStr;
+			sclassSpan.style.color = "black";
+			sclassSpan.style.fontStyle = "normal";
+		}
+		return true;
 	}
 }
 
 function checkStatus() {
-	let statusObjValue = document.getElementById("status").value;
+	let statusObjValue = document.getElementById("selectedStatus").value;
 	let statusSpan = document.getElementById("statusSpan");
 	
 	let statusIsOk = true;
@@ -186,8 +199,7 @@ function checkStatus() {
 		statusSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + statusStr;
 		statusSpan.style.color = "red";
 		statusSpan.style.fontStyle = "italic";
-	}
-	if (statusIsOk) {
+	} else {
 		if (statusObjValue == "" || statusObjValue.length == 0) {
 			statusSpan.innerHTML = "";
 		} else {

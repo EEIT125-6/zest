@@ -817,7 +817,7 @@ public class dashborad_Controller {
 		Integer resultCode = -1;
 		resultCode = (message.equals("") && storeList.size() > 0) ? 1 : resultCode;
 		resultCode = (message.equals("") && storeList.size() <= 0) ? 0 : resultCode;
-		message = (message.equals("") && storeList.size() > 0) ? "查詢到 " + totalDataNums + " 筆資料，共 " + totalDataPages + " 頁!" : message;
+		message = (message.equals("") && storeList.size() > 0) ? "查詢到 " + totalDataNums + " 筆店家資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁" : message;
 		message = (message.equals("") && storeList.size() <= 0) ? "沒有任何符合條件的資料！" : message;
 		
 		map.put("resultCode", resultCode.toString());
@@ -827,21 +827,95 @@ public class dashborad_Controller {
 		return map;
 	}
 	
-	/* 刪除店家 */
-	@PostMapping(value = "/controller/adminDeleteStore", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> adminDeleteStore(
+	/* 管理員對店家的權限操作 */
+	@PostMapping(value = "/controller/adminStoreOperate", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> adminStoreOperate (
 			Model model,
-			@RequestParam("storeId") Integer storeId) {
+			@RequestParam("storeId") Integer storeId,
+			@RequestParam("status") String status,
+			@RequestParam("mode") String mode) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
+		Integer resultCode = -1;
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
 		/* 驗證成功 */
 		if (message.equals("")) {
-			
+			/* 按選擇的模式分流 */
+			switch(mode) {
+				/* 刪除 */
+				case "delete":
+					/* 由storeId反查整個物件 */
+					StoreBean deletedStore = ss.get(storeId);
+					/* 如有存在才繼續 */
+					if (deletedStore == null) {
+						resultCode = -1;
+						message = "無效的店家代碼！";
+					} else {
+						/* 執行刪除 */
+						resultCode = ss.deleteStore(deletedStore);
+						message = (resultCode == 1) ? "順利完成刪除操作！" : "發生錯誤！無法完成刪除操作！";
+					}
+					break;
+				/* 上架 */
+				case "active":
+				/* 下架 */
+				case "quit":
+					/* 由storeId反查整個物件 */
+					StoreBean changedStore = ss.get(storeId);
+					/* 如有存在才繼續 */
+					if (changedStore == null) {
+						resultCode = -1;
+						message = "無效的店家代碼！";
+					} else {
+						/* 判定status參數是否合理 */
+						switch (status) {
+							case "0":
+								/* 已下架的不可再下架 */
+								if (mode.equals("quit")) {
+									resultCode = -1;
+									message = "已下架的商店不可再下架！";
+								} else if (mode.equals("active")) {
+									resultCode = ss.storeChange(storeId, "1");
+									message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
+								}
+								break;
+							case "1":
+								/* 已上架的不可再上架 */
+								if (mode.equals("active")) {
+									resultCode = -1;
+									message = "已下架的商店不可再下架！";
+								} else if (mode.equals("quit")) {
+									resultCode = ss.storeChange(storeId, "0");
+									message = (resultCode == 1) ? "順利完成下架操作！" : "發生錯誤！無法完成下架操作！";
+								}
+								break;
+							case "3":
+								/* 已移除的不可再下架 */
+								if (mode.equals("quit")) {
+									resultCode = -1;
+									message = "已移除的商店不可再下架！";
+								} else if (mode.equals("active")) {
+									resultCode = ss.storeChange(storeId, "1");
+									message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
+								}
+								break;
+							default:
+								resultCode = -1;
+								message = "無效的店家狀態！";
+								break;
+						}
+					}
+					break;
+				/* 其他 */
+				default:
+					resultCode = -1;
+					message = "無效的操作模式，請重新進行操作或詢問技術人員！";
+					break;
+			}
 		}
-		message = (message.equals("")) ? "成功" : message;
-		map.put("message", message);
+		map.put("resultCode", resultCode.toString());
+		map.put("resultMessage", message);
 		return map;
 	}
 	

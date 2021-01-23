@@ -10,7 +10,7 @@
 	<!--     字體跟ICON     -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
-	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
@@ -47,8 +47,7 @@
 								<span id="ownerSpan"></span>
 								<hr />
 								<label>依照類型：</label>
-								<select name="selectedSclass"
-									id="selectedSclass" onblur="checkSclass()">
+								<select name="selectedSclass" id="sSclass" onblur="checkSelectedSclass()">
 									<option value="">請選擇目前要查詢的餐廳類型</option>
 									<c:forEach items="${sclassList}" var="sclassItem">
 										<option value="${sclassItem}" label="${sclassItem}" />
@@ -57,7 +56,7 @@
 								<span id="sclassSpan"></span>
 								<c:if test='${userFullData.accountLv.lv == -1}'>
 									<label>店家狀態：</label>
-									<select name="selectedStatus" id="status" onblur="checkStatus()">
+									<select name="selectedStatus" id="selectedStatus" onblur="checkStatus()">
 										<option value="">請選擇要查詢的狀態</option>
 										<option value="3">已移除</option>
 										<option value="1">上架中</option>
@@ -98,8 +97,29 @@
 								/* 載入後先執行一次預設查詢 */
 								selectAllStore();
 								/* 綁定刪除按鈕 */
+								$("#dataContainer").on("click", ".deleteBtn", function() {
+									let selectedDelBtnInfo = this.id.substring(6);
+									var id = selectedDelBtnInfo.split("_")[0];
+									var status = selectedDelBtnInfo.split("_")[1];
+									var mode = 'delete';
+									lastCheck(id, status, mode);
+								});
 								/* 綁定上架按鈕 */
+								$("#dataContainer").on("click", ".activeBtn", function() {
+									let selectedActBtnInfo = this.id.substring(6);
+									var id = selectedActBtnInfo.split("_")[0];
+									var status = selectedActBtnInfo.split("_")[1];
+									var mode = 'active';
+									lastCheck(id, status, mode);
+								});
 								/* 綁定下架按鈕 */
+								$("#dataContainer").on("click", ".quitBtn", function() {
+									let selectedQutBtnInfo = this.id.substring(6);
+									var id = selectedQutBtnInfo.split("_")[0];
+									var status = selectedQutBtnInfo.split("_")[1];
+									var mode = 'quit';
+									lastCheck(id, status, mode);
+								});
 								/* 綁定第一頁按鈕 */
 								$("#dataContainer").on("click", ".pFirst", function() {
 									let startPage = parseInt(document.getElementById("pageNo").value);
@@ -109,8 +129,8 @@
 								$("#dataContainer").on("click", ".pFirstBtn", function() {
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObjValue = document.getElementById("selectedSclass").value;
-									var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+									var sclassObjValue = document.getElementById("sSclass").value;
+									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
 									document.getElementById("pageNo").value = 1;
@@ -125,9 +145,8 @@
 								$("#dataContainer").on("click", ".pPrevBtn", function() {
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObj = document.getElementsByClassName("sclass");
-									var sclassObjValue = document.getElementById("selectedSclass").value;
-									var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+									var sclassObjValue = document.getElementById("sSclass").value;
+									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
 									document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
@@ -142,9 +161,8 @@
 								$("#dataContainer").on("click", ".pNextBtn", function() {
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObj = document.getElementsByClassName("sclass");
-									var sclassObjValue = document.getElementById("selectedSclass").value;
-									var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+									var sclassObjValue = document.getElementById("sSclass").value;
+									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
 									document.getElementById("pageNo").value = startPage + 1;
@@ -159,9 +177,8 @@
 								$("#dataContainer").on("click", ".pLastBtn", function() {
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObj = document.getElementsByClassName("sclass");
-									var sclassObjValue = document.getElementById("selectedSclass").value;
-									var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+									var sclassObjValue = document.getElementById("sSclass").value;
+									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let maxPage = parseInt(document.getElementById("maxPage").value);
 									document.getElementById("pageNo").value = maxPage;
@@ -180,8 +197,8 @@
 								var userLv = document.getElementById("userLv").value.trim();
 								var stnameObjValue = document.getElementById("selectedStname").value.trim();
 								var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-								var sclassObjValue = document.getElementById("selectedSclass").value;
-								var selectedStatus = (userLv == -1) ? document.getElementById("status").value : "";
+								var sclassObjValue = document.getElementById("sSclass").value;
+								var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 								
 								if (checkForm()) {
 									if (stnameObjValue == "" && stnameObjValue.length == 0) {
@@ -206,7 +223,7 @@
 										if (counter == 4){
 											selectAllStore();
 										} else {
-											selectStore(stnameObjValue, ownerObjValue, sclassObjValue, selectedStatus);
+											selectStore(stnameObjValue, ownerObjValue, sclassObjValue, statusObjValue);
 										} 
 									}
 								} else {
@@ -214,7 +231,66 @@
 								}
 							};
 							
-							function selectStore(stnameObjValue, ownerObjValue, sclassObjValue, selectedStatus) {
+							function lastCheck(id, status, mode) {
+								let choice=confirm("是否要執行特定的操作？");
+								if (choice) {
+									let operateResultSpan = document.getElementById("searchSpan");
+									let operateResultStr = "...處理中，請稍後";
+									let operateResultIsOk = true;
+									
+									operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>" + operateResultStr;
+									operateResultSpan.style.color = "black";
+									operateResultSpan.style.fontStyle = "normal";
+									
+									$.ajax({
+										type : "POST",
+										url : "<c:url value='/controller/adminStoreOperate' />",
+										data : {
+											'storeId':id,
+											'status':status,
+											'mode':mode
+										},
+										dataType : "json",
+										success : function(resultObj) {
+											if (resultObj.resultCode == 1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+														+ operateResultStr;
+												operateResultSpan.style.color = "black";
+												operateResultSpan.style.fontStyle = "normal";
+												/* 顯示彈窗訊息 */
+												alert(resultObj.resultMessage);
+												/* 重新以Ajax寫出表格 */
+												selectAllStore();
+											} else if (resultObj.resultCode == 0) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗異常訊息 */
+												alert(resultObj.resultMessage);
+											} else if (resultObj.resultCode == -1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗異常訊息 */
+												alert(resultObj.resultMessage);
+											}
+										},
+										error : function(err) {
+											operateResultStr = "發生錯誤，無法執行指定的操作！";
+											operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+											operateResultSpan.style.color = "red";
+											operateResultSpan.style.fontStyle = "italic";
+											/* 顯示彈窗異常訊息 */
+											alert(resultObj.resultMessage);
+										}
+									});
+								}
+							};
+							
+							function selectStore(stnameObjValue, ownerObjValue, sclassObjValue, statusObjValue) {
 								let startPage = parseInt(document.getElementById("pageNo").value);
 								let searchSpan = document.getElementById("searchSpan");
 								let searchStr = "...處理中，請稍後";
@@ -234,7 +310,7 @@
 										'stname':stnameObjValue,
 										'owner':ownerObjValue,
 										'sclass':sclassObjValue,
-										'status':selectedStatus,
+										'status':statusObjValue,
 										'avPage':avgPage,
 										'startPage':startPage
 									},
@@ -301,7 +377,7 @@
 													
 													if (document.getElementById("userLv").value == -1) {
 														content += "<td>"
-																+ "<button type='button' class='deleBtn' id='delBtn" 
+																+ "<button type='button' class='deleteBtn' id='delBtn" 
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
@@ -517,7 +593,7 @@
 													
 													if (document.getElementById("userLv").value == -1) {
 														content += "<td>"
-																+ "<button type='button' class='deleBtn' id='delBtn" 
+																+ "<button type='button' class='deleteBtn' id='delBtn" 
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
@@ -667,7 +743,7 @@
     </div>
 </body>
 <!--   Core JS Files   -->
-<script src="js/jquery.3.2.1.min.js" type="text/javascript"></script>
+<!-- <script src="js/jquery.3.2.1.min.js" type="text/javascript"></script> -->
 <script src="js/popper.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
