@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +20,11 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div style="text-align: center;">
-						<h1>商家名稱：${stname}</h1>
+						<c:url value="/StoreGetFullstore" var="detailstore">
+							<c:param name="stname" value="${stname}"></c:param>
+							<c:param name="id" value="${id}"></c:param>
+						</c:url>
+						<h1>商家名稱：<a href="${detailstore}" style="text-decoration: none;color:black">${stname}</a></h1>
 					</div>
 					<div class="row">
 						<div class = "col-md-1">

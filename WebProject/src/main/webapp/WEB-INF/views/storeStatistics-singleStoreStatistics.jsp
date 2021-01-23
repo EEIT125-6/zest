@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>使用者分析</title>
+<title>商家統計</title>
 	<!--     字體跟ICON     -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="wrapper">
-		<%@include file = "dashborad-side-header.jsp" %>
+		<%@include file = "storeStatistics-side-header.jsp" %>
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
@@ -63,6 +63,7 @@
 		<%@include file = "dashborad-footer.jsp" %>
     </div>
 </body>
+
 <!--   Core JS Files   -->
 <script src="js/jquery.3.2.1.min.js" type="text/javascript"></script>
 <script src="js/popper.min.js" type="text/javascript"></script>

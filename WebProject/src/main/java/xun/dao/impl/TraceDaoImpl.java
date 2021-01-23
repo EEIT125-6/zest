@@ -1,5 +1,6 @@
 package xun.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -22,6 +23,8 @@ public class TraceDaoImpl implements TraceDao {
 		TraceBean tb = new TraceBean();
 		tb.setMemberId(memberId);
 		tb.setStoreId(stId);
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		tb.setTimestamp(timestamp);
 		session.save(tb);
 	}
 

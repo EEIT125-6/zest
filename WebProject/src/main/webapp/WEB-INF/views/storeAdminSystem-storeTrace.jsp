@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,21 +18,18 @@
     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
     <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
 <!--     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">  -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<style>
-/* 	table, th, td { */
-/* 	  border: 1px solid black; */
-/* 	  border-collapse: collapse; */
-/* 	} */
-/* 	th, td { */
-/* 	  padding: 5px; */
-/* 	  text-align: left;     */
-/* 	} */
+	.traceTableth{
+		font-size: 150%;
+		font-weight: bold;
+		color:black;
+	}
 	</style>
 </head>
 <body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
     <div class="wrapper">
 		<%@include file = "storeAdminSystem-side-header.jsp" %>
@@ -40,70 +38,60 @@
 					<div class="row">
 						<div class="col-1"></div>
 						<div class="col-10">
-							<table id="trace" >
-							 	    <thead>
-								        <tr>
-								        	<th style="width:50px;">編號</th>
-								         	<th style="width:200px;">暱稱</th>
-								         	<th style="width:200px;">操作</th> 
-								        </tr>
-								    </thead>
-								    <tbody id="bookReportList">
-								        <tr>
-								        	<td>編號</td>
-								        	<td>暱稱</td>
-								        	<td><button type="button" class="btn btn-outline-primary" value = "brID">查看</button>
-								        	  	<button type="button" class="btn btn-outline-danger ml-3" value = "brId">刪除</button>
-								        	</td>
-							 	        </tr>
-									</tbody>
-							</table> 
+							<div style="height: 150px"></div>
+							<div style="height: 50px; text-align:center;" >${stname}的追蹤者</div>
+							<table id="example" class="table table-striped table-bordered" style="width:100%">
+							        <thead>
+							            <tr>
+							                <th style="font-size: 130%;font-weight: bold;color:black;">暱稱</th>
+							                <th style="font-size: 130%;font-weight: bold;color:black;">性別</th>
+							                <th style="font-size: 130%;font-weight: bold;color:black;">生日</th>
+							                <th style="font-size: 130%;font-weight: bold;color:black;">偏好</th>
+							                <th style="font-size: 130%;font-weight: bold;color:black;">推送</th>
+							            </tr>
+							        </thead>
+							        <tbody>
+							            <c:forEach var="row" items="${memberList}">
+							            	<tr>
+							            		<td>
+							            			${row.nickname}
+							            		</td>
+							            		<td>
+							            			${row.gender.genderText}
+							            		</td>
+							            		<td>
+							            			${row.birth}
+							            		</td>
+							            		<td>
+							            			${row.fervor}
+							            		</td>
+							            		<td>
+							            			<form action="<c:url value='/storeAdTraceMail'/>" method="Post" >
+							            				<input type="hidden" name="stId" value="${stId}">
+							            				<input type="hidden" name="memberNickname" value="${row.nickname}">
+							            				<input type="hidden" name="memberEmail" value="${row.email}">
+							            				<input type="submit" value="推播" id="${row.userId}" class="btn btn-primary sendMail">
+							            			</form>	
+							            		</td>
+							            	</tr>
+							            </c:forEach>
+							        </tbody>
+							        <tfoot>
+							            <tr>
+							                <th>暱稱</th>
+							                <th>性別</th>
+							                <th>生日</th>
+							                <th>偏好</th>
+							                <th>推送</th>
+							            </tr>
+							        </tfoot>
+							    </table>
 								  <script>
-								  	$( "#trace" ).DataTable({
-								  		$.ajax({
-								  			type:"GET",
-								  			url:"<c:url value='storeGetTraceMember'/>",
-								  			dataSrc:""
-								  		}),
-								  		"columns": [
-										      { "data": "memberId" }, //第一欄使用data中的name
-										      { "data": "memberNickname" }, //第二欄使用data中的age
-										      {
-										    	  "data":"memberId",
-										    	  "render":function(data,type,row,meta){
-										    		  "<button type=\"button\" class=\"btn btn-outline-dark\" onclick='viewData(" + data + ")' value = \""+ data +"\">查看</button>" 			           
-										    		  + "<button type=\"button\" class=\"btn btn-outline-primary ml-2\" onclick='editData(" + data + ")' value = \""+ data +"\">刪除</button>" 
-										    	  }
-										      }	
-										],
-								  		
-								  		// 參數設定[註1]
-								  		"bPaginate": false, // 顯示換頁
-								  		"searching": false, // 顯示搜尋
-								  		"info":	false, // 顯示資訊
-								  		"fixedHeader": true, // 標題置頂
-								  	    "language": {
-								  	        "processing": "處理中...",
-								  	        "loadingRecords": "載入中...",
-								  	        "lengthMenu": "顯示 _MENU_ 項結果",
-								  	        "zeroRecords": "沒有符合的結果",
-								  	        "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
-								  	        "infoEmpty": "顯示第 0 至 0 項結果，共 0 項",
-								  	        "infoFiltered": "(從 _MAX_ 項結果中過濾)",
-								  	        "infoPostFix": "",
-								  	        "search": "搜尋:",
-								  	        "paginate": {
-								  	            "first": "第一頁",
-								  	            "previous": "上一頁",
-								  	            "next": "下一頁",
-								  	            "last": "最後一頁"
-								  	        },
-								  	        "aria": {
-								  	            "sortAscending": ": 升冪排列",
-								  	            "sortDescending": ": 降冪排列"
-								  	        }
-								  	    }
-								  	});
+// 								  $(document).ready(function() {
+// 									  $.ajax({
+										  
+// 									  })
+// 									});
 								  </script>
 						</div>
 						<div class="col-1"></div>

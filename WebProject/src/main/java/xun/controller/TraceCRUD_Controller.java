@@ -21,6 +21,7 @@ public class TraceCRUD_Controller {
 			,@RequestParam Integer stId
 			,@RequestParam Integer memberId
 			) {
+		
 		ts.addTrace(memberId, stId);
 		System.out.println("加入");
 	}

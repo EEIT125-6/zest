@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -22,6 +23,7 @@ import xun.model.StoreBean;
 import xun.model.TraceBean;
 import xun.service.StoreService;
 import xun.service.TraceService;
+import xun.util.sendJavaMail;
 
 @Controller
 @SessionAttributes({"userFullData","listAllStore"})
@@ -111,7 +113,21 @@ public class dashborad_Controller {
 	public String storeSt(
 			Model model
 			) {
+		WebUserData userFullData  = (WebUserData) model.getAttribute("userFullData");
+		List<StoreBean> listAllStore= ss.getMemberAllStore(userFullData);
+		model.addAttribute("listAllStore", listAllStore);
+		System.out.println("+++");
+		System.out.println(listAllStore);
+		System.out.println("+++");
 		return "storeStatistics-storeContent";
+	}
+	
+	@GetMapping("/storeStClick")
+	public String storeSingleSt(
+			Model model
+			) {
+		
+		return "storeStatistics-singleStoreStatistics";
 	}
 	//以上商家統計資料//
 	
@@ -164,28 +180,59 @@ public class dashborad_Controller {
 		for(Integer memberId :Tracelist) {
 			memberList.add(wus.getWebUserDataById(String.valueOf(memberId)));
 		}
-		
+		String stname = ss.get(stId).getStname();
+		model.addAttribute("stname", stname);
 		model.addAttribute("memberList", memberList);
 		model.addAttribute("stId", stId);
 		System.out.println(memberList);
+		System.out.println(memberList.get(0).getGender().getGenderText());
 		return "storeAdminSystem-storeTrace";
 	}
 	
-	@GetMapping("/storeGetTraceMember")
-	public @ResponseBody List<Map<String, Object>> iWantLearnMore(
-			@RequestParam Integer stId
-			) throws SQLException{
-		List<Integer> Tracelist = ts.StoreBeTraceQueryByMemberId(stId);
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		List<Map<String, Object>> TraceListmap  = new ArrayList<Map<String,Object>>();
-		for(Integer memberId:Tracelist) {
-			WebUserData wud = wus.getWebUserDataById(String.valueOf(memberId));
-			map1.put("memberId", wud.getUserId());
-			map1.put("memberNickname",wud.getNickname());
-			TraceListmap.add(map1);
-		}
-		return TraceListmap;
+	@PostMapping("/storeAdTraceMail")
+	public String storeAdTraceMail(
+			Model model
+			,@RequestParam String stId
+			,@RequestParam String memberNickname
+			,@RequestParam String memberEmail
+			) {
+		model.addAttribute("stId", stId);
+		model.addAttribute("memberNickname", memberNickname);
+		System.out.println(memberNickname);
+		model.addAttribute("memberEmail", memberEmail);
+		return "storeTraceMail";
 	}
+	
+	@PostMapping("/storeAdMailSend")
+	public String storeAdMailSend(
+			Model model
+			,@RequestParam String stId
+			,@RequestParam String memberEmail
+			,@RequestParam String mailSub
+			,@RequestParam String mailContext
+			) {
+		//寄信
+			sendJavaMail.goSendMail(memberEmail, mailSub, mailContext);
+		//轉跳
+		model.addAttribute("stId", stId);
+		return "redirect:/storeAdClick";
+	}
+//	觀察用
+//	@GetMapping("/storeGetTraceMember")
+//	public @ResponseBody List<Map<String, Object>> iWantLearnMore(
+//			@RequestParam Integer stId
+//			) throws SQLException{
+//		List<Integer> Tracelist = ts.StoreBeTraceQueryByMemberId(stId);
+//		Map<String, Object> map1 = new HashMap<String, Object>();
+//		List<Map<String, Object>> TraceListmap  = new ArrayList<Map<String,Object>>();
+//		for(Integer memberId:Tracelist) {
+//			WebUserData wud = wus.getWebUserDataById(String.valueOf(memberId));
+//			map1.put("memberId", wud.getUserId());
+//			map1.put("memberNickname",wud.getNickname());
+//			TraceListmap.add(map1);
+//		}
+//		return TraceListmap;
+//	}
 	
 	//以上商家管理資料//
 	

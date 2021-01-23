@@ -183,7 +183,7 @@ public class StoreHibernateDaoImpl implements StoreDao {
 	@Override
 	public List<ProductInfoBean> getProductInfoBeans(Integer stid) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ProductInfoBean Where Store_Id=:stid";
+		String hql = "FROM ProductInfoBean Where Store_Id=:stid and product_status != 3";
 		List<ProductInfoBean> list = session.createQuery(hql).setParameter("stid", stid).getResultList();
 		return list;
 	}
