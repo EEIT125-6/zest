@@ -386,6 +386,33 @@ public class BookingController {
 		
 	}	
 
+	//商家刪除訂位！
+		@PostMapping(value ="/storeCancel", produces="application/json; charset=UTF-8")
+		public @ResponseBody Map<String, Object> storeCancel(Model model,@RequestParam(value ="bookingNo")String bookingNo) {
+			int count = 0;
+			count=service.cancelBooking(bookingNo);
+			if(count==1) {
+				System.out.println("刪除成功～～～");
+			}
+			WebUserData userData=(WebUserData)model.getAttribute("userFullData");		
+			List<StoreBean> storeList = ss.getMemberAllStore(userData);
+			System.out.println("筆數="+storeList.size());
+			List<BookingBean> booked=service.allBooking();
+			List<BookingBean> show =new ArrayList<>();
+			for (StoreBean sb:storeList) {
+				System.out.println(sb.getStname());
+				for (BookingBean bb:booked) {
+					if (bb.getRestaurant().equals(sb.getStname())) {
+						show.add(bb);
+					}
+				}
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("data", show);
+			return map;
+		}
+	
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
 	public String cancel(Model model,

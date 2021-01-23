@@ -165,18 +165,20 @@ response.setContentType("text/html;charset=UTF-8");
 				let content="";
 				if (booking !=null){
 		      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
-		      				+"<tr><th>訂單編號</th><th>訂位狀態<th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th></tr>";
+		      				+"<tr><th>訂單編號</th><th>訂位狀態<th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th><th>變更</th></tr>";
 		      	for(let i=0;i<booking.length;i++){
 		      		let data=booking[i];
 		      		if (data.status==1){
-		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>";
-		      					
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>"
+		      					+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number
+		      					+"</td><td><button type='button' id='"+data.bookingNo+"' onclick='test(this)' class='btn btn-outline-danger'>取消</button></td></tr>";		
 		      		}else if (data.status==0){
-		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>";
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>"
+		      					+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td></td></tr>";
 		      		}else{
-						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
+						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>"
+								+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td></td></tr>";
 					}
-		      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td></tr>";
 		      	}
 		      	content+="</table>";
 	      		aa.innerHTML=content;
@@ -191,7 +193,53 @@ response.setContentType("text/html;charset=UTF-8");
 		
 		}); 
 	}
-
+ 	
+	function test(item){
+		var bookingNo = $(item).attr('id');
+		cancel(bookingNo);
+	}
+	function cancel(bookingNo){
+		$.ajax({
+			type : "POST",
+			url : "<c:url value='/booking/storeCancel'/>",
+			data : {
+				'bookingNo':bookingNo
+			},
+			dataType : "json",
+			success : function(resultObj) {
+				let booking=resultObj.data;	
+				let content="";
+				if (booking !=null){
+		      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
+		      				+"<tr><th>訂單編號</th><th>訂位狀態<th>餐廳名</th><th>訂位日期</th><th>時間</th><th>人數</th><th>變更</th></tr>";
+		      	for(let i=0;i<booking.length;i++){
+		      		let data=booking[i];
+		      		if (data.status==1){
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</a></td><td>有效</td>"
+		      					+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number
+		      					+"</td><td><button type='button' id='"+data.bookingNo+"' onclick='test(this)' class='btn btn-outline-danger'>取消</button></td></tr>";		
+		      		}else if (data.status==0){
+		      			content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>已取消</td>"
+		      					+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td></td></tr>";
+		      		}else{
+						content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>"
+								+"<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td></td></tr>";
+					}
+		      	}
+		      	content+="</table>";
+	      		aa.innerHTML=content;
+	      		
+		      	
+		      	}else{
+		      		aa.innerHTML="<h3>查無訂位資料</h3>";
+		      		
+		      	} 
+		      	
+			}
+		
+		}); 	
+	}
+	
 </script>
 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery.js"></script>
