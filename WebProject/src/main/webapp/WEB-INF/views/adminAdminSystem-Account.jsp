@@ -88,7 +88,7 @@
 							</fieldset>
 							<div align="center">
 								<label>顯示筆數：</label>
-								<select id=avPage onblur="specSearch()">
+								<select id="avPage" onblur="specSearch()">
 									<option value="3" label="3">
 									<option value="5" label="5">
 									<option value="10" label="10">
@@ -292,6 +292,8 @@
 											selectUser(accountObjValue, nicknameObjValue, fervorObjValue, locationCodeObjValue, selectedStatus, selectedIdentity);
 										} 
 									}
+								} else {
+									alert("檢查失敗！");
 								}
 							};
 							

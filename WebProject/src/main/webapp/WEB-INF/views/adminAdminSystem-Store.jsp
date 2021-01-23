@@ -89,7 +89,7 @@
 						
 						<div align="center" id="dataContainer"></div>
 						
-						<!-- 引用本地jQuery -->
+						<!--引用本地jQuery -->
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 						<!-- 引用本頁檢查用js -->
 						<script src="${pageContext.request.contextPath}/js/StoreSearchForm.js"></script>
@@ -177,6 +177,7 @@
 								document.getElementById("pageNo").value = 1;
 								document.getElementById("maxPage").value = 1;
 								var counter = 0;
+								var userLv = document.getElementById("userLv").value.trim();
 								var stnameObjValue = document.getElementById("selectedStname").value.trim();
 								var ownerObjValue = document.getElementById("selectedOwner").value.trim();
 								var sclassObjValue = document.getElementById("selectedSclass").value;
@@ -208,6 +209,8 @@
 											selectStore(stnameObjValue, ownerObjValue, sclassObjValue, selectedStatus);
 										} 
 									}
+								} else {
+									alert("檢查失敗！");
 								}
 							};
 							
@@ -441,8 +444,6 @@
 								let dataContainer = document.getElementById("dataContainer");
 								let avgPage = document.getElementById("avPage").value;
 								
-								alert(avgPage);
-								
 								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
 										+ searchStr;
 								searchSpan.style.color = "black";
@@ -658,81 +659,7 @@
 							};
 						</script>
 					</div>
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-12"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">使用者縣市分布圖</h4> -->
-<!--                                     <p class="card-category">使用者與地區依賴性</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="userAndarea" class="ct-chart "></div> -->
-<!--                                     <div class="legend"> -->
-<!--                                         <i class="fa fa-circle text-info"></i> 人數 -->
-<!--                                     </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div>						 -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-12"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">新會員增長率</h4> -->
-<!--                                     <p class="card-category">新會員增長率By月份</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="newAccount" class="ct-chart "></div> -->
-<!-- 	                                    <div class="legend"> -->
-<!-- 	                                        <i class="fa fa-circle text-info"></i> 增長人數 -->
-<!-- 	                                    </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-6"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">使用者性別比率</h4> -->
-<!--                                     <p class="card-category">使用者性別比率</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="gender" class="ct-chart "></div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 						<div class="col-md-6"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">年齡x平均花費金額</h4> -->
-<!--                                     <p class="card-category">年齡與平均花費金額關係</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="ageAndCost" class="ct-chart "></div> -->
-<!--                                     <div class="legend"> -->
-<!--                                         <i class="fa fa-circle text-info"></i> 花費金額 -->
-<!--                                     </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+<!---------------------------------------------------------------------------->
 				</div>
 			</div>
 <!--           		footer 				  -->
