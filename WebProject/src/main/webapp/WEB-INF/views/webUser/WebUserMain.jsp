@@ -213,14 +213,8 @@
                 
                 <script>
                 	window.onload = function () {
-//                 		let manageBtn = document.getElementById("manage");
                 		let logOutBtn = document.getElementById("logout");
                 		
-//                 		manageBtn.onclick = function() {
-//         					if(doubleCheck()) {
-//         						window.location.href = "controller/WebUserMain/Search";
-//         					}
-//         				};
                 		logOutBtn.onclick = function() {
         					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
         					alert("謝謝您的使用，" + account + " ！");

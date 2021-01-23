@@ -1081,7 +1081,7 @@ public class WebUserController {
 	}
 	
 	/* 前往管理畫面 */
-	@GetMapping(value = "/adminAccountAdd")
+	@GetMapping(value = "/adminAccount")
 	public String doCreateWebUserSearchForm(Model model) 
 	{
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -1095,7 +1095,7 @@ public class WebUserController {
 		model.addAttribute("identityList", identityList);
 		model.addAttribute("fervorList", fervorList);
 		model.addAttribute("cityInfoList", cityInfoList);
-		return "adminAdminSystem-Account-Add";
+		return "adminAdminSystem-Account";
 	}
 	
 	/* 回傳符合條件使用者的資料 */
