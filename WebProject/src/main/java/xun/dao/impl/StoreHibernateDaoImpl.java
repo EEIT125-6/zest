@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import webUser.model.WebUserData;
 import xun.dao.StoreDao;
 import xun.model.BoardBean;
 import xun.model.StoreBean;
@@ -374,5 +375,29 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		String hql = "FROM StoreBean";
 		List<StoreBean> list = session.createQuery(hql).getResultList();
 		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getMemberAllStore(WebUserData webUserData) {
+		Session session = factory.getCurrentSession();
+		String hql = "From StoreBean Where webUserData = :webUserData AND status = '1'";
+		List<StoreBean> list = session.createQuery(hql)
+				.setParameter("webUserData", webUserData)
+				.getResultList();
+		return list;
+	}
+	
+	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
+	@Override
+	public Integer storeChange(Integer stid, String newStatus) {
+		Session session = factory.getCurrentSession();
+		StoreBean updatedStoreData = (StoreBean) session.get(StoreBean.class, stid);
+		updatedStoreData.setStatus(newStatus);
+		String hql = "Update StoreBean sb set status = :status WHERE id = :id";
+		return session.createQuery(hql)
+			.setParameter("status", newStatus)
+			.setParameter("id", stid)
+			.executeUpdate();
 	}
 }

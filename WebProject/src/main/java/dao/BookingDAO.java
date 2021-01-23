@@ -31,4 +31,10 @@ public interface BookingDAO {
 
 	//查詢最大可訂位數
 	int maxBooking(String stname);
+	
+	//設定座位數
+	int insertSeat(Integer storeId,Integer seating);
+	
+	//刪除delete
+	int cancelBooking(String bookingNo);
 }

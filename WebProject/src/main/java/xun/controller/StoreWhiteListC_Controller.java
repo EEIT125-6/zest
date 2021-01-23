@@ -1,5 +1,6 @@
 package xun.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,9 @@ public class StoreWhiteListC_Controller {
 //		WebUserData wud = new WebUserData();
 //		wud = ws.getWebUserDataById(userFullData);
 		storeBean.setWebUserData(userFullData);
-
+//		寫入新增時間
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		storeBean.setTimestamp(timestamp);
 //		新增
 		ss.save(storeBean);
 //		將新登入的商家的ID取出 並送到查詢詳細商家的Controller 做印出

@@ -1,6 +1,6 @@
 function checkForm() {
 	let counter = 0;
-	let accountObjValue = document.getElementById("account").value.trim();
+	let accountObjValue = document.getElementById("usrAccount").value.trim();
 	let nicknameObjValue = document.getElementById("nickname").value.trim();
 	let fervorObj = document.getElementsByClassName("fervor");
 	let fervorObjValue = "";

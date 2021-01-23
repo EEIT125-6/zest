@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,9 @@ import webUser.model.WebUserData;
 
 @Entity
 @Table(name="booking")
-public class BookingBean {
+public class BookingBean implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@Column(nullable = false,unique = true,columnDefinition = "char(5)")
 	private String bookingNo;

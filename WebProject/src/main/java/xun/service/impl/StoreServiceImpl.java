@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import webUser.model.WebUserData;
 import xun.dao.StoreDao;
 
 import xun.model.ProductInfoBean;
@@ -240,5 +241,18 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public List<StoreBean> getAllStore() {
 		return dao.getAllStore();
+	}
+
+	@Transactional
+	@Override
+	public List<StoreBean> getMemberAllStore(WebUserData webUserData) {
+		return dao.getMemberAllStore(webUserData);
+	}
+	
+	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
+	@Transactional
+	@Override
+	public Integer storeChange(Integer stid, String newStatus) {
+		return dao.storeChange(stid, newStatus);
 	}
 }

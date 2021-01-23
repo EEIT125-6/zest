@@ -1,21 +1,17 @@
 package webUser.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -38,6 +34,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import util.CipherMsg;
+import util.GeneralEmailService;
+import util.GeneralInputCheckService;
 import util.GlobalService;
 import webUser.model.CityInfo;
 import webUser.model.FoodFervor;
@@ -96,9 +94,6 @@ public class WebUserController {
 	/* Location Service */
 	@Autowired
 	LocationService lcs;
-
-	/* Today */
-	final LocalDate today = LocalDate.now();
 	
 	/* 簽到用生日時顯示字串 */
 	final String birthday = "今天對您是特別的一日，今日登入讓您獲得 10 枚橙幣！";	
@@ -227,7 +222,7 @@ public class WebUserController {
 		
 		/* 追加檢查checkCode */
 		if (submitMessage.equals("")) {
-			submitMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, email);
+			submitMessage = GeneralInputCheckService.doCheckCheckCode(inputCheckCode, checkCode, registerEmail, email);
 		}
 		
 		/* 成功 */
@@ -322,8 +317,6 @@ public class WebUserController {
 				insertResultPage = request.getContextPath() + "/WebUserLogin";
 			} 
 		} 
-		
-		System.out.println("resultCode is:"+insertResult.toString());
 		
 		map.put("resultCode", insertResult.toString());
 		map.put("resultMessage", insertResultMessage);
@@ -443,16 +436,16 @@ public class WebUserController {
 							/* 取出當前橙幣 */
 							BigDecimal oldZest = userFullData.getZest();
 							/* 檢查簽到備用 */
-							Integer checkSignInResult = wus.checkWebUserSignIn(userFullData.getUserId(), Date.valueOf(today)) ;
+							Integer checkSignInResult = wus.checkWebUserSignIn(userFullData.getUserId(), Date.valueOf(GeneralInputCheckService.doGetToday())) ;
 							/* 0代表未簽到，1代表已簽到 */
 							if (checkSignInResult == 0) {
 								/* 設定簽到日 */
-								userFullData.setSignIn(Date.valueOf(today));
+								userFullData.setSignIn(Date.valueOf(GeneralInputCheckService.doGetToday()));
 								/* 同月份時每次登入加1幣 */
 								/* 生日時每次登入額外加9幣 */
-								if ((String.valueOf(today)).split("-")[1].equals((String.valueOf(userFullData.getBirth())).split("-")[1])) {
+								if ((String.valueOf(GeneralInputCheckService.doGetToday())).split("-")[1].equals((String.valueOf(userFullData.getBirth())).split("-")[1])) {
 									userFullData.setZest(userFullData.getZest().add(new BigDecimal("1")));
-									if ((String.valueOf(today)).split("-")[2].equals((String.valueOf(userFullData.getBirth())).split("-")[2])) {
+									if ((String.valueOf(GeneralInputCheckService.doGetToday())).split("-")[2].equals((String.valueOf(userFullData.getBirth())).split("-")[2])) {
 										userFullData.setZest(userFullData.getZest().add(new BigDecimal("9")));
 										signInMessage = birthday;
 									} else {		
@@ -488,7 +481,6 @@ public class WebUserController {
 								}
 							} else {
 								signInMessage = "您今日已經簽到過了！";
-								
 							}
 						}
 					}
@@ -566,11 +558,11 @@ public class WebUserController {
 						accountCheckResult = 5;
 					} else {
 						/* 寫入Cookie */
-						doWriteUserCookie(request, response, account, finPassword, remember);
+						GlobalService.doWriteUserCookie(request, response, account, finPassword, remember);
 					}
 				} else if (!ckAccount.equals("") && !ckPassword.equals("")) {
 					/* 寫入Cookie */
-					doWriteUserCookie(request, response, ckAccount, ckFinPassword, remember);
+					GlobalService.doWriteUserCookie(request, response, ckAccount, ckFinPassword, remember);
 					if (remember) {
 						model.addAttribute("remember", remember);
 					} else {
@@ -606,7 +598,7 @@ public class WebUserController {
 		/* 確認有無Cookie */
 		if (!ckAccount.equals("") && !ckPassword.equals("")) {
 			/* 移除Cookie */
-			doRemoveUserCookie(request, response, ckAccount, ckPassword, ckRemember);
+			GlobalService.doRemoveUserCookie(request, response, ckAccount, ckPassword, ckRemember);
 		}
 		/* 清空SessionAttribute */
 		sessionStatus.setComplete();
@@ -623,7 +615,6 @@ public class WebUserController {
 			/* 直接移除 */
 			context.removeAttribute("userMap");
 		}
-
 		/* 前往首頁 */
 		return "redirect:/";
 	}
@@ -811,7 +802,7 @@ public class WebUserController {
 		
 		if (message.equals("")) {
 			/* 執行圖片更新 */
-			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			map = GlobalService.doUpdatePic(oldUrl, newIconUrl, picFile);
 			/* 圖片更新成功 */
 			if (map.get("resultCode").equals("true")) {
 				/* 更新DB上的資料 */
@@ -900,7 +891,7 @@ public class WebUserController {
 		if (message.equals("") && !oldIconPath.equals("")) {
 			/* 執行圖片刪除 */
 			try {
-				resetIconUrlResult = doDeleteOldIcon(oldIconPath);
+				resetIconUrlResult = GlobalService.doDeleteOldIcon(oldIconPath);
 				if (resetIconUrlResult) {
 					/* 更新DB上的資料 */
 					/* 調用服務裡的方法 */
@@ -1054,7 +1045,7 @@ public class WebUserController {
 		/* 追加檢查checkCode */
 		if (updateResultMessage.equals("")) {
 			if (!newEmail.replace('<', ' ').replace('>', ' ').trim().equals(selfData.getEmail())) {	
-				updateResultMessage = doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail.replace('<', ' ').replace('>', ' ').trim());
+				updateResultMessage = GeneralInputCheckService.doCheckCheckCode(inputCheckCode, checkCode, registerEmail, newEmail.replace('<', ' ').replace('>', ' ').trim());
 			}
 		}
 		
@@ -1089,8 +1080,8 @@ public class WebUserController {
 		return map;
 	}
 	
-	/* 前往搜尋畫面 */
-	@GetMapping(value = "/webUser/WebUserSearchForm")
+	/* 前往管理畫面 */
+	@GetMapping(value = "/adminAccount")
 	public String doCreateWebUserSearchForm(Model model) 
 	{
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -1104,13 +1095,7 @@ public class WebUserController {
 		model.addAttribute("identityList", identityList);
 		model.addAttribute("fervorList", fervorList);
 		model.addAttribute("cityInfoList", cityInfoList);
-		return "webUser/WebUserSearchForm";
-	}
-	
-	/* 準備顯示搜尋畫面 */
-	@GetMapping(value = "/webUser/controller/WebUserMain/Search")
-	public String doDisplaySearchPage() {
-		return "redirect:/webUser/WebUserSearchForm";
+		return "adminAdminSystem-Account";
 	}
 	
 	/* 回傳符合條件使用者的資料 */
@@ -1269,10 +1254,10 @@ public class WebUserController {
 			/* 設定入Model中 */
 			model.addAttribute("genderList", genderList);
 			/* 前往個人資料畫面 */
-			destinationUrl = "redirect:/webUser/DisplayManagedUserData";
+			destinationUrl = "redirect:/adminAccount-display";
 		} else {
 			/* 導回查詢畫面 */
-			destinationUrl = "forward:/webUser/WebUserSearchForm";
+			destinationUrl = "forward:/adminAccount";
 		}
 		
 		return destinationUrl;
@@ -1327,7 +1312,7 @@ public class WebUserController {
 							/* 執行停用 */
 							operateResult = wus.adminChangeWebUserData(userId, status);
 							/* 寄送Email */
-							UserInfoController.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
+							GeneralEmailService.doSendEmail(banedUserData.getAccount(), banedUserData.getEmail(), "", "adminQuit", contextPath);
 						}
 						/* 將被停用的使用者離線 */
 						if (operateResult == 1) {
@@ -1370,7 +1355,7 @@ public class WebUserController {
 							/* 設定屬於哪種情境 */
 							String adMinMode = (FirstTimeUse) ? "adminActivate" : "adminReActive";
 							/* 寄送Email */
-							Boolean sendResult = UserInfoController.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode, contextPath);
+							Boolean sendResult = GeneralEmailService.doSendEmail(activedUserData.getAccount(), activedUserData.getEmail(), "", adMinMode, contextPath);
 							operateResult = (sendResult) ? 1 : 0;
 						}
 					} catch (SQLException sqlE) {
@@ -1429,7 +1414,7 @@ public class WebUserController {
 	}
 	
 	/* 傳送管理員後台新增表單所必需的資料 */
-	@GetMapping(value = "/webUser/WebUserAddForm")
+	@GetMapping(value = "/adminAccountAdd")
 	public String doCreateManagedUserRegisterForm(Model model) {
 		
 		/* 取得下拉選單、單選、多選所需的固定資料 */
@@ -1447,7 +1432,7 @@ public class WebUserController {
 		model.addAttribute("cityInfoList", cityInfoList);
 		
 		/* 前往註冊畫面 */
-		return "webUser/WebUserAddForm";
+		return "adminAdminSystem-Account-Add";
 	}
 	
 	/* 執行管理員新增 */
@@ -1574,7 +1559,7 @@ public class WebUserController {
 		
 		if (message.equals("")) {
 			/* 執行圖片更新 */
-			map = doUpdatePic(oldUrl, newIconUrl, picFile);
+			map = GlobalService.doUpdatePic(oldUrl, newIconUrl, picFile);
 			/* 圖片更新成功 */
 			if (map.get("resultCode").equals("true")) {
 				/* 更新DB上的資料 */
@@ -1670,7 +1655,7 @@ public class WebUserController {
 		if (message.equals("") && !oldIconPath.equals("")) {
 			/* 執行圖片刪除 */
 			try {
-				resetIconUrlResult = doDeleteOldIcon(oldIconPath);
+				resetIconUrlResult = GlobalService.doDeleteOldIcon(oldIconPath);
 				if (resetIconUrlResult) {
 					/* 更新DB上的資料 */
 					/* 調用服務裡的方法 */
@@ -1847,7 +1832,7 @@ public class WebUserController {
 		if (resultMessage.equals("") || resultMessage.equals("沒有輸入任何有效的修改內容，請重新操作")) {
 			/* 非第三方登入才做密碼檢查 */
 			if (managedUserData.getPassword() != null) {
-				String resultTmp = doCheckPassword(newPassword);
+				String resultTmp = GeneralInputCheckService.doCheckPassword(newPassword, "login");
 				resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 				if (newPassword.equals(managedUserData.getPassword())) {
 					count++;
@@ -1859,7 +1844,7 @@ public class WebUserController {
 		
 		/* 檢查性別 */
 		if (resultMessage.equals("")) {
-			String resultTmp = doCheckGender(gender.getGenderCode());
+			String resultTmp = GeneralInputCheckService.doCheckGender(gender.getGenderCode());
 			resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (gender.getGenderCode().equals(managedUserData.getGender().getGenderCode())) {
 				count++;
@@ -1868,7 +1853,7 @@ public class WebUserController {
 		
 		/* 檢查生日 */
 		if (resultMessage.equals("")) {
-			String resultTmp = doCheckBirth(newBirth);
+			String resultTmp = GeneralInputCheckService.doCheckBirth(newBirth);
 			resultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (newBirth.equals(managedUserData.getBirth())) {
 				count++;
@@ -1957,15 +1942,15 @@ public class WebUserController {
 	}
 	
 	/* 前往管理員用顯示個人資料畫面 */
-	@GetMapping(value = "/webUser/DisplayManagedUserData")
+	@GetMapping(value = "/adminAccount-display")
 	public String doGoDisplayManagedWebUserData() {
-		return "webUser/DisplayManagedUserData";
+		return "adminAdminSystem-Account-Display";
 	}
 	
-	/* 無輸入任何帳號則返回登入 */
+	/* 無輸入任何帳號則返回使用者管理 */
 	@GetMapping("/webUser/ManageWebUser")
-	public String doGoBackToLogin() {
-		return "WebUserLogin";
+	public String doGoBackToUserAdmin() {
+		return "redirect:/adminAccount";
 	}
 	
 	/* 前往重設密碼 */
@@ -2037,7 +2022,7 @@ public class WebUserController {
 		} else {
 			/* 檢查密碼 */
 			if (inputIsOk) {
-				String resultTmp = doCheckPassword(password);
+				String resultTmp = GeneralInputCheckService.doCheckPassword(password, "register");
 				submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 				inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 			}
@@ -2045,14 +2030,14 @@ public class WebUserController {
 		
 		/* 檢查中文姓氏 */
 		if (inputIsOk) {
-			String resultTmp = doCheckFirstName(firstName);
+			String resultTmp = GeneralInputCheckService.doCheckFirstName(firstName);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查中文名字 */
 		if (inputIsOk) {
-			String resultTmp = doCheckLastName(lastName);
+			String resultTmp = GeneralInputCheckService.doCheckLastName(lastName);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
@@ -2066,21 +2051,21 @@ public class WebUserController {
 		
 		/* 生理性別 */
 		if (inputIsOk) {
-			String resultTmp = doCheckGender(genderCode);
+			String resultTmp = GeneralInputCheckService.doCheckGender(genderCode);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 西元生日 */
 		if (inputIsOk) {
-			String resultTmp = doCheckBirth(birth);
+			String resultTmp = GeneralInputCheckService.doCheckBirth(birth);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查偏好食物 */
 		if (inputIsOk) {
-			String resultTmp = doCheckFervor(fervor);
+			String resultTmp = GeneralInputCheckService.doCheckFervor(fervor);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
@@ -2094,7 +2079,7 @@ public class WebUserController {
 		
 		/* 檢查getEmail */
 		if (inputIsOk) {
-			String resultTmp = doCheckGetEmail(willingCode);
+			String resultTmp = GeneralInputCheckService.doCheckGetEmail(willingCode);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
@@ -2108,28 +2093,28 @@ public class WebUserController {
 		
 		/* 檢查居住區域 */
 		if (inputIsOk) {
-			String resultTmp = doCheckCityCode(cityCode, "register");
+			String resultTmp = GeneralInputCheckService.doCheckCityCode(cityCode, "register");
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查生活地點一 */
 		if (inputIsOk) {
-			String resultTmp = doCheckAddr0(addr0, addr1, addr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr0(addr0, addr1, addr2);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查生活地點二 */
 		if (inputIsOk) {
-			String resultTmp = doCheckAddr1(addr0, addr1, addr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr1(addr0, addr1, addr2);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
 		
 		/* 檢查生活地點三 */
 		if (inputIsOk) {
-			String resultTmp = doCheckAddr2(addr0, addr1, addr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr2(addr0, addr1, addr2);
 			submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		}
@@ -2149,7 +2134,7 @@ public class WebUserController {
 		
 		/* 檢查密碼 */
 		if (message.equals("")) {
-			resultTmp = doCheckPassword(password);
+			resultTmp = GeneralInputCheckService.doCheckPassword(password, "login");
 			message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
@@ -2220,7 +2205,7 @@ public class WebUserController {
 			} else if (password.equals(oldPassword)){
 				updateResultMessage = "密碼未修改！";
 			} else {
-				String resultTmp = doCheckPassword(password);
+				String resultTmp = GeneralInputCheckService.doCheckPassword(password, "modify");
 				updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 				
 				if (updateResultMessage.equals("")) {	
@@ -2275,7 +2260,7 @@ public class WebUserController {
 		
 		/* 檢查中文姓氏 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckFirstName(newFirstName);
+			String resultTmp = GeneralInputCheckService.doCheckFirstName(newFirstName);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (updateResultMessage.equals("") && newFirstName.equals(oldFirstName)) {
 				count++;
@@ -2284,7 +2269,7 @@ public class WebUserController {
 		
 		/* 檢查中文名字 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckLastName(newLastName);
+			String resultTmp = GeneralInputCheckService.doCheckLastName(newLastName);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (updateResultMessage.equals("") && newLastName.equals(oldLastName)) {
 				count++;
@@ -2302,7 +2287,7 @@ public class WebUserController {
 		
 		/* 檢查偏好食物 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckFervor(fervor);
+			String resultTmp = GeneralInputCheckService.doCheckFervor(fervor);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (fervor.equals(oldFervor) && updateResultMessage.equals("")) {
 				count++;
@@ -2329,7 +2314,7 @@ public class WebUserController {
 		
 		/* 檢查接收促銷/優惠訊息 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckGetEmail(getEmail);
+			String resultTmp = GeneralInputCheckService.doCheckGetEmail(getEmail);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (getEmail.equals(oldGetEmail) && updateResultMessage.equals("")) {
 				count++;
@@ -2338,7 +2323,7 @@ public class WebUserController {
 		
 		/* 檢查區住區域 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckCityCode(locationCode, "update");
+			String resultTmp = GeneralInputCheckService.doCheckCityCode(locationCode, "update");
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (locationCode == oldLocationCode && updateResultMessage.equals("")) {
 				count++;
@@ -2347,7 +2332,7 @@ public class WebUserController {
 		
 		/* 檢查生活地點一 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckAddr0(newAddr0, newAddr1, newAddr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr0(newAddr0, newAddr1, newAddr2);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (newAddr0.equals(oldAddr0) && updateResultMessage.equals("")) {
 				count++;
@@ -2356,7 +2341,7 @@ public class WebUserController {
 		
 		/* 檢查生活地點二 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckAddr1(newAddr0, newAddr1, newAddr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr1(newAddr0, newAddr1, newAddr2);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (newAddr1.equals(oldAddr1) && updateResultMessage.equals("")) {
 				count++;
@@ -2365,7 +2350,7 @@ public class WebUserController {
 		
 		/* 檢查生活地點三 */
 		if (updateResultMessage.equals("")) {
-			String resultTmp = doCheckAddr2(newAddr0, newAddr1, newAddr2);
+			String resultTmp = GeneralInputCheckService.doCheckAddr2(newAddr0, newAddr1, newAddr2);
 			updateResultMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 			if (newAddr2.equals(oldAddr2) && updateResultMessage.equals("")) {
 				count++;
@@ -2398,7 +2383,7 @@ public class WebUserController {
 		
 		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
 		if (checkResult.equals("")) {
-			String resultTmp = doCheckCityCode(selectedLocationCode, "search");
+			String resultTmp = GeneralInputCheckService.doCheckCityCode(selectedLocationCode, "search");
 			checkResult = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
@@ -2472,12 +2457,13 @@ public class WebUserController {
 		return checkMessage;
 	}
 	
+	/* 檢查重設資訊 */
 	public String doCheckResetInput(String userId, String password) {
 		String checkMessage = "";
 		/* 檢查userId */
 		checkMessage = doCheckUserId(userId);
 		/* 檢查密碼 */
-		checkMessage = (checkMessage.equals("")) ? doCheckPassword(password) : checkMessage;
+		checkMessage = (checkMessage.equals("")) ? GeneralInputCheckService.doCheckPassword(password, "reset") : checkMessage;
 		checkMessage = (checkMessage.startsWith("?")) ? "" : checkMessage;
 		return checkMessage;
 	}
@@ -2486,13 +2472,9 @@ public class WebUserController {
 	public String doCheckUserId(String userId) {
 		String checkMessage = "";
 		
-		if (userId.equals("")) {
-			checkMessage = "Id不可為空白";
-		} else if (userId.length() != 7) {
-			checkMessage = "Id長度錯誤";
-		} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
-			checkMessage = "Id格式錯誤";
-		} else {
+		String resultTmp = GeneralInputCheckService.doBasicCheckUserId(userId);
+		checkMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		if (checkMessage.equals("")) {
 			Integer userIdCheckResult = -1;
 			/* 調用服務裡的方法 */
 			try {
@@ -2510,46 +2492,11 @@ public class WebUserController {
 		String submitMessage = "?";
 		Boolean inputIsOk = true;
 		
-		if (account.equals("")) {
-			submitMessage = "帳號不可為空白";
-			inputIsOk = false;
-		} else if (account.length() < 6 || account.length() > 30) {
-			submitMessage = "帳號長度不符格式，僅接受6~30個字元";
-			inputIsOk = false;
-		} else if (account.matches("[1-9]{1}.")) {
-			submitMessage = "帳號不可以數字開頭";
-			inputIsOk = false;
-		} else if (account.indexOf("&") != -1) {
-			submitMessage = "帳號不可以包含&符號";
-			inputIsOk = false;
-		} else if (account.indexOf("=") != -1) {
-			submitMessage = "帳號不可以包含等號";
-			inputIsOk = false;
-		} else if (account.indexOf("_") != -1) {
-			submitMessage = "帳號不可以包含底線";
-			inputIsOk = false;
-		} else if (account.indexOf("-") != -1) {
-			submitMessage = "帳號不可以包含破折號";
-			inputIsOk = false;
-		} else if (account.indexOf("+") != -1) {
-			submitMessage = "帳號不可以包含加號";
-			inputIsOk = false;
-		} else if (account.indexOf(",") != -1 || account.indexOf("，") != -1) {
-			submitMessage = "帳號不可以包含逗號";
-			inputIsOk = false;
-		} else if (account.indexOf(".") != -1 || account.indexOf("。") != -1) {
-			submitMessage = "帳號不可以包含句號";
-			inputIsOk = false;
-		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
-			submitMessage = "帳號不可以包含問號";
-			inputIsOk = false;
-		} else if (account.indexOf("<") != -1 || account.indexOf(">") != -1) {
-			submitMessage = "帳號不可以包含<、>";
-			inputIsOk = false;
-		} else if (!account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
-			submitMessage = "帳號不符合格式";
-			inputIsOk = false;
-		} else if (account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
+		String resultTmp = GeneralInputCheckService.doCheckPassword(account, "register");
+		submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (submitMessage.equals("") && account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
 			Integer accountCheckResult = -1;
 			/* 調用服務裡的方法 */
 			try {
@@ -2565,142 +2512,8 @@ public class WebUserController {
 					inputIsOk = false;
 				}
 			} 
-		} else {
-			submitMessage = "無效的帳號名稱";
-			inputIsOk = false;
 		}
-		
 		return submitMessage + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查密碼方法 */
-	public String doCheckPassword(String password) {
-		String submitMessage = "?";
-		Boolean inputIsOk = true;
-		
-		if (password.equals("")) {
-			submitMessage = "密碼不可為空白";
-			inputIsOk = false;
-		} else if (password.length() < 6 || password.length() > 30) {
-			submitMessage = "密碼長度不符格式，僅接受6~30個字元";
-			inputIsOk = false;
-		} else if (password.matches("[1-9]{1}.")) {
-			submitMessage = "密碼不可以數字開頭";
-			inputIsOk = false;
-		} else if (password.indexOf("&") != -1) {
-			submitMessage = "密碼不可以包含&符號";
-			inputIsOk = false;
-		} else if (password.indexOf("=") != -1) {
-			submitMessage = "密碼不可以包含等號";
-			inputIsOk = false;
-		} else if (password.indexOf("_") != -1) {
-			submitMessage = "密碼不可以包含底線";
-			inputIsOk = false;
-		} else if (password.indexOf("-") != -1) {
-			submitMessage = "密碼不可以包含破折號";
-			inputIsOk = false;
-		} else if (password.indexOf("+") != -1) {
-			submitMessage = "密碼不可以包含加號";
-			inputIsOk = false;
-		} else if (password.indexOf(",") != -1 || password.indexOf("，") != -1) {
-			submitMessage = "密碼不可以包含逗號";
-			inputIsOk = false;
-		} else if (password.indexOf(".") != -1 || password.indexOf("。") != -1) {
-			submitMessage = "密碼不可以包含句號";
-			inputIsOk = false;
-		} else if (password.indexOf("?") != -1 || password.indexOf("？") != -1) {
-			submitMessage = "密碼不可以包含問號";
-			inputIsOk = false;
-		} else if (password.indexOf("<") != -1 || password.indexOf(">") != -1) {
-			submitMessage = "密碼不可以包含<、>";
-			inputIsOk = false;
-		} else if (!password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
-			submitMessage = "密碼不符合格式";
-			inputIsOk = false;
-		} else if (password.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
-			submitMessage = "";
-			inputIsOk = true;
-		} else {
-			submitMessage = "無效的輸入密碼";
-			inputIsOk = false;
-		}
-		
-		return submitMessage + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查姓氏方法 */
-	public String doCheckFirstName(String firstName) {
-		String message = "?";
-		Boolean inputIsOk = true;
-		
-		if (firstName.equals("")) {
-			message = "姓氏不可為空白";
-			inputIsOk = false;
-		} else if (firstName.length() > 3) {
-			message = "姓氏長度過長，最多僅3個字元";
-			inputIsOk = false;
-		} else {
-			Integer charCountBegin = 0;
-			Boolean firstNameIsOk = true;
-			/* 16進位表示 */
-			Integer charChineseWordCountBegin = 0x4e00;
-			Integer charChineseWordCountEnd = 0x9fff;
-			for (Integer charIndex = charCountBegin; charIndex < firstName.length(); charIndex++) {
-				int firstNameChar = firstName.charAt(charIndex);
-
-				if (firstNameChar < charChineseWordCountBegin || firstNameChar > charChineseWordCountEnd) {
-					firstNameIsOk = false;
-				}
-				
-				if (!firstNameIsOk) {
-					break;
-				}
-			}
-			
-			if (!firstNameIsOk) {
-				message = "姓氏中含有非中文";
-				inputIsOk = false;
-			} 
-		}
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查名字方法 */
-	public String doCheckLastName(String lastName) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		if (lastName.equals("")) {
-			message = "名字不可為空白";
-			inputIsOk = false;
-		} else if (lastName.length() > 22) {
-			message = "名字長度過長，最多僅22個字元";
-			inputIsOk = false;
-		} else {
-			Integer charCountBegin = 0;
-			Boolean lastNameIsOk = true;
-			/* 16進位表示 */
-			Integer charChineseWordCountBegin = 0x4e00;
-			Integer charChineseWordCountEnd = 0x9fff;
-			for (Integer charIndex = charCountBegin; charIndex < lastName.length(); charIndex++) {
-				int lastNameChar = lastName.charAt(charIndex);
-				
-				if (lastNameChar < charChineseWordCountBegin || lastNameChar > charChineseWordCountEnd) {
-					lastNameIsOk = false;
-				}
-				
-				if (!lastNameIsOk) {
-					break;
-				}
-			}
-			if (!lastNameIsOk) {
-				message = "名字中含有非中文";
-				inputIsOk = false;
-			} 
-		}
-		
-		return message + "," + inputIsOk.toString();
 	}
 	
 	/* 統一檢查稱呼方法 */
@@ -2708,16 +2521,10 @@ public class WebUserController {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
-		if (nickname.equals("") && lastName.equals("")) {
-			message = "稱呼不可為空白";
-			inputIsOk = false;
-		} else if (nickname.equals("") && !lastName.equals("")) {
-			nickname = lastName;
-		} else if (nickname.length() > 25){
-			message = "稱呼長度過長";
-			inputIsOk = false;
-		} 
-		
+		String resultTmp = GeneralInputCheckService.doBasicCheckNickname(nickname, lastName, oldNickname);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
 		if (message.equals("")) {
 			Integer nicknameCheckResult = -1;
 			/* 調用服務裡的方法 */
@@ -2733,62 +2540,6 @@ public class WebUserController {
 				inputIsOk = false;
 			}
 		}
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查生理性別方法 */
-	public String doCheckGender(String genderCode) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		switch(genderCode) {
-			case "M":
-			case "W":
-			case "N":
-				break;
-			default:
-				message = "生理性別設定異常";
-				inputIsOk = false;
-				break;
-		}
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查生日方法 */
-	public String doCheckBirth(Date birth) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		if (birth == Date.valueOf(LocalDate.now())) {
-			message = "生日異常";
-			inputIsOk = false;
-		} else if (birth == Date.valueOf("1800-01-01")) {
-			message = "生日異常";
-			inputIsOk = false;
-		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now()))) {
-			message = "生日異常";
-			inputIsOk = false;
-		} else if (Date.valueOf(birth.toString()).after(Date.valueOf(LocalDate.now().minus(15, ChronoUnit.YEARS)))) {
-			message = "未滿15歲，無法申辦本服務";
-			inputIsOk = false;
-		} else {
-			inputIsOk = true;
-		}
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查偏好食物方法 */
-	public String doCheckFervor(String fervor) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		if (fervor.equals("")) {
-			message = "偏好食物不可為空白";
-			inputIsOk = false;
-		} else if (fervor.length() > 50){
-			message = "偏好食物長度過長";
-			inputIsOk = false;
-		}
-		
 		return message + "," + inputIsOk.toString();
 	}
 	
@@ -2797,16 +2548,11 @@ public class WebUserController {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
-		if (email.equals("")) {
-			message = "信箱資訊不可為空白";
-			inputIsOk = false;
-		} else if (email.indexOf("@") == -1 || email.split("@").length > 2 || email.indexOf(" ") != -1) {
-			message = "信箱資訊格式錯誤";
-			inputIsOk = false;
-		} else if (email.indexOf("@") == email.length() - 1 || email.lastIndexOf(".") == email.length() - 1) {
-			message = "信箱資訊格式錯誤";
-			inputIsOk = false;
-		} else {
+		String resultTmp = GeneralInputCheckService.doBasicCheckEmail(email);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (message.equals("")) {
 			Integer emailCheckResult = -1;
 			/* 調用服務裡的方法 */
 			try {
@@ -2821,25 +2567,6 @@ public class WebUserController {
 				inputIsOk = false;
 			} 
 		}
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查是否接受促銷資訊方法 */
-	public String doCheckGetEmail(String willingCode) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		switch(willingCode) {
-			case "Y":
-			case "N":
-					break;
-			default:
-				message = "接收促銷/優惠訊息設定異常";
-				inputIsOk = false;
-				break;
-		}
-		
 		return message + "," + inputIsOk.toString();
 	}
 	
@@ -2848,19 +2575,11 @@ public class WebUserController {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
-		if (phone.equals("")) {
-			message = "連絡電話不可為空白";
-			inputIsOk = false;
-		} else if(phone.length() < 9 || phone.indexOf(" ") != -1 || !phone.matches("[0]{1}[2-9]{1}[0-9]{7,9}")) {
-			message = "連絡電話格式錯誤";
-			inputIsOk = false;
-		} else if (phone.substring(0, 2).equals("09") && phone.length() != 10) {
-			message = "行動電話格式錯誤";
-			inputIsOk = false;
-		} else if (!phone.substring(0, 2).equals("09") && phone.length() == 10) {
-			message = "室內電話格式錯誤";
-			inputIsOk = false;
-		} else {
+		String resultTmp = GeneralInputCheckService.doBasicCheckPhone(phone);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (message.equals("")) {
 			Integer phoneCheckResult = -1;
 			/* 調用服務裡的方法 */
 			try {
@@ -2875,119 +2594,7 @@ public class WebUserController {
 				inputIsOk = false;
 			}
 		}
-		
 		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查居住區域方法 */
-	public String doCheckCityCode(Integer cityCode, String mode) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		switch(cityCode) {
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-			case 18:
-			case 19:
-			case 20:
-			case 21:
-			case 22:
-			case 23:
-				break;
-			default:
-				message = "居住區域設定異常";
-				inputIsOk = false;
-				break;
-		}
-		if (mode.equals("search") && cityCode == 0) {
-			inputIsOk = true;
-			message = "?";
-		}
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查生活地點一方法 */
-	public String doCheckAddr0(String addr0, String addr1, String addr2) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		if (addr0.equals("")) {
-			message = "生活地點一不可為空白";
-			inputIsOk = false;
-		} else if (addr0.length() > 65) {
-			message = "生活地點一超過長度限制";
-			inputIsOk = false;
-		} else if (addr0.equals(addr1) || addr0.equals(addr2)) {
-			message = "生活地點重複填寫";
-			inputIsOk = false;
-		} 
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查生活地點二方法 */
-	public String doCheckAddr1(String addr0, String addr1, String addr2) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		if (addr1.length() > 65) {
-			message = "生活地點二超過長度限制";
-			inputIsOk = false;
-		} else if (addr1.equals(addr0) || (addr1.equals(addr2) && !addr2.equals(""))) {
-			message = "生活地點重複填寫";
-			inputIsOk = false;
-		} 
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查生活地點三方法 */
-	public String doCheckAddr2(String addr0, String addr1, String addr2) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		if (addr2.length() > 65) {
-			message = "生活地點三超過長度限制";
-			inputIsOk = false;
-		} else if (addr2.equals(addr0) || (addr2.equals(addr1) && !addr1.equals(""))) {
-			message = "生活地點重複填寫";
-			inputIsOk = false;
-		} 
-		
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查驗證碼方法 */
-	public String doCheckCheckCode(String inputCheckCode, String checkCode, String registerEmail, String email) {
-		String message = "";
-		if (inputCheckCode.equals("")) {
-			message = "驗證碼不可為空白";
-		} else if (checkCode == null || registerEmail == null) {
-			message = "未產生驗證碼";
-		} else if (!inputCheckCode.toUpperCase().equals(checkCode.toUpperCase())) {
-			message = "驗證碼檢查失敗";
-		} else if (!registerEmail.equals(email)) {
-			message = "email資訊不吻合";
-		} else if (!checkCode.toUpperCase().matches("[0-9A-Z]{8}")) {
-			message = "驗證碼錯誤";
-		}
-		return message;
 	}
 	
 	/* 使用者物件初始化 */
@@ -3034,7 +2641,7 @@ public class WebUserController {
 					"",
 					email.trim(), 
 					phone, 
-					Date.valueOf(today), 
+					Date.valueOf(GeneralInputCheckService.doGetToday()), 
 					addr0.trim(), 
 					addr1.trim(), 
 					addr2.trim(), 
@@ -3060,7 +2667,7 @@ public class WebUserController {
 					"",
 					email.trim(), 
 					phone, 
-					Date.valueOf(today), 
+					Date.valueOf(GeneralInputCheckService.doGetToday()), 
 					addr0.trim(), 
 					addr1.trim(), 
 					addr2.trim(), 
@@ -3154,209 +2761,5 @@ public class WebUserController {
 		map.put("reg_webUser", reg_webUser);
 		map.put("submitMessage", submitMessage);
 		return map;
-	}
-	
-	/* 圖像檔案處理 */
-	public Map<String, String> doUpdatePic(String oldIconUrl, String newIconUrl, CommonsMultipartFile pic) {
-		/* 變數宣告 */
-		Map<String, String> map = new HashMap<>();
-		String oldIconPath = (oldIconUrl.equals("")) ? "" : GlobalService.getUploadUserIconPath() + oldIconUrl;
-		String newIconPath = GlobalService.getUploadUserIconPath() + newIconUrl;
-		String message = "";
-		Boolean delResult = false;
-		Boolean creResult = false;
-		/* 如果原本沒有圖檔，就直接新建檔案 */
-		if (oldIconPath.equals("")) {
-			try {
-				creResult = doCreateNewIcon(newIconPath, pic);
-			} catch (Exception e) {
-				message = e.getMessage();
-			}
-			
-			if (message.equals("") && !creResult) {
-				message = "無法新增圖檔！";
-			}
-		/* 如果原本有圖檔，就需要先刪除後再新增 */	
-		} else {
-			try {
-				delResult = doDeleteOldIcon(oldIconPath);
-			} catch (Exception e) {
-				message = e.getMessage();
-			}
-			
-			/* 成功才繼續 */
-			if (delResult) {
-				try {
-					creResult = doCreateNewIcon(newIconPath, pic);
-				} catch (Exception e) {
-					message = e.getMessage();
-				}
-			/* 失敗 */
-			} else {
-				message = "無法刪除舊有檔案！";
-			}
-			
-			if (message.equals("") && !creResult) {
-				message = "無法新增圖檔！";
-			}
-		}
-		map.put("resultCode", creResult.toString());
-		map.put("resultMessage", message);
-		return map;
-	}
-	
-	/* 刪除舊檔案 */
-	public Boolean doDeleteOldIcon(String oldIconPath) throws Exception{
-		/* 參數宣告 */
-		Boolean delResult = false;
-		Boolean userDirExist = false;
-		Boolean picDelResult = false;
-		/* 使用者目錄 */
-		String userDirPath = oldIconPath.substring(0,oldIconPath.lastIndexOf("/"));
-		/* 確認使用者目錄是否已建立 */
-		File userDir = new File(userDirPath);
-		/* 有建立且為目錄 */
-		if (userDir.exists() && userDir.isDirectory()) {
-			userDirExist = true;
-		/* 未建立則自動建立 */
-		} else if (!userDir.exists()) {
-			userDirExist = userDir.mkdir();
-		/* 有同名檔案但非目錄 */
-		} else if (userDir.exists() && !userDir.isDirectory()) {
-			/* 先嘗試移除原有檔案 */
-			userDirExist = userDir.delete();
-			/* 成功後再建立目錄 */
-			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
-		}
-		/* 確認該路徑是否有檔案存在 */
-		if (userDirExist) {
-			File picFile = new File(oldIconPath);
-			if (!picFile.exists()) {
-				delResult = false;
-			/* 有才執行刪除 */
-			} else {
-				/* 產生暫存檔檔名 */
-				String tempFileName = picFile.getName();
-				String finalTempFileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")) + "_tmp" + tempFileName.substring(tempFileName.lastIndexOf("."));
-				/* 刪除前先建立備份檔 */
-				/* 檢查備份檔是否存在 */
-				File tmpOldPic = new File(finalTempFileName);
-				/* 存在則先刪除舊有的暫存檔 */
-				if (tmpOldPic.exists()) {
-					tmpOldPic.delete();
-				}
-				/* 複製檔案 */
-				FileUtils.copyFile(picFile, tmpOldPic);
-				/* 再執行刪除 */
-				picDelResult = picFile.delete();
-			}
-		}
-		delResult = (picDelResult) ? true : delResult;
-		return delResult;
-	}
-	
-	/* 建立新檔案 */
-	public Boolean doCreateNewIcon(String newIconPath, CommonsMultipartFile pic) throws Exception{
-		/* 參數宣告 */
-		Boolean creResult = false;
-		Boolean userDirExist = false;
-		Boolean picCreResult = false;
-		/* 使用者目錄 */
-		String userDirPath = newIconPath.substring(0,newIconPath.lastIndexOf("/"));
-		/* 確認使用者目錄是否已建立 */
-		File userDir = new File(userDirPath);
-		/* 有建立且為目錄 */
-		if (userDir.exists() && userDir.isDirectory()) {
-			userDirExist = true;
-		/* 未建立則自動建立 */
-		} else if (!userDir.exists()) {
-			userDirExist = userDir.mkdir();
-		/* 有同名檔案但非目錄 */
-		} else if (userDir.exists() && !userDir.isDirectory()) {
-			/* 先嘗試移除原有檔案 */
-			userDirExist = userDir.delete();
-			/* 成功後再建立目錄 */
-			userDirExist = (userDirExist) ? userDir.mkdir() : userDirExist;
-		}
-		/* 檢查目錄下是否已有該檔案 */
-		if (userDirExist) {
-			File picFile = new File(newIconPath);
-			/* 有則先刪再建 */
-			if (picFile.exists()) {
-				/* 先刪除 */
-				picCreResult = picFile.delete();
-				/* 再建立 */
-				picCreResult = (picCreResult) ? doWritePicIntoFile(picFile, pic) : picCreResult;
-			/* 沒有就直接執行新增 */
-			} else {
-				picCreResult = doWritePicIntoFile(picFile, pic);
-			}
-		}
-		creResult = (picCreResult) ? true : creResult;
-		return creResult;
-	}
-	
-	/* 寫入新檔案 */
-	public Boolean doWritePicIntoFile(File picFile, CommonsMultipartFile pic) throws Exception{
-		Boolean writeResult = false;
-		/* 使用CommonsMultipartFile的getInputStream()取得InputStream */
-		try (InputStream is = pic.getInputStream();
-			FileOutputStream fos = new FileOutputStream(picFile)) 
-		{
-			byte[] buffer = new byte[1024]; 
-			int length = -1;
-			while((length = is.read(buffer)) != -1) {
-				fos.write(buffer, 0, length);
-			}
-			writeResult = true;
-		} catch(IOException ioE) {
-			throw new Exception(ioE.getMessage());
-		}
-		return writeResult;
-	}
-	
-	/* 寫入Cookie */
-	public void doWriteUserCookie(HttpServletRequest request, HttpServletResponse response, String account, String password, Boolean remember) {
-		Cookie cookieAccount = new Cookie("ckAccount", account);
-		Cookie cookiePassword = new Cookie("ckPassword", password);
-		Cookie cookieRemember = new Cookie("ckRemember", remember.toString());
-		/* 是否要記住帳密 */
-		if (remember) {
-			// Cookie的存活期: 七天
-			cookieAccount.setMaxAge(7 * 24 * 60 * 60);       
-			cookieAccount.setPath(request.getContextPath());
-			cookiePassword.setMaxAge(7 * 24 * 60 * 60);       
-			cookiePassword.setPath(request.getContextPath());
-			cookieRemember.setMaxAge(7 * 24 * 60 * 60);       
-			cookieRemember.setPath(request.getContextPath());
-		} else {
-			// Cookie的存活期: 0，立刻刪除
-			cookieAccount.setMaxAge(0);       
-			cookieAccount.setPath(request.getContextPath());
-			cookiePassword.setMaxAge(0);       
-			cookiePassword.setPath(request.getContextPath());
-			cookieRemember.setMaxAge(0);       
-			cookieRemember.setPath(request.getContextPath());
-		}
-		response.addCookie(cookieAccount);
-		response.addCookie(cookiePassword);
-		response.addCookie(cookieRemember);
-	}
-	
-	/* 移除Cookie */
-	public void doRemoveUserCookie(HttpServletRequest request, HttpServletResponse response, String account, String password, Boolean remember) {
-		// Cookie的存活期: 0，立刻刪除
-		Cookie cookieAccount = new Cookie("ckAccount", account);
-		Cookie cookiePassword = new Cookie("ckPassword", password);
-		Cookie cookieRemember = new Cookie("ckRemember", remember.toString());
-		cookieAccount.setMaxAge(0);
-		cookieAccount.setPath(request.getContextPath());
-		cookiePassword.setMaxAge(0);
-		cookiePassword.setPath(request.getContextPath());
-		cookieRemember.setMaxAge(0);
-		cookieRemember.setPath(request.getContextPath());
-		response.addCookie(cookieAccount);
-		response.addCookie(cookiePassword);
-		response.addCookie(cookieRemember);
 	}
 }

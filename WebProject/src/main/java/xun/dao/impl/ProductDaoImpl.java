@@ -115,4 +115,14 @@ public class ProductDaoImpl implements ProductDao{
 			.executeUpdate();
 	}
 
+	@Override
+	public void productRemoveByStore(Integer productid) {
+		Session session = factory.getCurrentSession();
+		String hql = "Update ProductInfoBean pib set product_status = :status WHERE product_id = :id";
+		session.createQuery(hql)
+			.setParameter("status", "3")
+			.setParameter("id", productid)
+			.executeUpdate();
+	}
+
 }

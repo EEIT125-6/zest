@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import model.BookingBean;
 import model.BookingData;
+import xun.model.StoreBean;
 
 @Repository
 public class BookingDAO_Impl implements BookingDAO {
@@ -158,4 +159,28 @@ public class BookingDAO_Impl implements BookingDAO {
 		}
 		return 0;
 	}
+	
+	//設定座位數
+	@Override
+	public int insertSeat(Integer storeId,Integer seating) {
+		int count = 0;
+		Session session = factory.getCurrentSession();
+		StoreBean store=session.get(StoreBean.class, storeId);
+		BookingData bean = new BookingData(store,seating);
+		session.saveOrUpdate(bean);
+		count++;
+		return count;
+	}
+	
+	//delete
+	@Override
+	public  int cancelBooking(String bookingNo) {
+		int count = 0;
+		Session session = factory.getCurrentSession();
+		BookingBean bean=session.get(BookingBean.class, bookingNo);
+		bean.setStatus(0);
+		session.saveOrUpdate(bean);
+		count++;
+		return count;
+	}	
 }

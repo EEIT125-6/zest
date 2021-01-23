@@ -81,6 +81,12 @@ public class ProductServiceImpl implements ProductService {
 	public void productReOnShelf(Integer productid) {
 		pDao.productReOnShelf(productid);
 	}
+
+	@Transactional
+	@Override
+	public void productRemoveByStore(Integer productid) {
+		pDao.productRemoveByStore(productid);
+	}
 	
 	
 }

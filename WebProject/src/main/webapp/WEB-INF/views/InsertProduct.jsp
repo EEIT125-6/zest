@@ -158,7 +158,7 @@ body {
                     </div>
                 </form:form>
                     	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
-                    		<button class="btn btn-success" >一鍵輸入</button>
+                    		<button class="btn btn-success" >一鍵輸入 商品1 </button>
                     	</div>
                     	
                     	<script type="text/javascript">
@@ -166,6 +166,30 @@ body {
                     			$("#produceName").val('牛肉拌麵<!--');
                     			$("#producePrice").val('320');
                     			$("#productQuantity").val('-8');
+                    		})
+                    	</script>
+                    	
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入 商品2</button>
+                    	</div>
+                    	
+                    	<script type="text/javascript">
+                    		$("#oneBt").click(function(){
+                    			$("#produceName").val('很貴的牛肉拌麵');
+                    			$("#producePrice").val('32000');
+                    			$("#productQuantity").val('1');
+                    		})
+                    	</script>
+                    	
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入 商品3</button>
+                    	</div>
+                    	
+                    	<script type="text/javascript">
+                    		$("#oneBt").click(function(){
+                    			$("#produceName").val('很貴的豬肉拌麵');
+                    			$("#producePrice").val('32000');
+                    			$("#productQuantity").val('2');
                     		})
                     	</script>
             </div>

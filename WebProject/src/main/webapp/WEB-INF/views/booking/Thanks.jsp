@@ -149,7 +149,7 @@ setTimeout(function(){
 <%@include file = "../Header-Include.jsp" %>
 <%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-  
+${obj} 
 <div align="center">            
 <h2>訂位完成！</h2>
 <h4>將會發送訂位資訊至您的e-mail</h4>

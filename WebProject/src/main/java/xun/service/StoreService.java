@@ -2,6 +2,7 @@ package xun.service;
 
 import java.util.List;
 
+import webUser.model.WebUserData;
 import xun.model.BoardBean;
 import xun.model.StoreBean;
 import xun.model.ProductInfoBean;
@@ -70,4 +71,9 @@ public interface StoreService {
 	
 	/* 取得全部商店列表 By George017 2021/01/19 */
 	List<StoreBean> getAllStore();
+	
+	List<StoreBean> getMemberAllStore(WebUserData webUserData);
+	
+	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
+	public Integer storeChange(Integer stid, String newStatus);
 }

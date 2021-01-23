@@ -23,4 +23,6 @@ public interface ProductService {
 	void productOffShelf(Integer productid);
 	
 	void productReOnShelf(Integer productid);
+	
+	void productRemoveByStore(Integer productid);
 }

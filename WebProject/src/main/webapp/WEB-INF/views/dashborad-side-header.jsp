@@ -59,6 +59,9 @@
 <!--                             </li> -->
 <!--                         </ul> -->
 <!--                     </div> -->
+					<div>
+						<a href="<c:url value='/adminBack'/>" style="text-decoration: none; color:wheat">回目錄</a>
+					</div>
                 </div>
             </nav>
             <!-- End Navbar -->
