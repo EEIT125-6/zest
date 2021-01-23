@@ -34,4 +34,7 @@ public interface BookingDAO {
 	
 	//設定座位數
 	int insertSeat(Integer storeId,Integer seating);
+	
+	//刪除delete
+	int cancelBooking(String bookingNo);
 }

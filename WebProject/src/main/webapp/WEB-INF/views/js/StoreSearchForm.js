@@ -84,7 +84,7 @@ function checkOwner() {
 	let ownerIsOk = true;
 	let ownerStr;
 
-	if (ownerObjValue != "" || ownerObjValue.length != 0) {
+	if (ownerObjValue == "" || ownerObjValue.length == 0) {
 		ownerStr = "";
 		ownerIsOk = true;
 	} else if (ownerObjValue.length > 30) {
@@ -114,7 +114,7 @@ function checkOwner() {
 	} else if (ownerObjValue.indexOf("?") != -1 || ownerObjValue.indexOf("？") != -1) {
 		ownerStr = "擁有者帳號不可以包含問號";
 		ownerIsOk = false;
-	} else if (ownerbjValue.indexOf("<") != -1 || ownerObjValue.indexOf(">") != -1) {
+	} else if (ownerObjValue.indexOf("<") != -1 || ownerObjValue.indexOf(">") != -1) {
 		ownerStr = "擁有者帳號不可以包含<、>";
 		ownerIsOk = false;
 	} else {

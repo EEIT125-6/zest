@@ -96,4 +96,14 @@ public class BookingServiceImpl implements BookingService {
 			
 		return count;
 	}
+	
+	//刪除delete
+	@Override
+	public  int cancelBooking(String bookingNo) {
+		int count = 0;
+		dao.cancelBooking(bookingNo);
+		count++;
+		
+		return count;
+	}
 }
