@@ -188,7 +188,7 @@
                 			</a>
                 		</c:if>
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
-                			<a href="<c:url value='/booking/adminStore'/>">
+                			<a href="<c:url value='/booking/admin2'/>">
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>

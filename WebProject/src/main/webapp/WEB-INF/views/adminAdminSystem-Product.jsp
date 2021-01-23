@@ -16,8 +16,10 @@
 <body>
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
-			<div class="content">
+<!---------------------------------------------------------------------------->	
+			<div class="content" style="background-color: #ffc107;">
 				<div class="container-fluid">
+<!---------------------------------------------------------------------------->
 <!-- 					<div class="row"> -->
 <!-- 						<div class="col-md-12"> -->
 <!--                             <div class="card "> -->

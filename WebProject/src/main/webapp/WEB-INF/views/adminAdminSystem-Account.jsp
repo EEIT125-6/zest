@@ -431,7 +431,7 @@
 												}
 				
 												let endPage = (resultObj.userDataList.length < startPage * avgPage) ? resultObj.userDataList.length : startPage * avgPage
-												for (let dataIndex = 0 * avgPage; dataIndex < endPage; dataIndex++) {
+												for (let dataIndex = 0; dataIndex < endPage; dataIndex++) {
 													let userData = resultObj.userDataList[dataIndex];
 													
 													content += "<tr>"
@@ -463,8 +463,8 @@
 																	+ "_" 
 																	+ userData.status 
 																	+ "' style='background-color:#ffc107'>" 
-																	+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
-																	+ "</button>";
+																	+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+																	+ "</button>"
 														} else if (userData.status == 'quit') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
 																	+ userData.userId 
@@ -473,8 +473,8 @@
 																	+ "_" 
 																	+ userData.status
 																	+ "' style='background-color:#ffc107'>" 
-																	+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-																	+ "</button>"
+																	+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																	+ "</button>";
 														} else if (userData.status == 'inactive') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
 																	+ userData.userId 

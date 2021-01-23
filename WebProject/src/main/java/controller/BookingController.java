@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -31,8 +30,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
-import ecpay.payment.integration.domain.AioCheckOutCVS;
-import ecpay.payment.integration.domain.InvoiceObj;
 import model.BookingBean;
 import service.BookingService;
 import webUser.model.WebUserData;
@@ -94,7 +91,7 @@ public class BookingController {
 	public static String genAioCheckOutALL(){
 		int r=(int)(Math.random()*1000+1);
 		java.util.Date date=new java.util.Date();
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		AllInOne all=new AllInOne("");
 		AioCheckOutALL obj = new AioCheckOutALL();
 		obj.setMerchantTradeNo("tuk004"+r);
@@ -286,6 +283,8 @@ public class BookingController {
 			map.put("line", "此時段剩餘座位數："+left);
 			map.put("code", 2);
 		}
+		return map;
+	}
 
 	//ajax查詢
 	@SuppressWarnings("unchecked")
@@ -298,39 +297,6 @@ public class BookingController {
 	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
 	    Map<String, Object> map = new HashMap<>();
 	    map.put("data", data);
-		return map;
-	}
-	
-	//剩餘座位數
-	@PostMapping(value ="/seating", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> seating(
-			Model model,
-			@RequestParam(value="bookingdate") String bookingdate,
-			@RequestParam(value="time") String time,
-			@RequestParam(value="number") Integer number,
-			@RequestParam(value="restaurant") String restaurant
-			) {
-		String stname = restaurant;
-		System.out.println(">>>"+restaurant);
-		Map<String, Object> map = new HashMap<>();
-		int left = service.showSeating(bookingdate, time, restaurant, stname);
-		if (left <0) {
-			map.put("line", "此餐廳目前不開放訂位～");
-			map.put("code", -1);
-		}
-		if (left ==0) {
-			map.put("line", "此時段目前訂位已額滿～");
-			map.put("code", 0);
-		}
-		if (left>0) {
-			if (number>left) {
-				map.put("line", "此時段可訂位數不足"+number+"位～");
-				map.put("code", 1);
-			}
-			map.put("line", "此時段剩餘座位數："+left);
-			map.put("code", 2);
-		}
-
 		return map;
 	}
 	

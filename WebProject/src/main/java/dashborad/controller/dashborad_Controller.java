@@ -42,7 +42,8 @@ import xun.service.StoreService;
 	"userYearList",
 	"fervorList",
 	"genderList",
-	"userFullData"
+	"userFullData",
+	"sclassList"
 })
 public class dashborad_Controller {
 	/* By Mimicker0903 */
@@ -131,9 +132,15 @@ public class dashborad_Controller {
 	
 	//以下管理員管理資料//
 	@GetMapping("/adminStore")
-	public String adminStore(
-			Model model
-			) {
+	public String adminStore(Model model) {
+		List<String> sclassList = new ArrayList<>();
+		List<StoreBean> storeList = ss.getAllStore();
+		for (StoreBean storeData: storeList) {
+			if (!sclassList.contains(storeData.getSclass())) {
+				sclassList.add(storeData.getSclass());
+			}
+		}
+		model.addAttribute("sclassList", sclassList);
 		return "adminAdminSystem-Store";
 	}
 	
@@ -708,12 +715,20 @@ public class dashborad_Controller {
 	@PostMapping(value = "/controller/getStoreList", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> getStoreList(
 			Model model,
-			@RequestParam(value = "status", required = false) String status,
-			@RequestParam(value = "type", required = false) String type) {
+			@RequestParam(value = "stname", required = false, defaultValue = "") String stname,
+			@RequestParam(value = "owner", required = false, defaultValue = "") String owner,
+			@RequestParam(value = "status", required = false, defaultValue = "") String status,
+			@RequestParam(value = "type", required = false, defaultValue = "") String type,
+			@RequestParam(value = "avPage", defaultValue = "5") Integer avPage,
+			@RequestParam(value = "startPage", required = false, defaultValue = "1") Integer startPage) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
+		/* 分頁用 */
+		Long totalDataNums = 0L;
+		Integer totalDataPages = 1;
 		/* 回傳的商家資料 */
 		List<StoreBean> storeList = new ArrayList<>();
+		List<StoreBean> finStoreList = new ArrayList<>();
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
 		/* 驗證通過 */
@@ -759,12 +774,56 @@ public class dashborad_Controller {
 					default:
 						break;
 				}
+				if (!stname.equals("")) {
+					/* 遍歷 */
+					for (int index = 0; index < storeList.size(); index++) {
+						if (storeList.get(index).getStname().indexOf(stname) == -1) {
+							storeList.remove(index);
+						}
+					}
+				}
+				if (!owner.equals("")) {
+					/* 遍歷 */
+					for (int index = 0; index < storeList.size(); index++) {
+						if (storeList.get(index).getWebUserData().getAccount().indexOf(owner) == -1) {
+							storeList.remove(index);
+						}
+					}
+				}
+				/* 計算出總共幾筆、共幾頁 */
+				totalDataNums = (long) storeList.size();
+				totalDataPages = (int) Math.ceil(totalDataNums / (avPage*1.0));
 			}
-			map.put("storeList", storeList);
+			/* 開始算分頁，無資料或資料少於等於每頁筆數就不處理 */
+			if (storeList != null) {
+				if (storeList.size() > avPage) {
+					/* 定義起始筆數、結束筆數 */
+					Integer startIndex = (startPage - 1)*avPage;
+					Integer endIndex = (storeList.size() < startIndex + avPage) ? storeList.size() : startIndex + avPage;
+					/* 遍歷 */
+					for (int index = startIndex; index < endIndex; index++) {
+						finStoreList.add(storeList.get(index));
+					}
+				}
+			}
+			/* 決定回傳的資料 */
+			if (storeList != null && finStoreList != null) {
+				map.put("storeList", finStoreList);
+			} else {
+				map.put("storeList", storeList);
+			}
+			
 		} 
-		message = (message.equals("")) ? "成功" : message;
+		Integer resultCode = -1;
+		resultCode = (message.equals("") && storeList.size() > 0) ? 1 : resultCode;
+		resultCode = (message.equals("") && storeList.size() <= 0) ? 0 : resultCode;
+		message = (message.equals("") && storeList.size() > 0) ? "查詢到 " + totalDataNums + " 筆資料，共 " + totalDataPages + " 頁!" : message;
+		message = (message.equals("") && storeList.size() <= 0) ? "沒有任何符合條件的資料！" : message;
 		
-		map.put("message", message);
+		map.put("resultCode", resultCode.toString());
+		map.put("resultMessage", message);
+		map.put("totalDataNums", totalDataNums);
+		map.put("totalDataPages", totalDataPages);
 		return map;
 	}
 	
