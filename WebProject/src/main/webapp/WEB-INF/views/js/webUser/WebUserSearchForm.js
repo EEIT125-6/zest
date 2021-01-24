@@ -1,6 +1,6 @@
 function checkForm() {
 	let counter = 0;
-	let accountObjValue = document.getElementById("account").value.trim();
+	let accountObjValue = document.getElementById("usrAccount").value.trim();
 	let nicknameObjValue = document.getElementById("nickname").value.trim();
 	let fervorObj = document.getElementsByClassName("fervor");
 	let fervorObjValue = "";
@@ -70,6 +70,33 @@ function checkAccountName() {
 	} else if (accountObjValue.length > 30) {
 		accountStr = "帳號長度過長";
 		accountIsOk = false;
+	} else if (accountObjValue.indexOf("&") != -1) {
+		accountStr = "帳號不可以包含&符號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("=") != -1) {
+		accountStr = "帳號不可以包含等號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("_") != -1) {
+		accountStr = "帳號不可以包含底線";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("-") != -1) {
+		accountStr = "帳號不可以包含破折號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("+") != -1) {
+		accountStr = "帳號不可以包含加號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf(",") != -1 || accountObjValue.indexOf("，") != -1) {
+		accountStr = "帳號不可以包含逗號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf(".") != -1 || accountObjValue.indexOf("。") != -1) {
+		accountStr = "帳號不可以包含句號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("?") != -1 || accountObjValue.indexOf("？") != -1) {
+		accountStr = "帳號不可以包含問號";
+		accountIsOk = false;
+	} else if (accountObjValue.indexOf("<") != -1 || accountObjValue.indexOf(">") != -1) {
+		accountStr = "帳號不可以包含<、>";
+		accountIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z0-9]{1,30}/;
 
@@ -108,6 +135,9 @@ function checkNickname() {
 	if (nicknameObjValue != "" || nicknameObjValue.length != 0) {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
+	} else if (nicknameObjValue.indexOf("<") != -1 || nicknameObjValue.indexOf(">") != -1) {
+		nicknameStr = "稱呼不可以包含<、>";
+		nicknameIsOk = false;
 	} else {
 		nicknameStr = "";
 		nicknameIsOk = false;

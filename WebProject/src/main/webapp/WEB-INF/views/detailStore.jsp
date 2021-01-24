@@ -320,10 +320,9 @@ a.mobile-show {
         	</div>
         	<div class="modal-footer">
 				<form action="<c:url value = '/OffShelfStore'/>" method="post" style="display:inline" id = "sbmaform">
-<%-- 				<form action="<c:url value = '/'/>" method="get" style="display:inline"  id = "sbmaform"> --%>
 					<input type="hidden" name="id" value="${id}">
 					<input id = "sweetalert" type="button" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
-<!-- 					<input id = "sweetalert" type="submit" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
+<!-- 					<input id = "sweetalert" type="button" class="btn btn-danger" value="下架" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px"> -->
 				</form>
 	        </div>
       </div>
@@ -332,29 +331,12 @@ a.mobile-show {
 <!-- -----------------------------------Model----------------------------			 -->
 <script >
 	document.getElementById("sweetalert").addEventListener("click",function(){
-	  swal("下架 ! ", "已經成功下架商家 ! ", "success");
+		  swal("下架 ! ", "已經成功下架商家 ! ", "success");
 	  setTimeout("mooy()",1500);
-	  
 	});
 	function mooy(){
 		sbmaform.submit();
 	}
-// 			$(function(){
-// 				$('#sbmaform').delay(3000).submit();
-// 			});
-// 	function waitAlertSubmit(){
-// 		return true;
-// 	}
-	
-// 	document.getElementById("sweetalert").addEventListener("click",
-// 			function(){
-// 		swal("下架 ! ", "已經成功下架商家 ! ", "success");
-// 				setTimeout(
-// 						function waitAlertSubmit(){
-// 							return true;
-// 						}, 3000)
-// 			}
-// 	);
 </script>
 <%--             	<%if(true){ %> --%>
 			<c:url value="/Update" var="EDITURL">
@@ -406,19 +388,10 @@ function relocate_bannerURL()
 				<input type="hidden" name="stname" value="${stname1}">
 				<input type="submit" class="btn btn-success" value="新增商品" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
-<!-- -------------------------方宣舊版--- -->			
-<!-- 			<span>|</span> -->
-<%-- 			<c:url value="newBookingTime" var="addBookingTime"> --%>
-<%-- 				<c:param name="storeId" value="${id}" /> --%>
-<%-- 			</c:url> --%>
-<%-- 			<a href="${addBookingTime}"> --%>
-<!-- 				<span>新增店家訂位時間</span> -->
-<!-- 			</a> -->
-<!-- -------------------------方宣舊版--- -->
 
 			<form action="${pageContext.request.contextPath}/newBookingTime" method="GET" style="display:inline">
-				<input type="hidden" name = "storeId" value="${id}">
-				<input type="submit" class="btn btn-success" value="新增訂位數" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
+				<input type="hidden" name = "id" value="${id}">
+				<input type="submit" class="btn btn-success" value="新增/修改訂位數" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);margin-right:2px">
 			</form>
 
 <!-- 			<span>|</span> -->
@@ -937,7 +910,6 @@ function initMap() {
     </div>
 </div>
 <!-- ----------------------------------------上架Model----------------------------			 -->
-					
 		          </c:forEach>
 		         <script type="text/javascript">
 	            	$(".removeProductBt").click(function(){

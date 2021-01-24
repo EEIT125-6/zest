@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -15,7 +16,8 @@ import xun.model.ProductInfoBean;
 
 @Entity
 @Table(name = "CartItem")
-public class CartItemBean {	
+public class CartItemBean implements Serializable {	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,5 +90,13 @@ public class CartItemBean {
 	
 	public void setPurchase_Trans(String purchase_Trans) {
 		this.purchase_Transport = purchase_Trans;
+	}
+
+	public Date getPurchase_Time() {
+		return purchase_Time;
+	}
+
+	public void setPurchase_Time(Date purchase_Time) {
+		this.purchase_Time = purchase_Time;
 	}
 }

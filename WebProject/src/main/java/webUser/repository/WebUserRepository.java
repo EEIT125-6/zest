@@ -38,9 +38,6 @@ public interface WebUserRepository {
 	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
 	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException;
 	
-	/* 執行簽到 -1->異常、0->錯誤、1->正確 */
-	public Integer runWebUserSignIn(WebUserData userData) throws SQLException;
-	
 	/* 驗證使用者資料 */
 	public WebUserData checkRecoveryInfo(String email, String phone, Date birth) throws SQLException;
 	
@@ -74,9 +71,6 @@ public interface WebUserRepository {
 	/* 取得所有有效的使用者資料 */
 	public List<WebUserData> getAllWebUserData() throws SQLException;
 	
-	/* 取得所有特定年份註冊的使用者資料 */
-	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException;
-	
 	/* 取得查詢到的總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
@@ -96,5 +90,5 @@ public interface WebUserRepository {
 	public Integer checkAdminAccess() throws SQLException;
 	
 	/* 取回所有可用使用者的註冊日期 */
-	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException;
+	public List<LocalDate> getAllWebUserJoinDate() throws SQLException;
 }

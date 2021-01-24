@@ -86,4 +86,24 @@ public class BookingServiceImpl implements BookingService {
 		int seating = dao.maxBooking(stname)-dao.nowBooking(bookingdate, time, restaurant);
 		return seating;		
 	}
+	
+	//設定座位數
+	@Override
+	public int insertSeat(Integer storeId,Integer seating) {
+		int count = 0;
+		dao.insertSeat(storeId,seating);
+		count++;
+			
+		return count;
+	}
+	
+	//刪除delete
+	@Override
+	public  int cancelBooking(String bookingNo) {
+		int count = 0;
+		dao.cancelBooking(bookingNo);
+		count++;
+		
+		return count;
+	}
 }

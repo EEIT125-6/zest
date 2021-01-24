@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
 import model.BookingBean;
 import service.BookingService;
 import webUser.model.WebUserData;
+import xun.model.StoreBean;
+import xun.service.StoreService;
 
  
 @Controller
@@ -45,6 +50,9 @@ public class BookingController {
 	final static String mailUser = "projectzesteeit1256@gmail.com";
 	/* 寄件者密碼或應用程式密碼 */
 	final static String mailPassword = "EEIT1256PZest";
+	
+	@Autowired
+	StoreService ss;
 	
 	@Autowired
 	BookingService service;
@@ -79,6 +87,24 @@ public class BookingController {
 	
 	return true;
 }
+	//綠界
+	public static String genAioCheckOutALL(){
+		int r=(int)(Math.random()*1000+1);
+		java.util.Date date=new java.util.Date();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		AllInOne all=new AllInOne("");
+		AioCheckOutALL obj = new AioCheckOutALL();
+		obj.setMerchantTradeNo("tuk004"+r);
+		obj.setMerchantTradeDate(sdf.format(date));
+		obj.setTotalAmount("50");
+		obj.setTradeDesc("test Description");
+		obj.setItemName("TestItem");
+		obj.setReturnURL("/booking/Thanks");
+		obj.setClientBackURL("http://localhost:8080/WebProject/booking/Thanks");
+		obj.setNeedExtraPaidInfo("N");
+		String form = all.aioCheckOut(obj, null);
+		return form;
+	}
 	
 	//確認資料
 	@PostMapping("/next")
@@ -127,6 +153,7 @@ public class BookingController {
 			
 		return "forward:/booking/"+restaurant;
 	}
+	
 	//增
 	@PostMapping("/confirm")
 	public String insert(Model model) {
@@ -209,7 +236,8 @@ public class BookingController {
 		} catch (Exception e) {
 			;
 		}
-		return "redirect:/booking/Thanks";
+		model.addAttribute("obj",genAioCheckOutALL());
+		return "/booking/Thanks";
 	}
 	
 	@GetMapping("/Thanks")
@@ -224,20 +252,6 @@ public class BookingController {
 			return "WebUserLogin";
 		}
 		return "/booking/showOrder";
-	}
-
-	//ajax查詢
-	@SuppressWarnings("unchecked")
-	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> order(Model model) {
-		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
-		List<BookingBean> bean = service.findBooking(user_id.getUserId());
-
-	    model.addAttribute("booking",bean);
-	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
-	    Map<String, Object> map = new HashMap<>();
-	    map.put("data", data);
-		return map;
 	}
 	
 	//剩餘座位數
@@ -269,7 +283,20 @@ public class BookingController {
 			map.put("line", "此時段剩餘座位數："+left);
 			map.put("code", 2);
 		}
+		return map;
+	}
 
+	//ajax查詢
+	@SuppressWarnings("unchecked")
+	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> order(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(user_id.getUserId());
+
+	    model.addAttribute("booking",bean);
+	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", data);
 		return map;
 	}
 	
@@ -281,16 +308,107 @@ public class BookingController {
 	    model.addAttribute("booking",bean);
 		return "booking/showOrder";
 	}
+	
 	//管理員＿訂單管理
 	@PostMapping(value ="/admin", produces="application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> admin(Model model) {
+	public @ResponseBody Map<String, Object> admin(Model model,@RequestParam(value = "eating",required = false) String storeName
+															,@RequestParam(value = "status",required = false,defaultValue = "-1") String status) {
+		Integer statusX=-1;
+		if (status.equals("有效")) {
+			statusX=1;
+		}else if (status.equals("已取消")) {
+			statusX=0;
+		}else if(status.equals("用餐過")){
+			statusX=2;
+		}
 		List<BookingBean> bean = service.allBooking();
 		System.out.println("筆數="+bean.size());
-		
+		List<StoreBean> store= ss.getAllStore();
+		List<BookingBean> storeSelected=new ArrayList<>();
+		List<BookingBean> statusSelected=new ArrayList<>();
+		List<String> storeEqual=new ArrayList<>();
+		if (storeName!=null&&!storeName.equals("")) {
+			for(BookingBean xyz:bean) { 		//xyz為bean裡任一個元素
+				if (xyz.getRestaurant().equals(storeName)) {
+					storeSelected.add(xyz);
+				}
+			}
+		}
+		if(statusX!=-1) {
+			for(BookingBean xyz:bean) {
+				if (xyz.getStatus()==statusX) {
+					statusSelected.add(xyz);
+				}
+			}
+		}else {
+			for(BookingBean xyz:bean) { 		
+				for (StoreBean asd:store) {
+					if (asd.getStname().equals(xyz.getRestaurant())) {
+						if (!storeEqual.contains(asd.getStname())) {
+							storeEqual.add(asd.getStname());
+						}
+					}
+				}
+			}
+		}
 	    Map<String, Object> map = new HashMap<>();
+	    if (storeName!=null&&!storeName.equals("")) {
+			bean=storeSelected;
+		}
 	    map.put("data", bean);
+	    map.put("store", storeEqual);
 		return map;
 	}
+	//商家＿訂單管理
+	@PostMapping(value ="/adminStore", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> adminStore(Model model) {
+		WebUserData userData=(WebUserData)model.getAttribute("userFullData");		
+		List<StoreBean> storeList = ss.getMemberAllStore(userData);
+		System.out.println("筆數="+storeList.size());
+		List<BookingBean> booked=service.allBooking();
+		List<BookingBean> show =new ArrayList<>();
+		for (StoreBean sb:storeList) {
+			System.out.println(sb.getStname());
+			for (BookingBean bb:booked) {
+				if (bb.getRestaurant().equals(sb.getStname())) {
+					show.add(bb);
+				}
+			}
+		}
+		
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", show);
+		return map;
+		
+	}	
+	
+	//商家刪除訂位！
+	@PostMapping(value ="/storeCancel", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> storeCancel(Model model,@RequestParam(value ="bookingNo")String bookingNo) {
+		int count = 0;
+		count=service.cancelBooking(bookingNo);
+		if(count==1) {
+			System.out.println("刪除成功～～～");
+		}
+		WebUserData userData=(WebUserData)model.getAttribute("userFullData");		
+		List<StoreBean> storeList = ss.getMemberAllStore(userData);
+		System.out.println("筆數="+storeList.size());
+		List<BookingBean> booked=service.allBooking();
+		List<BookingBean> show =new ArrayList<>();
+		for (StoreBean sb:storeList) {
+			System.out.println(sb.getStname());
+			for (BookingBean bb:booked) {
+				if (bb.getRestaurant().equals(sb.getStname())) {
+					show.add(bb);
+				}
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("data", show);
+		return map;
+	}
+
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
 	public String cancel(Model model,
@@ -384,6 +502,7 @@ public class BookingController {
 		
 		
 	}
+	
 	//改
 	@PostMapping(value = "/confirmUpd", params = "confirmUpd")
 	public String update(Model model, @RequestParam(value = "bookingNo") String bookingNo,
@@ -458,15 +577,22 @@ public class BookingController {
 		}
 		return "redirect:/booking/showOrder";
 	}
+	
 	@GetMapping("/admin1")
 	public String admin1() {
 		return "booking/admin";
+	}
+
+	@GetMapping("/admin2")
+	public String admin2() {
+		return "booking/adminStore";
 	}
 
 	@GetMapping("/updateResult2")
 	public String good() {
 		return "booking/updateResult2";
 	}
+	
 	@GetMapping("/cancelResult")
 	public String good2() {
 		return "booking/cancelResult";

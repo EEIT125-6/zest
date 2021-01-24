@@ -71,23 +71,14 @@ public interface WebUserService {
 	/* 取得所有有效的使用者資料 */
 	public List<WebUserData> getAllWebUserData() throws SQLException;
 	
-	/* 取得所有特定年份註冊的使用者資料 */
-	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException;
-	
 	/* 取得可查詢到總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
 	/* 取得可查詢到的總頁數 */
 	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException;
 	
-	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
-	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
-	
 	/* 更新使用者資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserData(WebUserData updatedUserData) throws SQLException;
-	
-	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
-	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
 	
 	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
@@ -99,5 +90,5 @@ public interface WebUserService {
 	public Integer checkAdminAccess() throws SQLException;
 	
 	/* 取回特定年度所有可用使用者的註冊日期 */
-	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException;
+	public List<LocalDate> getAllWebUserJoinDate() throws SQLException;
 }

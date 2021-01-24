@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <%@include file = "Link_Meta-Include.jsp" %>
 <title>橙皮</title>
@@ -280,7 +280,7 @@ a.mobile-show {
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
                     	<a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
                         	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
-                        	    service
+                        	    Service
                         	</span>
                         </a>
                     </div>
@@ -292,7 +292,7 @@ a.mobile-show {
                     <div style="line-height: 300px;text-align: center;font-size: 300%;">
 	                    <a href="<c:url value='/dashborad_order' />" style="text-decoration:none;">
                         	<span style="color:black;font-family: 'Noto Sans TC', sans-serif;">
-                        	    service
+                        	    Service
                         	</span>
                         </a>
                     </div>

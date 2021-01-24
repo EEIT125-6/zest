@@ -13,7 +13,11 @@ import webUser.model.WebUserData;
 
 public class CheckBossLoginInterceptor extends HandlerInterceptorAdapter {
 	List<String> url = Arrays.asList(
-			"/InsertStore"
+			"/InsertStore",
+			"/storeBack",
+			"/storeSt",
+			"/storeAdClick",
+			"/storeAdProduct"
 			);
 	
 	String servletPath;

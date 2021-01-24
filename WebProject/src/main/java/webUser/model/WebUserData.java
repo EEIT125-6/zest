@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="WebUserInfo")
-public class WebUserData implements Serializable{	
+public class WebUserData implements Serializable {	
 	private static final long serialVersionUID = 1L;
 	
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */
@@ -26,7 +26,7 @@ public class WebUserData implements Serializable{
 	private String userId;
 	@Column(nullable = false , unique = true , columnDefinition="varchar(30)")
 	private String account;
-	@Column(nullable = true , unique = false , columnDefinition="varchar(30)")
+	@Column(nullable = true , unique = false , columnDefinition="varchar(60)")
 	private String password;
 	@Column(nullable = false , unique = false , columnDefinition="nvarchar(3)")
 	private String firstName;

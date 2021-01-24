@@ -54,6 +54,9 @@ function checkAccountPassword() {
 	} else if (passwordObjValue.indexOf("?") != -1 || passwordObjValue.indexOf("？") != -1) {
 		passwordStr = "密碼不可以包含問號";
 		passwordIsOk = false;
+	} else if (passwordObjValue.indexOf("<") != -1 || passwordObjValue.indexOf(">") != -1) {
+		passwordStr = "密碼不可以包含<、>";
+		passwordIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
 
@@ -119,6 +122,9 @@ function checkConfirmPassword() {
 		confirmPasswordIsOk = false;
 	} else if (confirmPasswordObjValue.indexOf("?") != -1 || confirmPasswordObjValue.indexOf("？") != -1) {
 		confirmPasswordStr = "密碼不可以包含問號";
+		confirmPasswordIsOk = false;
+	} else if (confirmPasswordObjValue.indexOf("<") != -1 || confirmPasswordObjValue.indexOf(">") != -1) {
+		confirmPasswordStr = "密碼不可以包含<、>";
 		confirmPasswordIsOk = false;
 	} else {
 		let accountReg = /[a-zA-Z]{1}[a-zA-Z0-9]{5}/;
