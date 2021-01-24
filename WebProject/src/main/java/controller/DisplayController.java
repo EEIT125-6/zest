@@ -30,6 +30,15 @@ public class DisplayController {
 		
 	}
 	
+	@GetMapping("/booking/Display")
+	public String displayDetail(Model model,@RequestParam(value="key") String bookingNo) {
+		BookingBean bean = service.singleBooking(bookingNo);
+		model.addAttribute("bean", bean);
+
+		return "booking/queryResult";
+
+	}
+	
 	@GetMapping("/booking/updateResult")
 	public String fail() {
 		return "booking/updateResult";
@@ -37,7 +46,7 @@ public class DisplayController {
 	
 	@GetMapping("/booking/Index1")
 	public String home() {
-		return "booking/Index1";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/booking/{restaurant}")

@@ -3,6 +3,7 @@ package board.service;
 import java.util.List;
 
 import xun.model.BoardBean;
+import xun.model.StoreBean;
 
 public interface BoardService {
 	BoardBean getBoardById(int id);
@@ -18,4 +19,6 @@ public interface BoardService {
 	List<BoardBean> getAllcomment();
 	
 	List<BoardBean> getMember(String acount);
+	
+	List<BoardBean> getStoreStar(StoreBean sb);
 }

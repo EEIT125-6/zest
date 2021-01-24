@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import board.dao.BoardDao;
 import board.service.BoardService;
 import xun.model.BoardBean;
+import xun.model.StoreBean;
 
 @Transactional
 @Service
@@ -51,6 +52,9 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardBean> getMember(String acount) {
 		return dao.getMember(acount);
 	}
-	
 
+	@Override
+	public List<BoardBean> getStoreStar(StoreBean sb) {
+		return dao.getStoreStar(sb);
+	}
 }

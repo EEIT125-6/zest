@@ -2,6 +2,8 @@ package webUser.repository.impl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -17,7 +19,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	/* 產生SessionFactory */
 	@Autowired
 	SessionFactory factory;
-
+	
 	/* 重複出現factory.getCurrentSession()，所以整理成一個方法，直接呼叫結果 */
 	public Session getSession() {
 		return factory.getCurrentSession();
@@ -268,7 +270,10 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	/* 取得查詢的使用者資料 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException {
+		/* 取得開始的筆數 */
+		Integer startIndex = (startPage - 1) * avPage;
+		/* 開始組字串 */
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM WebUserData AS wu WHERE ");
 
@@ -343,7 +348,112 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		}
 
 		/* 取得當前Session，然後執行HQL以取得陣列 */
-		return getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList();
+		return getSession().createQuery(sb.toString())
+				.setParameter("lv", lv)
+				.setFirstResult(startIndex)
+                .setMaxResults(avPage).getResultList();
+	}
+	
+	/* 取得查詢的使用者資料 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<WebUserData> getAllWebUserData() throws SQLException {
+		String hql = "FROM WebUserData AS wu WHERE wu.status='active'";
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return getSession().createQuery(hql).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
+		String hql = "FROM WebUserData AS wu WHERE wu.status='active' AND wu.joinDate LIKE :year";
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return getSession().createQuery(hql).setParameter("year", year).getResultList();
+	}
+	
+	/* 取得查詢的總筆數 */
+	@Override
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM WebUserData AS wu WHERE ");
+
+		String account = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String nickname = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
+		String fervor = (selectedParameters.split(":")[2].equals("?")) ? "" : selectedParameters.split(":")[2];
+		Integer locationCode = (selectedParameters.split(":")[3].equals("0")) ? 0 : Integer.parseInt(selectedParameters.split(":")[3]);
+		Integer lv = Integer.parseInt(selectedParameters.split(":")[4]);
+		String status = "'" + selectedParameters.split(":")[5] + "'";
+		String selectedStatus = (selectedParameters.split(":")[6].equals("?")) ? ""
+				: "'" + selectedParameters.split(":")[6] + "'";
+		Integer selectedIdentity = (selectedParameters.split(":")[6].equals("-2")) ? -2
+				: Integer.parseInt(selectedParameters.split(":")[7]);
+		
+		if (!account.equals("")) {
+			account = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append("wu.account LIKE " + account);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !nickname.equals("")) {
+			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append("wu.nickname LIKE " + nickname);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !nickname.equals("")) {
+			nickname = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND wu.nickname LIKE " + nickname);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !fervor.equals("")) {
+			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
+			sb.append("wu.fervor LIKE " + fervor);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && !fervor.equals("")) {
+			fervor = "'%" + selectedParameters.split(":")[2] + "%'";
+			sb.append(" AND wu.fervor LIKE " + fervor);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append("wu.locationInfo.cityCode = " + locationCode);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && locationCode != 0) {
+			locationCode = Integer.parseInt(selectedParameters.split(":")[3]);
+			sb.append(" AND wu.locationInfo.cityCode = " + locationCode);
+		}
+
+		if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.status = " + selectedStatus);
+		} else if (lv == -1 && (!selectedStatus.equals("?") && !selectedStatus.equals(""))
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.status = " + selectedStatus);
+		}
+		
+		if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append("wu.accountLv.lv = " + selectedIdentity);
+		} else if (lv == -1 && (selectedIdentity >= -1 && selectedIdentity <= 1)
+				&& (!sb.toString().equals("FROM WebUserData AS wu WHERE "))) {
+			sb.append(" AND wu.accountLv.lv = " + selectedIdentity);
+		}
+
+		if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
+			sb.append("wu.accountLv.lv >= :lv");
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == -1)) {
+			sb.append(" AND wu.accountLv.lv >= :lv");
+		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
+			sb.append("wu.accountLv.lv = :lv AND wu.status = " + status);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 0)) {
+			sb.append(" AND wu.accountLv.lv = :lv AND wu.status = " + status);
+		} else if ((sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
+			sb.append("wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
+		} else if ((!sb.toString().equals("FROM WebUserData AS wu WHERE ")) && (lv == 1)) {
+			sb.append(" AND wu.accountLv.lv <= :lv AND wu.accountLv.lv >= 0 AND wu.status = " + status);
+		}
+
+		/* 取得當前Session，然後執行HQL以取得陣列 */
+		return Long.parseLong(String.valueOf(getSession().createQuery(sb.toString()).setParameter("lv", lv).getResultList().size()));
+	}
+	
+	/* 取得查詢的最大頁數 */
+	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException {
+		Integer totalPages = (int) (Math.ceil(getUserRecordCounts(selectedParameters) / (double) avPage));
+		return totalPages;
 	}
 	
 	/* 更新使用者資料 0->失敗、1->成功 */
@@ -355,17 +465,6 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		getSession().saveOrUpdate(updatedUserData);
 		updateResult++;
 		return updateResult;
-	}
-	
-	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
-	@Override
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
-		int count = 0;
-		/* 取得當前session，產生操作物件並執行刪除 */
-		getSession().delete( (WebUserData) getSession().get(WebUserData.class, deletedUserId));
-		/* 成功則遞增 */
-		count++;
-		return count;
 	}
 	
 	/* 由系統管理員執行的使用者變更 */
@@ -409,5 +508,19 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		String hql = "FROM WebUserData AS wu WHERE wu.accountLv.lv = -1 AND wu.status = 'active'";
 		/* 回傳符合條件的比數 */
 		return getSession().createQuery(hql).getResultList().size();
+	}
+	
+	/* 取回所有可用使用者的註冊日期 */
+	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
+		List<LocalDate> joinDateList = new ArrayList<>();
+		List<WebUserData> userList = getAllYearWebUserData(year);
+		
+		for (WebUserData user: userList) {
+			/* List中沒有才加入，避免重複日期 */
+			if (!joinDateList.contains(user.getJoinDate().toLocalDate())) {
+				joinDateList.add(user.getJoinDate().toLocalDate());
+			}
+		}
+		return joinDateList;
 	}
 }

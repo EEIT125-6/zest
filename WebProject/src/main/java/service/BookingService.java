@@ -13,13 +13,20 @@ public interface BookingService {
 	int cancelBooking(BookingBean bean);
 
 	//查詢query
-	List<BookingBean> findBooking(String phone);
+	List<BookingBean> findBooking(String user_Id);
 
 	//更新update
 	int updateBooking(BookingBean bean);
 
 	//檢查BookingNo
 	boolean checkBooking(String bookingNo);
-
+	
+	//查詢單筆
 	BookingBean singleBooking(String bookingNo);
+
+	//管理員查詢
+	List<BookingBean> allBooking();
+	
+	//檢查剩餘可訂位數
+	int showSeating(String bookingdate, String time, String restaurant, String stname);
 }

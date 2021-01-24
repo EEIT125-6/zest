@@ -1,50 +1,16 @@
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%> --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%
-	request.setCharacterEncoding("UTF-8");
-%>
-<%
-	response.setContentType("text/html;charset=UTF-8");
-%>
-
-<sql:setDataSource var="ds" dataSource="jdbc/zest" />
-
-<%-- <c:set var="ss" value="${param.sclass}" /> --%>
-<%-- <sql:query dataSource="${ds}" var="rs"> --%>
-<!--          SELECT * FROM store WHERE sclass = ?  -->
-<%--          <sql:param value="${ss}" /> --%>
-<%-- </sql:query> --%>
-
-
-
-
-
-<%-- <c:set var="as" value="${param.nsrch}" /> --%>
-<%-- <c:if test= "${!(empty param.nsrch)}">   --%>
-<%-- <c:set var="as" value="%${param.nsrch}%"/>  --%>
-<%-- </c:if> --%>
-
-<%-- <sql:query dataSource="${ds}" var="rs2"> --%>
-<!--          SELECT * FROM store WHERE stname like ?  -->
-<%--          <sql:param value="${as}" /> --%>
-<%-- </sql:query> --%>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
-    <%@include file = "Link_Meta-Include.jsp" %>
-
+<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
+<%@include file = "Link_Meta-Include.jsp" %>
 <title>橙皮</title>
 <style>
 body {
@@ -135,216 +101,366 @@ body {
 		#gotop :hover{
 		    background:#0099CC;
 		}
+		
+.search-area {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5555;
+  background-color: #051922;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 
+span.close-btn {
+  position: absolute;
+  right: 0%;
+  color: #fff;
+  top: 5%;
+  cursor: pointer;
+}
+
+.search-area {
+  height: 100%;
+}
+
+.search-area div {
+  height: 100%;
+}
+
+.search-bar {
+  height: 100%;
+  display: table;
+  width: 100%;
+}
+
+a.mobile-show {
+  display: none;
+}
+
+.search-area .search-bar div.search-bar-tablecell {
+  display: table-cell;
+  vertical-align: middle;
+  height: auto;
+}
+
+.search-bar-tablecell input {
+  border: none;
+  padding: 15px;
+  width: 60%;
+  background-color: transparent;
+  border-bottom: 1px solid #F28123;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] {
+  border: none;
+  background-color: #F28123;
+  padding: 15px 30px;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.search-bar-tablecell input::-webkit-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input:-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::-ms-input-placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell input::placeholder {
+  color: #fff;
+}
+
+.search-bar-tablecell button[type=submit] i {
+  margin-left: 5px;
+}
+
+.search-area {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.search-area.search-active {
+  visibility: visible;
+  opacity: 1;
+  z-index: 999;
+}
+
+.search-bar-tablecell h3 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+}
 </style>
 </head>
 <body>
-		<%@include file ="Header-Include-prototype.jsp" %>
-            <div class="container-fluid " style="margin-top:10px">
-                <!-- <img src="images/backbar2-1.jpg"> -->
-                    <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
-                      <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;">
-                        <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳"
-                        style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" >
-                        <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px
-                         ;float:right;height: 36px">
-                        	<img src="Images/searchbut.jpg" >  
-                        </button>
-                      </fieldset>
-                    </form>
-            	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <script>
+    jQuery(window).on("load",function(){
+        jQuery(".loader").fadeOut(1000);
+    });
+    </script>
+<!--PreLoader Ends-->    
+
+<!-- search area -->
+		<div class="search-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<span class="close-btn"><i class="fas fa-window-close"></i></span>
+						<div class="search-bar">
+							<div class="search-bar-tablecell">
+								<form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
+									<h3>搜尋商家名稱:</h3>
+									<input type="text" name="nsrch" placeholder="搜尋商家">
+									<button type="submit">搜尋 <i class="fas fa-search"></i></button>
+							    </form>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- end search arewa -->
+		<%@include file ="Header-Include.jsp" %>
+<!--             <div class="container-fluid " style="margin-top:10px"> -->
+<!--                 <img src="images/backbar2-1.jpg"> -->
+<!--                     <form action="StoreGetNamestore" method="GET" enctype="UTF-8"  > -->
+<!--                       <fieldset  style="padding: 8px;margin: auto;width: 550px; background-color:rgb(126, 125, 125,0.3);border-radius: 4px;"> -->
+<!--                         <input type ="text" id="srchid" name="nsrch" size="59"  placeholder="搜尋餐廳" -->
+<!--                         style="height: 36px;border-radius: 4px;line-height: 38px;border: solid 2px black;" > -->
+<!--                         <button type="submit"  style="background-color:#fcbf49 ;border: 1px black solid;border-radius: 4px;margin:0px -->
+<!--                          ;float:right;height: 36px"> -->
+<!--                         	<img src="Images/searchbut.jpg" >   -->
+<!--                         </button> -->
+<!--                       </fieldset> -->
+<!--                     </form> -->
+<!--             	</div> -->
+<!--             </div> -->
+            <div class="container-fluid" style="padding: 0%;background: url('Images/hero-bg.jpg');height:540px;padding-top: 220px;background-size:100%">
             </div>
 	<div class="container" style="margin-top:10px">
-	<div class="jumbotron row"
-		style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
+	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
+	<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
+			<c:set var="storeClass" value="${sclass}"></c:set>
+
 		<c:url value="StoreGetClassstore" var="riceURL">
 			<c:param name="sclass" value="中式" />
 		</c:url>
-
-		<div class="col-sm-2 "
-			style="border-right: rgb(204, 203, 203) 1px solid;text-align: center">
-			<a href="${riceURL }"><img class = "classimg"src="Images/S1.jpg"
-				></a><br>中式
+		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid;text-align: center">
+			<a href="${riceURL}"><img class = "classimg" src="Images/S1.jpg"></a><br>
+			<span 
+			<c:if test="${storeClass == '中式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			中式
+			</span>
 		</div>
 
 
 		<c:url value="StoreGetClassstore" var="JPURL">
 			<c:param name="sclass" value="日式" />
 		</c:url>
-		<div class="col-sm-2 "
-			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${JPURL}"><img src="Images/S2.jpg" class = "classimg"/></a><br>日式
+		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
+			<a href="${JPURL}"><img src="Images/S2.jpg" class = "classimg"/></a><br>
+			<span 
+			<c:if test="${storeClass == '日式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			日式
+			</span>
 		</div>
 
 
 		<c:url value="StoreGetClassstore" var="TEAURL">
 			<c:param name="sclass" value="下午茶" />
 		</c:url>
-		<div class="col-sm-2 "
-			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${TEAURL}"><img src="Images/S3.jpg" class = "classimg"></a><br>下午茶
+		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
+			<a href="${TEAURL}"><img src="Images/S3.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '下午茶'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			下午茶
+			</span>
 		</div>
 
-		
 		<c:url value="StoreGetClassstore" var="WESTURL">
 			<c:param name="sclass" value="西式" />
 		</c:url>
-		<div class="col-sm-2 "
-			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${WESTURL}"><img src="Images/S4.jpg" class = "classimg"></a><br>西式
+		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid; text-align: center">
+			<a href="${WESTURL}"><img src="Images/S4.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '西式'}">
+				style="font-weight:bold;"
+			</c:if>
+			>			
+			西式
+			</span>
 		</div>
 		
 		
 		<c:url value="StoreGetClassstore" var="fastURL">
 			<c:param name="sclass" value="快餐" />
 		</c:url>
-		<div class="col-sm-2 "
-			style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
-			<a href="${fastURL}"><img src="Images/S5.jpg"
-				class = "classimg"></a><br>快餐
+		<div class="col-sm-2 " style="border-right: rgb(204, 203, 203) 1px solid;; text-align: center">
+			<a href="${fastURL}"><img src="Images/S5.jpg" class = "classimg"></a><br>
+			<span 
+			<c:if test="${storeClass == '快餐'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			快餐
+			</span>
 		</div>
 
 		<c:url value="StoreGetClassstore" var="metURL">
 			<c:param name="sclass" value="燒肉" />
 		</c:url>
 		<div class="col-sm-2 " style="text-align: center">
-			<a href="${metURL }"><img src="Images/S6.jpg"
-				class = "classimg"	></a><br>燒肉
+			<a href="${metURL}"><img src="Images/S6.jpg" class = "classimg"	></a><br>
+			<span 
+			<c:if test="${storeClass == '燒肉'}">
+				style="font-weight:bold;"
+			</c:if>
+			>
+			燒肉
+			</span>
 		</div>
 
-		<!-- <div class="col-sm-4"><i class="fas fa-cloud"></i></div>
-                  <div class="col-sm-4"><i class="fas fa-cloud"></i></div> -->
-	</div>
+		</div>
 	</div>
 	<div class="row">
 	<div class="col-sm-3 ">
-	 <div class="container" style="background-color: wheat;border-radius:5px;padding:100px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-top:15px;margin-bottom:15px;margin-left:20px; ">
-        <!-- 用container -->
-        <form action="############################" method="post" >
-            <fieldset style="width: auto;margin:1px auto;">
-                <legend>進階查詢</legend>
-				<br>
-           		  	<input type="radio" id="d1" name="dollar" >
-  					<label for="d1"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>   
-                   	<input type="radio" id="d2" name="dollar" >
-  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d3" name="dollar" >
-  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d4" name="dollar" >
-  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                   	<input type="radio" id="d5" name="dollar" >
-  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
-  				<br>
-                <hr>
-                <label>欲查詢幾顆星以上店家
-                </label>
-				<br>
-					<input type="radio" id="star3.5" name="star" >
-  					<label for="star3.5">3.5+</label>
-  				<br>
-  					<input type="radio" id="star4" name="star" >
-  					<label for="star4">4.0+</label>
-  				<br>
- 
-            </fieldset>
-            <div style="text-align: center;">
-                <input type="submit" value="查詢">
-                <input type="reset" value="清除">
-            </div>
-        </form>
-    </div>
+		<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; margin-bottom:30px">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>排序:</legend>
+	                <label>依據價格排序
+	                </label>
+					<br>
+						<input type="radio" id="priceOrderH" name="priceOrder" value='-1' >
+	  					<label for="priceOrderH">由高至低</label>
+	  				<br>
+	  					<input type="radio" id="priceOrderL" name="priceOrder" value='1'>
+	  					<label for="priceOrderL">由低至高</label>
+	  				<br>
+	            </fieldset>
+	        </form>
+   		 </div>
+   		 
+	 	<div class="container" style="background-color: wheat;border-radius:5px;border: 1px solid wheat;box-shadow: 5px 5px 5px rgb(75, 75, 75);margin-right:0px;width:200px; ">
+	        <!-- 用container -->
+	        <form action="############################" method="post" >
+	            <fieldset style="width: auto;margin:1px auto;">
+	                <legend>篩選條件</legend>
+	                
+	                
+					<br>
+	           		  	<input type="radio" id="d1" name="dollar" value='1' >
+	  					<label ><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>   
+	                   	<input type="radio" id="d2" name="dollar" value='2'>
+	  					<label for="d2"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d3" name="dollar" value='3'>
+	  					<label for="d3"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d4" name="dollar" value='4'>
+	  					<label for="d4"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                   	<input type="radio" id="d5" name="dollar" value='5'>
+	  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
+	  				<br>
+	                <hr>
+	                <label>欲查詢幾顆星以上店家
+	                </label>
+					<br>
+						<input type="radio" id="star3.5" name="star" value='3.5' >
+	  					<label for="star3.5">3.5+</label>
+	  				<br>
+	  					<input type="radio" id="star4" name="star" value='4'>
+	  					<label for="star4">4.0+</label>
+	  				<br>
+	 
+	            </fieldset>
+		            <div style="text-align: center;">
+	            </div>
+	        </form>
+   		 </div>
 	</div>
 	<div class="col-sm-6" >
-<!-- 
-<form name="AddForm" action="detailStore.jsp" method="GET">
-         <input type="hidden" name="todo" value="add">
-         Select Book: <select name=bookID>         
-         
-         // <%
-            // Scriptlet 1: Populate the books into the "select" control.
-//           for (int i = 0; i < StoreDB.size(); ++i) {
-//           	if( 
-//            			StoreDB.getStname(i).equals(request.getParameter("nsrch"))){
-//               out.println("<option value='" + i + "'>");
-//               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
-//                       + " | " + StoreDB.getSaddress(i));
-//               out.println("</option>");
-//            	}
-//            } 
-        %> 
-        
-        <%
-            // Scriptlet 1: Populate the books into the "select" control.
-//            for (int i = 0; i < StoreDB.size(); ++i) {
-//            	if(StoreDB.getSclass(i).equals(request.getParameter("sclass"))){
-//               out.println("<option value='" + StoreDB.getStname(i) + "'>");
-//               out.println(StoreDB.getStname(i) + " | " + StoreDB.getSclass(i)
-//                       + " | " + StoreDB.getSaddress(i));
-//               out.println("</option>");
-//            	}
-//            } 
-        %> 
- 
-         </select>
-           Enter Quantity: <input type="text" name="qty" size="10" value="1">
-         <input type="submit" value="Add to Shopping Cart">
-      </form>
-   -->
-      
       
 		<div class="test1" style="margin-bottom:50px;">
-			<div id="ajax"></div>
-<%-- 		<c:forEach var="row" items="${Results}"> --%>
-
-<%-- 				<c:url value="StoreGetFullstore" var="GOURL"> --%>
-<%-- 				<c:param name="id" value="${row.id}" /> --%>
-<%-- 				<c:param name="stname" value="${row.stname}" />				 --%>
-<%-- 				</c:url> --%>
-<%-- 			<a href="${GOURL}" style="text-decoration:none;color:black">   --%>
-<!-- 			    <div class="outside" > -->
-<%--        				 	<div class="photo"  style="background-image: url('${row.photourl}');background-size:100% 100%"> --%>
-
-<!--       				  	</div> -->
-<!-- 				        	<div class="textdiv" style="font-size: 135%"> -->
-<!-- 				            <h1 class="h11" > -->
-<%-- 				                ${row.stname } --%>
-<!-- 				            </h1> -->
-<!-- 				            <div class="postion"> -->
-<%-- 				                ${row.saddress } --%>
-<!-- 				            </div> -->
-<!-- 				            <hr> -->
-<!-- 				            <span class="itdc"> -->
-<%-- 				                ${row.sclass}<br> --%>
-<%-- 				                ${row.stitd}	 --%>
-<!-- 				            </span> -->
-<!-- 			        	</div> -->
-<!-- 			    </div> -->
-<!-- 			</a>  -->
-
-<%-- 		</c:forEach> --%>
+			<div id="ajax" ></div>
+			<div id="lazyload" class="circle container" style="margin-top:25px;" ></div>
 		</div>
 <!-- 		----------------AJAX 大餅   START----------------------------- -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script type="text/javascript">
 		var context = "";
 		$(document).ready(function(){
-		
+// 			console.log("$--------------")
+// 			console.log("${stname}")
+// 			console.log("+++++++++++++++")			
+// 			console.log("${sclass}")
+// 			console.log("---------------")			
+			$("#lazyload").hide();
+			
+	         // search form
+	        $(".search-bar-icon").on("click", function(){
+	            $(".search-area").addClass("search-active");
+	        });
+
+	        $(".close-btn").on("click", function() {
+	            $(".search-area").removeClass("search-active");
+	        });		
+			
 			var flag = 0;
-				
+			var stopload = 0;
+			var priceLimit = "";
+			var star = "";
+			var priceOrder = 0;
 				$.ajax({
 						
 						type:"GET",
-// 						url:"StoreGetClassStoreAjax/${sclass}",
 						url:"StoreGetClassStoreAjax",
 						data:{
 							'sclass':"${sclass}",
 							'stname':"${stname}",
-							'limit':3,
-							'offset':flag
+							'priceLimit':priceLimit,
+							'star':star,
+							'offset':flag,
+							'priceOrder':priceOrder
 						},
 						datatype:'json',
 // 						datatype:'html',
@@ -353,62 +469,228 @@ body {
 				for(var i = 0; i < data.length;i++){
 					context +=
 						"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"' id=a"+data[i].id+"  style='text-decoration:none;color:black'> "+ 
-// 						"<a href='StoreGetFullstore'"+"id=a"+data[i].id+"  style='text-decoration:none;color:black'> "+
 						    "<div class='outside' >"+
-			       				 	"<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+		
+			       				 	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+		
 			      				  	"</div>"+
 							        	"<div class='textdiv' style='font-size: 135%'>"+
 							            "<h1 class='h11' >"+
-// 							                ${row.stname }
 							                data[i].stname+
 							            "</h1>"+
 							            "<div class='postion'>"+
-// 							                ${row.saddress }
 							                data[i].saddress+
 							            "</div>"+
 							            "<hr>"+
 							            "<span class='itdc'>"+
-// 							                ${row.sclass}<br>
 							                data[i].sclass+"<br>"+
-// 							                ${row.stitd}	
 							                data[i].stitd+
 							            "</span>"+
 						        	"</div>"+
 						    "</div>"+
 						"</a>" ;
-// 					$("#a"+data[i].id).on("click",function(event){
-						
-// 						event.preventDefault();
-// 						$.ajax({
-// 							type:"POST",
-// 							url:"StoreGetFullstore/",
-// 							data:{
-// 								"id":data[i].id,
-// 								"stname":data[i].stname
-// 							},
-// 							contentType:"application/x-www-form-urlencoded",
-// 							success : function(suc) {
-							
-// 							}
-// 						});
-// 					});
 				
 				}
 						$("#ajax").html(context)
-// 							console.log(data);
-// 							console.log(data[0].stname);						
-// 							console.log(data[1].stname);
 
 							flag += 3;
 						}
-// 						error:function (err) {
-// 							alert(err.Message);
-// 						}
 				})
+				
+				$('input[name="priceOrder"]').click(function(){
+					priceOrder = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
 
-				$(window).scroll(function(){
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
 					
-					if($(window).scrollTop() >= $(document).height() - $(window).height()){
+							}
+					})
+				});
+				
+				$('input[name="star"]').click(function(){
+					star = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    	"<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
+					
+							}
+					})
+				});				
+				
+				
+				$('input[name="dollar"]').click(function(){
+					
+					console.log('before priceLimit')
+					console.log(priceLimit)
+					console.log('before star')
+					console.log(star)
+					priceLimit = $(this).val()
+					flag = 0;
+					context="";
+					$("#ajax").html("")
+						$.ajax({
+							
+							type:"GET",
+							url:"StoreGetClassStoreAjax",
+							data:{
+								'sclass':"${sclass}",
+								'stname':"${stname}",
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
+							},
+							datatype:'json',
+							success:function (data){
+								console.log('priceLimit')
+								console.log(priceLimit)
+								console.log('star')
+								console.log(star)								
+								for(var i = 0; i < data.length;i++){
+									context +=
+										
+										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
+										    "<div class='outside' >"+
+										    "<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
+							      				  	"</div>"+
+											        	"<div class='textdiv' style='font-size: 135%'>"+
+											            "<h1 class='h11' >"+
+											                data[i].stname+
+											            "</h1>"+
+											            "<div class='postion'>"+
+											                data[i].saddress+
+											            "</div>"+
+											            "<hr>"+
+											            "<span class='itdc'>"+
+											                data[i].sclass+"<br>"+
+											                data[i].stitd+
+											            "</span>"+
+										        	"</div>"+
+										    "</div>"+
+										"</a>" ;
+
+							}
+								flag += 3;
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )								
+								}
+					
+							}
+					})
+				});
+				
+
+				
+				$(window).scroll(function(){
+
+// 					$.delay(3000);
+					
+
+					if($(window).scrollTop() >= $(document).height() - $(window).height() &&  flag>0){
+	//上下兩個方法皆有BUG 有可能會重複前三筆資料 
+// 					if($(this).scrollTop() >= ($(document).height() - $(window).height())*0.8){
 						
 						$.ajax({
 							
@@ -417,40 +699,55 @@ body {
 							data:{
 								'sclass':"${sclass}",
 								'stname':"${stname}",
-								'limit':3,
-								'offset':flag
+								'priceLimit':priceLimit,
+								'star':star,
+								'offset':flag,
+								'priceOrder':priceOrder
 							},
 							datatype:'json',
 							success:function (data){
+								console.log(priceLimit)
+								console.log(star)
+							
 								for(var i = 0; i < data.length;i++){
 									context +=
 										"<a href='StoreGetFullstore/"+data[i].id+"/"+data[i].stname+"'  style='text-decoration:none;color:black'> "+ 
 										    "<div class='outside' >"+
-							       				 "<div class='photo' "+" style='background-image: url("+data[i].photourl+");background-size:100% 100%' >"+
+										    "<div class=\"photo\" style=\"background-image: url(\'"+data[i].photourl+"\');background-size:100% 100%\" >"+
 							      				  	"</div>"+
 											        	"<div class='textdiv' style='font-size: 135%'>"+
 											            "<h1 class='h11' >"+
-//				 							                ${row.stname }
 											                data[i].stname+
 											            "</h1>"+
 											            "<div class='postion'>"+
-//				 							                ${row.saddress }
 											                data[i].saddress+
 											            "</div>"+
 											            "<hr>"+
 											            "<span class='itdc'>"+
-//				 							                ${row.sclass}<br>
 											                data[i].sclass+"<br>"+
-//				 							                ${row.stitd}	
 											                data[i].stitd+
 											            "</span>"+
 										        	"</div>"+
 										    "</div>"+
 										"</a>" ;
+
 							}
 								flag += 3;
-								$("#ajax").html(context);
-								
+
+								if(!$.isEmptyObject(data))
+								{
+									$("#lazyload").show();
+									$("#lazyload").fadeOut(1000);															
+									setTimeout("$('#ajax').html(context);", 1000 )
+								}
+// 								setTimeout("$('#ajax').show()", 30000);
+// 								$(".circle").fadeOut(1000);
+// 								$(".circle").fadeIn("1000");
+// 								$("#ajax").html(context);
+// 								console.log(flag);
+// 								console.log(stopload);
+// 								console.log(${stname});
+// 								console.log(priceLimit);
 					
 							}
 					})
@@ -501,113 +798,5 @@ $(function() {
 });
 </script>    
 <%@include file ="Footer-Include.jsp" %>
-<!-- -------------------------------------------------------------------------------------------- -->
-<!--              <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;bottom: 0"> -->
-<!--                 Footer -->
-<!--                 <footer class="page-footer font-small mdb-color lighten-3 pt-4"> -->
-                
-<!--                   Footer Links -->
-<!--                   <div class="container text-center text-md-left"> -->
-                
-<!--                     Grid row -->
-<!--                     <div class="row"> -->
-                
-<!--                       Grid column -->
-<!--                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1"> -->
-                
-<!--                         Content -->
-<!--                         <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5> -->
-<!--                         <p>商務合作</p> -->
-<!--                         <p>	餐飲代理商招募<br> -->
-<!--                         	商業企劃<br> -->
-<!--                         	申請掃碼點餐<br> -->
-<!--                         	美國收單代理商招募<br> -->
-<!--                         	美國收銀代理商招募<br> -->
-<!--                         	免費使用美國排隊<br></p> -->
-                
-<!--                       </div> -->
-<!--                       Grid column -->
-                
-<!--                       <hr class="clearfix w-100 d-md-none"> -->
-                
-<!--                       Grid column -->
-<!--                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1"> -->
-                
-<!--                         Links -->
-<!--                         <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5> -->
-                
-<!--                         <ul class="list-unstyled"> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <a href="#!">計畫</a> -->
-<!--                             </p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <a href="#!">關於我們</a> -->
-<!--                             </p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <a href="#!">Facebook</a> -->
-<!--                             </p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <a href="#!">AWARDS</a> -->
-<!--                             </p> -->
-<!--                           </li> -->
-<!--                         </ul> -->
-                
-<!--                       </div> -->
-<!--                       Grid column -->
-                
-<!--                       <hr class="clearfix w-100 d-md-none"> -->
-                
-<!--                       Grid column -->
-<!--                       <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1"> -->
-                
-<!--                         Contact details -->
-<!--                         <h5 class="font-weight-bold text-uppercase mb-4">Address</h5> -->
-                
-<!--                         <ul class="list-unstyled"> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <i class="fas fa-home mr-3"></i> 四川 中壢 </p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <i class="fas fa-phone mr-3"></i> + 02 453 245 88</p> -->
-<!--                           </li> -->
-<!--                           <li> -->
-<!--                             <p> -->
-<!--                               <i class="fas fa-print mr-3"></i> + 02 453 249 89</p> -->
-<!--                           </li> -->
-<!--                         </ul> -->
-                
-<!--                       </div> -->
-<!--                       Grid column -->
-<!--                       <hr class="clearfix w-100 d-md-none"> -->
-<!--                       Grid column -->
-                
-<!--                     </div> -->
-<!--                     Grid row -->
-                
-<!--                   </div> -->
-<!--                   Footer Links -->
-                
-<!--                   Copyright -->
-<!--                   <div class="footer-copyright text-center py-3">© 2020 Copyright: -->
-<!--                     <a > 橙皮美食平台</a> -->
-<!--                   </div> -->
-<!--                   Copyright -->
-                
-<!--                 </footer> -->
-<!--                 Footer -->
-<!--                     </div> -->
 </body>
 </html>

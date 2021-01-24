@@ -10,7 +10,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
 import board.dao.BoardDao;
 import xun.model.*;
 
@@ -69,18 +68,6 @@ public class BoardDaoImpl implements BoardDao {
 
 		return count;
 	}
-
-//	@Override
-//	public int deleteBoard(Integer id) {
-//		int result = 0;
-//		Session session = factory.getCurrentSession();
-//		/* 取得要刪除的物件 */
-//		BoardBean deleteBean = session.get(BoardBean.class, id);
-//		/* 執行刪除 */
-//		session.delete(deleteBean);
-//		result++;
-//		return result;
-//	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BoardBean> getAllcomment(){
@@ -97,6 +84,16 @@ public class BoardDaoImpl implements BoardDao {
 		Session session = factory.getCurrentSession();
 		String HQL = "FROM BoardBean WHERE status = 0 and name=:acount";
 		list=session.createQuery(HQL).setParameter("acount", acount).getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BoardBean> getStoreStar(StoreBean sb) {
+		String hql = "FROM BoardBean bb WHERE bb.storebean = :storebean";
+		List<BoardBean> list = factory.getCurrentSession().createQuery(hql)
+				.setParameter("storebean", sb)
+				.getResultList();
 		return list;
 	}
 }

@@ -12,6 +12,8 @@ response.setContentType("text/html;charset=UTF-8");
 <html>
 <head>
 <%@include file = "../Link_Meta-Include.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <title>完成訂位</title>
 <script type="text/javascript">
 setTimeout(function(){
@@ -145,18 +147,23 @@ setTimeout(function(){
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
-<center>            
+<div align="center">            
 <h2>訂位完成！</h2>
-5秒後將自動轉跳回訂位頁面
+<h4>將會發送訂位資訊至您的e-mail</h4>
+<h4>也可至會員中心查看</h4>
+<br><br><br>
+5秒後將自動轉跳回首頁
 <%-- <a href="<c:url value='bookingForm.jsp'/>"></a> --%>
 <form action="<c:url value='/'/>" >
 <input type="submit" name="back" value="返回" style="margin-top:20px;">
 </form>         
-</center> 
+</div> 
   <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
-        
+	<div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:360px">
+    	<%@include file = "../Footer-Include-prototype.jsp" %>
+    </div>   
 </body>
 </html>

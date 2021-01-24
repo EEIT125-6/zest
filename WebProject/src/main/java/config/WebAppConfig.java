@@ -35,7 +35,10 @@ import interceptor.CheckRegisterInterceptor;
 	"controller",
 	"board",
 	"dashborad",
-	"interceptor"})
+	"interceptor",
+	"_Init"
+	})
+
 public class WebAppConfig implements WebMvcConfigurer {
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver() {
@@ -85,5 +88,9 @@ public class WebAppConfig implements WebMvcConfigurer {
 		// By Brandon-Chen1122
 		registry.addResourceHandler("/star/**")
 		.addResourceLocations("/WEB-INF/views/orange/images/");
+//		registry.addResourceHandler("/undefined")
+//				.addResourceLocations("/Images/LOGO1-removebg-preview.png");
 	}
+	
+	
 }

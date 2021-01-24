@@ -2,6 +2,7 @@ package webUser.service.impl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,22 +52,30 @@ public class WebUserServiceImpl implements WebUserService {
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : requestedUserData;
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String account, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(account, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, email, phone, birth);
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfo(String account, String password, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfo(account, password, email, phone, birth);
 	}
 	
 	@Override
 	public WebUserData checkRecoveryInfoAnother(String password, String email, String phone, Date birth) throws SQLException {
-		return webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
+		WebUserData requestedUserData = webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
+		/* 如果為Google第三方登入，則不允許進行帳號重設 */
+		return (requestedUserData.getPassword() == null) ? null : webUserDAO.checkRecoveryInfoAnother(password, email, phone, birth);
 	}
 	
 	@Override
@@ -110,7 +119,7 @@ public class WebUserServiceImpl implements WebUserService {
 		checkAccountQuit = webUserDAO.checkAccountQuit(inputAccount);
 		/* 帳號棄用就不繼續往下執行 */
 		if (checkAccountQuit != 1) {
-			throw new SQLException("該帳號已棄用！請選擇其他帳號登入或註冊一個新帳號");
+			throw new SQLException("該帳號已停用！請選擇其他帳號登入或註冊一個新帳號");
 		} else {
 			checkLoginResult++;
 		}
@@ -126,7 +135,45 @@ public class WebUserServiceImpl implements WebUserService {
 		
 		return checkLoginResult;
 	}
-
+	
+	@Override
+	public Integer checkExtraWebUserLogin(String inputAccount) throws SQLException {
+		/* 變數宣告 */
+		Integer checkLoginResult = -1;
+		Integer checkAccountResult = -1;
+		Integer checkAccountQuit = -1;
+		
+		/* 檢查帳號 */
+		checkAccountResult = webUserDAO.checkAccountExist(inputAccount);
+		/* 帳號不存在就不繼續往下執行 */
+		if (checkAccountResult != 1) {
+			throw new SQLException("帳號錯誤，請檢查之後再次輸入");
+		} else {
+			checkLoginResult++;
+		}
+		
+		/* 檢查帳號是否有效 */
+		checkAccountQuit = webUserDAO.checkAccountQuit(inputAccount);
+		/* 帳號棄用就不繼續往下執行 */
+		if (checkAccountQuit != 1) {
+			throw new SQLException("該帳號已棄用！請選擇其他帳號登入或註冊一個新帳號");
+		} else {
+			checkLoginResult++;
+		}
+		
+		return checkLoginResult;
+	}
+	
+	@Override
+	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException {
+		return webUserDAO.checkWebUserSignIn(inputUserId, today);
+	}
+	
+	@Override
+	public Integer runWebUserSignIn(WebUserData userData) throws SQLException {
+		return webUserDAO.runWebUserSignIn(userData);
+	}
+	
 	@Override
 	public WebUserData getWebUserData(String inputAccount) throws SQLException {
 		return webUserDAO.getWebUserData(inputAccount);
@@ -138,18 +185,33 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException {
-		return webUserDAO.getSelectedWebUserData(selectedParameters);
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException {
+		return webUserDAO.getSelectedWebUserData(selectedParameters, avPage, startPage);
 	}
-
+	
 	@Override
-	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException {
-		return webUserDAO.quitWebUserData(quitUserData);
+	public List<WebUserData> getAllWebUserData() throws SQLException {
+		return webUserDAO.getAllWebUserData();
+	}
+	
+	@Override
+	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
+		return webUserDAO.getAllYearWebUserData(year);
+	}
+	
+	@Override
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
+		return webUserDAO.getUserRecordCounts(selectedParameters);
+	}
+	
+	@Override
+	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException {
+		return webUserDAO.getTotalUserRecordCounts(selectedParameters, avPage);
 	}
 
 	@Override
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException {
-		return webUserDAO.updateWebUserIconUrl(updatedUserData);
+		return webUserDAO.updateWebUserData(updatedUserData);
 	}
 	
 	@Override
@@ -159,14 +221,9 @@ public class WebUserServiceImpl implements WebUserService {
 
 	@Override
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException {
-		return webUserDAO.updateWebUserPassword(updatedUserData);
+		return webUserDAO.updateWebUserData(updatedUserData);
 	}
 	
-	@Override
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException {
-		return webUserDAO.deleteWebUserData(deletedUserId);
-	}
-
 	@Override
 	public Integer resetWebUserPassword(String userId, String password) throws SQLException {
 		return webUserDAO.resetWebUserPassword(userId, password);
@@ -180,5 +237,10 @@ public class WebUserServiceImpl implements WebUserService {
 	@Override
 	public Integer checkAdminAccess() throws SQLException {
 		return webUserDAO.checkAdminAccess();
+	}
+	
+	@Override
+	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
+		return webUserDAO.getAllWebUserJoinDate(year);
 	}
 }

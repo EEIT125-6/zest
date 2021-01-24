@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -73,7 +76,8 @@ public class BookingController {
 	if (booking.compareTo(deadline)<=0) {
 		return false;
 	}
-		return true;
+	
+	return true;
 }
 	
 	//確認資料
@@ -205,35 +209,87 @@ public class BookingController {
 		} catch (Exception e) {
 			;
 		}
-		
 		return "redirect:/booking/Thanks";
-
 	}
 	
 	@GetMapping("/Thanks")
 	public String thanks() {
 		return "/booking/Thanks";
 	}
+	
 	@GetMapping("/Page1")
 	public String jump(Model model) {
 		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
 		if (user_id == null) {
 			return "WebUserLogin";
 		}
-		return "/booking/Page1";
+		return "/booking/showOrder";
 	}
 
+	//ajax查詢
+	@SuppressWarnings("unchecked")
+	@PostMapping(value ="/order", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> order(Model model) {
+		WebUserData user_id = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(user_id.getUserId());
+
+	    model.addAttribute("booking",bean);
+	    List<BookingBean> data= (List<BookingBean>) model.getAttribute("booking");
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", data);
+		return map;
+	}
+	
+	//剩餘座位數
+	@PostMapping(value ="/seating", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> seating(
+			Model model,
+			@RequestParam(value="bookingdate") String bookingdate,
+			@RequestParam(value="time") String time,
+			@RequestParam(value="number") Integer number,
+			@RequestParam(value="restaurant") String restaurant
+			) {
+		String stname = restaurant;
+		System.out.println(">>>"+restaurant);
+		Map<String, Object> map = new HashMap<>();
+		int left = service.showSeating(bookingdate, time, restaurant, stname);
+		if (left <0) {
+			map.put("line", "此餐廳目前不開放訂位～");
+			map.put("code", -1);
+		}
+		if (left ==0) {
+			map.put("line", "此時段目前訂位已額滿～");
+			map.put("code", 0);
+		}
+		if (left>0) {
+			if (number>left) {
+				map.put("line", "此時段可訂位數不足"+number+"位～");
+				map.put("code", 1);
+			}
+			map.put("line", "此時段剩餘座位數："+left);
+			map.put("code", 2);
+		}
+
+		return map;
+	}
 	
 	//查
 	@PostMapping("/select")
-	public String query(Model model,@RequestParam(value="phone") String phone) {
-		
-		List<BookingBean> bean = service.findBooking(phone);
-
+	public String query(Model model) {
+		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
+		List<BookingBean> bean = service.findBooking(userData.getUserId());
 	    model.addAttribute("booking",bean);
-	    model.getAttribute("booking");
-	    
-		return "booking/queryResult";
+		return "booking/showOrder";
+	}
+	//管理員＿訂單管理
+	@PostMapping(value ="/admin", produces="application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> admin(Model model) {
+		List<BookingBean> bean = service.allBooking();
+		System.out.println("筆數="+bean.size());
+		
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("data", bean);
+		return map;
 	}
 	//刪
 	@PostMapping(value="/confirmUpd",params = "cancel")
@@ -398,9 +454,13 @@ public class BookingController {
 			} else {
 				System.out.println("訂位資料更新失敗！");
 			}
-			return "redirect:/booking/Page1";
+			return "redirect:/booking/showOrder";
 		}
-		return "redirect:/booking/Page1";
+		return "redirect:/booking/showOrder";
+	}
+	@GetMapping("/admin1")
+	public String admin1() {
+		return "booking/admin";
 	}
 
 	@GetMapping("/updateResult2")
@@ -412,5 +472,3 @@ public class BookingController {
 		return "booking/cancelResult";
 	}
 }
-
-

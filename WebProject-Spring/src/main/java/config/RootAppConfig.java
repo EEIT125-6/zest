@@ -22,9 +22,9 @@ public class RootAppConfig {
 	public static final String dbPassword = "tiger";
 	public static final String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static final String sqlType = "sqlserver";
-	public static final String sqlUrl = "localhost";
-//	public static final String sqlUrl = "10.31.25.130";
-//	public static final String sqlPort = "1433";
+//	public static final String sqlUrl = "127.0.0.1";
+	public static final String sqlUrl = "10.31.25.130";
+	public static final String sqlPort = "1433";
 	public static final String dbName = "WebProject";
 	
 	@Bean
@@ -37,7 +37,7 @@ public class RootAppConfig {
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}
-		ds.setJdbcUrl("jdbc:"+sqlType+"://"+sqlUrl+";DatabaseName="+dbName);
+		ds.setJdbcUrl("jdbc:"+sqlType+"://"+sqlUrl+":"+sqlPort+";DatabaseName="+dbName);
 		ds.setInitialPoolSize(4);
 		ds.setMaxPoolSize(8);
 		return ds;
@@ -47,7 +47,18 @@ public class RootAppConfig {
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		/* 掃描的package */
-		factory.setPackagesToScan(new String[] { "xun", "webUser", "controller", "dao", "service", "board", "model" });
+		factory.setPackagesToScan(new String[] { 
+				"xun", 
+				"webUser", 
+				"controller", 
+				"dao", 
+				"service", 
+				"board", 
+				"model", 
+				"dashborad",
+				"interceptor",
+				"_Init"});
+
 		factory.setDataSource(msSQLDataSource());
 		factory.setHibernateProperties(additionalPropertiesMsSQL());
 		return factory;

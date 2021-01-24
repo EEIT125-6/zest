@@ -2,6 +2,7 @@ package webUser.service;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -49,6 +50,9 @@ public interface WebUserService {
 	/* 執行登入檢查 -1->異常、0->失敗、1->成功 */
 	public Integer checkWebUserLogin(String inputAccount, String inputPassword) throws SQLException;
 	
+	/* 執行第三方登入檢查 -1->異常、0->失敗、1->成功 */
+	public Integer checkExtraWebUserLogin(String inputAccount) throws SQLException;
+	
 	/* 檢查簽到 -1->異常、0->錯誤、1->正確 */
 	public Integer checkWebUserSignIn(String inputUserId, Date today) throws SQLException;
 	
@@ -62,10 +66,19 @@ public interface WebUserService {
 	public WebUserData getWebUserDataById(String userId) throws SQLException;
 
 	/* 取得查詢的使用者資料 */
-	public List<WebUserData> getSelectedWebUserData(String selectedParameters) throws SQLException;
+	public List<WebUserData> getSelectedWebUserData(String selectedParameters, Integer avPage, Integer startPage) throws SQLException;
 	
-	/* 棄用使用者帳戶 -1->異常、0->失敗、1->成功 */
-	public Integer quitWebUserData(WebUserData quitUserData) throws SQLException;
+	/* 取得所有有效的使用者資料 */
+	public List<WebUserData> getAllWebUserData() throws SQLException;
+	
+	/* 取得所有特定年份註冊的使用者資料 */
+	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException;
+	
+	/* 取得可查詢到總筆數 */
+	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
+	
+	/* 取得可查詢到的總頁數 */
+	public Integer getTotalUserRecordCounts(String selectedParameters, Integer avPage) throws SQLException;
 	
 	/* 更新使用者圖示資料 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserIconUrl(WebUserData updatedUserData) throws SQLException;
@@ -76,9 +89,6 @@ public interface WebUserService {
 	/* 更新使用者密碼 -1->異常、0->失敗、1->成功 */
 	public Integer updateWebUserPassword(WebUserData updatedUserData) throws SQLException;
 	
-	/* 刪除使用者帳戶 -1->異常、0->失敗、1->成功 */
-	public Integer deleteWebUserData(String deletedUserId) throws SQLException;
-	
 	/* 變更使用者帳戶狀態 -1->異常、0->失敗、1->成功 */
 	public Integer adminChangeWebUserData(String userId, String status) throws SQLException;
 	
@@ -87,4 +97,7 @@ public interface WebUserService {
 	
 	/* 檢查有多少可登入的管理員帳號(回傳整數或0) */
 	public Integer checkAdminAccess() throws SQLException;
+	
+	/* 取回特定年度所有可用使用者的註冊日期 */
+	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException;
 }

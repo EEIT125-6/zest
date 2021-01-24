@@ -28,6 +28,12 @@ public interface StoreDao {
 	
 	List<StoreBean> getNamestore(String stname);
 	
+	List<StoreBean> getNamestoreandPrice(String stname , Integer price);
+	
+	List<StoreBean> getNamestoreandStar(String stname , Float star);
+	
+	List<StoreBean> getNamestoreandPriceandStar(String stname, Integer price, Float star);
+	
 	List<StoreBean> getFullstore(Integer id);
 	
 	List<StoreBean> getAdvertisementstore();
@@ -38,6 +44,30 @@ public interface StoreDao {
 	
 	List<ProductInfoBean> getProductInfoBeans(Integer stid);
 	
+	List<StoreBean> getStorebyClassandPrice(String sclass , Integer price);
+	
+	List<StoreBean> getStorebyClassandStar(String sclass, Float star);
+	
+	List<StoreBean> getStorebyClassandStarandPrice(String sclass, Integer price, Float star);
+	
 	Integer setStorePrice(Integer price,Integer id);
 	
+	Integer setStoreRealPrice(Integer realprice,Integer id);
+	
+	Integer setStoreStar(Float avgStar,Integer id);
+	
+	List<String> getSclassCategory();
+	
+	String getSclassCategoryTag();
+	
+	Integer setClickCount(Integer stid);
+	
+	List<String> getRenameStore(Integer stid);
+	
+	void storeOffShelf(Integer stid);
+	
+	List<StoreBean> guessYouLike(String sclass);
+	
+	/* 取得全部商店列表 By George017 2021/01/19 */
+	List<StoreBean> getAllStore();
 }

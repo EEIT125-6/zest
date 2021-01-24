@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<%@include file = "../Link_Meta-Include.jsp" %>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+   	<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <title>橙皮</title>
     <style>
         .classimg{
@@ -83,7 +85,6 @@
             width:24px;
             height: 10px;
         }
-
         .slide_btn{
             display: flex;
             justify-content: center;
@@ -134,13 +135,14 @@
 </head>
 <body>
             <%@include file = "../Header-Include.jsp" %>
+            <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
             <div class="container">
             	<h1 style="margin:10px auto;text-align:center">操作成功</h1>
             </div>
 <script>
 	setTimeout(function(){
-		window.location.href="<c:url value='/ShowComment' />"
+		window.location.href="<c:url value='orange/ShowComment' />"
 	}
 	,5000);
 </script>
@@ -167,7 +169,8 @@ $(function() {
 });
 </script>   
 <!-- -------------------------------------------------------------------- -->
-            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:20px">
-            <%@include file = "../Footer-Include-prototype.jsp" %>
+            <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:420px">
+            	<%@include file = "../Footer-Include-prototype.jsp" %>
+            </div>
 </body>
 </html>

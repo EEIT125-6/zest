@@ -5,6 +5,7 @@ import java.util.List;
 //import java.util.List;
 
 import xun.model.BoardBean;
+import xun.model.StoreBean;
 
 public interface BoardDao {
 	BoardBean getBoardById(int id);
@@ -22,5 +23,7 @@ public interface BoardDao {
 	List<BoardBean> getAllcomment();
 
 	List<BoardBean> getMember(String acount);
+	
+	List<BoardBean> getStoreStar(StoreBean sb);
 }
 

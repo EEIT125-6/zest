@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -7,7 +6,10 @@ response.setContentType("text/html;charset=UTF-8");
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file = "../Link_Meta-Include.jsp" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
+<link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
 <title>訂單修改完成！</title>
     <style>
          .classimg{
@@ -138,19 +140,22 @@ response.setContentType("text/html;charset=UTF-8");
 </head>
 <body>
 <%@include file = "../Header-Include.jsp" %>
+<%@include file="../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
   
-<center>      
+<div align="center">      
 <div class="h1" style="margin-top: 20px;">             
 <h2>訂單修改完成！</h2>
 </div>
-<%-- <a href="<c:url value='Page1.jsp'/>"></a> --%>
-<form action="<c:url value='/booking/Page1'/>" method="get" >
+
+<form action="<c:url value='/booking/Page1'/>" >
 <input type="submit" name="back" value="返回" style="margin-bottom:70px">
 </form>
-</center>   
+</div>   
   <!-- -------------------------------------------------------------- -->
- <%@include file = "../Footer-Include.jsp" %>
+ <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white;margin-top:150px">
+            <%@include file = "../Footer-Include-prototype.jsp" %>
+ </div>
     
 </body>
 </html>

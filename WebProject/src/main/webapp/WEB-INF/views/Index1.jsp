@@ -325,7 +325,7 @@ a.mobile-show {
 						<span class="close-btn"><i class="fas fa-window-close"></i></span>
 						<div class="search-bar">
 							<div class="search-bar-tablecell">
-								<form action="StoreGetNamestore" method="GET" enctype="UTF-8"  >
+								<form action="<c:url value='/StoreGetNamestore'/>" method="GET" enctype="UTF-8"  >
 									<h3>搜尋商家名稱:</h3>
 									<input type="text" name="nsrch" placeholder="搜尋商家">
 									<button type="submit">搜尋 <i class="fas fa-search"></i></button>
@@ -338,13 +338,13 @@ a.mobile-show {
 		</div>
 <!-- end search arewa -->
             <div class="container"  style="margin-top: 20px;">
-            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">分類找餐廳 Restaurant category</div>
+            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">
    <c:url value="StoreGetClassstore" var="riceURL">
    <c:param name="sclass" value="中式"/>
    </c:url>             
                 
-                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><a href="${riceURL }" ><img src="Images/S1.jpg" class = "classimg"></a><br>中式</div>
+                  <div class="col-sm-2" style="border-right:  rgb(204, 203, 203) 1px solid;;text-align: center"><a href="${riceURL}" ><img src="Images/S1.jpg" class = "classimg"></a><br>中式</div>
                   
                   
    <c:url value="StoreGetClassstore" var="JPURL">
@@ -380,7 +380,7 @@ a.mobile-show {
    <c:url value="StoreGetClassstore" var="metURL">
    <c:param name="sclass" value="燒肉"/>
    </c:url>                  
-                  <div class="col-sm-2" style="text-align: center"><a href="${metURL }"><img src="Images/S6.jpg" class = "classimg"></a><br>燒肉</div>
+                  <div class="col-sm-2" style="text-align: center"><a href="${metURL}"><img src="Images/S6.jpg" class = "classimg"></a><br>燒肉</div>
                   
                   <!-- <div class="col-sm-4"><i class="fas fa-cloud"></i></div>
                   <div class="col-sm-4"><i class="fas fa-cloud"></i></div> -->
@@ -392,7 +392,7 @@ a.mobile-show {
 <%-- <sql:query dataSource="${ds}" var="rsbanner"> --%>
 <!--          select top(4) bannerurl,stname,id  from Store  ORDER BY NEWID() -->
 <%-- </sql:query> --%>
-		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">美食跑馬燈 Recommended carousel</div>
+		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Recommended carousel</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;">
                 	    <div id="wrapper1" class="wrapper">
         <ul class="slides">
@@ -543,6 +543,9 @@ $(function() {
 });
 </script>   
 <!-- -------------------------------------------------------------------- -->
+<!--     <div class="wrapper"> -->
+
+<!--     </div> -->
 <%@include file = "Footer-Include.jsp" %>
 <!--             <div style="background-color: #003049;border-top: 3px #e76f51 solid; color:white"> -->
 <!--                 Footer -->

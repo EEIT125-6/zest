@@ -19,6 +19,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,14 +46,6 @@ public class UserInfoController {
 	@Autowired
 	WebUserService wus;
 	
-	/* Web相關資訊 */
-	/* 目前使用的IP */
-	final static String ipAddress = "http://10.31.25.130";
-	/* 目前使用的port */
-	final static String ipPort = "8080";
-	/* 網站專案名稱 */
-	final static String projectName = "WebProject";
-	
 	/* 寄送Email相關資訊 */
 	/* 寄件者使用的SMTP Mail Server，有單日發信上限 */
 	final static String mailHost = "smtp.gmail.com";
@@ -66,16 +59,19 @@ public class UserInfoController {
 	/* 執行註冊流程的相關檢查，並交由Ajax回傳 */
 	@PostMapping(value="/webUser/controller/UserInfoController", produces="application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doRegisterCheck(
-			@RequestParam(value="inputAccount", required=false, defaultValue="") String account, 
+			@RequestParam(value="inputAccount", required=false, defaultValue="") String newAccount, 
 			@RequestParam(value="inputPassword", required=false, defaultValue="") String password,
 			@RequestParam(value="inputNickname", required=false, defaultValue="") String nickname,
 			@RequestParam(value="inputEmail", required=false, defaultValue="") String email,
 			@RequestParam(value="inputPhone", required=false, defaultValue="") String phone,
 			@RequestParam(value="inputBirth", required=false, defaultValue="") String birth,
 			@RequestParam(value="register") String mode,
+			HttpServletRequest request,
 			Model model) 
 	{
 		Map<String, String> map = new HashMap<>();
+		String contextPath = request.getContextPath();
+		
 		/* 檢查帳號是否存在 */
 		if (mode.equals("checkAccount")) {	
 			/* 宣告欲回傳的參數 */
@@ -83,7 +79,7 @@ public class UserInfoController {
 			String message = "";
 			
 			try {
-				accountCheckResult = wus.checkAccountExist(account);
+				accountCheckResult = wus.checkAccountExist(newAccount);
 			} catch (SQLException sqlE) {
 				message = sqlE.getMessage();
 			}
@@ -145,13 +141,13 @@ public class UserInfoController {
 			String registerEmail;
 			
 			try {
-				sendResult = doSendEmail(account, email, checkCode, "submit");
+				sendResult = doSendEmail(newAccount, email, checkCode, "submit", contextPath);
 			} catch (Exception e) {
 				message = e.getMessage();
 			}
 			
 			if (sendResult) {		
-				message = "驗證碼已寄出，請至您填寫的信箱收信，並將驗證碼複製貼上至指定欄位";
+				message = "驗證碼已寄出，請至填寫的信箱收信，將驗證碼貼上";
 				sendResult = true;
 				/* 將變數賦值 */
 				registerEmail = email;
@@ -176,7 +172,7 @@ public class UserInfoController {
 			WebUserData recoveryUserData = new WebUserData();
 			
 			/* 執行後端檢查 */
-			recoveryMessage = doRecoveryInputCheck(account, password, email, phone, birth);
+			recoveryMessage = doRecoveryInputCheck(newAccount, password, email, phone, birth);
 			
 			/* 驗證資料是否存在 */
 			if (recoveryMessage.equals("")) {
@@ -185,14 +181,14 @@ public class UserInfoController {
 				
 				/* 帶入必要資訊驗證 + 選填資訊進行驗證，並從DB取得使用者的必要資訊 */
 				try {
-					if (account.equals("") && password.equals("")) {
+					if (newAccount.equals("") && password.equals("")) {
 						recoveryUserData = wus.checkRecoveryInfo(email, phone, inputBirth);
-					} else if (!account.equals("") && password.equals("")) {
-						recoveryUserData = wus.checkRecoveryInfo(account, email, phone, inputBirth);
-					} else if (account.equals("") && !password.equals("")) {
+					} else if (!newAccount.equals("") && password.equals("")) {
+						recoveryUserData = wus.checkRecoveryInfo(newAccount, email, phone, inputBirth);
+					} else if (newAccount.equals("") && !password.equals("")) {
 						recoveryUserData = wus.checkRecoveryInfoAnother(password, email, phone, inputBirth);
 					} else {
-						recoveryUserData = wus.checkRecoveryInfo(account, password, email, phone, inputBirth);
+						recoveryUserData = wus.checkRecoveryInfo(newAccount, password, email, phone, inputBirth);
 					}
 				} catch (SQLException sqlE) {
 					recoveryMessage = sqlE.getMessage();
@@ -209,17 +205,19 @@ public class UserInfoController {
 				String userId = recoveryUserData.getUserId();
 				
 				/* 產生驗證連結 */
-				recoveryUrl = ipAddress + ":" + ipPort + "/" + projectName
-						+ "/webUser/RecoveryAccount?ts=" + nowTimeStamp 
+				recoveryUrl = request.getContextPath()
+						+ "/recovery/RecoveryAccount?ts=" + nowTimeStamp 
 						+ "&key=" + checkCode
 						+ "&userId=" + userId;
 				
 				/* 寄送到指定email */
 				try {
-					sendResult = doSendEmail(account, email, recoveryUrl, "forget");
+					sendResult = doSendEmail(newAccount, email, recoveryUrl, "forget", contextPath);
 				} catch (Exception e) {
 					recoveryMessage = e.getMessage();
 				}
+			} else if (recoveryMessage.equals("") && recoveryUserData == null) {
+				recoveryMessage = "您似乎未在本服務註冊，或著您使用Google登入";
 			}
 			
 			if (sendResult) {
@@ -235,7 +233,7 @@ public class UserInfoController {
 	}
 	
 	/* 處理驗證連結 */
-	@GetMapping("/webUser/RecoveryAccount")
+	@GetMapping("/recovery/RecoveryAccount")
 	public String doRecoveryUrlCheck(
 			@RequestParam(value = "ts", required = false, defaultValue = "") String timeRecord,
 			@RequestParam(value = "key", required = false, defaultValue = "") String checkCode,
@@ -369,11 +367,11 @@ public class UserInfoController {
 		
 		/* 最終結果 */
 		if (recoveryResult.equals("") && infoIsOk) {
-			destinationUrl = "/webUser/WebUserResetPassword";
+			destinationUrl = "/recovery/WebUserResetPassword";
 			/* 將物件userId以"userId"的名稱放入Attribute中 */
 			model.addAttribute("userId", userId);
 		} else if (userData != null){
-			destinationUrl = "/webUser/WebUserLogin";
+			destinationUrl = "/WebUserLogin";
 		} else {
 			destinationUrl = "";
 		}
@@ -383,13 +381,13 @@ public class UserInfoController {
 		/* 將物件destinationUrl以"destinationUrl"的名稱放入Attribute中 */
 		model.addAttribute("redirectPage", destinationUrl);
 		
-		return "redirect:/webUser/WebUserCheckRecoveryResult";
+		return "redirect:/recovery/WebUserCheckRecoveryResult";
 	}
 	
 	/* 前往檢查結果畫面 */
-	@GetMapping("/webUser/WebUserCheckRecoveryResult")
+	@GetMapping("/recovery/WebUserCheckRecoveryResult")
 	public String doGoRecoveryCheckResult(Model model) {
-		return "webUser/WebUserCheckRecoveryResult";
+		return "recovery/WebUserCheckRecoveryResult";
 	}
 	
 	/* 檢查重設模式的輸入 */
@@ -484,7 +482,7 @@ public class UserInfoController {
 	}
 	
 	/* 寄送Email */
-	public static Boolean doSendEmail(String account, String email, String checkCode, String mode) 
+	public static Boolean doSendEmail(String account, String email, String checkCode, String mode, String contextPath) 
 			throws Exception {
 		Boolean sendResult = false;
 		
@@ -506,7 +504,7 @@ public class UserInfoController {
 						+ "您不久前執行了停用本服務的操作，我們感到遺憾！"
 						+ "<br /><br />"
 						+ "如果這個操作您不知情，請透過本網站提供的方法聯繫我方處理，謝謝！"
-						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\"></a>";
+						+ "<br /><br /><a href=\"" + contextPath + "\">橙皮官方網站</a>";
 		} else if (mode.equals("adminQuit")) {
 			mailContext = "親愛的 "
 						+ account 
@@ -514,12 +512,28 @@ public class UserInfoController {
 						+ "不久前您因故違反了執行本服務的相關條款，因此即日起您的帳號將暫時遭到停權！"
 						+ "<br /><br />"
 						+ "如果您對這個決定有任何不同的觀點想要申訴，請透過本網站提供的方法聯繫我方處理，謝謝！"
-						+ "<br /><br /><a href=\"" + ipAddress + ":" + ipPort + "/" + projectName + "\"></a>";
+						+ "<br /><br /><a href=\"" + contextPath + "\">橙皮官方網站</a>";
 		} else if (mode.equals("forget")) {
 			mailContext = "親愛的 " + account + " ！<br /><br />" 
 						+ "請按下方的連結以重設您的帳號資訊"
 						+ "<br /><br /><a href=\"" + checkCode + "\">重設密碼連結請點我</a>"
 						+ "<br /><br />本連結將定時失效，請盡速使用";
+		} else if (mode.equals("adminActivate")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "不久前您申請了帳號恢復服務！目前已經處理完成。您即刻起便可以重新使用本網站的相關服務"
+						+ "<br /><br />"
+						+ "如果您有其他需要告知的事項，請透過本網站提供的方法聯繫我方處理，謝謝！"
+						+ "<br /><br /><a href=\"" + contextPath + "\">橙皮官方網站</a>";
+		} else if (mode.equals("adminReactive")) {
+			mailContext = "親愛的 "
+						+ account 
+						+ " ！<br /><br />" 
+						+ "不久前您申請的 店家/管理員 帳號已經由管理員審核完畢並啟用。您即刻起便可以重新使用本網站的相關服務"
+						+ "<br /><br />"
+						+ "如果您有其他需要告知的事項，請透過本網站提供的方法聯繫我方處理，謝謝！"
+						+ "<br /><br /><a href=\"" + contextPath + "\">橙皮官方網站</a>";
 		}
 		
 		Properties props = new Properties();
@@ -538,7 +552,7 @@ public class UserInfoController {
 			}
 		});
 		
-		try {
+		try {	
 			Message message = new MimeMessage(mailSession);
 			message.setRecipients(
 					Message.RecipientType.TO
@@ -553,6 +567,10 @@ public class UserInfoController {
 				message.setSubject("您的橙皮帳號已遭管理員停用");
 			} else if (mode.equals("forget")) {
 				message.setSubject("您的橙皮重設連結在此");
+			} else if (mode.equals("adminActivate")) {
+				message.setSubject("您的橙皮帳號已由管理員啟用");
+			} else if (mode.equals("adminReactive")) {
+				message.setSubject("您的橙皮帳號已由管理員重新啟用");
 			}
 			/* 設定email內容與編碼 */
 			message.setContent(mailContext, "text/html; Charset=UTF-8");

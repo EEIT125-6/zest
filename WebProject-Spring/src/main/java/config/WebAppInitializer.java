@@ -1,6 +1,9 @@
 package config;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -33,4 +36,18 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 		characterEncodingFilter.setForceEncoding(true);
 		return new Filter[] {characterEncodingFilter};
 	}
+	@Override
+	public void onStartup(ServletContext context) throws ServletException {
+		super.onStartup(context);
+		context.addListener(_Init.listener.InitialListener.class);
+	}
+	
+	
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        boolean done = registration.setInitParameter("throwExceptionIfNoHandlerFound", "true"); // -> true
+//        if(!done) throw new RuntimeException();
+    
+//        registration.setInitParameter("throwException", "true");
+    } 
 }

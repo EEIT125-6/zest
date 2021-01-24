@@ -36,9 +36,18 @@ public class BookingServiceImpl implements BookingService {
 	}
 	//查詢query
 	@Override
-	public List <BookingBean> findBooking(String phone) {
+	public List <BookingBean> findBooking(String user_id) {
 		List<BookingBean> list = new ArrayList<>();
-		list =dao.findBooking(phone);
+		list =dao.findBooking(user_id);
+			
+		return list;
+	}
+	
+	//管理員查詢
+	@Override
+	public List <BookingBean> allBooking() {
+		List<BookingBean> list = new ArrayList<>();
+		list =dao.allBooking();
 			
 		return list;
 	}
@@ -69,5 +78,12 @@ public class BookingServiceImpl implements BookingService {
 		result=dao.checkBooking(bookingNo);		
 		
 		return result;
-	}		
+	}
+	
+	//檢查剩餘可訂位數
+	@Override
+	public int showSeating(String bookingdate,String time,String restaurant,String stname) {
+		int seating = dao.maxBooking(stname)-dao.nowBooking(bookingdate, time, restaurant);
+		return seating;		
+	}
 }

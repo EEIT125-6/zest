@@ -10,7 +10,7 @@ function checkForm() {
 	let lastNameObjValue = document.getElementById("lastName").value.trim();
 	let oldLastNameObjValue = document.getElementById("oldLastName").value.trim();
 	
-	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	
 	let birthObjValue = document.getElementById("birth").value.trim();
@@ -37,9 +37,8 @@ function checkForm() {
 	} 
 	let oldFervorObjValue = document.getElementById("oldFervor").value.trim();
 	
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
-	let emailSpan = document.getElementById("emailSpan");
 	
 	let phoneObjValue = document.getElementById("phone").value.trim();
 	let oldPhoneObjValue = document.getElementById("oldPhone").value;
@@ -50,13 +49,13 @@ function checkForm() {
 	let locationCodeObjValue = document.getElementById("locationCode").value;
 	let oldLocationCodeObjValue = document.getElementById("oldLocationCode").value;
 	
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
 	
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
 	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	
 	let updatedSpan = document.getElementById("operateResult");
@@ -64,23 +63,19 @@ function checkForm() {
 
 	let choice=confirm("是否確定要送出修改後的資料？");
 	if (choice == true) {
-		if (!checkPassword()) {
+		if (!checkSameInput()) {
+			return false;
+		} else if (!checkPassword()) {
 			return false;
 		} else if (!checkFirstName()) {
 			return false;
 		} else if (!checkLastName()) {
-			return false;
-		} else if (!checkSameNickname()) {
 			return false;
 		} else if (!checkGender()) {
 			return false;
 		} else if (!checkBirth()) {
 			return false;
 		} else if (!checkFervor()) {
-			return false;
-		} else if (!checkSameEmail()) {
-			return false;
-		} else if (!checkSamePhone()) {
 			return false;
 		} else if (!checkGetEmail()) {
 			return false;
@@ -116,15 +111,7 @@ function checkForm() {
 			}
 			if (emailObjValue == oldEmailObjValue) {
 				counter++;
-			} else {
-				if (emailSpan.textContent != "check_circle可使用此電子信箱！") {
-					alert("請先執行電子信箱檢查");
-					return false;
-				} else if (emailCheckCodeSpan.textContent != "check_circle聯絡信箱驗證成功") {
-					alert("請先執行電子信箱驗證");
-					return false;
-				}
-			}
+			} 
 			if (phoneObjValue == oldPhoneObjValue) {
 				counter++;
 			}
@@ -169,14 +156,14 @@ function checkPassword() {
 	let passwordStr;
 	let startCharReg = /[0-9]/;
 
-	if (passwordObjValue == "" || passwordObjValue.length == 0) {
+	if (oldPasswordObjValue != null && (passwordObjValue == "" || passwordObjValue.length == 0)) {
 		passwordStr = "密碼不可為空白";
 		passwordIsOk = false;
-	} else if (passwordObjValue.length < 8) {
-		passwordStr = "密碼長度不足，至少需8個字元";
-		passwordIsOk = false;
-	} else if (passwordObjValue.length > 20) {
-		passwordStr = "密碼長度過長，最多僅20個字元";
+	} else if (oldPasswordObjValue == null) {
+		passwordStr = "";
+		passwordIsOk = true;
+	} else if (passwordObjValue.length < 6 || passwordObjValue.length > 30) {
+		passwordStr = "密碼長度錯誤，需6~30個字元";
 		passwordIsOk = false;
 	} else if (passwordObjValue.charAt(0).match(startCharReg)) {
 		passwordStr = "密碼不可以數字開頭";
@@ -275,7 +262,7 @@ function checkLastName() {
 	} else if (lastNameObjValue == oldLastNameObjValue) {
 		lastNameStr = "";
 		lastNameIsOk = true;
-	} else if (lastNameObjValue.length < 4) {
+	} else if (lastNameObjValue.length < 23) {
 		let charCountBegin = 0;
 		let charChineseWordCountBegin = 0x4e00;
 		let charChineseWordCountEnd = 0x9fff;
@@ -310,7 +297,7 @@ function checkLastName() {
 }
 
 function checkNickname() {
-	let nicknameObjValue = document.getElementById("nickname").value.trim();
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
 	let nicknameSpan = document.getElementById("nicknameSpan");
 	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
 	
@@ -326,6 +313,9 @@ function checkNickname() {
 			nicknameStr = "稱呼不可為空";
 			nicknameIsOk = false;
 		}
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
 	} else if (nicknameObjValue == oldNicknameObjValue) {
 		nicknameStr = "";
 		nicknameIsOk = true;
@@ -337,19 +327,17 @@ function checkNickname() {
 		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 		nicknameSpan.style.color = "red";
 		nicknameSpan.style.fontStyle = "italic";
-		document.getElementById("checkNicknameUsed").style = "display:none";
-		return true;
+		return false;
 	} else {
 		if (nicknameObjValue == oldNicknameObjValue) {
 			nicknameSpan.innerHTML = "";
-			document.getElementById("checkNicknameUsed").style = "display:none";
 		} else {
 			nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 			nicknameSpan.style.color = "black";
 			nicknameSpan.style.fontStyle = "normal";
-			document.getElementById("checkNicknameUsed").style = "display:inline";
+			checkUpdateNickname();
 		}
-		return false;
+		return true;
 	} 
 }
 
@@ -412,7 +400,7 @@ function checkBirth() {
 		let todayYear = today.getFullYear();
 		let todayMonth = today.getMonth() + 1;
 		let todayDate = today.getDate();
-		let today18 = today.setFullYear(todayYear - 18);
+		let today15 = today.setFullYear(todayYear - 15);
 		
 		if (todayYear < inputYear) {
 			birthdayStr = "無效的出生時間";
@@ -423,8 +411,8 @@ function checkBirth() {
 		} else if (todayYear == inputYear && todayMonth == inputMonth && todayDate < inputDate) {
 			birthdayStr = "無效的出生時間";
 			birthdayIsOk = false;
-		} else if (today18 < new Date(birthdayObjValue).getTime()) {
-			birthdayStr = "未滿18歲，無法申辦本服務";
+		} else if (today15 < new Date(birthdayObjValue).getTime()) {
+			birthdayStr = "未滿15歲，無法申辦本服務";
 			birthdayIsOk = false;
 		} else {
 			birthdayStr = "有效的出生時間";
@@ -493,7 +481,7 @@ function checkFervor() {
 }
 
 function checkEmail() {
-	let emailObjValue = document.getElementById("email").value.trim();
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
 	let emailSpan = document.getElementById("emailSpan");
 	let oldEmailObjValue = document.getElementById("oldEmail").value;
 	
@@ -520,7 +508,6 @@ function checkEmail() {
 		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 		emailSpan.style.color = "red";
 		emailSpan.style.fontStyle = "italic";
-		document.getElementById("checkEmailUsed").style = "display:none";
 		return false;
 	}
 	else {
@@ -530,7 +517,7 @@ function checkEmail() {
 			emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 			emailSpan.style.color = "black";
 			emailSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
+			checkUpdateEmail();
 		}
 		return true;
 	} 
@@ -580,7 +567,7 @@ function checkPhone() {
 			phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + phoneStr;
 			phoneSpan.style.color = "black";
 			phoneSpan.style.fontStyle = "normal";
-			document.getElementById("checkEmailUsed").style = "display:inline";
+			checkUpdatePhone();
 		}
 		return true;
 	}
@@ -649,7 +636,7 @@ function checkLocationCode() {
 }
 
 function checkAddr0() {
-	let addr0ObjValue = document.getElementById("addr0").value.trim();
+	let addr0ObjValue = document.getElementById("addr0").value.replace('<', ' ').replace('>', '').trim();
 	let addr0Span = document.getElementById("addr0Span");
 	let oldAddr0ObjValue = document.getElementById("oldAddr0").value.trim();
 	let addr1ObjValue = document.getElementById("addr1").value.trim();
@@ -694,7 +681,7 @@ function checkAddr0() {
 }
 
 function checkAddr1() {
-	let addr1ObjValue = document.getElementById("addr1").value.trim();
+	let addr1ObjValue = document.getElementById("addr1").value.replace('<', ' ').replace('>', '').trim();
 	let addr1Span = document.getElementById("addr1Span");
 	let oldAddr1ObjValue = document.getElementById("oldAddr1").value.trim();
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
@@ -736,7 +723,7 @@ function checkAddr1() {
 }
 
 function checkAddr2() {
-	let addr2ObjValue = document.getElementById("addr2").value.trim();
+	let addr2ObjValue = document.getElementById("addr2").value.replace('<', ' ').replace('>', '').trim();
 	let addr2Span = document.getElementById("addr2Span");
 	let oldAddr2ObjValue = document.getElementById("oldAddr2").value.trim();
 	let addr0ObjValue = document.getElementById("addr0").value.trim();
@@ -792,14 +779,11 @@ function clearMessage() {
 	document.getElementById("firstNameSpan").innerHTML = "";
 	document.getElementById("lastNameSpan").innerHTML = "";
 	document.getElementById("nicknameSpan").innerHTML = "";
-	document.getElementById("checkNicknameUsed").style = "display:none";
 	document.getElementById("fervorSpan").innerHTML = "";
 	document.getElementById("genderSpan").innerHTML = "";
 	document.getElementById("birthdaySpan").innerHTML = "";
 	document.getElementById("emailSpan").innerHTML = "";
-	document.getElementById("checkEmailUsed").style = "display:none";
 	document.getElementById("phoneSpan").innerHTML = "";
-	document.getElementById("checkPhoneUsed").style = "display:none";
 	document.getElementById("locationCodeSpan").innerHTML = "";
 	document.getElementById("addr0Span").innerHTML = "";
 	document.getElementById("addr1Span").innerHTML = "";
@@ -868,5 +852,38 @@ function checkSamePhone(){
 		}
 	} else {
 		return true;
+	}
+}
+
+function checkSameInput(){
+	let nicknameObjValue = document.getElementById("nickname").value.replace('<', ' ').replace('>', '').trim();
+	let oldNicknameObjValue = document.getElementById("oldNickname").value.trim();
+	let nicknameSpan = document.getElementById("nicknameSpan");
+	let emailObjValue = document.getElementById("email").value.replace('<', ' ').replace('>', '').trim();
+	let oldEmailObjValue = document.getElementById("oldEmail").value.trim();
+	let emailSpan = document.getElementById("emailSpan");
+	let phoneObjValue = document.getElementById("phone").value.trim();
+	let oldPhoneObjValue = document.getElementById("oldPhone").value;
+	let phoneSpan = document.getElementById("phoneSpan");
+	
+	if (nicknameObjValue != oldNicknameObjValue && nicknameSpan.textContent != "check_circle可使用此稱呼！") {
+		alert("請先執行稱呼檢查");
+		return false;
+	} else if (emailObjValue != oldEmailObjValue && emailSpan.textContent != "check_circle可使用此電子信箱！") {
+		alert("請先執行電子信箱檢查");
+		return false;
+	} else if (phoneObjValue != oldPhoneObjValue && phoneSpan.textContent != "check_circle可使用此聯絡電話！") {
+		alert("請先執行聯絡電話檢查");
+		return false;
+	} else {
+		if (!checkNickname()) {
+			return false;
+		} else if (!checkEmail()) {
+			return false;
+		} else if (!checkPhone()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
