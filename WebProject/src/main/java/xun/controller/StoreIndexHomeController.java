@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import xun.model.StoreBean;
 import xun.service.StoreService;
+import xun.service.TraceService;
 import xun.util.GlobalService;
 @Controller
 public class StoreIndexHomeController {
@@ -31,6 +32,10 @@ public class StoreIndexHomeController {
 	
 	@Autowired
 	StoreService ss;
+	
+	@Autowired
+	TraceService ts;
+	
 	@GetMapping("/")
 	public String home(
 			Model model

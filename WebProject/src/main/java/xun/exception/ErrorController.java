@@ -2,8 +2,6 @@ package xun.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
@@ -14,6 +12,11 @@ public class ErrorController {
     	return "e404";
     }
 
+//  @ExceptionHandler(Throwable.class)
+//  public String handleException(final Exception e) {
+//      return "e500";
+//  }
+    
 //    @ExceptionHandler(RuntimeException.class)
 //    public String handleException(final Exception e) {
 //        return "e500";

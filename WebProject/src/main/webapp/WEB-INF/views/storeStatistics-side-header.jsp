@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-        <div class="sidebar" data-image="../assets/img/sidebar-5.jpg" data-color = "orange">
+        <div class="sidebar"  data-color = "orange">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="<c:url value='/'/>" class="simple-text">
@@ -10,7 +11,7 @@
                 <ul class = "nav">
                 <c:forEach var = "row" items="${listAllStore}">
 	                	<li class="nav-item">
-	                	<c:url value="#" var="go">
+	                	<c:url value="/storeStClick" var="go">
 	                		<c:param name="stId" value="${row.id}"/>
 	                	</c:url>
 	                		<a class="nav-link" href="${go}">

@@ -812,7 +812,8 @@ function initMap() {
 				<c:choose>
 					<c:when test="${userFullData.userId == userId && userId != null}">
 					<c:forEach var="row1" items="${Products}">
-						<div class="col-sm-4">
+						
+						<div class="col-sm-4" id="p${row1.product_id}">
 <!-- 					       style="background: url('Images/LOGO1-removebg-preview.png')" -->
 								    <div class="card" style="background:#f28633;">
 								    <c:if test="${row1.product_picture != null}">
@@ -850,12 +851,13 @@ function initMap() {
 							
 <!-- 							<span>|</span> -->
 <%-- 							<c:url value='/deleteProductpage'/> --%>
-							<form action="<c:url value='/deleteProductpage'/>" method="post" style="display:inline">
-								<input type="hidden" name="id" value="${id}">
-								<input type="hidden" name="productid" value="${row1.product_id}">
-								<input type="submit" value="刪除商品" class="btn btn-danger"> 
+<%-- 							<form action="<c:url value='/deleteProductpage'/>" method="post" style="display:inline"> --%>
+<%-- 								<input type="hidden" name="id" value="${id}"> --%>
+<%-- 								<input type="hidden" name="productid" value="${row1.product_id}"> --%>
+<!-- 								<input type="submit" value="刪除商品" class="btn btn-danger">  -->
 <!-- 								style="margin:0;padding:0;border:none;outline:none;color:rgb(38, 102, 240)"> -->
-							</form>
+<!-- 							</form> -->
+								<input type = "button" value="移除商品" id="bt${row1.product_id}" class="btn btn-danger removeProductBt">
 							<c:choose>
 								<c:when test="${row1.product_status == 1}">
 									<input class="btn btn-danger" type = "button" value="下架商品" id="d${row1.product_id}" 							data-toggle="modal" data-target="#myDR1${row1.product_id}"/>
@@ -909,6 +911,21 @@ function initMap() {
 </div>
 <!-- ----------------------------------------上架Model----------------------------			 -->
 		          </c:forEach>
+		         <script type="text/javascript">
+	            	$(".removeProductBt").click(function(){
+						var productId = $(this).attr("id").substring(2);
+						var disCard = '#p'+$(this).attr("id").substring(2);
+						$.ajax({
+							type:"post",
+							url:"<c:url value = '/productRemove'/>",
+							data:{
+								'productId':productId
+							},success:function(data){
+								$(disCard).css('display','none');
+							}
+						})
+	            	})
+		         </script>
 		         <script type="text/javascript">
 		         	$(".pds").click(function(){
 		         		var otherId = $(this).attr("id").substr(1);
