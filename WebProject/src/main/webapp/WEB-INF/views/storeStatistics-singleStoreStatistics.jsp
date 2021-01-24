@@ -20,16 +20,16 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
                             <div class="card ">
                                 <div class="card-header ">
-                                    <h4 class="card-title">分類x評分分數</h4>
-                                    <p class="card-category">分類與平均評分分數</p>
+                                    <h4 class="card-title">2021年 每月追蹤量</h4>
+                                    <p class="card-category">追蹤量與月份</p>
                                 </div>
                                 <div class="card-body ">
                                     <div id="CateAndStar" class="ct-chart "></div>
                                     <div class="legend">
-                                        <i class="fa fa-circle text-info"></i> 平均評分數
+                                        <i class="fa fa-circle text-info"></i> 追蹤數
                                     </div>
                                     <hr>
                                     <div class="stats">
@@ -37,18 +37,21 @@
                                     </div>
                                 </div>
                             </div>
-						</div>					
-						<div class="col-md-6">
+						</div>				
+					</div>
+					<div class="row">	
+                        <div class="col-md-9 container">
                             <div class="card ">
                                 <div class="card-header ">
-                                    <h4 class="card-title">分類x留言數量</h4>
-                                    <p class="card-category">分類與留言數量</p>
+                                    <h4 class="card-title">追蹤性別比率</h4>
+                                    <p class="card-category">追蹤性別比率</p>
                                 </div>
                                 <div class="card-body ">
-                                    <div id="CateAndCom" class="ct-chart "></div>
-                                    <div class="legend">
-                                        <i class="fa fa-circle text-info"></i> 留言數
-                                    </div>
+                                	<div id = "gnull"></div>
+                                    <div id="gender" class="ct-chart "></div>
+<!--                                     <div class="legend"> -->
+<!--                                         <i class="fa fa-circle text-info"></i> 單月花費 -->
+<!--                                     </div> -->
                                     <hr>
                                     <div class="stats">
                                         <i class="fa fa-clock-o"></i> 近期更新時間...
@@ -78,18 +81,53 @@
 <script src="js/light-bootstrap-dashboard.js?v=2.0.0 " type="text/javascript"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <!-- <script src="js/demo.js"></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script type="text/javascript">
+var monthdata;
+var genderpie;
 $(document).ready(function() {
-	demo.orderDashboard();
+	$.ajax({
+		type:"GET",
+		url:"<c:url value='/storeStMonth'/>",
+		data:{
+			"stId":${stId}
+		},
+		datatype:'json',
+		success:function(data){
+				monthdata = data.d1;
+				genderpie = data.d2;
+				console.log(monthdata);
+				console.log(genderpie);
+				if(genderpie[0]==0 && genderpie[1]==0){
+					$('#CateAndStar').html('<h2  style="text-align: center">暫無資料</h2>');
+					$('#gnull').html('<h2  style="text-align: center">暫無資料</h2>');
+				}else{
+					demo.orderDashboard();
+				}
+			}
+	});
+// 	$.ajax({
+// 		type:"GET",
+// 		url:"<c:url value='/storeStGender'/>",
+// 		date:{
+// 			"stId":${stId}
+// 		},
+// 		datatype:'json',
+// 		success:function(data2){
+// 			genderpie = data2;
+// 			console.log(genderpie);
+// 		}
+// 	})
 });
 
 demo={
 	orderDashboard:function(){
-        var data = {
-                labels: ['中式','日式','下午茶','西式','快餐','燒肉'],
+       		 var data = {
+                labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
                 series: [
-                	[3.2, 4, 4.1, 3.5, 3.4, 4.5]
-                ]
+//                 	[3.2, 4, 4.1, 3.5, 3.4, 4.5,3.2, 4, 4.1, 2, 1,9	]
+					monthdata
+               		]
             };
 
             var options = {
@@ -102,7 +140,7 @@ demo={
 
             var responsiveOptions = [
                 ['screen and (max-width: 640px)', {
-                    seriesBarDistance: 5,
+                    seriesBarDistance: 20,
                     axisX: {
                         labelInterpolationFnc   : function(value) {
                             return value[0];
@@ -114,34 +152,27 @@ demo={
             var chartActivity = Chartist.Bar('#CateAndStar', data, options, responsiveOptions);
 		
 // 		-----------------------------------------------------
-		
-        var data = {
-                labels: ['中式','日式','下午茶','西式','快餐','燒肉'],
-                series: [
-                    [542, 443, 320,505,642,700]
-                ]
-            };
-
-            var options = {
-                seriesBarDistance: 10,
-                axisX: {
-                    showGrid: false
-                },
-                height: "245px"
-            };
-
-            var responsiveOptions = [
-                ['screen and (max-width: 640px)', {
-                    seriesBarDistance: 5,
-                    axisX: {
-                        labelInterpolationFnc   : function(value) {
-                            return value[0];
-                        }
-                    }
-                }]
-            ];
-
-            var chartActivity = Chartist.Bar('#CateAndCom', data, options, responsiveOptions);
+		if(genderpie[0]==0){
+			Chartist.Pie('#gender',{	
+ 				labels:['男', '女100%' ],
+//  				series: [20, 18]  //測試用數字
+ 				series: genderpie	
+ 			 })				
+		}else if(genderpie[1]==0){
+			Chartist.Pie('#gender',{	
+ 				labels:['男100%', '女' ],
+//  				series: [20, 18]  //測試用數字
+ 				series: genderpie	
+ 			 })
+// 		}else if(genderpie[0]==0 && genderpie[1]==0){
+// 			$('#gnull').html('<span>暫無資料</span>');
+		}else{
+   			 Chartist.Pie('#gender',{	
+ 				labels:['男', '女' ],
+//  				series: [20, 18]  //測試用數字
+ 				series: genderpie	
+ 			 })				
+		}
             
 //             -----------------------------------
 	}

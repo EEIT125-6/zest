@@ -76,7 +76,7 @@
                             <label for="">主旨:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" id="" value=""  name="mailSub"required>
+                            <input type="text" class="form-control" id="mailSubId" value=""  name="mailSub"required>
                         </div>
                     </div>
                     
@@ -85,15 +85,18 @@
 							<label  for="storeItddt">內文</label>
                     	</div>
 	                    <div class="col-md-8">
-	                    	<textarea  class="form-control" id="storeItddt" rows="5" name="mailContext"></textarea>
+	                    	<textarea  class="form-control" id="mailTxtId" rows="5" name="mailContext"></textarea>
 	                    </div>
                     </div>
                     
 					<div class="form-row">
 						<div class="col-md-4"></div>
 						<div class="col-md-8" style="text-align: center;">
-		                    <button class="btn btn-primary" type="submit" >送出</button>
+		                    <button class="btn btn-primary" type="submit" id="sendMail">送出</button>
 						</div>
+                    	<div class = "col-md-12" style="text-align: center; margin-top: 5px" id="oneBt">
+                    		<button class="btn btn-success" >一鍵輸入</button>
+                    	</div>
 					</div>
                 </form>
             </div>
@@ -122,4 +125,15 @@
 <script src="js/light-bootstrap-dashboard.js?v=2.0.0 " type="text/javascript"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <!-- <script src="js/demo.js"></script> -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript">
+$("#oneBt").click(function(){
+	$("#mailSubId").val('感謝您的追蹤');
+	$("#mailTxtId").val('感謝您追蹤203蘋果，後續將會不定期放送優惠訊息。');
+
+})
+document.getElementById("sendMail").addEventListener("click",function(){
+  swal("成功送出信件!", "您成功送出信件!", "success");
+});
+</script>
 </html>

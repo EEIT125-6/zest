@@ -47,6 +47,16 @@ public class TraceServiceImpl implements TraceService {
 	public List<Integer> StoreBeTraceQueryByMemberId(Integer stId) {
 		return tdao.StoreBeTraceQueryByMemberId(stId);
 	}
+
+	@Override
+	public List<Integer> StoreStMonthTrace(Integer stId) {
+		return tdao.StoreStMonthTrace(stId);
+	}
+
+	@Override
+	public List<TraceBean> StoreStGender(Integer stId) {
+		return tdao.StoreStGender(stId);
+	}
 	
 	
 

@@ -125,8 +125,9 @@ public class dashborad_Controller {
 	@GetMapping("/storeStClick")
 	public String storeSingleSt(
 			Model model
+			,@RequestParam Integer stId
 			) {
-		
+		model.addAttribute("stId", stId);
 		return "storeStatistics-singleStoreStatistics";
 	}
 	//以上商家統計資料//
@@ -217,6 +218,74 @@ public class dashborad_Controller {
 		model.addAttribute("stId", stId);
 		return "redirect:/storeAdClick";
 	}
+	
+//	@GetMapping("/storeStMonth")
+//	public @ResponseBody List<Integer> storeStMonth(
+//			Model model
+//			,@RequestParam Integer stId
+//			) {
+//		List<Integer> rs = ts.StoreStMonthTrace(stId);
+//		System.out.println(rs);
+//		return rs;
+//	}
+	@GetMapping("/storeStMonth")
+	public @ResponseBody Map<String, List<Integer>> storeStMonth(
+			Model model
+			,@RequestParam Integer stId
+			) {
+		List<Integer> rs = ts.StoreStMonthTrace(stId);
+		System.out.println(rs);
+//		-----------------------
+		Integer man = 0;
+		Integer female = 0;
+		List<Integer> rs2 = new ArrayList<Integer>();
+		List<TraceBean> list = ts.StoreStGender(stId);
+		for (TraceBean tb:list) {//女性 男性
+			try {
+				if (wus.getWebUserDataById(String.valueOf(tb.getMemberId())).getGender().getGenderText().equals("男性")) {
+					man++;
+				}else if(wus.getWebUserDataById(String.valueOf(tb.getMemberId())).getGender().getGenderText().equals("女性")) {
+					female++;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		rs2.add(man);
+		rs2.add(female);
+		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+		map.put("d1", rs);
+		map.put("d2", rs2);
+		return map;
+	}
+	
+	//暫時無用
+//	@GetMapping("/storeStGender")
+//	public @ResponseBody List<Integer> storeStGender(
+//			Model model
+//			,@RequestParam Integer stId
+//			)  {
+//		Integer man = 0;
+//		Integer female = 0;
+//		List<Integer> rs = new ArrayList<Integer>();
+//		List<TraceBean> list = ts.StoreStGender(stId);
+//		for (TraceBean tb:list) {//女性 男性
+//			try {
+//				if (wus.getWebUserDataById(String.valueOf(tb.getMemberId())).getGender().getGenderText().equals("男性")) {
+//					man++;
+//				}else if(wus.getWebUserDataById(String.valueOf(tb.getMemberId())).getGender().getGenderText().equals("女性")) {
+//					female++;
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		rs.add(man);
+//		rs.add(female);
+//		System.out.println(rs);
+//		return rs;
+//	}
+	
 //	觀察用
 //	@GetMapping("/storeGetTraceMember")
 //	public @ResponseBody List<Map<String, Object>> iWantLearnMore(

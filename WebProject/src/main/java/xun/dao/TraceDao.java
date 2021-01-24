@@ -18,4 +18,7 @@ public interface TraceDao {
 	
 	List<Integer> StoreBeTraceQueryByMemberId(Integer stId);
 	
+	List<Integer> StoreStMonthTrace(Integer stId);
+	
+	List<TraceBean> StoreStGender(Integer stId);
 }

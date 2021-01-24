@@ -1,8 +1,15 @@
 package xun.dao.impl;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.inject.New;
+
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +82,46 @@ public class TraceDaoImpl implements TraceDao {
 		Session session = factory.getCurrentSession();
 		String hql = "select memberId From TraceBean tb Where tb.storeId = :storeId";
 		List<Integer> list = session.createQuery(hql).setParameter("storeId", stId)
+								.getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> StoreStMonthTrace(Integer stId) {
+		Session session = factory.getCurrentSession();
+		List<Integer> Result = new ArrayList<Integer>();
+//		String hql = "From TraceBean where timestamp BETWEEN '2021-01-01' AND '2021-12-31'";
+//		String hql = "From TraceBean where timestamp BETWEEN '2021-12-01' AND DATEADD(mm,1,'2021-12-01')";
+		String hql = "From TraceBean where storeId = :stId AND timestamp BETWEEN :std AND DATEADD(mm,1,:std)";
+		for (int i = 1; i < 13; i++) {
+			String limitSt;
+			if(i<10) {
+				limitSt = "2021/0"+String.valueOf(i)+"/01";
+			}else {
+				limitSt = "2021/"+String.valueOf(i)+"/01";
+			}
+			List<TraceBean> list = new ArrayList<TraceBean>();
+			try {
+				list = session.createQuery(hql)
+										.setParameter("stId", stId)
+										.setParameter("std", new SimpleDateFormat("yyyy/MM/dd").parse(limitSt))
+										.getResultList();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		Result.add(list.size());
+		}
+		
+		return Result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TraceBean> StoreStGender(Integer stId) {
+		Session session = factory.getCurrentSession();
+		String hql = "From TraceBean where storeId = :stId ";
+		List<TraceBean> list = session.createQuery(hql).setParameter("stId", stId)
 								.getResultList();
 		return list;
 	}
