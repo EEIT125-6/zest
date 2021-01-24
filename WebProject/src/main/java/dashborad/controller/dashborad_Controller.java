@@ -50,7 +50,8 @@ import xun.util.sendJavaMail;
 	"sclassList",
 	"locationChartList",
 	"genderChartList",
-	"joinDateChartList"
+	"joinDateChartList",
+	"listAllStore"
 })
 public class dashborad_Controller {
 	/* By Mimicker0903 */
@@ -482,6 +483,7 @@ public class dashborad_Controller {
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
+				List<String> caculatedUser = new ArrayList<>();
 				/* 取回註冊時間列表 */
 				List<LocalDate> joinDateList = wus.getAllWebUserJoinDate();
 				/* 取回該年度所有註冊的使用者列表 */
@@ -491,21 +493,25 @@ public class dashborad_Controller {
 					for (LocalDate jDate: joinDateList) {
 						/* 年份、月份一致 */
 						if (user.getJoinDate().toLocalDate().getYear() == jDate.getYear() && user.getJoinDate().toLocalDate().getMonth() == jDate.getMonth()) {
-							if (charBeanList.size() == 0) {
+							if (charBeanList.size() == 0 && !caculatedUser.contains(user.getUserId())) {
 								charBeanList.add(new ChartBean(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1));
-								System.out.println(charBeanList.get(0).getLabelName()+","+charBeanList.get(0).getLabelNum());
+								caculatedUser.add(user.getUserId());
 							} else {
 								Boolean check = false;
 								for (ChartBean charBeanData: charBeanList) {
 									if (charBeanData.getLabelName().equals(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString())) {
-										charBeanData.setLabelNum(charBeanData.getLabelNum() + 1);
-										check = true;
-										System.out.println(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString()+","+charBeanList.get(0).getLabelNum());
+										if (!caculatedUser.contains(user.getUserId())) {											
+											charBeanData.setLabelNum(charBeanData.getLabelNum() + 1);
+											caculatedUser.add(user.getUserId());
+											check = true;
+										}
 									}
 								}
 								if (!check) {
-									charBeanList.add(new ChartBean(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1));
-									System.out.println(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString()+","+charBeanList.get(0).getLabelNum());
+									if (!caculatedUser.contains(user.getUserId())) {
+										charBeanList.add(new ChartBean(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1));
+										caculatedUser.add(user.getUserId());
+									}
 								}
 							}
 						}
