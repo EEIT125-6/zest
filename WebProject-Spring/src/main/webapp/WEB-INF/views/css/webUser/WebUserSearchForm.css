@@ -1,0 +1,25 @@
+form {
+	width: 1200px;
+	margin: 20px auto;
+}
+#checkAccount {
+ 	display: none;
+}
+#checkEmailUsed {
+ 	display: none;
+}
+#sendCheckCode {
+ 	display: none;
+}
+#checkRegisterNickname {
+	display: none;
+}
+#checkNicknameUsed {
+	display: none;
+}
+#checkRegisterPhone {
+	display: none; 
+}
+#checkPhoneUsed {
+ 	display: none;
+}
