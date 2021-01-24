@@ -338,7 +338,7 @@ public class WebUserController {
 	}
 	
 	/* 執行登入檢查 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/controller/WebUserLogin", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, String> doLoginCheck(
 			Model model,
@@ -494,56 +494,57 @@ public class WebUserController {
 			} 
 		}
 		
-		if (accountCheckResult == 1) {
-			Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
-			Boolean singleLogin = false;
-			/* 第一位登入系統的使用者 */
-			if (userMap == null) {
-				singleLogin = true;
-				/* 放入存所有使用者資料的map */
-				Map<String, Object> zeroUserMap = new HashMap<>(); 
-				/* 存Session */
-				if (ckAccount.equals("")) {					
-					zeroUserMap.put(account, session);
-				} else {
-					zeroUserMap.put(ckAccount, session);
-				}
-				/* 將帳號、對應的Session物件存入servletContext */
-				context.setAttribute("userMap", zeroUserMap);
-			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
-			} else if (userMap != null && (userMap.get(account) == null) || (userMap.get(ckAccount) == null && !ckAccount.equals(""))) {
-				singleLogin = true;
-				/* 放入存所有使用者資料的map */
-				if (ckAccount.equals("")) {
-					userMap.put(account, session);
-				} else {
-					userMap.put(ckAccount, session);
-				}
-				/* 將帳號、對應的Session物件存入servletContext */
-				context.setAttribute("userMap", userMap);
-			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
-			} else if (userMap != null && (userMap.get(account) != null) || (userMap.get(ckAccount) != null && !ckAccount.equals(""))) {
-				singleLogin = true;
-				HttpSession oldSession = (ckAccount.equals("")) ? (HttpSession) userMap.get(account) : (HttpSession) userMap.get(ckAccount);
-				if (oldSession != null) {
-					/* 清除舊連線 */
-					oldSession.invalidate();
-				} 
-				/* 直接放入新Session物件取代舊的 */
-				if (ckAccount.equals("")) {
-					userMap.put(account, session);
-				} else {
-					userMap.put(ckAccount, session);
-				}
-				/* 將帳號、對應的Session物件存入servletContext */
-				context.setAttribute("userMap", userMap);
-			} else {
-				accountCheckResult = 4;
-				singleLogin = false;
-				loginMessage = "發生異常，無法登入！";
-			}
-			
-			if(singleLogin) {
+//		if (accountCheckResult == 1) {
+//			Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
+//			Boolean singleLogin = false;
+//			/* 第一位登入系統的使用者 */
+//			if (userMap == null) {
+//				singleLogin = true;
+//				/* 放入存所有使用者資料的map */
+//				Map<String, Object> zeroUserMap = new HashMap<>(); 
+//				/* 存Session */
+//				if (ckAccount.equals("")) {					
+//					zeroUserMap.put(account, session);
+//				} else {
+//					zeroUserMap.put(ckAccount, session);
+//				}
+//				/* 將帳號、對應的Session物件存入servletContext */
+//				context.setAttribute("userMap", zeroUserMap);
+//			/* 非第一位登入系統的使用者，但此帳號第一次登入 */	
+//			} else if (userMap != null && (userMap.get(account) == null) || (userMap.get(ckAccount) == null && !ckAccount.equals(""))) {
+//				singleLogin = true;
+//				/* 放入存所有使用者資料的map */
+//				if (ckAccount.equals("")) {
+//					userMap.put(account, session);
+//				} else {
+//					userMap.put(ckAccount, session);
+//				}
+//				/* 將帳號、對應的Session物件存入servletContext */
+//				context.setAttribute("userMap", userMap);
+//			/* 非第一位登入系統的使用者，此帳號可能重複登入 */
+//			} else if (userMap != null && (userMap.get(account) != null) || (userMap.get(ckAccount) != null && !ckAccount.equals(""))) {
+//				singleLogin = true;
+//				HttpSession oldSession = (ckAccount.equals("")) ? (HttpSession) userMap.get(account) : (HttpSession) userMap.get(ckAccount);
+//				if (oldSession != null) {
+//					/* 清除舊連線 */
+//					oldSession.invalidate();
+//				} 
+//				/* 直接放入新Session物件取代舊的 */
+//				if (ckAccount.equals("")) {
+//					userMap.put(account, session);
+//				} else {
+//					userMap.put(ckAccount, session);
+//				}
+//				/* 將帳號、對應的Session物件存入servletContext */
+//				context.setAttribute("userMap", userMap);
+//			} else {
+//				accountCheckResult = 4;
+//				singleLogin = false;
+//				loginMessage = "發生異常，無法登入！";
+//			}
+//		
+//			if (singleLogin) {
+			if(accountCheckResult == 1) {
 				loginMessage = "登入成功！歡迎使用本服務，" + userFullData.getNickname() + " ！";
 				/* 將Java Bean物件userFullData以"userFullData"的名稱放入SessionAttributes中 */
 				model.addAttribute("userFullData", userFullData);
@@ -570,7 +571,7 @@ public class WebUserController {
 					}
 				}
 			}
-		} 
+//		} 
 		
 		map.put("resultCode", accountCheckResult.toString());
 		map.put("resultMessage", loginMessage);
@@ -1317,18 +1318,18 @@ public class WebUserController {
 						/* 將被停用的使用者離線 */
 						if (operateResult == 1) {
 							Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
-							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常強況 */
+							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常情況 */
 							if (userMap.isEmpty()) {
 								operateResult = 0;
 								operateMessage = "發生異常！請考慮重新登入本系統或聯絡技術人員";
 							} else {
-								/* 透過帳號取得Session物件 */
-								HttpSession bannedSession = (HttpSession) userMap.get(account);
-								/* 檢查是否處於有效階段？ */
-								if (bannedSession != null) {
-									/* 無效該使用者的Session */
-									bannedSession.invalidate();
-								}
+//								/* 透過帳號取得Session物件 */
+//								HttpSession bannedSession = (HttpSession) userMap.get(account);
+//								/* 檢查是否處於有效階段？ */
+//								if (bannedSession != null) {
+//									/* 無效該使用者的Session */
+//									bannedSession.invalidate();
+//								}
 								/* 沒異常就繼續維持resultCode */
 								operateResult = 1;
 							}

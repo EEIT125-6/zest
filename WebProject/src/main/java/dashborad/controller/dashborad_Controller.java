@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import board.service.BoardService;
 import model.BookingBean;
-import model.CartItemBean;
+//import model.CartDetailBean;
 import service.BookingService;
 import service.CartService;
-import util.GeneralInputCheckService;
+//import util.GeneralInputCheckService;
 import webUser.model.CityInfo;
 import webUser.model.Gender;
 import webUser.model.ChartBean;
@@ -43,7 +43,7 @@ import xun.util.sendJavaMail;
 
 @Controller
 @SessionAttributes({
-	"cartYearList",
+//	"cartYearList",
 	"userYearList",
 	"fervorList",
 	"genderList",
@@ -118,8 +118,8 @@ public class dashborad_Controller {
 	//以下管理員統計資料//
 	@GetMapping("/dashborad_order")
 	public String dashborad_order(Model model) {
-		List<String> cartYearList = getCartYearList();
-		model.addAttribute("cartYearList", cartYearList);
+//		List<String> cartYearList = getCartYearList();
+//		model.addAttribute("cartYearList", cartYearList);
 		return "dashborad-orderAnalysis";
 	}
 	
@@ -168,9 +168,9 @@ public class dashborad_Controller {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/dashborad_user")
 	public String dashborad_user(Model model) {
-		List<String> cartYearList = getCartYearList();
+//		List<String> cartYearList = getCartYearList();
 		List<String> userYearList = getUserYearList();
-		model.addAttribute("cartYearList", cartYearList);
+//		model.addAttribute("cartYearList", cartYearList);
 		model.addAttribute("userYearList", userYearList);
 		/* 使用者縣市分布圖 */
 		Map<String, Object> locationChartData = getLocationChartData(model);
@@ -808,153 +808,153 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢個人花費金額，按年齡分組(15歲一個區間，從0開始逐個區間+1，第一個為0~15)，僅計算已付款的 */
-	@PostMapping(value = "/controller/avgCostChartByAge", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getAvgCostChartByAge(Model model) {
-		Map<String, Object> map = new HashMap<>();
-		/* 年紀Map */
-		Map<String, Object> ageMap = new HashMap<>();
-		/* 使用者Map */
-		Map<String, Object> userMap = new HashMap<>();
-		String message = "";
-		/* 驗證身分 */
-		message = checkAdminIdentity(model);
-		/* 驗證通過 */
-		if (message.equals("")) {
-			/* 取出所有購物車訂單資料 */
-			List<CartItemBean> cartList = cts.getCartList();
-			/* 遍歷 */
-			for (CartItemBean cartData: cartList) {
-				/* 僅計算已付款的 */
-				if (cartData.getPurchase_Payment()) {
-					/* 取出使用者 */
-					WebUserData user = cartData.getProduct_User();
-					/* 取出購買產品的總價 */
-					Integer price = cartData.getProduct_Info().getProduct_price() * Integer.parseInt(cartData.getProduct_Quantity());
-					/* 算出年齡 */
-					Integer age = GeneralInputCheckService.doCaculateAge(user.getBirth());
-					/* 進行區間分類 */
-					Integer ageRange = age / 15;
-					/* 放入ageMap */
-					if (ageMap.get(ageRange.toString()) == null) {
-						ageMap.put(ageRange.toString(), price);
-					} else {
-						long tmpL = (long) ageMap.get(ageRange.toString());
-						ageMap.put(ageRange.toString(), tmpL + price);
-					}
-					/* 放入userMap */
-					if (userMap.get(ageRange.toString()) == null) {
-						userMap.put(ageRange.toString(), 1);
-					} else {
-						int tmp = (int) userMap.get(ageRange.toString());
-						userMap.put(ageRange.toString(), tmp + 1);
-					}
-					/* 計算平均 */
-					String realRange = String.valueOf(ageRange*15 + 0) + "~" + String.valueOf(ageRange*15 + 14);
-					if (map.get(realRange) == null) {
-						map.put(realRange, price);
-					} else {
-						long avgCost = (long) map.get(realRange) / (int) userMap.get(ageRange.toString());
-						map.put(realRange, avgCost);
-					}
-				}
-			}
-		}
-		message = (message.equals("")) ? "成功" : message;
-		
-		map.put("message", message);
-		return map;
-	}
+//	@PostMapping(value = "/controller/avgCostChartByAge", produces = "application/json; charset=UTF-8")
+//	public @ResponseBody Map<String, Object> getAvgCostChartByAge(Model model) {
+//		Map<String, Object> map = new HashMap<>();
+//		/* 年紀Map */
+//		Map<String, Object> ageMap = new HashMap<>();
+//		/* 使用者Map */
+//		Map<String, Object> userMap = new HashMap<>();
+//		String message = "";
+//		/* 驗證身分 */
+//		message = checkAdminIdentity(model);
+//		/* 驗證通過 */
+//		if (message.equals("")) {
+//			/* 取出所有購物車訂單資料 */
+//			List<CartDetailBean> cartList = cts.getCartList();
+//			/* 遍歷 */
+//			for (CartDetailBean cartData: cartList) {
+//				/* 僅計算已付款的 */
+//				if (cartData.getPurchase_Payment()) {
+//					/* 取出使用者 */
+//					WebUserData user = cartData.getProduct_User();
+//					/* 取出購買產品的總價 */
+//					Integer price = cartData.getProduct_Info().getProduct_price() * Integer.parseInt(cartData.getProduct_Quantity());
+//					/* 算出年齡 */
+//					Integer age = GeneralInputCheckService.doCaculateAge(user.getBirth());
+//					/* 進行區間分類 */
+//					Integer ageRange = age / 15;
+//					/* 放入ageMap */
+//					if (ageMap.get(ageRange.toString()) == null) {
+//						ageMap.put(ageRange.toString(), price);
+//					} else {
+//						long tmpL = (long) ageMap.get(ageRange.toString());
+//						ageMap.put(ageRange.toString(), tmpL + price);
+//					}
+//					/* 放入userMap */
+//					if (userMap.get(ageRange.toString()) == null) {
+//						userMap.put(ageRange.toString(), 1);
+//					} else {
+//						int tmp = (int) userMap.get(ageRange.toString());
+//						userMap.put(ageRange.toString(), tmp + 1);
+//					}
+//					/* 計算平均 */
+//					String realRange = String.valueOf(ageRange*15 + 0) + "~" + String.valueOf(ageRange*15 + 14);
+//					if (map.get(realRange) == null) {
+//						map.put(realRange, price);
+//					} else {
+//						long avgCost = (long) map.get(realRange) / (int) userMap.get(ageRange.toString());
+//						map.put(realRange, avgCost);
+//					}
+//				}
+//			}
+//		}
+//		message = (message.equals("")) ? "成功" : message;
+//		
+//		map.put("message", message);
+//		return map;
+//	}
 	
 	/* 查詢平均每筆花費金額，按年+月分組(預設為2020)，僅計算已付款的 */
-	@PostMapping(value = "/controller/avgCostChartByMonth", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getAvgCostChartByMonth(Model model,
-			@RequestParam(value = "year", defaultValue = "2020") String year) {
-		Map<String, Object> map = new HashMap<>();
-		/* 統計Map */
-		Map<String, Object> countMap = new HashMap<>();
-		/* 統計Map */
-		Map<String, Object> totalMap = new HashMap<>();
-		String message = "";
-		/* 驗證身分 */
-		message = checkAdminIdentity(model);
-		/* 驗證通過 */
-		if (message.equals("")) {
-			/* 取出所有購物車訂單資料 */
-			List<CartItemBean> cartList = cts.getCartList();
-			/* 遍歷 */
-			for (CartItemBean cartData: cartList) {
-				/* 該年度且僅計算已付款的 */
-				if (cartData.getPurchase_Payment() && String.valueOf(cartData.getPurchase_Time().toLocalDate().getDayOfYear()).equals(year)) {
-					/* 取出購買月份 */
-					Integer pMonth = cartData.getPurchase_Time().toLocalDate().getDayOfMonth();
-					/* 取出購買產品的總價 */
-					Integer price = cartData.getProduct_Info().getProduct_price() * Integer.parseInt(cartData.getProduct_Quantity());
-					/* 開始統計 */
-					if (countMap.get(pMonth.toString()) == null) {
-						countMap.put(pMonth.toString(), 1);
-					} else {
-						int tmp = (int) countMap.get(pMonth.toString());
-						countMap.put(pMonth.toString(), tmp + 1);
-					}
-					
-					if (totalMap.get(pMonth.toString()) == null) {
-						totalMap.put(pMonth.toString(), price);
-					} else {
-						long tmpL = (long) totalMap.get(pMonth.toString());
-						totalMap.put(pMonth.toString(), tmpL + price);
-					}
-					
-					if (map.get(pMonth.toString()) == null) {
-						map.put(pMonth.toString(), price);
-					} else {
-						int countTmp = (int) countMap.get(pMonth.toString());
-						long totalTmp = (long) totalMap.get(pMonth.toString());
-						map.put(pMonth.toString(), totalTmp / countTmp);
-					}
-				}
-			}
-		}
-		message = (message.equals("")) ? "成功" : message;
-		
-		map.put("message", message);
-		return map;
-	}
+//	@PostMapping(value = "/controller/avgCostChartByMonth", produces = "application/json; charset=UTF-8")
+//	public @ResponseBody Map<String, Object> getAvgCostChartByMonth(Model model,
+//			@RequestParam(value = "year", defaultValue = "2020") String year) {
+//		Map<String, Object> map = new HashMap<>();
+//		/* 統計Map */
+//		Map<String, Object> countMap = new HashMap<>();
+//		/* 統計Map */
+//		Map<String, Object> totalMap = new HashMap<>();
+//		String message = "";
+//		/* 驗證身分 */
+//		message = checkAdminIdentity(model);
+//		/* 驗證通過 */
+//		if (message.equals("")) {
+//			/* 取出所有購物車訂單資料 */
+//			List<CartItemBean> cartList = cts.getCartList();
+//			/* 遍歷 */
+//			for (CartItemBean cartData: cartList) {
+//				/* 該年度且僅計算已付款的 */
+//				if (cartData.getPurchase_Payment() && String.valueOf(cartData.getPurchase_Time().toLocalDate().getDayOfYear()).equals(year)) {
+//					/* 取出購買月份 */
+//					Integer pMonth = cartData.getPurchase_Time().toLocalDate().getDayOfMonth();
+//					/* 取出購買產品的總價 */
+//					Integer price = cartData.getProduct_Info().getProduct_price() * Integer.parseInt(cartData.getProduct_Quantity());
+//					/* 開始統計 */
+//					if (countMap.get(pMonth.toString()) == null) {
+//						countMap.put(pMonth.toString(), 1);
+//					} else {
+//						int tmp = (int) countMap.get(pMonth.toString());
+//						countMap.put(pMonth.toString(), tmp + 1);
+//					}
+//					
+//					if (totalMap.get(pMonth.toString()) == null) {
+//						totalMap.put(pMonth.toString(), price);
+//					} else {
+//						long tmpL = (long) totalMap.get(pMonth.toString());
+//						totalMap.put(pMonth.toString(), tmpL + price);
+//					}
+//					
+//					if (map.get(pMonth.toString()) == null) {
+//						map.put(pMonth.toString(), price);
+//					} else {
+//						int countTmp = (int) countMap.get(pMonth.toString());
+//						long totalTmp = (long) totalMap.get(pMonth.toString());
+//						map.put(pMonth.toString(), totalTmp / countTmp);
+//					}
+//				}
+//			}
+//		}
+//		message = (message.equals("")) ? "成功" : message;
+//		
+//		map.put("message", message);
+//		return map;
+//	}
 	
 	/* 查詢已付款的購物車清單中，按餐廳分類分組顯示比例，僅計算已付款的 */
-	@PostMapping(value = "/controller/buyCountsChartByType", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBuyCountsChartByType(Model model) {
-		Map<String, Object> map = new HashMap<>();
-		/* 各類筆數 */
-		Map<String, Object> countMap = new HashMap<>();
-		String message = "";
-		/* 驗證身分 */
-		message = checkAdminIdentity(model);
-		/* 驗證通過 */
-		if (message.equals("")) {
-			/* 取出所有購物車訂單資料 */
-			List<CartItemBean> cartList = cts.getCartList();
-			/* 遍歷 */
-			for (CartItemBean cartData: cartList) {
-				/* 僅計算已付款的 */
-				if (cartData.getPurchase_Payment()) {
-					/* 取店家類型 */
-					String storeType = cartData.getProduct_Info().getStorebean().getSclass();
-					if (countMap.get(storeType) == null) {
-						countMap.put(storeType, 1);
-						map.put(storeType, countMap);
-					} else {
-						long tmpL = (long) countMap.get(storeType);
-						countMap.put(storeType, tmpL + 1);
-						map.put(storeType, countMap);
-					}
-				}
-			}
-		}
-		message = (message.equals("")) ? "成功" : message;
-		
-		map.put("message", message);
-		return map;
-	}
+//	@PostMapping(value = "/controller/buyCountsChartByType", produces = "application/json; charset=UTF-8")
+//	public @ResponseBody Map<String, Object> getBuyCountsChartByType(Model model) {
+//		Map<String, Object> map = new HashMap<>();
+//		/* 各類筆數 */
+//		Map<String, Object> countMap = new HashMap<>();
+//		String message = "";
+//		/* 驗證身分 */
+//		message = checkAdminIdentity(model);
+//		/* 驗證通過 */
+//		if (message.equals("")) {
+//			/* 取出所有購物車訂單資料 */
+//			List<CartItemBean> cartList = cts.getCartList();
+//			/* 遍歷 */
+//			for (CartItemBean cartData: cartList) {
+//				/* 僅計算已付款的 */
+//				if (cartData.getPurchase_Payment()) {
+//					/* 取店家類型 */
+//					String storeType = cartData.getProduct_Info().getStorebean().getSclass();
+//					if (countMap.get(storeType) == null) {
+//						countMap.put(storeType, 1);
+//						map.put(storeType, countMap);
+//					} else {
+//						long tmpL = (long) countMap.get(storeType);
+//						countMap.put(storeType, tmpL + 1);
+//						map.put(storeType, countMap);
+//					}
+//				}
+//			}
+//		}
+//		message = (message.equals("")) ? "成功" : message;
+//		
+//		map.put("message", message);
+//		return map;
+//	}
 	
 	/* 取得留言列表 */
 	@PostMapping(value = "/controller/getCommentList", produces = "application/json; charset=UTF-8")
@@ -1204,19 +1204,19 @@ public class dashborad_Controller {
 		return map;
 	}
 	
-	/* 取出購物車年份(下拉選單用) */
-	private List<String> getCartYearList() {
-		/* 取出所有購物車訂單資料 */
-		List<String> cartYearList = new ArrayList<>();
-		List<CartItemBean> cartList = cts.getCartList();
-		if (cartList != null) {
-			for (CartItemBean cartData: cartList) {
-				cartYearList.add(String.valueOf(cartData.getPurchase_Time().toLocalDate().getYear()));
-			}
-			return cartYearList;
-		}
-		return null;
-	}
+//	/* 取出購物車年份(下拉選單用) */
+//	private List<String> getCartYearList() {
+//		/* 取出所有購物車訂單資料 */
+//		List<String> cartYearList = new ArrayList<>();
+//		List<CartItemBean> cartList = cts.getCartList();
+//		if (cartList != null) {
+//			for (CartItemBean cartData: cartList) {
+//				cartYearList.add(String.valueOf(cartData.getPurchase_Time().toLocalDate().getYear()));
+//			}
+//			return cartYearList;
+//		}
+//		return null;
+//	}
 	
 	/* 取出使用者加入年份(下拉選單用) */
 	private List<String> getUserYearList() {

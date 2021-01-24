@@ -141,7 +141,7 @@ span.price {
   <div class="col-75">
     <div class="container">
     <button id="ufd" style="float:right">同會員資料</button>
-      <form action="資訊串接綠界金流" class="qu">      
+      <form action="/WebProject/controller/creditCardCheckOut" method="POST" class="qu">      
         <div class="row">
           <div class="col-50">
             <h3>帳單郵寄地址</h3>
@@ -164,8 +164,8 @@ span.price {
   <div class="col-25">
     <div class="container">
       <h4>您的購物車項目 <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i><b><c:out value="${fn:length(cart)}"/><c:out value="項商品"/></b></span></h4>
-      <c:forEach var="product" items="${cart}">
-      <p><span>${product.product_name}</span><c:out value="x"/><span id="itemQuantity">${itemQuantity[product.product_id]}</span><span class="price"><c:out value="NT$"/>${product.product_price*itemQuantity[product.product_id]}</span></p>
+      <c:forEach var="thisCart" items="${cart}">
+      <p><span>${thisCart.product.product_name}</span><c:out value="x"/><span id="itemQuantity">${itemQuantity[thisCart.product.product_id]}</span><span class="price"><c:out value="NT$"/>${thisCart.product.product_price*itemQuantity[thisCart.product.product_id]}</span></p>
       <hr>
       </c:forEach>
       <p>總計<span id="tot" class="price" style="color:black"><b>NT$ ${itemTotalValue}</b></span></p>

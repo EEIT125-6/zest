@@ -257,12 +257,18 @@ public class ProductCUD_Controller {
 	}
 	
 	@PostMapping(value = "/productRemove" ,produces = "application/json; charset=utf-8")
+	public @ResponseBody void productRemove(
 			@RequestParam Integer productId
 			) {
 		System.out.println("有傳到刪除");
 		ps.productRemoveByStore(productId);
 	}
 //	設置商家價格區間
+	public void CalculateStoreRealPrice(Integer stid) {
+		
+		StoreBean sb = ss.get(stid);
+		
+//		Integer sumPrice = 0;
 		List<Integer> productsprice = new ArrayList<Integer>() ;
 		for (ProductInfoBean pi : ps.getStoreProduct(sb)) {
 			Integer ss =  pi.getProduct_price();

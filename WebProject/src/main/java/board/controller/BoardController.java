@@ -42,8 +42,7 @@ public class BoardController {
 		StoreBean storebean = storeService.get(storeId);
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.MILLISECOND, 0);
-		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, "", photo, storebean,0);
-//		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, photo, 0, storebean);
+		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, photo, 0, storebean);
 		if (boardService.insertBoard(boardBean) > 0) {
 			map.put("message", "success");
 			map.put("boardBean", boardBean);
@@ -132,23 +131,14 @@ public class BoardController {
 		List<Integer> storeStars= new ArrayList<Integer>();
 		if (boardService.getStoreStar(sb).get(0).getStar()!=null) {			
 			for(BoardBean bb : boardService.getStoreStar(sb)) {
-//				if (boardService.getStoreStar(sb).size()==0) {
-//					
-//				}
 				Integer star = bb.getStar();
 				allStars += star;
 				storeStars.add(star);
-//				System.out.println("---------------");
-//				System.out.println(star);
-//				System.out.println("---------------");
 			}
 			Float size = (float) storeStars.size();
-//			System.out.println(size);
-//			System.out.println(allStars);
 			avgStar = (float) (allStars/size);
-//			System.out.println("show AVG" + avgStar);
+			System.out.println("show AVG" + avgStar);
 			storeService.setStoreStar(avgStar, stid);
 		}
-		
 	}
 }
