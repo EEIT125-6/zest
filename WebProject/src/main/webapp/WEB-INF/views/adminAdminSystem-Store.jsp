@@ -19,10 +19,10 @@
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
 <!---------------------------------------------------------------------------->	
-			<div class="content" style="background-color: #ffc107;">
+			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-					<div class="container" style="margin-top: 20px;">
+					<div class="container" style="margin-top: 20px;background-color: #FFF;">
 						<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 						<input type="hidden" id="pageNo" value="1" />
 						<input type="hidden" id="maxPage" value="1" />
@@ -381,7 +381,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
 																+ "</button>";
 													}
@@ -391,7 +391,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																+ "</button>"
 													} else if (storeData.status == "0") {
@@ -399,7 +399,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 																+ "</button>";
 													} else if (storeData.status == "3") {
@@ -407,7 +407,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:blue'>delete</i>"
 																+ "</button>";
 													}
@@ -419,7 +419,7 @@
 															+ "/"
 															+ storeData.stname
 															+ "'>"
-															+ "<button type='button' style='background-color:#ffc107'>"
+															+ "<button type='button' style='background-color:#F0F0F0'>"
 															+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
 															+ "</button>"
 															+ "</a>"
@@ -457,25 +457,25 @@
 												document.getElementById("maxPage").value = resultObj.totalDataPages;
 												
 												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirstBtn'>"
 															+ "第一頁"
 															+ "</button>";
 												}
 												
 												if (startPage - 1 > 0) {
-													content +="<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+													content +="<button type='button' style='background-color:#F0F0F0' class='pPrevBtn'>"
 															+ "上一頁"
 															+ "</button>";
 												} 
 												
 												if (resultObj.totalDataNums > startPage * avgPage) {
-													content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNextBtn'>"
 															+ "下一頁"
 															+ "</button>";
 												}
 												
 												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLastBtn'>"
 															+ "最末頁"
 															+ "</button>";
 												}
@@ -597,7 +597,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
 																+ "</button>"
 																+ "</td>";
@@ -609,7 +609,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																+ "</button>"
 													} else if (storeData.status == "0") {
@@ -618,7 +618,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 																+ "</button>";
 													} else if (storeData.status == "3") {
@@ -627,7 +627,7 @@
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
-																+ "' style='background-color:#ffc107'>" 
+																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:blue'>delete</i>"
 																+ "</button>";
 													}
@@ -639,7 +639,7 @@
 															+ "/"
 															+ storeData.stname
 															+ "'>"
-															+ "<button type='button' style='background-color:#ffc107'>"
+															+ "<button type='button' style='background-color:#F0F0F0'>"
 															+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
 															+ "</button>"
 															+ "</a>"
@@ -677,27 +677,27 @@
 												document.getElementById("maxPage").value = resultObj.totalDataPages;
 												
 												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirst'>"
 															+ "第一頁"
 															+ "</button>";
 															
 												} 
 												
 												if (startPage - 1 > 0) {
-													content += "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pPrev'>"
 															+ "上一頁"
 															+ "</button>";
 															
 												} 
 												
 												if (resultObj.totalDataNums > startPage * avgPage) {
-													content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNext'>"
 															+ "下一頁"
 															+ "</button>";
 												}
 												
 												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pLast'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLast'>"
 															+ "最末頁"
 															+ "</button>";
 												}

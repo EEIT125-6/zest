@@ -194,11 +194,6 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
-	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
-		return webUserDAO.getAllYearWebUserData(year);
-	}
-	
-	@Override
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
 		return webUserDAO.getUserRecordCounts(selectedParameters);
 	}
@@ -229,7 +224,7 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 	
 	@Override
-	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
-		return webUserDAO.getAllWebUserJoinDate(year);
+	public List<LocalDate> getAllWebUserJoinDate() throws SQLException {
+		return webUserDAO.getAllWebUserJoinDate();
 	}
 }

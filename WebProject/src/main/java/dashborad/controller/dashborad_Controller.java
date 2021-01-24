@@ -26,6 +26,7 @@ import service.CartService;
 import util.GeneralInputCheckService;
 import webUser.model.CityInfo;
 import webUser.model.Gender;
+import webUser.model.ChartBean;
 import webUser.model.WebUserData;
 import webUser.service.FervorService;
 import webUser.service.GenderService;
@@ -43,7 +44,10 @@ import xun.service.StoreService;
 	"fervorList",
 	"genderList",
 	"userFullData",
-	"sclassList"
+	"sclassList",
+	"locationChartList",
+	"genderChartList",
+	"joinDateChartList"
 })
 public class dashborad_Controller {
 	/* By Mimicker0903 */
@@ -120,12 +124,31 @@ public class dashborad_Controller {
 		return "dashborad-commentAnalysis";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/dashborad_user")
 	public String dashborad_user(Model model) {
 		List<String> cartYearList = getCartYearList();
 		List<String> userYearList = getUserYearList();
 		model.addAttribute("cartYearList", cartYearList);
 		model.addAttribute("userYearList", userYearList);
+		/* 使用者縣市分布圖 */
+		Map<String, Object> locationChartData = getLocationChartData(model);
+		List<ChartBean> locationChartList = (List<ChartBean>) locationChartData.get("locationChartList");
+		if (locationChartData.get("message").equals("成功")) {
+			model.addAttribute("locationChartList", locationChartList);
+		}
+		/* 使用者性別分布圖 */
+		Map<String, Object> genderChartData = getGenderChartData(model);
+		List<ChartBean> genderChartList = (List<ChartBean>) genderChartData.get("genderChartList");
+		if (genderChartData.get("message").equals("成功")) {
+			model.addAttribute("genderChartList", genderChartList);
+		}
+		/* 使用者加入時間分布圖 */
+		Map<String, Object> joinDateChartData = getJoinDateChartData(model);
+		List<ChartBean> joinDateChartList = (List<ChartBean>) joinDateChartData.get("joinDateChartList");
+		if ( joinDateChartData.get("message").equals("成功")) {
+			model.addAttribute("joinDateChartList",  joinDateChartList);
+		}
 		return "dashborad-userAnalysis";
 	}
 	//以上管理員統計資料//
@@ -198,12 +221,11 @@ public class dashborad_Controller {
 	
 	/* 後臺用資料 By George017 2021/01/20 */
 	/* 將使用者資料按縣市區域分組統計 */
-	@PostMapping(value = "/controller/localCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getLocationCharData(Model model) {
+	public Map<String, Object> getLocationChartData(Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
-		
+		List<ChartBean> charBeanList = new ArrayList<>();
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
 		/* 驗證通過 */
@@ -218,11 +240,19 @@ public class dashborad_Controller {
 					for (WebUserData user: userList) {
 						/* 區域代碼一致 */
 						if (user.getLocationInfo().getCityCode() == cityInfo.getCityCode()) {
-							if (map.get(cityInfo.getCityName()) == null) {								
-								map.put(cityInfo.getCityName(), 1);
+							if (charBeanList.size() == 0) {
+								charBeanList.add(new ChartBean(cityInfo.getCityName(), 1));
 							} else {
-								int tmp = (int) map.get(cityInfo.getCityName());
-								map.put(cityInfo.getCityName(), tmp + 1);
+								Boolean check = false;
+								for (ChartBean charBeanData: charBeanList) {
+									if (charBeanData.getLabelName().equals(cityInfo.getCityName())) {
+										charBeanData.setLabelNum(charBeanData.getLabelNum() + 1);
+										check = true;
+									}
+								}
+								if (!check) {
+									charBeanList.add(new ChartBean(cityInfo.getCityName(), 1));
+								}
 							}
 						}
 					}
@@ -232,18 +262,17 @@ public class dashborad_Controller {
 			}
 		}
 		message = (message.equals("")) ? "成功" : message;
-		
+		map.put("locationChartList", charBeanList);
 		map.put("message", message);
 		return map;
 	}
 	
 	/* 將使用者資料按生理性別分組統計 */
-	@PostMapping(value = "/controller/genderCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getGenderCharData (Model model) {
+	public Map<String, Object> getGenderChartData (Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
-		
+		List<ChartBean> charBeanList = new ArrayList<>();
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
 		/* 驗證通過 */
@@ -254,15 +283,23 @@ public class dashborad_Controller {
 				/* 取回所有使用者列表 */
 				List<WebUserData> userList = wus.getAllWebUserData();
 				/* 遍歷 */
-				for (Gender gender: genderList) {
-					for (WebUserData user: userList) {
+				for (WebUserData user: userList) {
+					for (Gender gender: genderList) {
 						/* 性別代碼一致 */
 						if (user.getGender().getGenderCode().equals(gender.getGenderCode())) {
-							if (map.get(gender.getGenderText()) == null) {								
-								map.put(gender.getGenderText(), 1);
+							if (charBeanList.size() == 0) {
+								charBeanList.add(new ChartBean(gender.getGenderText(), 1));
 							} else {
-								int tmp = (int) map.get(gender.getGenderText());
-								map.put(gender.getGenderText(), tmp + 1);
+								Boolean check = false;
+								for (ChartBean charBeanData: charBeanList) {
+									if (charBeanData.getLabelName().equals(gender.getGenderText())) {
+										charBeanData.setLabelNum(charBeanData.getLabelNum() + 1);
+										check = true;
+									}
+								}
+								if (!check) {
+									charBeanList.add(new ChartBean(gender.getGenderText(), 1));
+								}
 							}
 						}
 					}
@@ -272,39 +309,47 @@ public class dashborad_Controller {
 			}
 		}
 		message = (message.equals("")) ? "成功" : message;
-		
+		map.put("genderChartList", charBeanList);
 		map.put("message", message);
 		return map;
 	}
 	
 	/* 將使用者資料按加入時段分組統計(一次僅會顯示一個年度的資料，預設值為2020) */
-	@PostMapping(value = "/controller/joinDateCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getJoinDateCharData (
-			Model model, 
-			@RequestParam(value = "year", defaultValue = "2020") String year) {
+	public Map<String, Object> getJoinDateChartData (Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
-		
+		List<ChartBean> charBeanList = new ArrayList<>();
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
 				/* 取回註冊時間列表 */
-				List<LocalDate> joinDateList = wus.getAllWebUserJoinDate(year);
+				List<LocalDate> joinDateList = wus.getAllWebUserJoinDate();
 				/* 取回該年度所有註冊的使用者列表 */
-				List<WebUserData> userList = wus.getAllYearWebUserData(year);
+				List<WebUserData> userList = wus.getAllWebUserData();
 				/* 遍歷 */
-				for (LocalDate jDate: joinDateList) {
-					for (WebUserData user: userList) {
+				for (WebUserData user: userList) {
+					for (LocalDate jDate: joinDateList) {
 						/* 年份、月份一致 */
 						if (user.getJoinDate().toLocalDate().getYear() == jDate.getYear() && user.getJoinDate().toLocalDate().getMonth() == jDate.getMonth()) {
-							if (map.get(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString()) == null) {
-								map.put(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1);
+							if (charBeanList.size() == 0) {
+								charBeanList.add(new ChartBean(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1));
+								System.out.println(charBeanList.get(0).getLabelName()+","+charBeanList.get(0).getLabelNum());
 							} else {
-								int tmp = (int) map.get(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString());
-								map.put(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), tmp + 1);
+								Boolean check = false;
+								for (ChartBean charBeanData: charBeanList) {
+									if (charBeanData.getLabelName().equals(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString())) {
+										charBeanData.setLabelNum(charBeanData.getLabelNum() + 1);
+										check = true;
+										System.out.println(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString()+","+charBeanList.get(0).getLabelNum());
+									}
+								}
+								if (!check) {
+									charBeanList.add(new ChartBean(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString(), 1));
+									System.out.println(String.valueOf(jDate.getYear()) + "-" + jDate.getMonth().toString()+","+charBeanList.get(0).getLabelNum());
+								}
 							}
 						}
 					}
@@ -314,14 +359,14 @@ public class dashborad_Controller {
 			}
 		}
 		message = (message.equals("")) ? "成功" : message;
-		
+		map.put("joinDateChartList", charBeanList);
 		map.put("message", message);
 		return map;
 	}
 	
 	/* 將使用者按有無使用過訂位系統來分組統計(used/not used) */
-	@PostMapping(value = "/controller/bookingUsageCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBookingUsageCharData(Model model) {
+	@PostMapping(value = "/controller/bookingUsageChartData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingUsageChartData(Model model) {
 		/* 參數宣告 */
 		Map<String, Object> map = new HashMap<>();
 		Map<String, Object> resultMap = new HashMap<>();
@@ -365,8 +410,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 將非取消的訂單資料按用途分組統計 */
-	@PostMapping(value = "/controller/bookingGoalCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBookingGoalCharData(Model model) {
+	@PostMapping(value = "/controller/bookingGoalChartData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingGoalChartData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		
@@ -397,8 +442,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 將非取消的訂單資料裡的人數按餐廳分類分組統計(*未排除已下線的商店) */
-	@PostMapping(value = "/controller/bookingTypeCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBookingTypeCharData(Model model) {
+	@PostMapping(value = "/controller/bookingTypeChartData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBookingTypeChartData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
@@ -436,8 +481,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢各分類的有效評分(將排除空值)，平均數為float型別 */
-	@PostMapping(value = "/controller/boardStarCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBoardStarCharData(Model model) {
+	@PostMapping(value = "/controller/boardStarChartData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBoardStarChartData(Model model) {
 		Map<String, Object> resultMap = new HashMap<>();
 		/* 總分 */
 		Map<String, Object> map = new HashMap<>();
@@ -480,8 +525,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢各分類的有效評分(將排除空值)，統計其留言數 */
-	@PostMapping(value = "/controller/boardCountsCharData", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBoardCountsCharData(Model model) {
+	@PostMapping(value = "/controller/boardCountsChartData", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBoardCountsChartData(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
@@ -513,8 +558,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢個人花費金額，按年齡分組(15歲一個區間，從0開始逐個區間+1，第一個為0~15)，僅計算已付款的 */
-	@PostMapping(value = "/controller/avgCostByAge", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getAvgCostByAge(Model model) {
+	@PostMapping(value = "/controller/avgCostChartByAge", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getAvgCostChartByAge(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		/* 年紀Map */
 		Map<String, Object> ageMap = new HashMap<>();
@@ -571,8 +616,8 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢平均每筆花費金額，按年+月分組(預設為2020)，僅計算已付款的 */
-	@PostMapping(value = "/controller/avgCostByMonth", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getAvgCostByMonth(Model model,
+	@PostMapping(value = "/controller/avgCostChartByMonth", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getAvgCostChartByMonth(Model model,
 			@RequestParam(value = "year", defaultValue = "2020") String year) {
 		Map<String, Object> map = new HashMap<>();
 		/* 統計Map */
@@ -626,13 +671,11 @@ public class dashborad_Controller {
 	}
 	
 	/* 查詢已付款的購物車清單中，按餐廳分類分組顯示比例，僅計算已付款的 */
-	@PostMapping(value = "/controller/buyCountsByType", produces = "application/json; charset=UTF-8")
-	public @ResponseBody Map<String, Object> getBuyCountsByType(Model model) {
+	@PostMapping(value = "/controller/buyCountsChartByType", produces = "application/json; charset=UTF-8")
+	public @ResponseBody Map<String, Object> getBuyCountsChartByType(Model model) {
 		Map<String, Object> map = new HashMap<>();
 		/* 各類筆數 */
 		Map<String, Object> countMap = new HashMap<>();
-		/* 總筆數 */
-		Map<String, Object> totalMap = new HashMap<>();
 		String message = "";
 		/* 驗證身分 */
 		message = checkAdminIdentity(model);
@@ -646,21 +689,13 @@ public class dashborad_Controller {
 				if (cartData.getPurchase_Payment()) {
 					/* 取店家類型 */
 					String storeType = cartData.getProduct_Info().getStorebean().getSclass();
-					if (totalMap.get("total") == null) {
-						totalMap.put("total", 1);
-					} else {
-						long tmp = (long) totalMap.get("total");
-						totalMap.put("total", tmp + 1);
-					}
 					if (countMap.get(storeType) == null) {
 						countMap.put(storeType, 1);
-						long totalTmp = (long) totalMap.get("total");
-						map.put(storeType, (float)(1 / totalTmp));
+						map.put(storeType, countMap);
 					} else {
 						long tmpL = (long) countMap.get(storeType);
 						countMap.put(storeType, tmpL + 1);
-						long totalTmp = (long) totalMap.get("total");
-						map.put(storeType, (float)((long) countMap.get(storeType) / totalTmp));
+						map.put(storeType, countMap);
 					}
 				}
 			}
@@ -926,7 +961,7 @@ public class dashborad_Controller {
 		List<CartItemBean> cartList = cts.getCartList();
 		if (cartList != null) {
 			for (CartItemBean cartData: cartList) {
-				cartYearList.add(String.valueOf(cartData.getPurchase_Time().toLocalDate().getDayOfYear()));
+				cartYearList.add(String.valueOf(cartData.getPurchase_Time().toLocalDate().getYear()));
 			}
 			return cartYearList;
 		}
@@ -947,7 +982,9 @@ public class dashborad_Controller {
 		
 		if (userList != null) {
 			for (WebUserData userData: userList) {
-				userYearList.add(String.valueOf(userData.getBirth().toLocalDate().getDayOfYear()));
+				if (!userYearList.contains(String.valueOf(userData.getJoinDate().toLocalDate().getYear()))) {
+					userYearList.add(String.valueOf(userData.getJoinDate().toLocalDate().getYear()));
+				}
 			}
 			return userYearList;
 		}

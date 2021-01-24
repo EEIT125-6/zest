@@ -122,6 +122,7 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		List<WebUserData> list = getSession().createQuery(hql).setParameter("inputAccount", inputAccount)
 				.setParameter("inputPassword", inputPassword).getResultList();
 		/* 由size()判結果 */
+		System.out.println(inputAccount+","+inputPassword+","+hql+","+list.size());
 		return (list.size() > 0) ? 1 : 0;
 	}
 	
@@ -353,13 +354,6 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 		return getSession().createQuery(hql).getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException {
-		String hql = "FROM WebUserData AS wu WHERE wu.status='active' AND wu.joinDate LIKE :year";
-		/* 取得當前Session，然後執行HQL以取得陣列 */
-		return getSession().createQuery(hql).setParameter("year", year).getResultList();
-	}
-	
 	/* 取得查詢的總筆數 */
 	@Override
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException {
@@ -501,9 +495,9 @@ public class WebUserRepositoryImpl implements WebUserRepository {
 	}
 	
 	/* 取回所有可用使用者的註冊日期 */
-	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException {
+	public List<LocalDate> getAllWebUserJoinDate() throws SQLException {
 		List<LocalDate> joinDateList = new ArrayList<>();
-		List<WebUserData> userList = getAllYearWebUserData(year);
+		List<WebUserData> userList = getAllWebUserData();
 		
 		for (WebUserData user: userList) {
 			/* List中沒有才加入，避免重複日期 */

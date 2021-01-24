@@ -19,10 +19,10 @@
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
 <!---------------------------------------------------------------------------->	
-			<div class="content" style="background-color: #ffc107;">
+			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-		            <div class="container"  style="margin-top: 20px;">
+		            <div class="container"  style="margin-top: 20px;background-color:#FFF;">
 						<c:if test="${managedUserData.account == null}">
 							<c:redirect url="adminAccount" />
 						</c:if>
