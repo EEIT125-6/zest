@@ -42,7 +42,7 @@ public class BoardController {
 		StoreBean storebean = storeService.get(storeId);
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.MILLISECOND, 0);
-		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, photo, 0, storebean);
+		BoardBean boardBean = new BoardBean(null, name, star, c.getTime(), comment, "", photo, storebean, 0);
 		if (boardService.insertBoard(boardBean) > 0) {
 			map.put("message", "success");
 			map.put("boardBean", boardBean);
