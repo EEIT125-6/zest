@@ -85,7 +85,6 @@
 							 	}
 							 	function eating(){
 							 		var eating=document.getElementById("eat").value;
-							 		alert(eating);
 							 		if(eating==""){
 							 			showAll();	
 							 		}else{
