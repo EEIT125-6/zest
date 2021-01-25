@@ -256,37 +256,45 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+  	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
 		function checkPhone( strPhone ) { 
 	 	    var cellphone = /^09[0-9]{8}$/; 
 	 	 
 	 	    if (!cellphone.test( strPhone )) { 
-	 	        alert( "手機格式輸入錯誤" ); 
+	 	    	swal("手機格式輸入錯誤", "", "error");
+// 	 	        alert( "手機格式輸入錯誤" ); 
 	 	    } 	    
 		 };  
  	
 		function check(){
 			if($("#datepicker1").val()==""){
-				alert("請選擇訂位日期");
+				swal("請選擇訂位日期", "", "warning");
+// 				alert("請選擇訂位日期");
 				return false;
 			}else if($("#time").val()==""){
-				alert("請選擇用餐時間");
+				swal("請選擇用餐時間", "", "warning");
+// 				alert("請選擇用餐時間");
 				eval("document.form['time'].focus()");	
 				return false;
 			}else if($("#number").val()==""){
-				alert("請選擇用餐人數");
+				swal("請選擇用餐人數", "", "warning");
+// 				alert("請選擇用餐人數");
 				eval("document.form['number'].focus()");	
 				return false;	
 			}else if($("#name").val()==""){
-				alert("姓名不得為空白");
+				swal("姓名不得為空白", "", "warning");
+// 				alert("姓名不得為空白");
 				eval("document.form['name'].focus()");	
 				return false;
 			}else if($("#phone").val()==""){
-				alert("手機號碼尚未填寫");
+				swal("手機號碼尚未填寫", "", "warning");
+// 				alert("手機號碼尚未填寫");
 				eval("document.form['phone'].focus()");	
 				return false;
 			}else if($("#email").val()==""){
-				alert("e-mail尚未填寫");
+				swal("e-mail尚未填寫", "", "warning");
+// 				alert("e-mail尚未填寫");
 				eval("document.form['email'].focus()");	
 				return false;
 			}else{

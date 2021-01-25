@@ -239,6 +239,7 @@
       });
  
 </script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 	function egg() {
 			var dateTime=new Date();
@@ -246,7 +247,8 @@
 			dateTime=new Date(dateTime); //當天日期加一天
 			var bookingdate = document.forms["form1"].bookingdate.value;
 			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
-				alert("已超過修改/取消訂位的時限！");
+// 				alert("已超過修改/取消訂位的時限！");
+				swal("已超過修改/取消訂位的時限！", "", "error");
 				return false;
 			} 
 			return true;
