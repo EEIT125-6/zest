@@ -186,9 +186,6 @@
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
-                		<c:if test="${userFullData.accountLv.lv != -1}" >
-<!--                 			<button type="button" id="manage" name="manage" style="font-size:18px;display:none;" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button> -->
-                		</c:if>
                 		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />">
                 			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
                 		</a>
@@ -204,14 +201,14 @@
 						</fieldset>
 					</form>
                 </div>
-                
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script>
                 	window.onload = function () {
                 		let logOutBtn = document.getElementById("logout");
                 		
                 		logOutBtn.onclick = function() {
         					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
-        					alert("謝謝您的使用，" + account + " ！");
+							swal("謝謝您的使用，" + account + " ！", "", "success");
         				};
         				
         				getSelfData();
@@ -252,7 +249,7 @@
 										} else {
 											getDataStr = "取得資料途中遭遇錯誤！";
 											/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+											swal(resultObj.resultMessage, "", "error");
 										}
 										if (!getDataIsOk) {
 											getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;

@@ -179,6 +179,7 @@
 					<hr />
                 </form>
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserResetPassword.js"></script>
                 <script>
 	                $("#sendReset").click(function () {
@@ -186,14 +187,13 @@
 	                	var password = document.getElementById("password").value.trim();
 	                	
 	                	if (!checkForm()) {
-	                		alert("操作無效或已被取消");
+	                		/* 顯示彈窗訊息 */
+		            		swal("操作無效或已被取消","","error");
 	                	} else {
 	                		sendResetRequest(userId, password);
 	                	}
 				    });
 	                function sendResetRequest(userId, password) {
-	                	
-	                	
 	                	let resetSpan = document.getElementById("resetSpan");
 						let resetStr = "...處理中，請稍後";
 						let resetIsOk = true;
@@ -215,22 +215,22 @@
 				            		resetStr = "重設成功！請重新登入您的帳號";
 				            		resetIsOk = true;
 				            		/* 顯示彈窗訊息 */
-				            		alert(resetStr);
+				            		swal(resetStr,"","success");
 				            	} else if(resultObj.resultCode == 0) {
 				            		resetStr = "密碼未變更！";
 				            		resetIsOk = false;
 				            		/* 顯示彈窗訊息 */
-				            		alert(resetStr);
+				            		swal(resetStr,"","error");
 				            	} else if(resultObj.resultCode == -1) {
 				            		resetStr = "本帳號已停用！請重新註冊或聯絡網站管理員";
 				            		resetIsOk = false;
 				            		/* 顯示彈窗訊息 */
-				            		alert(resetStr);
+				            		swal(resetStr,"","error");
 				            	} else if(resultObj.resultCode == -2) {
 				            		resetStr = "無效的帳號驗證資訊！無法重設密碼";
 				            		resetIsOk = false;
 				            		/* 顯示彈窗訊息 */
-				            		alert(resetStr);
+				            		swal(resetStr,"","error");
 				            	} else if(resultObj.resultCode == -3) {
 				            		resetStr = "重設密碼密碼失敗";
 				            		resetIsOk = false;
@@ -240,7 +240,7 @@
 				            		resetStr = "檢查途中遭遇錯誤！";
 				            		resetIsOk = false;
 				            		/* 顯示彈窗訊息 */
-				            		alert(resultObj.resultMessage);
+				            		swal(resetStr,"","error");
 				            	}
 				            	if (!resetIsOk) {
 				            		resetSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + resetStr;
@@ -259,8 +259,8 @@
 				            	resetSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + resetStr;
 				            	resetSpan.style.color = "red";
 				            	resetSpan.style.fontStyle = "italic";
-			            		/* 顯示彈窗訊息 */
-			            		alert(resetStr);
+				            	/* 顯示彈窗訊息 */
+			            		swal(resetStr,"","error");
 				            }
 						});
 	                }

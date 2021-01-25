@@ -90,6 +90,7 @@
 						
 						<!--引用本地jQuery -->
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<!-- 引用本頁檢查用js -->
 						<script src="${pageContext.request.contextPath}/js/ProductSearchForm.js"></script>
 						<script>
@@ -121,10 +122,29 @@
 									lastCheck(id, status, mode);
 								});
 								/* 綁定第一頁按鈕 */
+								$("#dataContainer").on("click", ".pFirst", function() {
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = 1;
+									selectAllProduct();
+								});
 								/* 綁定上一頁按鈕 */
+								$("#dataContainer").on("click", ".pPrev", function() {
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+									selectAllProduct();
+								});
 								/* 綁定下一頁按鈕 */
+								$("#dataContainer").on("click", ".pNext", function() {
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = startPage + 1;
+									selectAllProduct();
+								});
 								/* 綁定最末頁按鈕 */
-								
+								$("#dataContainer").on("click", ".pLast", function() {
+									let maxPage = parseInt(document.getElementById("maxPage").value);
+									document.getElementById("pageNo").value = maxPage;
+									selectAllProduct();
+								});
 							};
 							
 							$("#search").click(function() {
@@ -134,7 +154,8 @@
 							function specSearch() {
 								document.getElementById("pageNo").value = 1;
 								document.getElementById("maxPage").value = 1;
-								
+								var counter = 0;
+								var userLv = document.getElementById("userLv").value.trim();
 							}
 							
 							function lastCheck(id, status, mode) {

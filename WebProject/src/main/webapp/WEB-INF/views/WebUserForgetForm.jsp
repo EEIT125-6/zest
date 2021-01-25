@@ -200,6 +200,7 @@
 					<hr />
                 </form>
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserForgetForm.js"></script>
                 <script>
 	                $("#userInput").click(function () {
@@ -212,7 +213,7 @@
 				    });
 	                function checkRecoveryRequest() {
 	                	if (!checkForm()) {
-	                		alert("輸入的欄位有錯誤，請修正後再次執行!");
+	                		swal("輸入的欄位有錯誤，請修正後再次執行!","","error");
 	                	} else {
 	                		let sendRecoveryUrlBtn = document.getElementById("recovery");
 	                		let email = document.getElementById("email").value.trim();
@@ -259,13 +260,13 @@
 				            	if(resultObj.resultCode == 'true') {
 				            		requestStr = "信件已成功寄出！";
 				            		requestIsOk = true;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
+				            		/* 顯示彈窗訊息 */
+				            		swal(resultObj.resultMessage,"","success");
 				            	} else if(resultObj.resultCode == 'false') {
 				            		requestStr = "信件未能寄出！";
 				            		requestIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
+				            		/* 顯示彈窗訊息 */
+				            		swal(resultObj.resultMessage,"","error");
 				            	}
 				            	if (!requestIsOk) {
 				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
@@ -282,6 +283,8 @@
 				            	requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
 				            	requestSpan.style.color = "red";
 				            	requestSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗訊息 */
+			            		swal(requestStr,"","error");
 				            }
 						});
 	                }

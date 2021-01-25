@@ -101,12 +101,13 @@
 				<span id="logOutBtn" style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;display: none;">登出</span>
 			</c:if>			
 		</p>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script>
 			window.onload = function() {
 				let logOutBtn = document.getElementById("logOutBtn");
 				logOutBtn.onclick = function() {
 					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
-					alert("謝謝您的使用，" + account + " ！");
+					swal("謝謝您的使用，" + account + " ！", "", "success");
 				};
 			};
 		</script>

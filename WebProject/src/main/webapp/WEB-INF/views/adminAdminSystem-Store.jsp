@@ -88,6 +88,7 @@
 						
 						<!--引用本地jQuery -->
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<!-- 引用本頁檢查用js -->
 						<script src="${pageContext.request.contextPath}/js/StoreSearchForm.js"></script>
 						<script>
@@ -229,7 +230,7 @@
 										} 
 									}
 								} else {
-									alert("檢查失敗！");
+									swal("檢查失敗！","","error");
 								}
 							};
 							
@@ -261,7 +262,7 @@
 												operateResultSpan.style.color = "black";
 												operateResultSpan.style.fontStyle = "normal";
 												/* 顯示彈窗訊息 */
-												alert(resultObj.resultMessage);
+												swal(operateResultStr,"","success");
 												/* 重新以Ajax寫出表格 */
 												selectAllStore();
 											} else if (resultObj.resultCode == 0) {
@@ -269,15 +270,15 @@
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 												operateResultSpan.style.color = "red";
 												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");
 											} else if (resultObj.resultCode == -1) {
 												operateResultStr = resultObj.resultMessage;
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 												operateResultSpan.style.color = "red";
 												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");
 											}
 										},
 										error : function(err) {
@@ -285,8 +286,8 @@
 											operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 											operateResultSpan.style.color = "red";
 											operateResultSpan.style.fontStyle = "italic";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(operateResultStr,"","error");
 										}
 									});
 								}
@@ -501,8 +502,8 @@
 											searchSpan.style.color = "red";
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(searchStr,"","error");
 										}
 									},
 									error : function(err) {
@@ -512,8 +513,8 @@
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							};
@@ -724,7 +725,7 @@
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
 											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											swal(searchStr,"","error");
 										}
 									},
 									error : function(err) {
@@ -734,8 +735,8 @@
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							};

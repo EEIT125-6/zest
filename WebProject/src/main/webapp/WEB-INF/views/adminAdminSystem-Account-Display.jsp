@@ -216,6 +216,7 @@
 							</div>
 						</form>
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<script src="<c:url value='/js/webUser/DisplayManagedUserData.js' />"></script>
 						<script>
 							$(document).ready(function () {
@@ -276,13 +277,15 @@
 										success:function(resultObj) {
 											if (resultObj.resultCode == "true") {
 												picStr = resultObj.resultMessage;
-												alert(picStr);
+												/* 顯示彈窗訊息 */
+												swal(picStr,"","success");
 												picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
 												picSpan.style.color = "green";
 												picSpan.style.fontStyle = "normal";
 											} else {
 												picStr = resultObj.resultMessage;
-												alert(picStr);
+												/* 顯示彈窗訊息 */
+												swal(picStr,"","error");
 												picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 												picSpan.style.color = "red";
 												picSpan.style.fontStyle = "italic";
@@ -290,7 +293,8 @@
 										},
 										error:function(err) {
 											picStr = "發生錯誤，無法上傳";
-											alert(picStr);
+											/* 顯示彈窗訊息 */
+											swal(picStr,"","error");
 											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 											picSpan.style.color = "red";
 											picSpan.style.fontStyle = "italic";
@@ -323,13 +327,15 @@
 											success:function(resultObj) {
 												if (resultObj.resultCode == "true") {
 													picStr = resultObj.resultMessage;
-													alert(picStr);
+													/* 顯示彈窗訊息 */
+													swal(picStr,"","success");
 													picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
 													picSpan.style.color = "green";
 													picSpan.style.fontStyle = "normal";
 												} else {
 													picStr = resultObj.resultMessage;
-													alert(picStr);
+													/* 顯示彈窗訊息 */
+													swal(picStr,"","error");
 													picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 													picSpan.style.color = "red";
 													picSpan.style.fontStyle = "italic";
@@ -337,7 +343,8 @@
 											},
 											error:function(err) {
 												picStr = "發生錯誤，無法回復預設值";
-												alert(picStr);
+												/* 顯示彈窗訊息 */
+												swal(picStr,"","error");
 												picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 												picSpan.style.color = "red";
 												picSpan.style.fontStyle = "italic";
@@ -346,7 +353,8 @@
 				                	}
 			                	} else {
 			                		picStr = "無法回復預設值！因為已經為預設圖示";
-									alert(picStr);
+			                		/* 顯示彈窗訊息 */
+									swal(picStr,"","error");
 									picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 									picSpan.style.color = "red";
 									picSpan.style.fontStyle = "italic";
@@ -376,14 +384,16 @@
 						            	if (resultObj.resultCode == 1) {
 						            		nicknameStr = "此稱呼已有人使用！";
 						            		nicknameIsOk = false;
+						            		/* 顯示彈窗訊息 */
+											swal(nicknameStr,"","error");
 						            	} else if (resultObj.resultCode == 0) {
 						            		nicknameStr = "可使用此稱呼！";
 						            		nicknameIsOk = true;
 						            	} else if (resultObj.resultCode == -1) {
 						            		nicknameStr = "檢查途中遭遇錯誤！";
 						            		nicknameIsOk = false;
-						            		/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+						            		/* 顯示彈窗訊息 */
+											swal(nicknameStr,"","error");
 						            	}
 						            	if (!nicknameIsOk) {
 						            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
@@ -400,6 +410,8 @@
 						            	nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 						            	nicknameSpan.style.color = "red";
 						            	nicknameSpan.style.fontStyle = "italic";
+						            	/* 顯示彈窗訊息 */
+										swal(nicknameStr,"","error");
 						            }
 								});
 							}
@@ -427,14 +439,16 @@
 						            	if (resultObj.resultCode == 1) {
 						            		emailStr = "此電子信箱已有人使用！";
 						            		emailIsOk = false;
+						            		/* 顯示彈窗訊息 */
+											swal(emailStr,"","error");
 						            	} else if (resultObj.resultCode == 0) {
 						            		emailStr = "可使用此電子信箱！";
 						            		emailIsOk = true;
 						            	} else if (resultObj.resultCode == -1) {
 						            		emailStr = "檢查途中遭遇錯誤！";
 						            		emailIsOk = false;
-						            		/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+						            		/* 顯示彈窗訊息 */
+											swal(emailStr,"","error");
 						            	}
 						            	if (!emailIsOk) {
 						            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
@@ -451,6 +465,8 @@
 						            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 						            	emailSpan.style.color = "red";
 						            	emailSpan.style.fontStyle = "italic";
+						            	/* 顯示彈窗訊息 */
+										swal(emailStr,"","error");
 						            }
 								});
 							}
@@ -478,14 +494,16 @@
 						            	if (resultObj.resultCode == 1) {
 						            		phoneStr = "此聯絡電話已有人使用！";
 						            		phoneIsOk = false;
+						            		/* 顯示彈窗訊息 */
+											swal(phoneStr,"","error");
 						            	} else if (resultObj.resultCode == 0) {
 						            		phoneStr = "可使用此聯絡電話！";
 						            		phoneIsOk = true;
 						            	} else if (resultObj.resultCode == -1) {
 						            		phoneStr = "檢查途中遭遇錯誤！";
 						            		phoneIsOk = false;
-						            		/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+						            		/* 顯示彈窗訊息 */
+											swal(phoneStr,"","error");
 						            	}
 						            	if (!phoneIsOk) {
 						            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
@@ -502,6 +520,8 @@
 						            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 						            	phoneSpan.style.color = "red";
 						            	phoneSpan.style.fontStyle = "italic";
+						            	/* 顯示彈窗訊息 */
+										swal(phoneStr,"","error");
 						            }
 								});
 							}
@@ -513,7 +533,7 @@
 		                		if (checkForm()) {
 		                			doUpdate();
 		                		} else {
-		                			alert("欄位檢查失敗!");
+		                			swal("欄位檢查失敗!","","error");
 		                		}	
 		                	}
 		                	function doUpdate() {
@@ -580,13 +600,15 @@
 						            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
 						            		updateSpan.style.color = "black";
 						            		updateSpan.style.fontStyle = "normal";
+						            		/* 顯示彈窗訊息 */
+											swal(updateStr,"","success");
 						            	} else {
 						            		updateStr = resultObj.resultMessage;
 							            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 							            	updateSpan.style.color = "red";
 							            	updateSpan.style.fontStyle = "italic";
-							            	/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+							            	/* 顯示彈窗訊息 */
+											swal(updateStr,"","error");
 						            	}
 						            },
 						            error:function(err) {
@@ -594,6 +616,8 @@
 						            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 						            	updateSpan.style.color = "red";
 						            	updateSpan.style.fontStyle = "italic";
+						            	/* 顯示彈窗訊息 */
+										swal(updateStr,"","error");
 						            }
 								});
 		                	}
