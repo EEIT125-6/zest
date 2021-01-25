@@ -49,7 +49,7 @@ public class BookingController {
 	/* 寄件者email帳號 */
 	final static String mailUser = "projectzesteeit1256@gmail.com";
 	/* 寄件者密碼或應用程式密碼 */
-	final static String mailPassword = "EEIT1256PZest";
+	final static String mailPassword = "EE12IT56PZest";
 	
 	@Autowired
 	StoreService ss;

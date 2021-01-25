@@ -27,16 +27,20 @@ public class GeneralInputCheckService {
 	
 	/* 統一檢查userId方法(不含驗證是否存在於DB) */
 	public static String doBasicCheckUserId(String userId) {
-		String checkMessage = "";
+		String checkMessage = "?";
+		Boolean inputIsOk = true;
 		
 		if (userId.equals("")) {
 			checkMessage = "Id不可為空白";
+			inputIsOk = false;
 		} else if (userId.length() != 7) {
 			checkMessage = "Id長度錯誤";
+			inputIsOk = false;
 		} else if (!userId.matches("[0-2]{1}[0-9]{6}")) {
 			checkMessage = "Id格式錯誤";
+			inputIsOk = false;
 		} 
-		return checkMessage;
+		return checkMessage + "," + inputIsOk.toString();
 	}
 	
 	/* 統一檢查帳號方法(不含驗證是否存在於DB)
@@ -466,15 +470,19 @@ public class GeneralInputCheckService {
 	 * registerEmail->使用者在表單上所輸入的email地址
 	 * email->使用者執行請求驗證碼後，將請求時所使用的email儲存在model.Attribute物件裡 */
 	public static String doCheckCheckCode(String inputCheckCode) {
-		String message = "";
+		Boolean inputIsOk = true;
+		String message = "?";
 		if (inputCheckCode.equals("")) {
 			message = "驗證碼不可為空白";
+			inputIsOk = false;
 		} else if (inputCheckCode.length() != 8) {
 			message = "驗證碼錯誤";
+			inputIsOk = false;
 		} else if (!inputCheckCode.toUpperCase().matches("[0-9A-Z]{8}")) {
 			message = "驗證碼錯誤";
+			inputIsOk = false;
 		}
-		return message;
+		return message + "," + inputIsOk.toString();
 	}
 	
 	public static String doCheckCheckCode(String inputCheckCode, String checkCode, String registerEmail, String email) {
