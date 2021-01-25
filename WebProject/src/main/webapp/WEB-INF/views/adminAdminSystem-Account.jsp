@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,10 +20,10 @@
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
 <!---------------------------------------------------------------------------->	
-			<div class="content" style="background-color: #ffc107;">
+			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-					<div class="container" style="margin-top: 20px;">
+					<div class="container" style="margin-top: 20px;background-color:#FFF">
 						<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 						<input type="hidden" id="pageNo" value="1" />
 						<input type="hidden" id="maxPage" value="1" />
@@ -33,9 +34,6 @@
 									value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
 								<input type="hidden" name="userAccount" id="userAccount"
 									value=<c:out value="${userFullData.account}"></c:out> />
-								<c:if test="${operateMessage != null}">
-									<p><c:out value="${operateMessage}" /></p>
-								</c:if>
 								<hr />
 								<label>帳號名稱：</label> <input type="text" name="selectedAccount"
 									id="usrAccount" size="30" maxlength="30" onblur="checkAccountName()"
@@ -145,6 +143,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pFirstBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -169,6 +168,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pPrevBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -193,6 +193,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pNextBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -217,6 +218,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pLastBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -463,7 +465,7 @@
 																	+ userData.account 
 																	+ "_" 
 																	+ userData.status 
-																	+ "' style='background-color:#ffc107'>" 
+																	+ "' style='background-color:#F0F0F0'>" 
 																	+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																	+ "</button>"
 														} else if (userData.status == 'quit') {
@@ -473,7 +475,7 @@
 																	+ userData.account 
 																	+ "_" 
 																	+ userData.status
-																	+ "' style='background-color:#ffc107'>" 
+																	+ "' style='background-color:#F0F0F0'>" 
 																	+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 																	+ "</button>";
 														} else if (userData.status == 'inactive') {
@@ -483,7 +485,7 @@
 																	+ userData.account 
 																	+ "_" 
 																	+ userData.status
-																	+ "' style='background-color:#ffc107'>" 
+																	+ "' style='background-color:#F0F0F0'>" 
 																	+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
 																	+ "</button>"
 														}
@@ -492,7 +494,7 @@
 																	+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" 
 																	+ userData.account 
 																	+ "'>"
-																	+ "<button type='button' style='background-color:#ffc107'>"
+																	+ "<button type='button' style='background-color:#F0F0F0'>"
 																	+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
 																	+ "</button>"
 																	+ "</a>"
@@ -541,25 +543,25 @@
 												document.getElementById("maxPage").value = resultObj.totalDataPages;		
 														
 												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pFirstBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirstBtn'>"
 															+ "第一頁"
 															+ "</button>";
 												}
 												
 												if (startPage - 1 > 0) {
-													content +="<button type='button' style='background-color:#ffc107' class='pPrevBtn'>"
+													content +="<button type='button' style='background-color:#F0F0F0' class='pPrevBtn'>"
 															+ "上一頁"
 															+ "</button>";
 												} 
 												
 												if (resultObj.totalDataNums > startPage * avgPage) {
-													content += "<button type='button' style='background-color:#ffc107' class='pNextBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNextBtn'>"
 															+ "下一頁"
 															+ "</button>";
 												}
 												
 												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pLastBtn'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLastBtn'>"
 															+ "最末頁"
 															+ "</button>";
 												}
@@ -695,9 +697,9 @@
 																		+ "_" 
 																		+ userData.account 
 																		+ "_" 
-																		+ userData.status 
-																		+ "' style='background-color:#ffc107'>" 
-																		+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																		+ userData.status
+																		+ "' style='background-color:#F0F0F0'>" 
+																		+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																		+ "</button>";
 														} else if (userData.status == 'quit') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
@@ -706,9 +708,9 @@
 																		+ userData.account 
 																		+ "_" 
 																		+ userData.status
-																		+ "' style='background-color:#ffc107'>" 
-																		+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-																		+ "</button>"
+																		+ "' style='background-color:#F0F0F0'>" 
+																		+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																		+ "</button>";
 														} else if (userData.status == 'inactive') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
 																		+ userData.userId 
@@ -716,14 +718,14 @@
 																		+ userData.account 
 																		+ "_" 
 																		+ userData.status
-																		+ "' style='background-color:#ffc107'>" 
+																		+ "' style='background-color:#F0F0F0'>" 
 																		+ "<i class='material-icons' style='font-size:24px;color:blue'>security</i>"
 																		+ "</button>"
 														}									
 														content += "</td>"
 																	+ "<td>"
 																	+ "<a href='${pageContext.request.contextPath}/webUser/ManageWebUser/" + userData.account + "'>"
-																	+ "<button type='button' style='background-color:#ffc107'>"
+																	+ "<button type='button' style='background-color:#F0F0F0'>"
 																	+ "<i class='material-icons' style='font-size:24px;color:green'>info</i>"
 																	+ "</button>"
 																	+ "</a>"
@@ -772,27 +774,27 @@
 												document.getElementById("maxPage").value = resultObj.totalDataPages;
 														
 												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pFirst'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirst'>"
 															+ "第一頁"
 															+ "</button>";
 															
 												} 
 												
 												if (startPage - 1 > 0) {
-													content += "<button type='button' style='background-color:#ffc107' class='pPrev'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pPrev'>"
 															+ "上一頁"
 															+ "</button>";
 															
 												} 
 												
 												if (resultObj.totalDataNums > startPage * avgPage) {
-													content += "<button type='button' style='background-color:#ffc107' class='pNext'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNext'>"
 															+ "下一頁"
 															+ "</button>";
 												}
 												
 												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
-													content += "<button type='button' style='background-color:#ffc107' class='pLast'>"
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLast'>"
 															+ "最末頁"
 															+ "</button>";
 												}

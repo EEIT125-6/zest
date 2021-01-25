@@ -16,7 +16,7 @@ Welcome<br/><input id="text" type="text"/>
 var websocket = null;
 //判斷當前瀏覽器是否支援WebSocket
 if ('WebSocket' in window) {
-websocket = new WebSocket("ws://localhost:8080/websocket");
+websocket = new WebSocket("ws://localhost:8080/WebProject/websocket");
 }
 else {
 alert('當前瀏覽器 Not support websocket')
@@ -43,7 +43,7 @@ closeWebSocket();
 }
 //將訊息顯示在網頁上
 function setMessageInnerHTML(innerHTML) {
-document.getElementById('message').innerHTML  = innerHTML   '<br/>';
+document.getElementById('message').innerHTML+= innerHTML+'<br/>';
 }
 //關閉WebSocket連線
 function closeWebSocket() {

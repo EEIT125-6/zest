@@ -268,7 +268,7 @@ ul.slides li img {
 				"id":id //id向後端發送
 			},
 			type:"Get",
-			dataType:"JSON",
+			dataType:"TEXT",
 			success:function(obj){ 
 				window.alert('商品已加入購物車!');
 			},

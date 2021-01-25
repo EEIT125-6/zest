@@ -212,20 +212,20 @@ ul.slides li img {
 			</thead>
 			<c:set var="total" value="0"></c:set>
 			<c:set var="quant" value="0"></c:set>
-			<c:forEach var="product" items="${cart}">
-				<c:set var="total" value="${total+product.product_price}"></c:set>
-				<tr>
+			<c:forEach var="thisCart" items="${cart}">
+				<c:set var="total" value="${total+thisCart.product.product_price}"></c:set>
+				<tr id="thing${thisCart.product.product_id}">
 					<td align="center">
-						<button id="clearItem" onclick="itemRemove(${product.product_id})">刪除項目</button>
+						<button id="clear${thisCart.product.product_id}" onclick="itemRemove(${thisCart.product.product_id})">刪除項目</button>
 						<%-- 						<a href="<c:url value="/controller/itemremove?id=${product.product_id}"/>"	onclick="return confirm('是否確定?')">刪除項目</a> --%>
 					</td>
-					<td>${product.product_id}</td>
-					<td>${product.product_shop}</td>
-					<td>${product.product_name}</td>
+					<td>${thisCart.product.product_id}</td>
+					<td>${thisCart.product.product_shop}</td>
+					<td>${thisCart.product.product_name}</td>
 					<td><img
-						src='<c:url value="/images/${product.product_picture}"/>'
+						src='<c:url value="/images/${thisCart.product.product_picture}"/>'
 						width="120px"></td>
-					<td id="aa">${product.product_price}</td>
+					<td id="aa">${thisCart.product.product_price}</td>
 					<td><input list="quantities-list" name="ttt" class="qu">
 						<datalist id="quantities-list">
 							<option value="1"></option>
@@ -259,7 +259,7 @@ ul.slides li img {
 				$.ajax({
 					url:"/WebProject/controller/clearCart",
 					type:"Get",
-					dataType:"JSON",
+					dataType:"TEXT",
 					success:function(){
 						$("table").eq(0).children("tbody").children("tr").each(function(){
 							$(this).html("");
@@ -326,6 +326,7 @@ ul.slides li img {
 			})
 			
 			function itemRemove(id) {
+							console.log("testtest="+$(this).attr("id"));
 		        var K =confirm('是否確定刪除所選項目?')
 				if (K==true) {
 					$.ajax({
@@ -334,11 +335,20 @@ ul.slides li img {
 							"id":id //id向後端發送
 						},
 						type:"Get",			
-						dataType:"JSON",
+						dataType:"TEXT",
 						success:function(obj) {
+							console.log("id="+id)		
+													
 							$("table").eq(0).children("tbody").children("tr").each(function(){
-								if($(this).children("td").eq(1).html() == id){
+								if($(this).children("td").eq(1).html() == id){		
 									$(this).html("");
+									
+									let total=0;
+									$(".re").each(function() {
+										total += parseInt($(this).text());
+										
+									})
+									$("#tot").html(total);
 								}
 							})
 						},

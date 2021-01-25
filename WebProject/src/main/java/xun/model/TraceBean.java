@@ -1,5 +1,7 @@
 package xun.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,17 @@ public class TraceBean {
 	Integer memberId;
 	
 	Integer storeId;
+	
+	Timestamp timestamp;
+
+	
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	@Override
 	public String toString() {

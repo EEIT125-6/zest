@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,10 +19,10 @@
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
 <!---------------------------------------------------------------------------->	
-			<div class="content" style="background-color: #ffc107;">
+			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-		            <div class="container"  style="margin-top: 20px;">
+		            <div class="container"  style="margin-top: 20px;background-color:#FFF;">
 						<c:if test="${managedUserData.account == null}">
 							<c:redirect url="adminAccount" />
 						</c:if>

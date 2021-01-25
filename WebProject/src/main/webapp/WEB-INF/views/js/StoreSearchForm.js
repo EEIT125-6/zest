@@ -64,6 +64,9 @@ function checkStname() {
 	} else if (stnameObjValue.length > 50) {
 		stnameStr = "店家名稱長度過長";
 		stnameIsOk = false;
+	} else if (stnameObjValue.indexOf("<") != -1 || stnameObjValue.indexOf(">") != -1) {
+		stnameStr = "店家名稱不可以包含<、>";
+		stnameIsOk = false;
 	} 
 	if (!stnameIsOk) {
 		stnameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + stnameStr;

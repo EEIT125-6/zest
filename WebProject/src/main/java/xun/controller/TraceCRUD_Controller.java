@@ -21,6 +21,7 @@ public class TraceCRUD_Controller {
 			,@RequestParam Integer stId
 			,@RequestParam Integer memberId
 			) {
+		
 		ts.addTrace(memberId, stId);
 		System.out.println("加入");
 	}
@@ -32,7 +33,7 @@ public class TraceCRUD_Controller {
 			,@RequestParam Integer memberId
 			) {
 		ts.removeTrace(memberId, stId);
-		System.out.println("死去");
+		System.out.println("退出");
 	}
 	
 }

@@ -181,10 +181,12 @@ public class UserInfoController {
 				String userId = recoveryUserData.getUserId();
 				
 				/* 產生驗證連結 */
-				recoveryUrl = "http://127.0.0.1:8080/" + request.getContextPath()
+				recoveryUrl = "http://127.0.0.1:8080" + request.getContextPath()
 						+ "/recovery/RecoveryAccount?ts=" + nowTimeStamp 
 						+ "&key=" + checkCode
 						+ "&userId=" + userId;
+				
+				System.out.println("--------URL is: "+recoveryUrl);
 				
 				/* 寄送到指定email */
 				try {

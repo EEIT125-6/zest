@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,13 +9,25 @@
 	<!--     字體跟ICON     -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
-	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
 </head>
 <body>
     <div class="wrapper">
+    <c:forEach items="${bookingUsageChartList}" var="bookingUsageObject">
+    	<input type="hidden" class="bookingUsageLabel" value="${bookingUsageObject.labelName}">
+    	<input type="hidden" class="bookingUsageCount" value="${bookingUsageObject.labelNum}">
+    </c:forEach>
+    <c:forEach items="${bookingPurposeChartList}" var="bookingPurposeObject">
+    	<input type="hidden" class="bookingPurposeLabel" value="${bookingPurposeObject.labelName}">
+    	<input type="hidden" class="bookingPurposeCount" value="${bookingPurposeObject.labelNum}">
+    </c:forEach>
+    <c:forEach items="${bookingTypeChartList}" var="bookingTypeObject">
+    	<input type="hidden" class="bookingTypeLabel" value="${bookingTypeObject.labelName}">
+    	<input type="hidden" class="bookingTypeCount" value="${bookingTypeObject.labelNum}">
+    </c:forEach>
 		<%@include file = "dashborad-side-header.jsp" %>
 			<div class="content">
 				<div class="container-fluid">
@@ -121,71 +134,93 @@ $(document).ready(function() {
 
 demo={
 		orderDashboard:function(){
-
+			<!--chart-->
+			var bookingPurposeLabels = document.getElementsByClassName("bookingPurposeLabel");
+    		var bookingPurposeCounts = document.getElementsByClassName("bookingPurposeCount");
+    		var bookingPurposeLabelArray = [];
+    		var bookingPurposeCountArray = [];
+    		for (let index = 0; index < bookingPurposeLabels.length; index++) {
+    			bookingPurposeLabelArray.push(bookingPurposeLabels[index].value);
+    			bookingPurposeCountArray.push(bookingPurposeCounts[index].value);
+    		}
+			<!--bookingGoalChart-->
 	        var data = {
-	                labels: ['Jan', 'Feb', '其他'],
-	                series: [
-	                    [542, 443, 320, 780]
-	                ]
-	            };
+                labels:bookingPurposeLabelArray,
+                series:[
+                	bookingPurposeCountArray
+                ]
+            };
 
-	            var options = {
-	                seriesBarDistance: 10,
-	                axisX: {
-	                    showGrid: false
-	                },
-	                height: "245px"
-	            };
+            var options = {
+                seriesBarDistance: 10,
+                axisX: {
+                    showGrid: false
+                },
+                height: "245px"
+            };
 
-	            var responsiveOptions = [
-	                ['screen and (max-width: 640px)', {
-	                    seriesBarDistance: 5,
-	                    axisX: {
-	                        labelInterpolationFnc   : function(value) {
-	                            return value[0];
-	                        }
-	                    }
-	                }]
-	            ];
+            var responsiveOptions = [
+                ['screen and (max-width: 640px)', {
+                    seriesBarDistance: 5,
+                    axisX: {
+                        labelInterpolationFnc   : function(value) {
+                            return value[0];
+                        }
+                    }
+                }]
+            ];
 
-	            var chartActivity = Chartist.Bar('#a1', data, options, responsiveOptions);
-		 
-			
-// 			-----------------
+            var chartActivity = Chartist.Bar('#a1', data, options, responsiveOptions);
+            <!--chart-->
+            var bookingTypeLabels = document.getElementsByClassName("bookingTypeLabel");
+    		var bookingTypeCounts = document.getElementsByClassName("bookingTypeCount");
+    		var bookingTypeLabelArray = [];
+    		var bookingTypeCountArray = [];
+    		for (let index = 0; index < bookingTypeLabels.length; index++) {
+    			bookingTypeLabelArray.push(bookingTypeLabels[index].value);
+    			bookingTypeCountArray.push(bookingTypeCounts[index].value);
+    		}
+            <!--bookingTypeChart-->
+ 		    var data = {
+    	        labels:bookingTypeLabelArray,
+  		        series: [
+  		        	bookingTypeCountArray
+   		        ]
+   		    };
 
-    		        var data = {
-    		                labels: ['中式','日式','下午茶','西式','快餐','燒肉'],
-    		                series: [
-    		                    [542, 343, 220, 780, 453, 653]
-    		                ]
-    		            };
+    		var options = {
+  		        seriesBarDistance: 10,
+    		    axisX: {
+   		             showGrid: false
+   		        },
+   		        height: "245px"
+   		    };
 
-    		            var options = {
-    		                seriesBarDistance: 10,
-    		                axisX: {
-    		                    showGrid: false
-    		                },
-    		                height: "245px"
-    		            };
+    		var responsiveOptions = [
+    		    ['screen and (max-width: 640px)', {
+    		          seriesBarDistance: 5,
+    		          axisX: {
+    		              labelInterpolationFnc   : function(value) {
+    		                  return value[0];
+    		              }
+    		          }
+    		    }]
+    		];
 
-    		            var responsiveOptions = [
-    		                ['screen and (max-width: 640px)', {
-    		                    seriesBarDistance: 5,
-    		                    axisX: {
-    		                        labelInterpolationFnc   : function(value) {
-    		                            return value[0];
-    		                        }
-    		                    }
-    		                }]
-    		            ];
-
-    		            var chartActivity = Chartist.Bar('#a2', data, options, responsiveOptions);
-    			 
-			
-// 			-----------------
+    		var chartActivity = Chartist.Bar('#a2', data, options, responsiveOptions);
+    		<!--chart-->	 
+    		var bookingUsageLabels = document.getElementsByClassName("bookingUsageLabel");
+    		var bookingUsageCounts = document.getElementsByClassName("bookingUsageCount");
+    		var bookingUsageLabelArray = [];
+    		var bookingUsageCountArray = [];
+    		for (let index = 0; index < bookingUsageLabels.length; index++) {
+    			bookingUsageLabelArray.push(bookingUsageLabels[index].value);
+    			bookingUsageCountArray.push(bookingUsageCounts[index].value);
+    		}
+    		<!--bookingUsageChart-->
 			 Chartist.Pie('#a3',{
- 				labels:['有使用','未使用'],
- 				series: [20, 18]  //測試用數字
+ 				labels:bookingUsageLabelArray,
+ 				series:bookingUsageCountArray
  			 })			
 		}
 }

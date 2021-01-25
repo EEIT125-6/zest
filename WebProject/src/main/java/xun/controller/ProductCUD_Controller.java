@@ -247,12 +247,21 @@ public class ProductCUD_Controller {
 		System.out.println("有傳到下架");
 		ps.productOffShelf(productId);
 	}
+	
 	@PostMapping(value="/productReOnShelfAjax",produces = "application/json; charset=utf-8")
 	public @ResponseBody void productReOnShelf(
 			@RequestParam Integer productId
 			) {
 		System.out.println("有傳到上架");
 		ps.productReOnShelf(productId);
+	}
+	
+	@PostMapping(value = "/productRemove" ,produces = "application/json; charset=utf-8")
+	public @ResponseBody void productRemove(
+			@RequestParam Integer productId
+			) {
+		System.out.println("有傳到刪除");
+		ps.productRemoveByStore(productId);
 	}
 //	設置商家價格區間
 	public void CalculateStoreRealPrice(Integer stid) {

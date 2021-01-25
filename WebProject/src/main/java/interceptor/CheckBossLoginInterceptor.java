@@ -17,7 +17,8 @@ public class CheckBossLoginInterceptor extends HandlerInterceptorAdapter {
 			"/storeBack",
 			"/storeSt",
 			"/storeAdClick",
-			"/storeAdProduct"
+			"/storeAdProduct",
+			"/storeAdd"
 			);
 	
 	String servletPath;
