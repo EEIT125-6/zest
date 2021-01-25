@@ -28,10 +28,10 @@
                         </a>
                     </li>
                     <li>
-<%--                         <a class="nav-link" href="<c:url value='/adminBooking'/>"> --%>
-<!--                             <i class="fas fa-archive"></i> -->
-<!--                             <p>全訂位資料管理</p> -->
-<!--                         </a> -->
+                        <a class="nav-link" href="<c:url value='/adminBooking'/>">
+                            <i class="fas fa-archive"></i>
+                            <p>全訂位資料管理</p>
+                        </a>
                     </li>
                 </ul>
             </div>
