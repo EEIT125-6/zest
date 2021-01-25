@@ -153,12 +153,6 @@
                 	<fieldset>
                 		<legend>登入相關資料</legend>
                 		<hr />
-                		<div align="center">
-	                		<button type="button" id="userInput">使用者一鍵輸入</button>
-	                		<button type="button" id="bossInput">店家一鍵輸入</button>
-	                		<button type="button" id="adminInput">管理員一鍵輸入</button>
-                		</div>
-                		<hr />
                 		<label>帳號名稱：</label>
                 		<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
 							placeholder="請輸入帳號，6~30個字" required="required" />
@@ -176,6 +170,14 @@
 								checked='checked'
 							</c:if> 
 							value=true>
+						<select id="autoInput">
+               				<option value="">一鍵輸入</option>
+               				<option value="1">一般使用者一</option>
+               				<option value="2">一般使用者二</option>
+               				<option value="3">店家使用者一</option>
+               				<option value="4">店家使用者二</option>
+               				<option value="5">網站管理員一</option>
+               			</select>
 						<hr />
 						<span id="loginSpan">
 							<c:if test="${timeOut != null}">
@@ -208,28 +210,41 @@
                 <script>
                 	window.onload = function() {
                 		let submitBtn = document.getElementById("submit");
-                		let userAutoInputBtn = document.getElementById("userInput");
-                		let bossAutoInputBtn = document.getElementById("bossInput");
-                		let adminAutoInputBtn = document.getElementById("adminInput");
                 		let googleLoginBtn = document.getElementById("googleLogin");
                 		let googleQuitBtn = document.getElementById("googleQuit");
                 		let cookieLoginBtn = document.getElementById("cookieLogin");
+                		let autoInput = document.getElementById("autoInput");
                 		
                 		submitBtn.onclick = function() {
                 			inputCheck();
                 		};
-                		userAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "brandon123";
-                			document.getElementById("password").value = "avril456";
-                		};
-                		bossAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "TomcatTest";
-                			document.getElementById("password").value = "TomcatTest2021";
-                		};
-                		adminAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "WebAdmin";
-                			document.getElementById("password").value = "WebAdmin2020";
-                		};
+                		
+                		autoInput.onblur = function() {
+	                		switch(autoInput.value) {
+	                			case '1':
+	                				document.getElementById("account").value = "brandon123";
+	                    			document.getElementById("password").value = "avril456";
+	                				break;
+	                			case '2':
+	                				document.getElementById("account").value = "George017";
+	                    			document.getElementById("password").value = "Geo1rge6";
+	                				break;
+	                			case '3':
+	                				document.getElementById("account").value = "TomcatTest";
+	                    			document.getElementById("password").value = "TomcatTest2021";
+	                				break;
+	                			case '4':
+	                				document.getElementById("account").value = "xun19960903";
+	                    			document.getElementById("password").value = "Doing0903";
+	                				break;
+	                			case '5':
+	                				document.getElementById("account").value = "WebAdmin";
+	                    			document.getElementById("password").value = "WebAdmin2020";
+	                				break;
+	                			default:
+	                				break;
+	                		}
+                		}
                 		googleLoginBtn.onclick = function() {
                 			GoogleLogin();
                 		};

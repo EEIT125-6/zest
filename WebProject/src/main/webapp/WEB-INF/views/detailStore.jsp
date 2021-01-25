@@ -38,7 +38,7 @@
 <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
      <link rel='stylesheet' href='${pageContext.request.contextPath}/css/ProductCard.css'  type="text/css" />
      <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
     <%@include file = "Link_Meta-Include.jsp" %>
@@ -68,7 +68,6 @@
             margin: 0;
             margin-left:5px ;
        }
-
 #gotop {
     position:fixed;
     z-index:90;
@@ -88,7 +87,6 @@
 #gotop :hover{
     background:#0099CC;
 }
-
 .search-area {
   position: fixed;
   left: 0;
@@ -99,7 +97,6 @@
   height: 100%;
   text-align: center;
 }
-
 span.close-btn {
   position: absolute;
   right: 0%;
@@ -107,31 +104,25 @@ span.close-btn {
   top: 5%;
   cursor: pointer;
 }
-
 .search-area {
   height: 100%;
 }
-
 .search-area div {
   height: 100%;
 }
-
 .search-bar {
   height: 100%;
   display: table;
   width: 100%;
 }
-
 a.mobile-show {
   display: none;
 }
-
 .search-area .search-bar div.search-bar-tablecell {
   display: table-cell;
   vertical-align: middle;
   height: auto;
 }
-
 .search-bar-tablecell input {
   border: none;
   padding: 15px;
@@ -146,7 +137,6 @@ a.mobile-show {
   margin-bottom: 40px;
   color: #fff;
 }
-
 .search-bar-tablecell button[type=submit] {
   border: none;
   background-color: #F28123;
@@ -156,27 +146,21 @@ a.mobile-show {
   border-radius: 50px;
   font-weight: 700;
 }
-
 .search-bar-tablecell input::-webkit-input-placeholder {
   color: #fff;
 }
-
 .search-bar-tablecell input:-ms-input-placeholder {
   color: #fff;
 }
-
 .search-bar-tablecell input::-ms-input-placeholder {
   color: #fff;
 }
-
 .search-bar-tablecell input::placeholder {
   color: #fff;
 }
-
 .search-bar-tablecell button[type=submit] i {
   margin-left: 5px;
 }
-
 .search-area {
   visibility: hidden;
   opacity: 0;
@@ -184,13 +168,11 @@ a.mobile-show {
   -o-transition: 0.3s;
   transition: 0.3s;
 }
-
 .search-area.search-active {
   visibility: visible;
   opacity: 1;
   z-index: 999;
 }
-
 .search-bar-tablecell h3 {
   color: #fff;
   margin-bottom: 30px;
@@ -198,15 +180,10 @@ a.mobile-show {
   text-transform: uppercase;
   letter-spacing: 7px;
   
-
 }
-
-
-
 .comment-card{
 	background: #F0F0F0
 }
-
 .comment-card-title{
 	color:#191970;
 	font-style:italic;
@@ -218,6 +195,17 @@ a.mobile-show {
 .comment-card-date{
 	color:gray;
 	font-size:small;
+}
+.comment-card-body{
+	background:white;
+	padding-left:10px;
+	padding-top:10px;
+	border-radius:15px;
+} 
+.div1-container{
+	background-color:#FFD382;
+	padding:10px;
+	margin-bottom:5px;
 } 
     </style>
 </head>
@@ -261,7 +249,6 @@ a.mobile-show {
         $(".search-bar-icon").on("click", function(){
             $(".search-area").addClass("search-active");
         });
-
         $(".close-btn").on("click", function() {
             $(".search-area").removeClass("search-active");
         });		
@@ -525,18 +512,15 @@ function relocate_bannerURL()
     </div>
   </div>
 <!--   -------------------------------------------- -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnJDAMDvH2aKvUIdQV0nTQ9YX32cZ4xds&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnJDAMDvH2aKvUIdQV0nTQ9YX32cZ4xds&callback=initMap" async="true" defer></script>
 <script type="text/javascript">
 var map, geocoder;
-
 function initMap() {
   geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 17
   });
-
   var address = '${saddress}';
-
   geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == 'OK') {
       map.setCenter(results[0].geometry.location);
@@ -556,7 +540,6 @@ function initMap() {
     $("#location-map").css("width", "100%");
     $("#map_canvas").css("width", "100%");
   });
-
   // Trigger map resize event after modal shown
   $('#myModal').on('shown.bs.modal', function() {
     google.maps.event.trigger(map, "resize");
@@ -637,55 +620,57 @@ function initMap() {
 						</form>
 					</div>
 				</c:if>
-			    
-			    <div id="detail" border="1" class="div1 container" style="background-color:#FFD382;padding:10px;margin-bottom:5px;">
+				<div id="detail" border="1" class="div1-container" >
 			    	<!--產生所有留言板  -->
 			    	<c:forEach var="row" items="${Comments}">
 			    		<!-- 產生卡片 -->
 			    		<div class="comment-card w-100">
-						  <div class="comment-card-body"  style="background: #F0F0F0">
+						   <div class="comment-card-body" >
 						    <h4 class="comment-card-title">${row.name}</h4>
 						    <p class="comment-card-date">${fn:substring(row.date, 0, 19)}</p>
 						    <p class="comment-card-text">
 	
-	    						<!-- 產生星星 -->
-	    						<c:forEach var="x" begin="1" end="5">
-	    							<c:choose>
-	    								<c:when test="${row.star >= x}">
-	    									<img src="<c:url value='/star/s3.png'/>" height="25px" width="25px"/>
-	    								</c:when>
-	    								<c:otherwise>
-	    									<img src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
-	    								</c:otherwise>
-	    							</c:choose>
-	    						</c:forEach>
+    						<!-- 產生星星 -->
+    						<c:forEach var="x" begin="1" end="5">
+    							<c:choose>
+    								<c:when test="${row.star >= x}">
+    									<img src="<c:url value='/star/s3.png'/>" height="25px" width="25px"/>
+    								</c:when>
+    								<c:otherwise>
+    									<img src="<c:url value='/star/s1.png'/>" height="25px" width="25px"/>
+    								</c:otherwise>
+    							</c:choose>
+    						</c:forEach>
 	    						
-	    						</p>
-							    <p class="card-text">${row.context}</p>
+    						</p>
+						     <p class="comment-card-text">${row.context}</p>
 							    
-							    <!-- 若有回覆內容，產生<hr> -->
-						   		<c:if test="${fn:length(row.reply)>0}">
-						   			<hr/>
-						   		</c:if>
+						    <!-- 若有回覆內容，產生<hr> -->
+					   		<c:if test="${fn:length(row.reply)>0}">
+					   			<hr/>
+					   		</c:if>
 						   		
-						   		<p class="card-text">
-						   			<c:choose>
-						   				<c:when test="${isR eq 'Y' and fn:length(row.reply)>0}"> <!-- 1. 如果我是商家，也回覆過了，-->
-						   					<span style="color:#008000;font-size: 22px;">${row.reply} </span>
-						   				</c:when>
-						   				<c:when test="${isR eq 'Y'}"> <!-- 2.如果我是商家  -->
-						   					<textarea cols="45" rows="5" >${row.reply}</textarea>
-						   					<input type="button" onclick="doReply(this,${row.boardid});" value="回覆"  />
-						   				</c:when>
-						   				<c:otherwise>
-						   					<span style="color:#808080;font-size: 22px;">${row.reply} </span>
-						   				</c:otherwise>
-						   			</c:choose>
-						   		</p> 
-			    			</div>
-			    		</div>
-			    	</c:forEach>
-			    </div>
+					   		<p class="comment-card-text">
+					   			<c:choose>
+					   				<c:when test="${isR eq 'Y' and fn:length(row.reply)>0}"> <!-- 1. 如果我是商家，也回覆過了，-->
+					   					<span style="color:#008000;font-size: 22px;">${row.reply} </span>
+					   				</c:when>
+					   				<c:when test="${isR eq 'Y'}"> <!-- 2.如果我是商家  -->
+					   					<span style="font-size:20px;">店家回覆:</span>
+					   					<textarea cols="45" rows="1" >${row.reply}</textarea>
+					   					<input type="button" onclick="doReply(this,${row.boardid});" value="回覆"  />
+					   				</c:when>
+					   				<c:otherwise>
+					   					<c:if test="${fn:length(row.reply)>0}">
+					   						<span style="color:#808080;font-size: 22px;">${row.reply} </span>
+					   					</c:if>
+					   				</c:otherwise>
+					   			</c:choose>
+					   		</p> 
+		    			</div>
+		    		</div>
+		    	</c:forEach>
+		    </div>
 			    
 			    <br />
 			    <script >
@@ -720,11 +705,7 @@ function initMap() {
 			      		  data:map,
 			      		  success:function(res){
 			      				console.log(res);
-			      				Swal.fire(
-			      	 				      '回覆成功',
-			      	 				      "",
-			      	 				      'success'
-			      	 				    )
+			      				swal( '回覆成功','','success');
 //			       				alert('回覆成功');
 			      				$(e).siblings('textarea').remove();
 			      				$(e).closest('p').before($('<hr>'));
@@ -767,18 +748,18 @@ function initMap() {
 	            				$('.i').attr("src","<c:url value='/star/s1.png'/>");
 	        					//建造卡片
 	            				var startContent = $('#startContent').find('.i').clone();
-	            				var content = $('<div>',{'class':'card w-100'});
-	        					var _body =$('<div>',{'class':'card-body'});
+	            				var content = $('<div>',{'class':'comment-card w-100'});
+	        					var _body =$('<div>',{'class':'comment-card-body'});
 	        					content.append(_body);
-	        					_body.append($('<h4>',{'class':'card-title'}).html(res.boardBean.name));
-	        					_body.append($('<p>',{'class':'card-date'}).html(formatedTimestamp(res.boardBean.date)));
+	        					_body.append($('<h4>',{'class':'comment-card-title'}).html(res.boardBean.name));
+	        					_body.append($('<p>',{'class':'comment-card-date'}).html(formatedTimestamp(res.boardBean.date)));
 	        					
 	        					for(var i = 0; i < res.boardBean.star; i++){
 	        						$(startContent[i]).attr("src","<c:url value='/star/s3.png'/>");
 	        					}
 	        					
-	        					_body.append($('<p>',{'class':'card-text'}).html(startContent));
-	    						_body.append($('<p>',{'class':'card-text'}).html(res.boardBean.context));
+	        					_body.append($('<p>',{'class':'comment-card-text'}).html(startContent));
+	    						_body.append($('<p>',{'class':'comment-card-text'}).html(res.boardBean.context));
 	    						//卡片擺第一個
 	        					$('#detail').prepend(content);
 	        					swal('新增成功','已成功新增您的留言','success')
@@ -1009,7 +990,6 @@ function initMap() {
             $(".ddiv").css("display","none")
             $("#div1").css("display","inline")
         })
-
         $("#sp2").click(function(){
             $(".ddiv").css("display","none")
             $("#div2").css("display","inline")

@@ -24,7 +24,7 @@ public class GeneralEmailService {
 	/* 寄件者email帳號 */
 	final static String mailUser = "projectzesteeit1256@gmail.com";
 	/* 寄件者密碼或應用程式密碼 */
-	final static String mailPassword = "EEIT1256PZest";
+	final static String mailPassword = "EE12IT56PZest";
 	
 	/* 產生寄送註冊所需的驗證碼(大寫英文+數字的組合共8位) */
 	public static String doCreateCheckCode() {

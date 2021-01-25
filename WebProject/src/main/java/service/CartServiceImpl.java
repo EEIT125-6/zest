@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import dao.CartDAO;
-import model.CartItemBean;
+import model.CartDetailBean;
+import model.OrderDetailBean;
 import webUser.model.WebUserData;
 import xun.model.ProductInfoBean;
 
@@ -26,72 +28,77 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	@Transactional
-	public List<CartItemBean> getCartList() {
+	@Transactional // 列出目前所有未結帳購物車資料
+	public List<CartDetailBean> getCartList() {
 		return DAO.getCartList();
 	}
 
 	@Override
 	@Transactional
-	@SuppressWarnings("unchecked")
-	public List<CartItemBean> getCartByUser(String inputId) {
-		System.out.println("ServiceLayerIdCheck="+inputId);
-		return (List<CartItemBean>) DAO.getCartByUser(inputId);
+	// 取得使用者個人購物車資料
+	public OrderDetailBean getOrderByUserId(WebUserData wus) {
+		System.out.println("ServiceLayerIdCheck=" + wus);
+		return DAO.getOrderByUserId(wus);
 	}
 
 	@Override
-	@Transactional
+	@Transactional // 檢查使用者是否存在資料庫
 	public Integer checkAccountExist(String inputAccount) throws SQLException {
 		return DAO.checkAccountExist(inputAccount);
 	}
 
 	@Override
-	@Transactional
+	@Transactional // 取得所有產品列表
 	public List<ProductInfoBean> getProductList() {
 		return DAO.getProductList();
 	}
 
-//	@Override
-//	public String addProduct(Integer addItem) {
-//		// TODO Auto-generated method stub
-//		return DAO.addProduct(addItem);
-//	}
-//
-//	@Override
-//	public String removeProduct(Integer deleteItem) {
-//		// TODO Auto-generated method stub
-//		return DAO.removeProduct(deleteItem);
-//	}
-
 	@Override
-	public List <ProductInfoBean> find(String id) {
-		return DAO.find(id);
+	@Transactional 
+	public ProductInfoBean findProductInfoBeanById(Integer id) {
+		return DAO.findProductInfoBeanById(id);
 	}
 
 	@Override
+	@Transactional //此類別永續化訂單物件
+	public void save(OrderDetailBean odb) { 
+		DAO.save(odb);
+	}
+
+	@Override
+	@Transactional //此類別永續化購物車物件
+	public void save(CartDetailBean cdb) {
+		DAO.save(cdb);
+	}
+
+	@Override // 找尋購物車內特定商品
+	@Transactional
+	public List<CartDetailBean> find(ProductInfoBean id) {
+
+		return DAO.find(id);
+	}
+
+	@Override // 帶入目前使用者資料用
+	@Transactional
 	public Map<String, String> findCurrentMemberData(Model model) {
-		WebUserData wusd = (WebUserData)model.getAttribute("userFullData");
+		WebUserData wusd = (WebUserData) model.getAttribute("userFullData");
 		Map<String, String> remap = new HashMap<String, String>();
-		remap.put("member", wusd.getFirstName()+wusd.getLastName());
+		remap.put("member", wusd.getFirstName() + wusd.getLastName());
 		remap.put("email", wusd.getEmail());
 		remap.put("addr", wusd.getAddr0());
 		return remap;
 	}
 
-//	@Override
-//	public Map<String, String> setProductAmount(StringTokenizer st) {
-//		Map<String,String> remap = new HashMap<String,String>();
-//		System.out.println("Result inside service="+st);
-//		while(st.hasMoreTokens()) {
-//			System.out.println(st.nextToken());
-//		}
-//		
-//		return null;
-//	}
-
-//	@Override
-//	public Map<String, String> CurrentCartItemDetail(Model model) {
-//		Map<String,String> remap = new HashMap<String,String>();
-//		remap.put(, arg1)
-//		return null;
+	@Override
+	@Transactional
+	public void deleteAll(Set<CartDetailBean> cdb) {
+		 DAO.deleteAll(cdb);
+		
+	}
+	
+	@Override
+	@Transactional
+	public void delete(CartDetailBean k) {
+		DAO.delete(k);
+	}
 }
