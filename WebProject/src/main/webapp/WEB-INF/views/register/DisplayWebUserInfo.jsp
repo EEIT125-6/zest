@@ -238,6 +238,7 @@
 				</form>
 				<!-- 引用本地jQuery -->
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 				<script src="<c:url value='/js/webUser/DisplayWebUserInfo.js' />"></script>
 				<script>
 					window.onload = function() {
@@ -267,15 +268,13 @@
 									if (resultObj.resultCode == 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = true;
-										/* 顯示彈窗訊息 */
-					            		alert(confirmStr);
 									} else if (resultObj.resultCode != 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = false;
-										/* 顯示彈窗訊息 */
-					            		alert(confirmStr);
 									}
 									if (!confirmIsOk) {
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","error");
 										confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
 										confirmSpan.style.color = "red";
 										confirmSpan.style.fontStyle = "italic";
@@ -283,8 +282,12 @@
 					            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
 					            		confirmSpan.style.color = "black";
 					            		confirmSpan.style.fontStyle = "normal";
-					            		/* 跳轉 */
-					            		window.location.href = resultObj.nextPath;
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","success");
+					            		setTimeout(function() {
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
+					            		},1500);
 					            	}
 								},
 								error : function(err) {
@@ -292,8 +295,8 @@
 									confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
 									confirmSpan.style.color = "red";
 									confirmSpan.style.fontStyle = "italic";
-				            		/* 顯示彈窗訊息 */
-				            		alert(confirmStr);
+									/* 顯示彈窗訊息 */
+				            		swal(confirmStr,"","error");
 								}
 							});
 						});

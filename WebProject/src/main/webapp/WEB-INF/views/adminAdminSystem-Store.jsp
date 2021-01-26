@@ -34,9 +34,6 @@
 									value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
 								<input type="hidden" name="userAccount" id="userAccount"
 									value=<c:out value="${userFullData.account}"></c:out> />
-								<c:if test="${operateMessage != null}">
-									<p><c:out value="${operateMessage}" /></p>
-								</c:if>
 								<hr />
 								<label>按店家名：</label> <input type="text" name="selectedStname"
 									id="selectedStname" size="50" maxlength="50" onblur="checkStname()"
@@ -91,6 +88,7 @@
 						
 						<!--引用本地jQuery -->
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<!-- 引用本頁檢查用js -->
 						<script src="${pageContext.request.contextPath}/js/StoreSearchForm.js"></script>
 						<script>
@@ -128,6 +126,7 @@
 									selectAllStore();
 								});
 								$("#dataContainer").on("click", ".pFirstBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
 									var sclassObjValue = document.getElementById("sSclass").value;
@@ -144,6 +143,7 @@
 									selectAllStore();
 								});
 								$("#dataContainer").on("click", ".pPrevBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
 									var sclassObjValue = document.getElementById("sSclass").value;
@@ -160,6 +160,7 @@
 									selectAllStore();
 								});
 								$("#dataContainer").on("click", ".pNextBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
 									var sclassObjValue = document.getElementById("sSclass").value;
@@ -176,6 +177,7 @@
 									selectAllStore();
 								});
 								$("#dataContainer").on("click", ".pLastBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
 									var sclassObjValue = document.getElementById("sSclass").value;
@@ -228,7 +230,7 @@
 										} 
 									}
 								} else {
-									alert("檢查失敗！");
+									swal("檢查失敗！","","error");
 								}
 							};
 							
@@ -255,28 +257,31 @@
 										success : function(resultObj) {
 											if (resultObj.resultCode == 1) {
 												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = true;
+											} else if (resultObj.resultCode == 0) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											} else if (resultObj.resultCode == -1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											}
+											if (!operateResultIsOk) {
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");												
+											} else {
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
 														+ operateResultStr;
 												operateResultSpan.style.color = "black";
 												operateResultSpan.style.fontStyle = "normal";
 												/* 顯示彈窗訊息 */
-												alert(resultObj.resultMessage);
-												/* 重新以Ajax寫出表格 */
-												selectAllStore();
-											} else if (resultObj.resultCode == 0) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
-											} else if (resultObj.resultCode == -1) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
+												swal(operateResultStr,"","success");
+												setTimeout(function() {
+													/* 重新以Ajax寫出表格 */
+													selectAllStore();
+												},1500);
 											}
 										},
 										error : function(err) {
@@ -284,8 +289,8 @@
 											operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 											operateResultSpan.style.color = "red";
 											operateResultSpan.style.fontStyle = "italic";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(operateResultStr,"","error");
 										}
 									});
 								}
@@ -384,11 +389,13 @@
 																+ storeData.status 
 																+ "' style='background-color:#F0F0F0'>" 
 																+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
-																+ "</button>";
+																+ "</button>"
+																+ "</td>";
 													}
 														
 													if (storeData.status == "1") {
-														content += "<button type='button' class='quitBtn' id='qutBtn" 
+														content += "<td>"
+																+ "<button type='button' class='quitBtn' id='qutBtn" 
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
@@ -396,7 +403,8 @@
 																+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																+ "</button>"
 													} else if (storeData.status == "0") {
-														content += "<button type='button' class='activeBtn' id='actBtn" 
+														content += "<td>"
+																+ "<button type='button' class='activeBtn' id='actBtn" 
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
@@ -404,7 +412,8 @@
 																+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
 																+ "</button>";
 													} else if (storeData.status == "3") {
-														content += "<button type='button' class='activeBtn' id='actBtn" 
+														content += "<td>"
+																+ "<button type='button' class='activeBtn' id='actBtn" 
 																+ storeData.id  
 																+ "_" 
 																+ storeData.status 
@@ -496,19 +505,19 @@
 											searchSpan.style.color = "red";
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(searchStr,"","error");
 										}
 									},
 									error : function(err) {
-										searchStr = "發生錯誤，無法載入使用者資料";
+										searchStr = "發生錯誤，無法載入店家資料";
 										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
 												+ searchStr;
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							};
@@ -532,7 +541,9 @@
 									data : {
 										'avPage':avgPage,
 										'startPage':startPage
-									},success : function(resultObj) {
+									},
+									dataType : "json",
+									success : function(resultObj) {
 										if (resultObj.resultCode == 1) {
 											searchStr = resultObj.resultMessage;
 											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
@@ -719,18 +730,18 @@
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
 											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											swal(searchStr,"","error");
 										}
 									},
 									error : function(err) {
-										searchStr = "發生錯誤，無法載入使用者資料";
+										searchStr = "發生錯誤，無法載入店家資料";
 										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
 												+ searchStr;
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							};

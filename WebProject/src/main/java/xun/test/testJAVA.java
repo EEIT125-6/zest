@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -87,6 +89,13 @@ public class testJAVA {
 		timeOrderTest.add(t2);
 		Collections.sort(timeOrderTest, new TestJavaTimeComparator());
 		System.out.println(timeOrderTest);
+		
+		System.out.println("----------------------------");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("1", "12");
+		map.put("2", "22");
+		System.out.println(map.get("1"));
+		
 		
 	}
 	

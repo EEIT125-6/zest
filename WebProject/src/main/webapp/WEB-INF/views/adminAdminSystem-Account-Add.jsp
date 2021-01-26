@@ -157,6 +157,7 @@
 							</div>
 							<hr />
 						</form>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<script src="<c:url value='/js/webUser/WebUserAddForm.js' />"></script>
 						<script>
 							window.onload = function() {
@@ -248,30 +249,32 @@
 												if (resultObj.resultCode == 1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = true;
-													/* 顯示彈窗訊息 */
-													alert(resultObj.resultMessage);
 												} else if (resultObj.resultCode == 0) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													alert(resultObj.resultMessage);
 												} else if (resultObj.resultCode == -1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													alert(resultObj.resultMessage);
 												}
 												if (!addResultIsOk) {
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","error");
 													addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 													addResultSpan.style.color = "red";
 													addResultSpan.style.fontStyle = "italic";
 								            	} else {
-								            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
-								            		addResultSpan.style.color = "black";
-								            		addResultSpan.style.fontStyle = "normal";
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","success");
+													setTimeout(function() {
+									            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
+									            		addResultSpan.style.color = "black";
+									            		addResultSpan.style.fontStyle = "normal";
+													},1500);
 								            	}
 											} else {
 												addResultStr = "發生錯誤，無法執行檢查";
+												/* 顯示彈窗訊息 */
+												swal(resultObj.resultMessage,"","error");
 												addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 												addResultSpan.style.color = "red";
 												addResultSpan.style.fontStyle = "italic";
@@ -279,7 +282,7 @@
 										}
 									};
 								} else {
-									alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+									swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 								}
 							}
 							
@@ -314,10 +317,10 @@
 												} else if (resultObj.resultCode == -1) {
 													accountStr = "檢查途中遭遇錯誤！";
 								            		accountIsOk = false;
-								            		/* 顯示彈窗異常訊息 */
-								            		alert(resultObj.resultMessage);
 												}
 												if (!accountIsOk) {
+								            		/* 顯示彈窗訊息 */
+													swal(accountStr,"","error");
 								            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 								            		accountSpan.style.color = "red";
 								            		accountSpan.style.fontStyle = "italic";
@@ -331,11 +334,13 @@
 								            	accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 							            		accountSpan.style.color = "red";
 							            		accountSpan.style.fontStyle = "italic";
+							            		/* 顯示彈窗訊息 */
+												swal(accountStr,"","error");
 											}
 										} 
 									};
 								} else {
-									alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+									swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 								}
 							}
 							
@@ -370,10 +375,10 @@
 												} else if (resultObj.resultCode == -1) {
 													nicknameStr = "檢查途中遭遇錯誤！";
 													nicknameIsOk = false;
-								            		/* 顯示彈窗異常訊息 */
-								            		alert(resultObj.resultMessage);
 												}
 												if (!nicknameIsOk) {
+													/* 顯示彈窗訊息 */
+								            		swal(resultObj.resultMessage,"","error");
 													nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 													nicknameSpan.style.color = "red";
 													nicknameSpan.style.fontStyle = "italic";
@@ -387,11 +392,13 @@
 												nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 												nicknameSpan.style.color = "red";
 												nicknameSpan.style.fontStyle = "italic";
+												/* 顯示彈窗訊息 */
+							            		swal(nicknameStr,"","error");
 									        }
 										}
 									};
 								} else {
-									alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+									swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 								}
 							}
 							
@@ -426,10 +433,10 @@
 												} else if (resultObj.resultCode == -1) {
 													emailStr = "檢查途中遭遇錯誤！";
 								            		emailIsOk = false;
-								            		/* 顯示彈窗異常訊息 */
-								            		alert(resultObj.resultMessage);
 												}
 												if (!emailIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(emailStr,"","error");
 								            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 								            		emailSpan.style.color = "red";
 								            		emailSpan.style.fontStyle = "italic";
@@ -443,11 +450,13 @@
 								            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 								            	emailSpan.style.color = "red";
 								            	emailSpan.style.fontStyle = "italic";
+								            	/* 顯示彈窗訊息 */
+							            		swal(emailStr,"","error");
 											}
 										} 
 									};
 								} else {
-									alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+									swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 								}
 							}
 							
@@ -482,10 +491,10 @@
 												} else if (resultObj.resultCode == -1) {
 													phoneStr = "檢查途中遭遇錯誤！";
 								            		phoneIsOk = false;
-								            		/* 顯示彈窗異常訊息 */
-								            		alert(resultObj.resultMessage);
 												}
 												if (!phoneIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(phoneStr,"","error");
 								            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 								            		phoneSpan.style.color = "red";
 								            		phoneSpan.style.fontStyle = "italic";
@@ -499,11 +508,13 @@
 								            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 								            	phoneSpan.style.color = "red";
 								            	phoneSpan.style.fontStyle = "italic";
+								            	/* 顯示彈窗訊息 */
+							            		swal(phoneStr,"","error");
 											}
 										} 
 									};
 								} else {
-									alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+									swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 								}
 							}
 						</script> 

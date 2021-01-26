@@ -9,13 +9,10 @@ function checkForm() {
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
 	if (choice) {
 		if (!checkStname()) {
-			alert("fail 1");
 			return false;
 		} else if (!checkOwner()) {
-			alert("fail 2");
 			return false;
 		} else if (!checkSelectedSclass()) {
-			alert("fail 3");
 			return false;
 		} else {
 			if (stnameObjValue == "" && stnameObjValue.length == 0) {
@@ -63,6 +60,9 @@ function checkStname() {
 		stnameIsOk = true;
 	} else if (stnameObjValue.length > 50) {
 		stnameStr = "店家名稱長度過長";
+		stnameIsOk = false;
+	} else if (stnameObjValue.indexOf("<") != -1 || stnameObjValue.indexOf(">") != -1) {
+		stnameStr = "店家名稱不可以包含<、>";
 		stnameIsOk = false;
 	} 
 	if (!stnameIsOk) {

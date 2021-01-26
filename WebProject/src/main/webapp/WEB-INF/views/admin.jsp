@@ -13,20 +13,12 @@
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
-    <style>
-	     th {
-			font-size:20px;
-	    } 
-	     td {
-			font-size:18px;
-	    } 
-    </style>
 </head>
 <body>
     <div class="wrapper">
 		<%@include file = "adminAdminSystem-side-header.jsp" %>
 <!---------------------------------------------------------------------------->	
-			<div class="content" style="background-color: #FFF;">
+			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
 					<div class="container" align="center" style="margin-top: 20px;background-color:#FFF">
@@ -48,7 +40,7 @@
 											let storeName=resultObj.store;	
 											let content="";
 											if (booking !=null){
-									      		content +="<table cellspacing='1' cellpadding='1' border='1' width='980px' style='border:8px #FFD382 groove ;'>"
+									      		content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
 									      				+"<tr><th>訂單編號</th><th>訂位狀態"
 							// 		      				+"<select id='status' onChange='status()'><option value=''>訂位狀態</option><option value='有效'>有效</option><option value='用餐過'>用餐過</option><option value='已取消'>已取消</option></select></th>"
 									      				+"<th><select id='eat' onChange='eating()'><option value=''>餐廳名</option>";
@@ -68,7 +60,7 @@
 									      		}else{
 													content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
 												}
-									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><td>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
+									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
 									      	}
 									      	content+="</table>";
 								      		aa.innerHTML=content;
@@ -115,7 +107,7 @@
 											let storeName=resultObj.store;	
 											let content="";
 											if (booking !=null){
-												content +="<table cellspacing='1' cellpadding='1' border='1' width='980px' style='border:8px #FFD382 groove;'>"
+												content +="<table cellspacing='1' cellpadding='1' border='1' width='880px' style='border:8px #FFD382 groove;'>"
 								      					+"<tr><th>訂單編號</th><th>訂位狀態"
 							//		      				+"<select id='status' onChange='status()'><option value=''>訂位狀態</option><option value='有效'>有效</option><option value='用餐過'>用餐過</option><option value='已取消'>已取消</option></select></th>"
 								      					+"<th><select id='eat' onChange='eating()'><option value=''>餐廳名</option>";
@@ -135,7 +127,7 @@
 									      		}else{
 													content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
 												}
-									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><td>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
+									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
 									      	}
 									      	content+="</table>";
 								      		aa.innerHTML=content;

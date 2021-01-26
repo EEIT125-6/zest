@@ -255,4 +255,10 @@ public class StoreServiceImpl implements StoreService {
 	public Integer storeChange(Integer stid, String newStatus) {
 		return dao.storeChange(stid, newStatus);
 	}
+	
+	@Transactional
+	@Override
+	public void removeComment(StoreBean sb) {
+		dao.removeComment(sb);
+	}
 }
