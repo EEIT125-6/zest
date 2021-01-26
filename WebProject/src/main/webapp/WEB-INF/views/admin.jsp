@@ -48,7 +48,7 @@
 									      			let storeItem = storeName[i];
 								      				content +="<option value='"+storeItem+"'>"+storeItem+"</option>";
 									      		}		
-							      				content +="</select></th><th>訂位日期</th><th>時間</th><th>人數</th><th>userId</th></tr>";
+							      				content +="</select></th><th>訂位日期</th><th>時間</th><th>人數</th><th>帳號</th></tr>";
 									      	for(let i=0;i<booking.length;i++){
 									      		let data=booking[i];
 									      			
@@ -60,7 +60,7 @@
 									      		}else{
 													content+="<tr><td><a href=<c:url value='/booking/Display?key="+data.bookingNo+"'/>>"+data.bookingNo+"</td><td>用餐過</td>";
 												}
-									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.userId+"</td></tr>";
+									      		content+="<td>"+data.restaurant+"</td><td>"+data.bookingdate+"</td><th>"+data.time+"</td><td>"+data.number+"</td><td>"+data.user_id.account+"</td></tr>";
 									      	}
 									      	content+="</table>";
 								      		aa.innerHTML=content;
