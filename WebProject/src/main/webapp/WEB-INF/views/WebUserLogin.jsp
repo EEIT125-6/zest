@@ -176,7 +176,8 @@
                				<option value="2">一般使用者二</option>
                				<option value="3">店家使用者一</option>
                				<option value="4">店家使用者二</option>
-               				<option value="5">網站管理員一</option>
+               				<option value="5">店家使用者三</option>
+               				<option value="6">網站管理員一</option>
                			</select>
 						<hr />
 						<span id="loginSpan">
@@ -239,6 +240,10 @@
 	                    			document.getElementById("password").value = "Doing0903";
 	                				break;
 	                			case '5':
+	                				document.getElementById("account").value = "George610787";
+	                    			document.getElementById("password").value = "Geo1rge6";
+	                				break;
+	                			case '6':
 	                				document.getElementById("account").value = "WebAdmin";
 	                    			document.getElementById("password").value = "WebAdmin2020";
 	                				break;
@@ -368,7 +373,7 @@
 						            		loginStr = "帳號錯誤！";
 						            		loginIsOk = false;
 						            	} else if(resultObj.resultCode == -3) {
-						            		loginStr = "檢查途中遭遇錯誤！";
+						            		loginStr = resultObj.resultMessage;
 						            		loginIsOk = false;
 						            	}
 										if (!loginIsOk) {

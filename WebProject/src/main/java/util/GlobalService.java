@@ -24,7 +24,7 @@ public class GlobalService {
 				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
 				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
 				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
-				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
+				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\WebProject0125\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);
@@ -48,7 +48,7 @@ public class GlobalService {
 				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
 				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\Images\\"
 				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
-				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\Images\\"
+				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\WebProject0125\\src\\main\\webapp\\Images\\"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);
@@ -73,7 +73,7 @@ public class GlobalService {
 				"C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views"
 				,"C:/ProjectGithub/zest/WebProject/src/main/webapp/WEB-INF/views"
 				,"H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views"
-				,"C:/Users/Tony Chi/Desktop/Programming/JAVA Stuff/AdvancedWork/For Rehersal/src/main/webapp/WEB-INF/views"
+				,"C:/Users/Tony Chi/Desktop/Programming/JAVA Stuff/AdvancedWork/WebProject0125/src/main/webapp/WEB-INF/views"
 				);
 		for(String pUrl : photourl) {
 			File pUF = new File(pUrl);

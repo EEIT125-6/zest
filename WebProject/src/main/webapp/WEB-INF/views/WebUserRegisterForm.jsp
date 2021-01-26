@@ -348,7 +348,7 @@
 											accountStr = "可建立此帳號！";
 						            		accountIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											accountStr = "檢查途中遭遇錯誤！";
+											accountStr = resultObj.resultMessage;
 						            		accountIsOk = false;
 										}
 										if (!accountIsOk) {
@@ -406,7 +406,7 @@
 											nicknameStr = "可使用此稱呼！";
 											nicknameIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											nicknameStr = "檢查途中遭遇錯誤！";
+											nicknameStr = resultObj.resultMessage;
 											nicknameIsOk = false;
 										}
 										if (!nicknameIsOk) {
@@ -464,7 +464,7 @@
 											emailStr = "可使用此電子信箱！";
 						            		emailIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											emailStr = "檢查途中遭遇錯誤！";
+											emailStr = resultObj.resultMessage;
 						            		emailIsOk = false;
 										}
 										if (!emailIsOk) {
@@ -527,7 +527,7 @@
 						            		emailCheckCodeIsOk = true;
 						            		checkCodeStr = resultObj.resultText;
 										} else if (resultObj.resultCode == "false") {
-											emailCheckCodeStr = "遭遇錯誤！請稍後再試！";
+											emailCheckCodeStr = resultObj.resultMessage;
 						            		emailCheckCodeIsOk = false;
 										}
 										if (!emailCheckCodeIsOk) {
@@ -591,7 +591,7 @@
 											phoneStr = "可使用此聯絡電話！";
 						            		phoneIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											phoneStr = "檢查途中遭遇錯誤！";
+											phoneStr = resultObj.resultMessage;
 						            		phoneIsOk = false;
 										}
 										if (!phoneIsOk) {

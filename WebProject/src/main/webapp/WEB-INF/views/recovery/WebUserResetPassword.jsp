@@ -227,7 +227,7 @@
 				            		resetStr = "重設密碼密碼失敗";
 				            		resetIsOk = false;
 				            	} else if(resultObj.resultCode == -4) {
-				            		resetStr = "檢查途中遭遇錯誤！";
+				            		resetStr = resultObj.resultMessage;
 				            		resetIsOk = false;
 				            	}
 				            	if (!resetIsOk) {

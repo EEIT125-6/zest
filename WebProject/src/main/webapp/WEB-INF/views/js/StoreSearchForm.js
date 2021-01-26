@@ -3,7 +3,7 @@ function checkForm() {
 	let userLv = document.getElementById("userLv").value.trim();
 	let stnameObjValue = document.getElementById("selectedStname").value.trim();
 	let ownerObjValue = document.getElementById("selectedOwner").value.trim();
-	let sclassObjValue = document.getElementById("sSclass").value;
+	let sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 	let statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 	
 	let choice=confirm("是否要依據目前填寫的資料進行查詢？");
@@ -21,16 +21,16 @@ function checkForm() {
 			if (ownerObjValue == "" || ownerObjValue.length == 0) {
 				counter++;
 			}
-			if (sclassObjValue == "" || sclassObjValue.length == 0) {
-				counter++;
-			}
 			if (userLv != -1) {
-				if (counter == 3){
+				if (counter == 2){
 					alert("您沒有選擇任何一項，將使用預設搜尋");
 				} else {
 					searchSpan.innerHTML = "";
 				} 
 			} else {
+				if (sclassObjValue == "" || sclassObjValue.length == 0) {
+					counter++;
+				}
 				if (statusObjValue == "" || statusObjValue.length == 0) {
 					counter++;
 				}
@@ -64,7 +64,10 @@ function checkStname() {
 	} else if (stnameObjValue.indexOf("<") != -1 || stnameObjValue.indexOf(">") != -1) {
 		stnameStr = "店家名稱不可以包含<、>";
 		stnameIsOk = false;
-	} 
+	} else {
+		stnameStr = "店家名稱填寫完成";
+		stnameIsOk = true;
+	}
 	if (!stnameIsOk) {
 		stnameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + stnameStr;
 		stnameSpan.style.color = "red";
@@ -213,8 +216,8 @@ function checkStatus() {
 function clearMessage() {
 	document.getElementById("stnameSpan").innerHTML = "";
 	document.getElementById("ownerSpan").innerHTML = "";
-	document.getElementById("sclassSpan").innerHTML = "";
 	if (document.getElementById("userLv").value == -1) {
+		document.getElementById("sclassSpan").innerHTML = "";
 		document.getElementById("statusSpan").innerHTML = "";
 	}
 }

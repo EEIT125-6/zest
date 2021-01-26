@@ -388,6 +388,15 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		return list;
 	}
 	
+	@Override
+	public void removeComment(StoreBean sb) {
+		String hql = "DELETE BoardBean  WHERE storebean = :storebean";
+		Session session = factory.getCurrentSession();
+		session.createQuery(hql)
+				.setParameter("storebean", sb)
+				.executeUpdate();
+	}
+	
 	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
 	@Override
 	public Integer storeChange(Integer stid, String newStatus) {
@@ -399,14 +408,5 @@ public class StoreHibernateDaoImpl implements StoreDao {
 			.setParameter("status", newStatus)
 			.setParameter("id", stid)
 			.executeUpdate();
-	}
-
-	@Override
-	public void removeComment(StoreBean sb) {
-		String hql = "DELETE BoardBean  WHERE storebean = :storebean";
-		Session session = factory.getCurrentSession();
-		session.createQuery(hql)
-				.setParameter("storebean", sb)
-				.executeUpdate();
 	}
 }

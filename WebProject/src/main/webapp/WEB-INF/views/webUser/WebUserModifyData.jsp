@@ -441,7 +441,7 @@
                 		if (checkForm()) {
                 			doUpdate();
                 		} else {
-                			alert("欄位檢查失敗！");
+                			swal("欄位檢查失敗！","","error");
                 		}
                 	}
                 	function doUpdate() {

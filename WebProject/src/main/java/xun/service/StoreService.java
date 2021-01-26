@@ -69,12 +69,12 @@ public interface StoreService {
 	
 	List<StoreBean> guessYouLike(String sclass);
 	
-	void removeComment(StoreBean sb);
-	
 	/* 取得全部商店列表 By George017 2021/01/19 */
 	List<StoreBean> getAllStore();
 	
 	List<StoreBean> getMemberAllStore(WebUserData webUserData);
+	
+	void removeComment(StoreBean sb);
 	
 	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
 	public Integer storeChange(Integer stid, String newStatus);

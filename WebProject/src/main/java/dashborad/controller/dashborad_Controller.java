@@ -206,12 +206,14 @@ public class dashborad_Controller {
 	public String adminStore(Model model) {
 		List<String> sclassList = new ArrayList<>();
 		List<StoreBean> storeList = ss.getAllStore();
+		List<String> shopOwnerList = getShopOwnerList();
 		for (StoreBean storeData: storeList) {
 			if (!sclassList.contains(storeData.getSclass())) {
 				sclassList.add(storeData.getSclass());
 			}
 		}
 		model.addAttribute("sclassList", sclassList);
+		model.addAttribute("shopOwnerList", shopOwnerList);
 		return "adminAdminSystem-Store";
 	}
 	
@@ -1203,7 +1205,7 @@ public class dashborad_Controller {
 				if (!account.equals("")) {
 					/* 遍歷 */
 					for (int index = 0; index < productInfoList.size(); index++) {
-						if (productInfoList.get(index).getStorebean().getWebUserData().getAccount().equals(account)) {
+						if (!productInfoList.get(index).getStorebean().getWebUserData().getAccount().equals(account)) {
 							productInfoList.remove(index--);
 						}
 					}

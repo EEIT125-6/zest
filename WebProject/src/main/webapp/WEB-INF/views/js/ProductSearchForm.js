@@ -74,7 +74,10 @@ function checkProduct() {
 	} else if (productObjValue.indexOf("<") != -1 || productObjValue.indexOf(">") != -1) {
 		productStr = "商品名稱不可以包含<、>";
 		productIsOk = false;
-	} 
+	} else {
+		productStr = "商品名稱填寫完成";
+		productIsOk = true;
+	}
 	if (!productIsOk) {
 		productSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + productStr;
 		productSpan.style.color = "red";
@@ -108,7 +111,10 @@ function checkStore() {
 	} else if (storeObjValue.indexOf("<") != -1 || storeObjValue.indexOf(">") != -1) {
 		storeStr = "店家名稱不可以包含<、>";
 		storeIsOk = false;
-	} 
+	} else {
+		storeStr = "店家名稱填寫完成";
+		storeIsOk = true;
+	}
 	if (!storeIsOk) {
 		storeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + storeStr;
 		storeSpan.style.color = "red";

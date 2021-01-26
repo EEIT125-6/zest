@@ -498,8 +498,6 @@ public class BookingController {
 		}
 		ra.addFlashAttribute("line","已過取消期限");
 		return false;
-		
-		
 	}
 	
 	//改
@@ -510,6 +508,7 @@ public class BookingController {
 			@RequestParam(value = "number") Integer number, @RequestParam(value = "name") String name,
 			@RequestParam(value = "phone") String phone, @RequestParam(value = "mail") String mail,
 			@RequestParam(value = "needs") String needs, @RequestParam(value = "purpose") String purpose) {
+
 		if (checkCancelBooking(bookingdate) == true) {
 
 			int count = 0;
@@ -566,6 +565,7 @@ public class BookingController {
 				} catch (Exception e) {
 					;
 				}
+
 				return true;
 			} else {
 				System.out.println("訂位資料更新失敗！");

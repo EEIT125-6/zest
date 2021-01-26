@@ -187,9 +187,7 @@
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
-<%--                 		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />"> --%>
                 			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
-<!--                 		</a> -->
 						<hr />
                 	</fieldset>
                 </form>
@@ -241,10 +239,10 @@
 											getDataStr = resultObj.resultMessage;
 										} else {
 											getDataStr = "取得資料途中遭遇錯誤！";
-											/* 顯示彈窗異常訊息 */
-											swal(resultObj.resultMessage, "", "error");
 										}
 										if (!getDataIsOk) {
+											/* 顯示彈窗訊息 */
+											swal(resultObj.resultMessage, "", "error");
 											getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
 											getDataSpan.style.color = "red";
 											getDataSpan.style.fontStyle = "italic";
@@ -304,6 +302,7 @@
 						            	}
 									} else {
 										getDataStr = "發生錯誤，無法取得使用者個人資料";
+										swal(getDataStr, "", "error");
 										getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
 										getDataSpan.style.color = "red";
 										getDataSpan.style.fontStyle = "italic";
@@ -311,7 +310,7 @@
 								}
 							};
 						} else {
-							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+							swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 						}
 					}
                 </script>
