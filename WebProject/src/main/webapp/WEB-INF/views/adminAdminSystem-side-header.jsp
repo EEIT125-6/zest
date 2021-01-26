@@ -16,10 +16,10 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="<c:url value='/adminProduct'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>全商品管理</p>
-                        </a>
+<%--                         <a class="nav-link" href="<c:url value='/adminProduct'/>"> --%>
+<!--                             <i class="fas fa-archive"></i> -->
+<!--                             <p>全商品管理</p> -->
+<!--                         </a> -->
                     </li>
                     <li>
                         <a class="nav-link" href="<c:url value='/adminAccount'/>">

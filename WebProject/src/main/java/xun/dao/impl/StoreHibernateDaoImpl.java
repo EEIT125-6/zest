@@ -400,4 +400,13 @@ public class StoreHibernateDaoImpl implements StoreDao {
 			.setParameter("id", stid)
 			.executeUpdate();
 	}
+
+	@Override
+	public void removeComment(StoreBean sb) {
+		String hql = "DELETE BoardBean  WHERE storebean = :storebean";
+		Session session = factory.getCurrentSession();
+		session.createQuery(hql)
+				.setParameter("storebean", sb)
+				.executeUpdate();
+	}
 }

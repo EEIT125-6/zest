@@ -34,5 +34,6 @@ public class MyWebConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(myWebSocketHandler, "/socketHandler");
     }
+    
   
 }

@@ -69,6 +69,8 @@ public interface StoreService {
 	
 	List<StoreBean> guessYouLike(String sclass);
 	
+	void removeComment(StoreBean sb);
+	
 	/* 取得全部商店列表 By George017 2021/01/19 */
 	List<StoreBean> getAllStore();
 	
