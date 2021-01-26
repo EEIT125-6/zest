@@ -180,6 +180,7 @@
 						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
                 </form>
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyPassword.js"></script>
                 <script>
                 	window.onload = function() {
@@ -213,24 +214,26 @@
     											if (resultObj.resultCode == 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = true;
-    												/* 顯示彈窗訊息 */
-    							            		alert(confirmPasswordStr);
     											} else if (resultObj.resultCode != 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = false;
-    												/* 顯示彈窗訊息 */
-    							            		alert(confirmPasswordStr);
     											} 
     											if (!confirmPasswordIsOk) {
     												confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmPasswordStr;
     												confirmPasswordSpan.style.color = "red";
     												confirmPasswordSpan.style.fontStyle = "italic";
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "error");
     							            	} else {
     							            		confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmPasswordStr;
     							            		confirmPasswordSpan.style.color = "black";
     							            		confirmPasswordSpan.style.fontStyle = "normal";
-    							            		/* 跳轉 */
-    							            		window.location.href = resultObj.nextPath;
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "success");
+    												setTimeout(function() {
+	    							            		/* 跳轉 */
+	    							            		window.location.href = resultObj.nextPath;
+    												},1500);
     							            	}
     										} else {
     											confirmPasswordStr = "發生錯誤，無法執行檢查";
@@ -238,12 +241,12 @@
     											confirmPasswordSpan.style.color = "red";
     											confirmPasswordSpan.style.fontStyle = "italic";
     						            		/* 顯示彈窗訊息 */
-    						            		alert(confirmPasswordStr);
+    											swal(confirmPasswordStr, "", "error");
     										}
     									}
     								};
     							} else {
-    								alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+    								swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！", "", "error");
     							}
                 			}
                 		};

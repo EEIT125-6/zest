@@ -125,4 +125,29 @@ public class ProductDaoImpl implements ProductDao{
 			.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProductInfoBean> getAllProduct() {
+		String hql = "FROM ProductInfoBean";
+		return factory.getCurrentSession().createQuery(hql).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProductInfoBean> getAllProductByUserId(String userId) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM ProductInfoBean AS pi WHERE pi.storebean.webUserData.userId = :userId";
+		return session.createQuery(hql).setParameter("userId", userId).getResultList();
+	}
+	
+	@Override
+	public Integer productChange(Integer productId, String status) {
+		Session session = factory.getCurrentSession();
+		String hql = "Update ProductInfoBean pib set product_status = :status WHERE product_id = :id";
+		Integer result = session.createQuery(hql)
+		.setParameter("status", status)
+		.setParameter("id", productId)
+		.executeUpdate();
+		return result;
+	}
 }

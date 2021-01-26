@@ -38,17 +38,6 @@ public class BookingDAO_Impl implements BookingDAO {
 		count++;
 		return count;
 	}
-	//delete
-	@Override
-	public  int cancelBooking(String bookingNo) {
-		int count = 0;
-		Session session = factory.getCurrentSession();
-		BookingBean bean=session.get(BookingBean.class, bookingNo);
-		bean.setStatus(0);
-		session.saveOrUpdate(bean);
-		count++;
-		return count;
-	}
 	
 	//update
 	@Override
@@ -182,4 +171,16 @@ public class BookingDAO_Impl implements BookingDAO {
 		count++;
 		return count;
 	}
+	
+	//delete
+	@Override
+	public  int cancelBooking(String bookingNo) {
+		int count = 0;
+		Session session = factory.getCurrentSession();
+		BookingBean bean=session.get(BookingBean.class, bookingNo);
+		bean.setStatus(0);
+		session.saveOrUpdate(bean);
+		count++;
+		return count;
+	}	
 }

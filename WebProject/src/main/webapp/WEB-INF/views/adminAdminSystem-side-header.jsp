@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
         <div class="sidebar" data-image="../assets/img/sidebar-5.jpg" data-color = "orange">
             <div class="sidebar-wrapper">
@@ -15,15 +16,21 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="<c:url value='/adminProduct'/>">
-                            <i class="fas fa-archive"></i>
-                            <p>全商品管理</p>
-                        </a>
+<%--                         <a class="nav-link" href="<c:url value='/adminProduct'/>"> --%>
+<!--                             <i class="fas fa-archive"></i> -->
+<!--                             <p>全商品管理</p> -->
+<!--                         </a> -->
                     </li>
                     <li>
                         <a class="nav-link" href="<c:url value='/adminAccount'/>">
                             <i class="fas fa-archive"></i>
                             <p>全會員管理</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="<c:url value='/adminBooking'/>">
+                            <i class="fas fa-archive"></i>
+                            <p>全訂位資料管理</p>
                         </a>
                     </li>
                 </ul>

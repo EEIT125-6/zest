@@ -34,15 +34,6 @@ public class BookingServiceImpl implements BookingService {
 			
 		return count;
 	}
-	//刪除delete
-	@Override
-	public  int cancelBooking(String bookingNo) {
-		int count = 0;
-		dao.cancelBooking(bookingNo);
-		count++;
-		
-		return count;
-	}
 	//查詢query
 	@Override
 	public List <BookingBean> findBooking(String user_id) {
@@ -103,6 +94,16 @@ public class BookingServiceImpl implements BookingService {
 		dao.insertSeat(storeId,seating);
 		count++;
 			
+		return count;
+	}
+	
+	//刪除delete
+	@Override
+	public  int cancelBooking(String bookingNo) {
+		int count = 0;
+		dao.cancelBooking(bookingNo);
+		count++;
+		
 		return count;
 	}
 }

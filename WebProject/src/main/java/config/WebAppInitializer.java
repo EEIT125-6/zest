@@ -48,6 +48,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         boolean done = registration.setInitParameter("throwExceptionIfNoHandlerFound", "true"); // -> true
 //        if(!done) throw new RuntimeException();
     
-//        registration.setInitParameter("throwException", "true");
+        registration.setInitParameter("throwException", "true");
     } 
 }

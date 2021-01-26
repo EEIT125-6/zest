@@ -27,8 +27,7 @@ public class CheckAdminLoginInterceptor extends HandlerInterceptorAdapter {
 			"/dashborad_user",
 			"/adminStore",
 			"/adminProduct",
-			"/adminAccount",
-			"/storeAd"
+			"/adminAccount"
 			);
 	
 	String servletPath;

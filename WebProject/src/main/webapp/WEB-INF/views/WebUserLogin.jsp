@@ -153,12 +153,6 @@
                 	<fieldset>
                 		<legend>登入相關資料</legend>
                 		<hr />
-                		<div align="center">
-	                		<button type="button" id="userInput">使用者一鍵輸入</button>
-	                		<button type="button" id="bossInput">店家一鍵輸入</button>
-	                		<button type="button" id="adminInput">管理員一鍵輸入</button>
-                		</div>
-                		<hr />
                 		<label>帳號名稱：</label>
                 		<input type="text" name="account" id="account" size="30" maxlength="30" onblur="checkAccountName()"
 							placeholder="請輸入帳號，6~30個字" required="required" />
@@ -176,6 +170,14 @@
 								checked='checked'
 							</c:if> 
 							value=true>
+						<select id="autoInput">
+               				<option value="">一鍵輸入</option>
+               				<option value="1">一般使用者一</option>
+               				<option value="2">一般使用者二</option>
+               				<option value="3">店家使用者一</option>
+               				<option value="4">店家使用者二</option>
+               				<option value="5">網站管理員一</option>
+               			</select>
 						<hr />
 						<span id="loginSpan">
 							<c:if test="${timeOut != null}">
@@ -203,33 +205,47 @@
                 </form>
                 <!-- 引用本地jQuery -->
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <!-- 引用檢查用js -->
                 <script src="<c:url value='/js/webUser/WebUserLogin.js' />"></script>
                 <script>
                 	window.onload = function() {
                 		let submitBtn = document.getElementById("submit");
-                		let userAutoInputBtn = document.getElementById("userInput");
-                		let bossAutoInputBtn = document.getElementById("bossInput");
-                		let adminAutoInputBtn = document.getElementById("adminInput");
                 		let googleLoginBtn = document.getElementById("googleLogin");
                 		let googleQuitBtn = document.getElementById("googleQuit");
                 		let cookieLoginBtn = document.getElementById("cookieLogin");
+                		let autoInput = document.getElementById("autoInput");
                 		
                 		submitBtn.onclick = function() {
                 			inputCheck();
                 		};
-                		userAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "brandon123";
-                			document.getElementById("password").value = "avril456";
-                		};
-                		bossAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "TomcatTest";
-                			document.getElementById("password").value = "TomcatTest2021";
-                		};
-                		adminAutoInputBtn.onclick = function() {
-                			document.getElementById("account").value = "WebAdmin";
-                			document.getElementById("password").value = "WebAdmin2020";
-                		};
+                		
+                		autoInput.onblur = function() {
+	                		switch(autoInput.value) {
+	                			case '1':
+	                				document.getElementById("account").value = "brandon123";
+	                    			document.getElementById("password").value = "avril456";
+	                				break;
+	                			case '2':
+	                				document.getElementById("account").value = "George017";
+	                    			document.getElementById("password").value = "Geo1rge6";
+	                				break;
+	                			case '3':
+	                				document.getElementById("account").value = "TomcatTest";
+	                    			document.getElementById("password").value = "TomcatTest2021";
+	                				break;
+	                			case '4':
+	                				document.getElementById("account").value = "xun19960903";
+	                    			document.getElementById("password").value = "Doing0903";
+	                				break;
+	                			case '5':
+	                				document.getElementById("account").value = "WebAdmin";
+	                    			document.getElementById("password").value = "WebAdmin2020";
+	                				break;
+	                			default:
+	                				break;
+	                		}
+                		}
                 		googleLoginBtn.onclick = function() {
                 			GoogleLogin();
                 		};
@@ -271,14 +287,16 @@
                             });
                         },
                         function (error) {
-                        	alert("Google登入失敗，請確認您是否正使用無痕或隱私瀏覽");
+                        	/* 顯示彈窗訊息 */
+		            		swal("Google登入失敗，請確認您是否正使用無痕或隱私瀏覽","","error");
                         });
                     }
                 	
                 	function Google_disconnect() {
                         let auth2 = gapi.auth2.getAuthInstance(); //取得GoogleAuth物件
                         auth2.disconnect().then(function () {
-                            alert("使用者已斷開帳號");
+                        	/* 顯示彈窗訊息 */
+		            		swal("使用者已斷開帳號","","success");
                         });
                     } 
                 	
@@ -287,7 +305,8 @@
 	                	var password = document.getElementById("password").value.trim();
 	                	var remember = document.getElementById("remember").checked;
 						if(!checkForm()) {
-	                		alert("帳號或密碼不符規範，請再檢查一次！");
+							/* 顯示彈窗訊息 */
+		            		swal("帳號或密碼不符規範，請再檢查一次","","error");
 	                	} else {
 	                		loginCheck(account, password, "", remember, false);	
 	                	}
@@ -318,68 +337,56 @@
 										if (resultObj.resultCode == 6) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if (resultObj.resultCode == 5) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if (resultObj.resultCode == 4) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if (resultObj.resultCode == 3) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if (resultObj.resultCode == 2) {
 											loginStr = "驗證成功！將導向新畫面";
 											loginIsOk = true;
-											/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
 						            		let loginSucMsg = resultObj.resultMessage;
 						            		if (resultObj.signInMessage != "") {
 						            			loginSucMsg += "\n" + resultObj.signInMessage;
-						            		} 
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginSucMsg);
+						            		}
+						            		/* 重新置換 */
+						            		loginStr = loginSucMsg;
 										} else if (resultObj.resultCode == 0) {
 											loginStr = "帳號或密碼錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 										} else if(resultObj.resultCode == -1) {
 						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(loginStr);
 						            	} else if(resultObj.resultCode == -2) {
 						            		loginStr = "帳號錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal("錯誤",loginStr,"error");
 						            	} else if(resultObj.resultCode == -3) {
 						            		loginStr = "檢查途中遭遇錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		alert(resultObj.resultMessage);
 						            	}
 										if (!loginIsOk) {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
 						            		loginSpan.style.color = "red";
 						            		loginSpan.style.fontStyle = "italic";
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","error");
 						            	} else {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 						            		loginSpan.style.color = "black";
 						            		loginSpan.style.fontStyle = "normal";
-						            		/* 跳轉 */
-						            		window.location.href = resultObj.nextPath;
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","success");
+						            		setTimeout(function() {
+						            			/* 跳轉 */
+						                		window.location.href = resultObj.nextPath;
+						            		},1500);
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";
@@ -387,12 +394,12 @@
 						            	loginSpan.style.color = "red";
 					            		loginSpan.style.fontStyle = "italic";
 					            		/* 顯示彈窗訊息 */
-					            		alert(loginStr);
+					            		swal(loginStr,"","error");
 									}
 								} 
 							};
 	            		} else {
-							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+	            			swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 						}
                 	}
                 </script>

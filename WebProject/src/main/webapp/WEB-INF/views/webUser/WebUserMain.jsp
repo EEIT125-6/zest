@@ -149,6 +149,7 @@
 <!-- -------------------------------------------------------------- -->
             <div class="container"  style="margin-top: 20px;">
 				<input type="hidden" id="password" value="${userFullData.password}" />
+				<input type="hidden" id="leavePath" value="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout" />
                 <form action="<c:url value='/webUser/WebUserModifyData' />" method="POST">
                 	<fieldset>
                 		<legend>
@@ -181,23 +182,14 @@
                 		
 <!--                 	<button type="button" id="myFavorite" name="myFavorite" style="font-size:18px" >我的最愛 <i class="material-icons" style="font-size:18px;color:blue">favorite</i></button> -->
                 		
-                		<c:if test="${userFullData.accountLv.lv == -1}" >
-                			<button type="button" id="manage" name="manage" style="font-size:18px" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
-                			<a href="<c:url value='/booking/admin1'/>">
-                				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
-                			</a>
-                		</c:if>
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
                 			<a href="<c:url value='/booking/admin2'/>">
                 				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
-                		<c:if test="${userFullData.accountLv.lv != -1}" >
-                			<button type="button" id="manage" name="manage" style="font-size:18px;display:none;" >管理會員 <i class="material-icons" style="font-size:18px;color:blue">settings</i></button>
-                		</c:if>
-                		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />">
+<%--                 		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />"> --%>
                 			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
-                		</a>
+<!--                 		</a> -->
 						<hr />
                 	</fieldset>
                 </form>
@@ -210,32 +202,18 @@
 						</fieldset>
 					</form>
                 </div>
-                
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script>
+	                document.getElementById("logout").addEventListener("click",function() {
+	    				let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
+	    				swal("謝謝您的使用，" + account + " ！", "", "success");
+	    				setTimeout(function() {
+	    					/* 跳轉 */
+		            		window.location.href = document.getElementById("leavePath").value;
+	    				},1500);
+	    			});
                 	window.onload = function () {
-                		let manageBtn = document.getElementById("manage");
-                		let logOutBtn = document.getElementById("logout");
-                		
-                		manageBtn.onclick = function() {
-        					if(doubleCheck()) {
-        						window.location.href = "controller/WebUserMain/Search";
-        					}
-        				};
-                		logOutBtn.onclick = function() {
-        					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
-        					alert("謝謝您的使用，" + account + " ！");
-        				};
-        				
         				getSelfData();
-                	}
-                	
-                	function doubleCheck() {
-                		let highPrevPassword = prompt("如要繼續進行操作，請輸入您的密碼：", "");
-                		let inputPassword = document.getElementById("password").value;
-                		if (highPrevPassword != inputPassword) {
-                			return false;
-                		} 
-                		return true;
                 	}
                 	
                 	function getSelfData() {
@@ -264,7 +242,7 @@
 										} else {
 											getDataStr = "取得資料途中遭遇錯誤！";
 											/* 顯示彈窗異常訊息 */
-						            		alert(resultObj.resultMessage);
+											swal(resultObj.resultMessage, "", "error");
 										}
 										if (!getDataIsOk) {
 											getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;

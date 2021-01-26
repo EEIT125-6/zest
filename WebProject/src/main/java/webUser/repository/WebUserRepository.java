@@ -71,9 +71,6 @@ public interface WebUserRepository {
 	/* 取得所有有效的使用者資料 */
 	public List<WebUserData> getAllWebUserData() throws SQLException;
 	
-	/* 取得所有特定年份註冊的使用者資料 */
-	public List<WebUserData> getAllYearWebUserData(String year) throws SQLException;
-	
 	/* 取得查詢到的總筆數 */
 	public Long getUserRecordCounts(String selectedParameters) throws SQLException;
 	
@@ -93,5 +90,5 @@ public interface WebUserRepository {
 	public Integer checkAdminAccess() throws SQLException;
 	
 	/* 取回所有可用使用者的註冊日期 */
-	public List<LocalDate> getAllWebUserJoinDate(String year) throws SQLException;
+	public List<LocalDate> getAllWebUserJoinDate() throws SQLException;
 }

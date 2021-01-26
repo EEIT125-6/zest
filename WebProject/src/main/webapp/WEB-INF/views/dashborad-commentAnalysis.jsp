@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=BIG5" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,13 +9,21 @@
 	<!--     字體跟ICON     -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
-	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
 </head>
 <body>
     <div class="wrapper">
+    <c:forEach items="${boardStarChartList}" var="boardStarObject">
+    	<input type="hidden" class="boardStarLabel" value="${boardStarObject.labelName}">
+    	<input type="hidden" class="boardStarCount" value="${boardStarObject.labelNum}">
+    </c:forEach>
+    <c:forEach items="${boardCountChartList}" var="boardCountObject">
+    	<input type="hidden" class="boardCountLabel" value="${boardCountObject.labelName}">
+    	<input type="hidden" class="boardCountCount" value="${boardCountObject.labelNum}">
+    </c:forEach>
 		<%@include file = "dashborad-side-header.jsp" %>
 			<div class="content">
 				<div class="container-fluid">
@@ -83,65 +92,80 @@ $(document).ready(function() {
 
 demo={
 	orderDashboard:function(){
-        var data = {
-                labels: ['中式','日式','下午茶','西式','快餐','燒肉'],
-                series: [
-                	[3.2, 4, 4.1, 3.5, 3.4, 4.5]
-                ]
-            };
+		<!--chart-->
+		var boardStarLabels = document.getElementsByClassName("boardStarLabel");
+		var boardStarCounts = document.getElementsByClassName("boardStarCount");
+		var boardStarLabelArray = [];
+		var boardStarCountArray = [];
+		for (let index = 0; index < boardStarLabels.length; index++) {
+			boardStarLabelArray.push(boardStarLabels[index].value);
+			boardStarCountArray.push(boardStarCounts[index].value);
+		}
+		<!--boardStarChart-->
+		var data = {
+            labels:boardStarLabelArray,
+            series: [
+            	boardStarCountArray
+            ]
+        };
 
-            var options = {
-                seriesBarDistance: 10,
+        var options = {
+            seriesBarDistance: 10,
+            axisX: {
+                showGrid: false
+            },
+            height: "245px"
+        };
+
+        var responsiveOptions = [
+            ['screen and (max-width: 640px)', {
+                seriesBarDistance: 5,
                 axisX: {
-                    showGrid: false
-                },
-                height: "245px"
-            };
-
-            var responsiveOptions = [
-                ['screen and (max-width: 640px)', {
-                    seriesBarDistance: 5,
-                    axisX: {
-                        labelInterpolationFnc   : function(value) {
-                            return value[0];
-                        }
+                    labelInterpolationFnc   : function(value) {
+                        return value[0];
                     }
-                }]
-            ];
+                }
+            }]
+        ];
 
-            var chartActivity = Chartist.Bar('#CateAndStar', data, options, responsiveOptions);
-		
-// 		-----------------------------------------------------
-		
+        var chartActivity = Chartist.Bar('#CateAndStar', data, options, responsiveOptions);
+        <!--chart-->
+        var boardCountLabels = document.getElementsByClassName("boardCountLabel");
+		var boardCountCounts = document.getElementsByClassName("boardCountCount");
+		var boardCountLabelArray = [];
+		var boardCountCountArray = [];
+		for (let index = 0; index < boardCountLabels.length; index++) {
+			boardCountLabelArray.push(boardCountLabels[index].value);
+			boardCountCountArray.push(boardCountCounts[index].value);
+		}
+		<!--boardCountChart-->
         var data = {
-                labels: ['中式','日式','下午茶','西式','快餐','燒肉'],
-                series: [
-                    [542, 443, 320,505,642,700]
-                ]
-            };
+             labels:boardCountLabelArray,
+             series: [
+            	 boardCountCountArray
+             ]
+         };
 
-            var options = {
-                seriesBarDistance: 10,
-                axisX: {
-                    showGrid: false
-                },
-                height: "245px"
-            };
+         var options = {
+             seriesBarDistance: 10,
+             axisX: {
+                 showGrid: false
+             },
+             height: "245px"
+         };
 
-            var responsiveOptions = [
-                ['screen and (max-width: 640px)', {
-                    seriesBarDistance: 5,
-                    axisX: {
-                        labelInterpolationFnc   : function(value) {
-                            return value[0];
-                        }
-                    }
-                }]
-            ];
+         var responsiveOptions = [
+             ['screen and (max-width: 640px)', {
+                 seriesBarDistance: 5,
+                 axisX: {
+                     labelInterpolationFnc   : function(value) {
+                         return value[0];
+                     }
+                 }
+             }]
+         ];
 
-            var chartActivity = Chartist.Bar('#CateAndCom', data, options, responsiveOptions);
-            
-//             -----------------------------------
+         var chartActivity = Chartist.Bar('#CateAndCom', data, options, responsiveOptions);
 	}
 }
 </script>

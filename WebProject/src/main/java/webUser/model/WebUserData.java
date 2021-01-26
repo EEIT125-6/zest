@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 /* 定義表格名 */
 @Table(name="WebUserInfo")
-public class WebUserData implements Serializable{	
+public class WebUserData implements Serializable {	
 	private static final long serialVersionUID = 1L;
 	
 	/* 屬性宣告private，透過public的setter/getter進行存取/修改 */

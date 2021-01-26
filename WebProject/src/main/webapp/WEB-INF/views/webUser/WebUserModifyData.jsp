@@ -292,6 +292,7 @@
 					<hr />
                 </form>
                 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script src="${pageContext.request.contextPath}/js/webUser/WebUserModifyData.js"></script>
                 <script>
 	                $(document).ready(function () {
@@ -352,13 +353,15 @@
 								success:function(resultObj) {
 									if (resultObj.resultCode == "true") {
 										picStr = resultObj.resultMessage;
-										alert(picStr);
-										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
-										picSpan.style.color = "green";
-										picSpan.style.fontStyle = "normal";
+										swal(picStr, "", "success");
+										setTimeout(function() {
+											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+											picSpan.style.color = "green";
+											picSpan.style.fontStyle = "normal";
+										},1500);
 									} else {
 										picStr = resultObj.resultMessage;
-										alert(picStr);
+										swal(picStr, "", "error");
 										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 										picSpan.style.color = "red";
 										picSpan.style.fontStyle = "italic";
@@ -366,7 +369,7 @@
 								},
 								error:function(err) {
 									picStr = "發生錯誤，無法上傳";
-									alert(picStr);
+									swal(picStr, "", "error");
 									picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 									picSpan.style.color = "red";
 									picSpan.style.fontStyle = "italic";
@@ -399,13 +402,15 @@
 									success:function(resultObj) {
 										if (resultObj.resultCode == "true") {
 											picStr = resultObj.resultMessage;
-											alert(picStr);
-											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
-											picSpan.style.color = "green";
-											picSpan.style.fontStyle = "normal";
+											swal(picStr, "", "success");
+											setTimeout(function() {
+												picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+												picSpan.style.color = "green";
+												picSpan.style.fontStyle = "normal";
+											},1500);
 										} else {
 											picStr = resultObj.resultMessage;
-											alert(picStr);
+											swal(picStr, "", "error");
 											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 											picSpan.style.color = "red";
 											picSpan.style.fontStyle = "italic";
@@ -413,7 +418,7 @@
 									},
 									error:function(err) {
 										picStr = "發生錯誤，無法回復預設值";
-										alert(picStr);
+										swal(picStr, "", "error");
 										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 										picSpan.style.color = "red";
 										picSpan.style.fontStyle = "italic";
@@ -422,7 +427,7 @@
 		                	}
 	                	} else {
 	                		picStr = "無法回復預設值！因為已經為預設圖示";
-							alert(picStr);
+	                		swal(picStr, "", "error");
 							picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + picStr;
 							picSpan.style.color = "red";
 							picSpan.style.fontStyle = "italic";
@@ -494,22 +499,26 @@
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == 1) {
 				            		updateStr = resultObj.resultMessage;
-				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
-				            		updateSpan.style.color = "black";
-				            		updateSpan.style.fontStyle = "normal";
-				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
-				            		updateResultSpan.style.color = "black";
-				            		updateResultSpan.style.fontStyle = "normal";
+				            		/* 顯示彈窗訊息 */
+				            		swal(updateStr, "", "success");
+				            		setTimeout(function() {
+					            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+					            		updateSpan.style.color = "black";
+					            		updateSpan.style.fontStyle = "normal";
+					            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
+					            		updateResultSpan.style.color = "black";
+					            		updateResultSpan.style.fontStyle = "normal";
+				            		},1500);
 				            	} else {
 				            		updateStr = resultObj.resultMessage;
+					            	/* 顯示彈窗訊息 */
+					            	swal(updateStr, "", "error");
 					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 					            	updateSpan.style.color = "red";
 					            	updateSpan.style.fontStyle = "italic";
 					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 					            	updateResultSpan.style.color = "red";
 					            	updateResultSpan.style.fontStyle = "italic";
-					            	/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
 				            	}
 				            },
 				            error:function(err) {
@@ -520,6 +529,8 @@
 				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 				            	updateResultSpan.style.color = "red";
 				            	updateResultSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗訊息 */
+				            	swal(updateStr, "", "error");
 				            }
 						});
                 	}
@@ -553,13 +564,13 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		nicknameStr = "檢查途中遭遇錯誤！";
 				            		nicknameIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!nicknameIsOk) {
 				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 				            		nicknameSpan.style.color = "red";
 				            		nicknameSpan.style.fontStyle = "italic";
+					            	/* 顯示彈窗訊息 */
+					            	swal(resultObj.resultMessage, "", "error");
 				            	} else {
 				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 				            		nicknameSpan.style.color = "black";
@@ -571,6 +582,8 @@
 				            	nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 				            	nicknameSpan.style.color = "red";
 				            	nicknameSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗訊息 */
+				            	swal(nicknameStr, "", "error");
 				            }
 						});
 					}	
@@ -604,10 +617,10 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		emailStr = "檢查途中遭遇錯誤！";
 				            		emailIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!emailIsOk) {
+				            		/* 顯示彈窗訊息 */
+			            			swal(resultObj.resultMessage, "", "error");
 				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            		emailSpan.style.color = "red";
 				            		emailSpan.style.fontStyle = "italic";
@@ -615,9 +628,9 @@
 				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailStr;
 				            		emailSpan.style.color = "black";
 				            		emailSpan.style.fontStyle = "normal";
-				            		let choice=confirm("是否要寄往 " + email + " ?");
+			            		    let choice=confirm("是否要寄往 " + email + " ?");
 				            		if (choice) {
-				            			sendTestEmail();
+				            			sendEmailCheckCode();
 				            		}
 				            	}
 				            },
@@ -626,6 +639,8 @@
 				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            	emailSpan.style.color = "red";
 				            	emailSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗訊息 */
+		            			swal(emailStr, "", "error");
 				            }
 						});
 					}
@@ -659,10 +674,10 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		phoneStr = "檢查途中遭遇錯誤！";
 				            		phoneIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-				            		alert(resultObj.resultMessage);
 				            	}
 				            	if (!phoneIsOk) {
+				            		/* 顯示彈窗訊息 */
+		            				swal(resultObj.resultMessage, "", "error");
 				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 				            		phoneSpan.style.color = "red";
 				            		phoneSpan.style.fontStyle = "italic";
@@ -677,6 +692,8 @@
 				            	phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 				            	phoneSpan.style.color = "red";
 				            	phoneSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗異常訊息 */
+		            			swal(phoneStr, "", "error");
 				            }
 						});
 					}
@@ -707,15 +724,19 @@
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == "true") {
 				            		emailCheckCodeStr = resultObj.resultMessage;
-				            		alert(emailCheckCodeStr);
-				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
-				            		emailCheckCodeSpan.style.color = "black";
-				            		emailCheckCodeSpan.style.fontStyle = "normal";
-				            		checkCodeStr = resultObj.resultText;
-				            		document.getElementById("checkCode").value = checkCodeStr;
+				            		/* 顯示彈窗訊息 */
+				            		swal(emailCheckCodeStr, "", "success");
+				            		setTimeout(function() {
+					            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+					            		emailCheckCodeSpan.style.color = "black";
+					            		emailCheckCodeSpan.style.fontStyle = "normal";
+					            		checkCodeStr = resultObj.resultText;
+					            		document.getElementById("checkCode").value = checkCodeStr;
+					            	},1500);
 				            	} else if (resultObj.resultCode == "false") {
 				            		emailCheckCodeStr = resultObj.resultMessage;
-				            		alert(emailCheckCodeStr);
+				            		/* 顯示彈窗訊息 */
+		            				swal(emailCheckCodeStr, "", "error");
 				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
 					            	emailCheckCodeSpan.style.color = "red";
 					            	emailCheckCodeSpan.style.fontStyle = "italic";
@@ -727,6 +748,8 @@
 				            	emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
 				            	emailCheckCodeSpan.style.color = "red";
 				            	emailCheckCodeSpan.style.fontStyle = "italic";
+				            	/* 顯示彈窗異常訊息 */
+	            				swal(emailCheckCodeStr, "", "error");
 				            }
 						});
 					}
