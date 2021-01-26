@@ -19,6 +19,7 @@ response.setCharacterEncoding("UTF-8");
 <%@include file="../Link_Meta-Include.jsp"%>
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css' type="text/css" />
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/LoadingScreen.css' type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <title>Product Page</title>
 <!-- 商城頁面 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
@@ -270,7 +271,13 @@ ul.slides li img {
 			type:"Get",
 			dataType:"TEXT",
 			success:function(obj){ 
-				window.alert('商品已加入購物車!');
+				Swal.fire({
+					  position: 'center',
+					  icon: 'success',
+					  title: '您的商品已加入溝物車',
+					  showConfirmButton: false,
+					  timer: 1500
+					})
 			},
 			error: function(xhr,ajaxOptions,thrownError){
 				console.log(xhr.status);
