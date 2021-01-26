@@ -34,9 +34,6 @@
 									value=<c:out value="${userFullData.accountLv.lv}"></c:out> />
 								<input type="hidden" name="userAccount" id="userAccount"
 									value=<c:out value="${userFullData.account}"></c:out> />
-								<c:if test="${operateMessage != null}">
-									<p><c:out value="${operateMessage}" /></p>
-								</c:if>
 								<hr />
 								<label>帳號名稱：</label> <input type="text" name="selectedAccount"
 									id="usrAccount" size="30" maxlength="30" onblur="checkAccountName()"
@@ -115,6 +112,7 @@
 						
 						<!-- 引用本地jQuery -->
 						<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+						<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 						<!-- 引用本頁檢查用js -->
 						<script src="${pageContext.request.contextPath}/js/webUser/WebUserSearchForm.js"></script>
 						<script>
@@ -146,6 +144,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pFirstBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -170,6 +169,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pPrevBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -194,6 +194,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pNextBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -218,6 +219,7 @@
 									selectAllUser();
 								});
 								$("#dataContainer").on("click", ".pLastBtn", function() {
+									var userLv = document.getElementById("userLv").value;
 									var accountObjValue = document.getElementById("usrAccount").value.trim();
 									var nicknameObjValue = document.getElementById("nickname").value.trim();
 									var fervorObj = document.getElementsByClassName("fervor");
@@ -294,7 +296,8 @@
 										} 
 									}
 								} else {
-									alert("檢查失敗！");
+									/* 顯示彈窗訊息 */
+				            		swal("檢查失敗！","","error");
 								}
 							};
 							
@@ -326,7 +329,7 @@
 												operateResultSpan.style.color = "black";
 												operateResultSpan.style.fontStyle = "normal";
 												/* 顯示彈窗訊息 */
-												alert(resultObj.resultMessage);
+												swal(resultObj.resultMessage,"","success");
 												/* 重新以Ajax寫出表格 */
 												selectAllUser();
 											} else if (resultObj.resultCode == 0) {
@@ -334,15 +337,15 @@
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 												operateResultSpan.style.color = "red";
 												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
+												/* 顯示彈窗訊息 */
+												swal(resultObj.resultMessage,"","error");
 											} else if (resultObj.resultCode == -1) {
 												operateResultStr = resultObj.resultMessage;
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 												operateResultSpan.style.color = "red";
 												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗異常訊息 */
-												alert(resultObj.resultMessage);
+												/* 顯示彈窗訊息 */
+												swal(resultObj.resultMessage,"","error");
 											}
 										},
 										error : function(err) {
@@ -350,8 +353,8 @@
 											operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
 											operateResultSpan.style.color = "red";
 											operateResultSpan.style.fontStyle = "italic";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(operateResultStr,"","error");
 										}
 									});
 								}
@@ -580,8 +583,8 @@
 											searchSpan.style.color = "red";
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(resultObj.resultMessage,"","error");
 										}
 									},
 									error : function(err) {
@@ -591,8 +594,8 @@
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							}
@@ -696,9 +699,9 @@
 																		+ "_" 
 																		+ userData.account 
 																		+ "_" 
-																		+ userData.status 
+																		+ userData.status
 																		+ "' style='background-color:#F0F0F0'>" 
-																		+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																		+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
 																		+ "</button>";
 														} else if (userData.status == 'quit') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
@@ -708,8 +711,8 @@
 																		+ "_" 
 																		+ userData.status
 																		+ "' style='background-color:#F0F0F0'>" 
-																		+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
-																		+ "</button>"
+																		+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																		+ "</button>";
 														} else if (userData.status == 'inactive') {
 															content += "<button type='button' class='activeBtn' id='actBtn" 
 																		+ userData.userId 
@@ -807,8 +810,8 @@
 											searchSpan.style.color = "red";
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(resultObj.resultMessage,"","error");
 										} else if (resultObj.resultCode == -1) {
 											searchStr = resultObj.resultMessage;
 											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
@@ -816,8 +819,8 @@
 											searchSpan.style.color = "red";
 											searchSpan.style.fontStyle = "italic";
 											dataContainer.innerHTML = "";
-											/* 顯示彈窗異常訊息 */
-											alert(resultObj.resultMessage);
+											/* 顯示彈窗訊息 */
+											swal(resultObj.resultMessage,"","error");
 										}
 									},
 									error : function(err) {
@@ -827,8 +830,8 @@
 										searchSpan.style.color = "red";
 										searchSpan.style.fontStyle = "italic";
 										dataContainer.innerHTML = "";
-										/* 顯示彈窗異常訊息 */
-										alert(searchStr);
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
 									}
 								});
 							}

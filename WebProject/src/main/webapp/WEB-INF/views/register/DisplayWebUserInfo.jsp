@@ -238,6 +238,7 @@
 				</form>
 				<!-- 引用本地jQuery -->
 				<script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
+				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 				<script src="<c:url value='/js/webUser/DisplayWebUserInfo.js' />"></script>
 				<script>
 					window.onload = function() {
@@ -268,12 +269,12 @@
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = true;
 										/* 顯示彈窗訊息 */
-					            		alert(confirmStr);
+					            		swal(confirmStr,"","success");
 									} else if (resultObj.resultCode != 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = false;
 										/* 顯示彈窗訊息 */
-					            		alert(confirmStr);
+					            		swal(confirmStr,"","error");
 									}
 									if (!confirmIsOk) {
 										confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
@@ -292,8 +293,8 @@
 									confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
 									confirmSpan.style.color = "red";
 									confirmSpan.style.fontStyle = "italic";
-				            		/* 顯示彈窗訊息 */
-				            		alert(confirmStr);
+									/* 顯示彈窗訊息 */
+				            		swal(confirmStr,"","error");
 								}
 							});
 						});
