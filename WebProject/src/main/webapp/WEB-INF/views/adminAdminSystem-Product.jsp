@@ -286,28 +286,31 @@
 										success : function(resultObj) {
 											if (resultObj.resultCode == 1) {
 												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = true;
+											} else if (resultObj.resultCode == 0) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											} else if (resultObj.resultCode == -1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											}
+											if (!operateResultIsOk) {
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");												
+											} else {
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
 														+ operateResultStr;
 												operateResultSpan.style.color = "black";
 												operateResultSpan.style.fontStyle = "normal";
 												/* 顯示彈窗訊息 */
 												swal(operateResultStr,"","success");
-												/* 重新以Ajax寫出表格 */
-												selectAllStore();
-											} else if (resultObj.resultCode == 0) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗訊息 */
-												swal(operateResultStr,"","error");
-											} else if (resultObj.resultCode == -1) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗訊息 */
-												swal(operateResultStr,"","error");
+												setTimeout(function() {
+													/* 重新以Ajax寫出表格 */
+													selectAllStore();
+												},1500);	
 											}
 										},
 										error : function(err) {

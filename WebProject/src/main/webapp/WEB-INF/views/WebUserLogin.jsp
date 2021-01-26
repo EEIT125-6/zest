@@ -337,68 +337,56 @@
 										if (resultObj.resultCode == 6) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 5) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 4) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 3) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 2) {
 											loginStr = "驗證成功！將導向新畫面";
 											loginIsOk = true;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","success");
 										} else if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
 						            		let loginSucMsg = resultObj.resultMessage;
 						            		if (resultObj.signInMessage != "") {
 						            			loginSucMsg += "\n" + resultObj.signInMessage;
-						            		} 
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginSucMsg,"","success");
+						            		}
+						            		/* 重新置換 */
+						            		loginStr = loginSucMsg;
 										} else if (resultObj.resultCode == 0) {
 											loginStr = "帳號或密碼錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if(resultObj.resultCode == -1) {
 						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	} else if(resultObj.resultCode == -2) {
 						            		loginStr = "帳號錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	} else if(resultObj.resultCode == -3) {
 						            		loginStr = "檢查途中遭遇錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	}
 										if (!loginIsOk) {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
 						            		loginSpan.style.color = "red";
 						            		loginSpan.style.fontStyle = "italic";
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","error");
 						            	} else {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 						            		loginSpan.style.color = "black";
 						            		loginSpan.style.fontStyle = "normal";
-						            		/* 跳轉 */
-						            		window.location.href = resultObj.nextPath;
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","success");
+						            		setTimeout(function() {
+						            			/* 跳轉 */
+						                		window.location.href = resultObj.nextPath;
+						            		},1500);
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";

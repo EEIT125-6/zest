@@ -268,15 +268,13 @@
 									if (resultObj.resultCode == 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = true;
-										/* 顯示彈窗訊息 */
-					            		swal(confirmStr,"","success");
 									} else if (resultObj.resultCode != 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = false;
-										/* 顯示彈窗訊息 */
-					            		swal(confirmStr,"","error");
 									}
 									if (!confirmIsOk) {
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","error");
 										confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
 										confirmSpan.style.color = "red";
 										confirmSpan.style.fontStyle = "italic";
@@ -284,8 +282,12 @@
 					            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
 					            		confirmSpan.style.color = "black";
 					            		confirmSpan.style.fontStyle = "normal";
-					            		/* 跳轉 */
-					            		window.location.href = resultObj.nextPath;
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","success");
+					            		setTimeout(function() {
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
+					            		},1500);
 					            	}
 								},
 								error : function(err) {

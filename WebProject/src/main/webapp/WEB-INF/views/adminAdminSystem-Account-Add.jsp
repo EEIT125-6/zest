@@ -249,30 +249,32 @@
 												if (resultObj.resultCode == 1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = true;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","success");
 												} else if (resultObj.resultCode == 0) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","error");
 												} else if (resultObj.resultCode == -1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","error");
 												}
 												if (!addResultIsOk) {
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","error");
 													addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 													addResultSpan.style.color = "red";
 													addResultSpan.style.fontStyle = "italic";
 								            	} else {
-								            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
-								            		addResultSpan.style.color = "black";
-								            		addResultSpan.style.fontStyle = "normal";
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","success");
+													setTimeout(function() {
+									            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
+									            		addResultSpan.style.color = "black";
+									            		addResultSpan.style.fontStyle = "normal";
+													},1500);
 								            	}
 											} else {
 												addResultStr = "發生錯誤，無法執行檢查";
+												/* 顯示彈窗訊息 */
+												swal(resultObj.resultMessage,"","error");
 												addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 												addResultSpan.style.color = "red";
 												addResultSpan.style.fontStyle = "italic";
@@ -309,18 +311,16 @@
 												if (resultObj.resultCode == 1) {
 													accountStr = "此帳號已有人使用！";
 								            		accountIsOk = false;
-								            		/* 顯示彈窗訊息 */
-													swal(accountStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													accountStr = "可建立此帳號！";
 								            		accountIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													accountStr = "檢查途中遭遇錯誤！";
 								            		accountIsOk = false;
-								            		/* 顯示彈窗訊息 */
-													swal(accountStr,"","error");
 												}
 												if (!accountIsOk) {
+								            		/* 顯示彈窗訊息 */
+													swal(accountStr,"","error");
 								            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 								            		accountSpan.style.color = "red";
 								            		accountSpan.style.fontStyle = "italic";
@@ -369,18 +369,16 @@
 												if (resultObj.resultCode == 1) {
 													nicknameStr = "此稱呼已有人使用！";
 													nicknameIsOk = false;
-													/* 顯示彈窗訊息 */
-								            		swal(resultObj.resultMessage,"","error");
 												} else if (resultObj.resultCode == 0) {
 													nicknameStr = "可使用此稱呼！";
 													nicknameIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													nicknameStr = "檢查途中遭遇錯誤！";
 													nicknameIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(resultObj.resultMessage,"","error");
 												}
 												if (!nicknameIsOk) {
+													/* 顯示彈窗訊息 */
+								            		swal(resultObj.resultMessage,"","error");
 													nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 													nicknameSpan.style.color = "red";
 													nicknameSpan.style.fontStyle = "italic";
@@ -429,18 +427,16 @@
 												if (resultObj.resultCode == 1) {
 													emailStr = "此電子信箱已有人使用！";
 								            		emailIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(emailStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													emailStr = "可使用此電子信箱！";
 								            		emailIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													emailStr = "檢查途中遭遇錯誤！";
 								            		emailIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(emailStr,"","error");
 												}
 												if (!emailIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(emailStr,"","error");
 								            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 								            		emailSpan.style.color = "red";
 								            		emailSpan.style.fontStyle = "italic";
@@ -489,18 +485,16 @@
 												if (resultObj.resultCode == 1) {
 													phoneStr = "此聯絡電話已有人使用！";
 								            		phoneIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(phoneStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													phoneStr = "可使用此聯絡電話！";
 								            		phoneIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													phoneStr = "檢查途中遭遇錯誤！";
 								            		phoneIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(phoneStr,"","error");
 												}
 												if (!phoneIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(phoneStr,"","error");
 								            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 								            		phoneSpan.style.color = "red";
 								            		phoneSpan.style.fontStyle = "italic";

@@ -354,9 +354,11 @@
 									if (resultObj.resultCode == "true") {
 										picStr = resultObj.resultMessage;
 										swal(picStr, "", "success");
-										picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
-										picSpan.style.color = "green";
-										picSpan.style.fontStyle = "normal";
+										setTimeout(function() {
+											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+											picSpan.style.color = "green";
+											picSpan.style.fontStyle = "normal";
+										},1500);
 									} else {
 										picStr = resultObj.resultMessage;
 										swal(picStr, "", "error");
@@ -401,9 +403,11 @@
 										if (resultObj.resultCode == "true") {
 											picStr = resultObj.resultMessage;
 											swal(picStr, "", "success");
-											picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
-											picSpan.style.color = "green";
-											picSpan.style.fontStyle = "normal";
+											setTimeout(function() {
+												picSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + picStr;
+												picSpan.style.color = "green";
+												picSpan.style.fontStyle = "normal";
+											},1500);
 										} else {
 											picStr = resultObj.resultMessage;
 											swal(picStr, "", "error");
@@ -495,22 +499,26 @@
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == 1) {
 				            		updateStr = resultObj.resultMessage;
-				            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
-				            		updateSpan.style.color = "black";
-				            		updateSpan.style.fontStyle = "normal";
-				            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
-				            		updateResultSpan.style.color = "black";
-				            		updateResultSpan.style.fontStyle = "normal";
+				            		/* 顯示彈窗訊息 */
+				            		swal(updateStr, "", "success");
+				            		setTimeout(function() {
+					            		updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr;
+					            		updateSpan.style.color = "black";
+					            		updateSpan.style.fontStyle = "normal";
+					            		updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + updateStr + "<hr />";
+					            		updateResultSpan.style.color = "black";
+					            		updateResultSpan.style.fontStyle = "normal";
+				            		},1500);
 				            	} else {
 				            		updateStr = resultObj.resultMessage;
+					            	/* 顯示彈窗訊息 */
+					            	swal(updateStr, "", "error");
 					            	updateSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr;
 					            	updateSpan.style.color = "red";
 					            	updateSpan.style.fontStyle = "italic";
 					            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 					            	updateResultSpan.style.color = "red";
 					            	updateResultSpan.style.fontStyle = "italic";
-					            	/* 顯示彈窗異常訊息 */
-					            	swal(updateStr, "", "error");
 				            	}
 				            },
 				            error:function(err) {
@@ -521,7 +529,7 @@
 				            	updateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + updateStr + "<hr />";
 				            	updateResultSpan.style.color = "red";
 				            	updateResultSpan.style.fontStyle = "italic";
-				            	/* 顯示彈窗異常訊息 */
+				            	/* 顯示彈窗訊息 */
 				            	swal(updateStr, "", "error");
 				            }
 						});
@@ -556,13 +564,13 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		nicknameStr = "檢查途中遭遇錯誤！";
 				            		nicknameIsOk = false;
-					            	/* 顯示彈窗異常訊息 */
-					            	swal(resultObj.resultMessage, "", "error");
 				            	}
 				            	if (!nicknameIsOk) {
 				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 				            		nicknameSpan.style.color = "red";
 				            		nicknameSpan.style.fontStyle = "italic";
+					            	/* 顯示彈窗訊息 */
+					            	swal(resultObj.resultMessage, "", "error");
 				            	} else {
 				            		nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + nicknameStr;
 				            		nicknameSpan.style.color = "black";
@@ -574,7 +582,7 @@
 				            	nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 				            	nicknameSpan.style.color = "red";
 				            	nicknameSpan.style.fontStyle = "italic";
-				            	/* 顯示彈窗異常訊息 */
+				            	/* 顯示彈窗訊息 */
 				            	swal(nicknameStr, "", "error");
 				            }
 						});
@@ -609,10 +617,10 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		emailStr = "檢查途中遭遇錯誤！";
 				            		emailIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-			            			swal(resultObj.resultMessage, "", "error");
 				            	}
 				            	if (!emailIsOk) {
+				            		/* 顯示彈窗訊息 */
+			            			swal(resultObj.resultMessage, "", "error");
 				            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            		emailSpan.style.color = "red";
 				            		emailSpan.style.fontStyle = "italic";
@@ -631,7 +639,7 @@
 				            	emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 				            	emailSpan.style.color = "red";
 				            	emailSpan.style.fontStyle = "italic";
-				            	/* 顯示彈窗異常訊息 */
+				            	/* 顯示彈窗訊息 */
 		            			swal(emailStr, "", "error");
 				            }
 						});
@@ -666,10 +674,10 @@
 				            	} else if (resultObj.resultCode == -1) {
 				            		phoneStr = "檢查途中遭遇錯誤！";
 				            		phoneIsOk = false;
-				            		/* 顯示彈窗異常訊息 */
-		            				swal(resultObj.resultMessage, "", "error");
 				            	}
 				            	if (!phoneIsOk) {
+				            		/* 顯示彈窗訊息 */
+		            				swal(resultObj.resultMessage, "", "error");
 				            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 				            		phoneSpan.style.color = "red";
 				            		phoneSpan.style.fontStyle = "italic";
@@ -716,15 +724,18 @@
 				            success:function(resultObj) {
 				            	if (resultObj.resultCode == "true") {
 				            		emailCheckCodeStr = resultObj.resultMessage;
+				            		/* 顯示彈窗訊息 */
 				            		swal(emailCheckCodeStr, "", "success");
-				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
-				            		emailCheckCodeSpan.style.color = "black";
-				            		emailCheckCodeSpan.style.fontStyle = "normal";
-				            		checkCodeStr = resultObj.resultText;
-				            		document.getElementById("checkCode").value = checkCodeStr;
+				            		setTimeout(function() {
+					            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+					            		emailCheckCodeSpan.style.color = "black";
+					            		emailCheckCodeSpan.style.fontStyle = "normal";
+					            		checkCodeStr = resultObj.resultText;
+					            		document.getElementById("checkCode").value = checkCodeStr;
+					            	},1500);
 				            	} else if (resultObj.resultCode == "false") {
 				            		emailCheckCodeStr = resultObj.resultMessage;
-				            		/* 顯示彈窗異常訊息 */
+				            		/* 顯示彈窗訊息 */
 		            				swal(emailCheckCodeStr, "", "error");
 				            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
 					            	emailCheckCodeSpan.style.color = "red";

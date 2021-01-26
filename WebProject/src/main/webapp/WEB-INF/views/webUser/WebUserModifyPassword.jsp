@@ -214,24 +214,26 @@
     											if (resultObj.resultCode == 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = true;
-    												/* 顯示彈窗訊息 */
-    												swal(confirmPasswordStr, "", "success");
     											} else if (resultObj.resultCode != 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = false;
-    												/* 顯示彈窗訊息 */
-    												swal(confirmPasswordStr, "", "error");
     											} 
     											if (!confirmPasswordIsOk) {
     												confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmPasswordStr;
     												confirmPasswordSpan.style.color = "red";
     												confirmPasswordSpan.style.fontStyle = "italic";
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "error");
     							            	} else {
     							            		confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmPasswordStr;
     							            		confirmPasswordSpan.style.color = "black";
     							            		confirmPasswordSpan.style.fontStyle = "normal";
-    							            		/* 跳轉 */
-    							            		window.location.href = resultObj.nextPath;
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "success");
+    												setTimeout(function() {
+	    							            		/* 跳轉 */
+	    							            		window.location.href = resultObj.nextPath;
+    												},1500);
     							            	}
     										} else {
     											confirmPasswordStr = "發生錯誤，無法執行檢查";

@@ -260,22 +260,24 @@
 				            	if(resultObj.resultCode == 'true') {
 				            		requestStr = "信件已成功寄出！";
 				            		requestIsOk = true;
-				            		/* 顯示彈窗訊息 */
-				            		swal(resultObj.resultMessage,"","success");
 				            	} else if(resultObj.resultCode == 'false') {
 				            		requestStr = "信件未能寄出！";
 				            		requestIsOk = false;
-				            		/* 顯示彈窗訊息 */
-				            		swal(resultObj.resultMessage,"","error");
 				            	}
 				            	if (!requestIsOk) {
+				            		/* 顯示彈窗訊息 */
+				            		swal(resultObj.resultMessage,"","error");
 				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + requestStr;
 				            		requestSpan.style.color = "red";
 				            		requestSpan.style.fontStyle = "italic";
 				            	} else {
-				            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + requestStr;
-				            		requestSpan.style.color = "black";
-				            		requestSpan.style.fontStyle = "normal";
+				            		/* 顯示彈窗訊息 */
+				            		swal(resultObj.resultMessage,"","success");
+				            		setTimeout(function() {
+					            		requestSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + requestStr;
+					            		requestSpan.style.color = "black";
+					            		requestSpan.style.fontStyle = "normal";
+				            		},1500);
 				            	}
 				            },
 				            error:function(err) {
