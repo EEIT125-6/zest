@@ -148,7 +148,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
 				<form method="post" enctype="multipart/form-data">
 					<fieldset>
 						<legend>以下為您可變更的資料：</legend>
@@ -167,8 +167,8 @@
                 		<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${selfData.iconUrl}">
 						<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
                 		<input type="hidden" name="newIconUrl" id="newIconUrl">
-                		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
-                		<button type="button" name="resetDefault" id="resetDefault" style="font-size:18x">回復預設 <i class="material-icons" style="font-size:18px;color:green">refresh</i></button>
+                		<button class="btn btn-info" type="button" name="uploadPic" id="uploadPic" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
+                		<button class="btn btn-info" type="button" name="resetDefault" id="resetDefault" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18x;color: black">回復預設 <i class="material-icons" style="font-size:18px;color:green">refresh</i></button>
                 		<span id="picSpan"></span>
                 		<hr />
 					</fieldset>
@@ -285,9 +285,13 @@
 					    <span id="updatedSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain"><button type="button" name="update" style="font-size:18px" >取消/返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
-						<button type="button" name="update" id="updateConfirm" style="font-size:18px" >資料修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+                		<a href="WebUserMain">
+                			<button class="btn btn-success" type="button" name="update" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >取消/返回 
+                				<i class="material-icons" style="font-size:18px;color:white">undo</i>
+                			</button>
+                		</a>
+						<button class="btn btn-primary" type="button" name="update" id="updateConfirm" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >資料修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning" type="reset" id="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>

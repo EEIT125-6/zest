@@ -148,7 +148,7 @@
             <%@include file = "Header-Include.jsp" %>
             <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
             	<c:if test="${userFullData.account != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
@@ -161,7 +161,7 @@
                 		<legend>請進行填寫下列資料以便重新取回您的帳號，如不確定可保持空白</legend>
                 		<hr />
                 		<div align="center">
-	                		<button type="button" id="userInput">一鍵輸入</button>
+	                		<button class="btn btn-primary" type="button" id="userInput" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px">一鍵輸入</button>
                 		</div>
                 		<hr />
                 		<label>帳號名稱：</label>
@@ -172,7 +172,7 @@
                 		<label>帳號密碼：</label>
                 		<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，6~30個字(選填)" />
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
                 		<label>聯絡信箱：</label>
@@ -193,9 +193,13 @@
 						<span id="requestSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="<c:url value='/WebUserLogin' /> "><button type="button" style="font-size:18px" id="login" name="login" >返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>  		
-						<button type="button" style="font-size:18px" id="recovery" name="recovery" >送出請求 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+                		<a href="<c:url value='/WebUserLogin' /> ">
+                			<button class="btn btn-success" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="login" name="login" >返回登入 
+                				<i class="material-icons" style="font-size:18px;color:white">undo</i>
+                			</button>
+                		</a>  		
+						<button class="btn btn-primary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="recovery" name="recovery" >送出請求 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning" type="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>

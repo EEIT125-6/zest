@@ -148,7 +148,7 @@
             <%@include file = "Header-Include.jsp" %>
             <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
                <c:if test="${userFullData.password != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
@@ -157,7 +157,7 @@
 						<legend>註冊相關資料</legend>
 						<hr />
                 		<div align="center">
-	                		<button type="button" id="userInput">一鍵輸入</button>
+	                		<button class="btn btn-primary" type="button" id="userInput" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px">一鍵輸入</button>
                 		</div>
                 		<c:if test="${id_token == null}">
                 			<c:redirect url="/WebUserLogin" />
@@ -291,9 +291,13 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<button type="submit" style="font-size:18px" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-						<a href="<c:url value='/WebUserLogin' /> "><button type="button" name="login" style="font-size:18px" >前往登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button class="btn btn-primary" type="submit" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning"type="reset" id="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="<c:url value='/WebUserLogin' /> ">
+							<button class="btn btn-success" type="button" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >前往登入 
+								<i class="material-icons" style="font-size:18px;color:white">undo</i>
+							</button>
+						</a>
 					</div>
 					<hr />
 				</form>

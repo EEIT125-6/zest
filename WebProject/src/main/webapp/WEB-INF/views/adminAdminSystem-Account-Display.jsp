@@ -13,7 +13,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -22,7 +23,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-		            <div class="container"  style="margin-top: 20px;background-color:#FFF;">
+		            <div class="container"  style="margin-top: 20px;background-color:#FFF;border-radius: 5px;">
 						<c:if test="${managedUserData.account == null}">
 							<c:redirect url="adminAccount" />
 						</c:if>
@@ -50,8 +51,8 @@
 		                		<label>圖示檔案：</label>
 								<input type="hidden" name="oldIconUrl" id="oldIconUrl" value="${managedUserData.iconUrl}">
 								<input type="file" name="iconUrl" id="iconUrl" data-target="iconUrl" accept="image/png, image/jpg, image/jpeg, image/gif" />
-		                		<button type="button" name="uploadPic" id="uploadPic" style="font-size:18px">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
-		                		<button type="button" name="resetDefault" id="resetDefault" style="font-size:18x">回復預設 <i class="material-icons" style="font-size:18px;color:green">refresh</i></button>
+		                		<button class="btn btn-info" type="button" name="uploadPic" id="uploadPic" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black">執行上傳 <i class="material-icons" style="font-size:18px;color:green">upload</i></button>
+		                		<button class="btn btn-info" type="button" name="resetDefault" id="resetDefault" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18x;color: black">回復預設 <i class="material-icons" style="font-size:18px;color:green">refresh</i></button>
 		                		<span id="picSpan"></span>
 								<hr />
 							</fieldset>
@@ -73,11 +74,11 @@
 								</c:if>
 								<c:if test="${managedUserData.password == null}">
 									<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
-									<button type="button" style="font-size:18px;display:none;" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+									<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black;display:none;" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 								</c:if>
 								<c:if test="${managedUserData.password != null}">
 									<input type="hidden" name="oldPassword" id="oldPassword" value="${managedUserData.password}">
-									<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+									<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 									<span id="passwordSpan"></span>
 									<hr />
 								</c:if>
@@ -208,9 +209,13 @@
 								<hr />
 							</fieldset>
 							<div align="center">
-								<button type="button" style="font-size:18px" id="updateAccount" >編輯帳號 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
-								<button type="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-								<a href="adminAccount"><button type="button" style="font-size:18px" >返回上一頁 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+								<button class="btn btn-primary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="updateAccount" >編輯帳號 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
+								<button class="btn btn-warning" type="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<a href="adminAccount">
+									<button class="btn btn-success" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回上一頁 
+										<i class="material-icons" style="font-size:18px;color:green">undo</i>
+									</button>
+								</a>
 								<hr />
 								<span id="operateResult"></span>
 							</div>

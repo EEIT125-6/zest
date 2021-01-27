@@ -148,7 +148,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
 				<c:if test="${userId == null}">
 					<c:redirect url="/WebUserLogin" />
 				</c:if>
@@ -160,21 +160,25 @@
 						<input type="hidden" name="userId" id="userId" value="${userId}" />
 						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>確認新密碼：</label> 
 						<input type="password" name="confirmPassword" id="confirmPassword" size="30" maxlength="30" onblur="checkConfirmPassword()"
 							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="confirmPasswordSpan"></span>
 						<hr />
 						<span id="resetSpan"></span>
                 	</fieldset>
                 	<div align="center">
-                		<a href="<c:url value='/WebUserLogin'/> "><button type="button" name="update" style="font-size:18px" >取消/返回登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
-						<button type="button" id="sendReset" name="update" style="font-size:18px" >密碼重設完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+                		<a href="<c:url value='/WebUserLogin'/> ">
+                			<button class="btn btn-success" type="button" name="update" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >取消/返回登入 
+                				<i class="material-icons" style="font-size:18px;color:white">undo</i>
+               				</button>
+          				</a>
+						<button class="btn btn-primary" type="button" id="sendReset" name="update" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >密碼重設完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning" type="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 					</div>
 					<hr />
                 </form>

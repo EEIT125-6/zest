@@ -13,7 +13,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -22,7 +23,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-		            <div class="container"  style="margin-top: 20px;background-color:#FFF;">
+		            <div class="container"  style="margin-top: 20px;background-color:#FFF;border-radius: 5px;">
 		               <c:if test="${userFullData.accountLv.lv != -1}">
 							<c:redirect url="WebUserLogin" />
 						</c:if>
@@ -55,7 +56,7 @@
 								<label>帳號密碼：</label> 
 								<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 									placeholder="請輸入密碼，6~30個字" required="required" />
-								<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+								<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 								<span id="passwordSpan"></span>
 								<hr />
 								<label>中文姓氏：</label>
@@ -150,9 +151,9 @@
 							    <hr />
 							</fieldset>
 							<div align="center">
-								<button type="button" style="font-size:18px" id="add" name="add" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-								<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-								<a href="<c:url value='/adminAccount' /> "><button type="button" name="login" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+								<button class="btn btn-primary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="add" name="add" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+								<button class="btn btn-warning" type="reset" id="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<a href="<c:url value='/adminAccount' /> "><button class="btn btn-success" type="button" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 								<span id="addResultSpan"></span>
 							</div>
 							<hr />

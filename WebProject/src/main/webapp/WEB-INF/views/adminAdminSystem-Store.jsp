@@ -14,7 +14,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -23,7 +24,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-					<div class="container" style="margin-top: 20px;background-color: #FFF;">
+					<div class="container" style="margin-top: 20px;background-color: #FFF;border-radius: 5px;">
 						<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 						<input type="hidden" id="pageNo" value="1" />
 						<input type="hidden" id="maxPage" value="1" />
@@ -78,11 +79,14 @@
 									<option value="20" label="20">
 								</select>
 								<a href="adminBack">
-									<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+									<button class="btn btn-success" type="button" id="back" name="back" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回 
+										<i class="material-icons" style="font-size:18px;color:green">undo</i>
+									</button>
 								</a> 
-								<button type="button" id="search" name="select" style="font-size:18px" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
-								<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<button class="btn btn-primary" type="button" id="search" name="select" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+								<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 							</div>
+							<hr />
 						</form>
 						<div align="center">
 							<span id="searchSpan"></span>
@@ -494,6 +498,8 @@
 															+ "最末頁"
 															+ "</button>";
 												}
+												
+												content += "<hr />";
 											} 
 											
 											dataContainer.innerHTML = content;
@@ -718,6 +724,8 @@
 															+ "最末頁"
 															+ "</button>";
 												}
+												
+												content += "<hr />";
 											} 
 											
 											dataContainer.innerHTML = content;

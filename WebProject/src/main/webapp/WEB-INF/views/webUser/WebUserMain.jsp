@@ -147,7 +147,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
 				<input type="hidden" id="password" value="${userFullData.password}" />
 				<input type="hidden" id="leavePath" value="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout" />
                 <form action="<c:url value='/webUser/WebUserModifyData' />" method="POST">
@@ -162,32 +162,36 @@
                 			</c:if>
             			</legend>
                			<hr />
-               			<button type="submit" id="updateData" style="font-size:18px" >修改資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
+               			<button class="btn btn-primary" type="submit" id="updateData" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >修改資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
                 			<a href="<c:url value='/Insert' />">
-                				<button type="button" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
+                				<button class="btn btn-info" type="button" id="addShop" name="addShop" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 			</a>
                 		</c:if>
                 		<c:if test="${userFullData.password != null}">
 	                		<a href="<c:url value='/webUser/controller/WebUserModifyPassword' />">
-	                			<button type="button" name="updatePassword" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
+	                			<button class="btn btn-warning" type="button" name="updatePassword" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
 	               			</a>
                			</c:if>
                 		<a href="<c:url value='/booking/Page1' />">
-                			<button type="button" id="checkBooking" name="checkBooking" style="font-size:18px" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
+                			<button class="btn btn-dark" type="button" id="checkBooking" name="checkBooking" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
                 		</a>
                 		<a href="<c:url value='/orange/ShowComment' />">
-                			<button type="button" id="checkComment" name="checkComment" style="font-size:18px" >查詢留言 <i class="material-icons" style="font-size:18px;color:blue">forum</i></button>
+                			<button class="btn btn-secondary" type="button" id="checkComment" name="checkComment" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢留言 
+                				<i class="material-icons" style="font-size:18px;color:blue">forum</i>
+                			</button>
                 		</a>
                 		
 <!--                 	<button type="button" id="myFavorite" name="myFavorite" style="font-size:18px" >我的最愛 <i class="material-icons" style="font-size:18px;color:blue">favorite</i></button> -->
                 		
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
                 			<a href="<c:url value='/booking/admin2'/>">
-                				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
+                				<button class="btn btn-info" type="button" id="manage" name="manage" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
-                			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
+                			<button class="btn btn-success" type="button" id="logout" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >登出帳戶 
+                				<i class="material-icons" style="font-size:18px;color:white">power</i>
+                			</button>
 						<hr />
                 	</fieldset>
                 </form>
