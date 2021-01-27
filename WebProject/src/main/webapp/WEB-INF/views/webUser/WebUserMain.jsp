@@ -174,7 +174,7 @@
 	               			</a>
                			</c:if>
                 		<a href="<c:url value='/booking/Page1' />">
-                			<button class="btn btn-dark" type="button" id="checkBooking" name="checkBooking" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
+                			<button class="btn btn-secondary" type="button" id="checkBooking" name="checkBooking" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
                 		</a>
                 		<a href="<c:url value='/orange/ShowComment' />">
                 			<button class="btn btn-secondary" type="button" id="checkComment" name="checkComment" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢留言 
