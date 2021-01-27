@@ -119,7 +119,7 @@ public class WebUserServiceImpl implements WebUserService {
 		checkAccountQuit = webUserDAO.checkAccountQuit(inputAccount);
 		/* 帳號棄用就不繼續往下執行 */
 		if (checkAccountQuit != 1) {
-			throw new SQLException("該帳號已停用！請選擇其他帳號登入或註冊一個新帳號");
+			throw new SQLException("該帳號已停用或尚未啟用！請選擇其他帳號登入、註冊一個新帳號或通知技術人員");
 		} else {
 			checkLoginResult++;
 		}

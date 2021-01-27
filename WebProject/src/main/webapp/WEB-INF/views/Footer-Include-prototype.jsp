@@ -13,8 +13,8 @@
                       <!-- Grid column -->
                       <div class="col-md-4 col-lg-3 mr-auto my-md-4 my-0 mt-4 mb-1">
                 
-                        <!-- Content -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">More Content</h5>
+<!--                         Content -->
+                        <h5 class="font-weight-bold text-uppercase mb-4">更多資訊</h5>
                         <p>商務合作</p>
                         <p>	餐飲代理商招募<br>
                         	商業企劃<br>
@@ -32,7 +32,7 @@
                       <div class="col-md-2 col-lg-2 mx-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Links -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">ABOUT</h5>
+                        <h5 class="font-weight-bold text-uppercase mb-4">關於我們</h5>
                 
                         <ul class="list-unstyled">
                           <li>
@@ -66,16 +66,16 @@
                       <div class="col-md-4 col-lg-3 mx-auto my-md-4 my-0 mt-4 mb-1">
                 
                         <!-- Contact details -->
-                        <h5 class="font-weight-bold text-uppercase mb-4">Address</h5>
+                        <h5 class="font-weight-bold text-uppercase mb-4">聯絡地址</h5>
                 
                         <ul class="list-unstyled">
                           <li>
                             <p>
-                              <i class="fas fa-home mr-3"></i> 四川 中壢 </p>
+                              <i class="fas fa-home mr-3"></i>桃園市中壢區中大路300號</p>
                           </li>
                           <li>
                             <p>
-                              <i class="fas fa-envelope mr-3"></i> zestinfo@google.com</p>
+                              <i class="fas fa-envelope mr-3"></i> projecteeit1256@gmail.com</p>
                           </li>
                           <li>
                             <p>

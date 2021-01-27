@@ -338,7 +338,8 @@ a.mobile-show {
 		</div>
 <!-- end search arewa -->
             <div class="container"  style="margin-top: 20px;">
-            		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
+<!--             		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div> -->
+                	<div class="container" style="font-family: 'Microsoft JhengHei', cursive;font-size:145%;font-weight:bold;">餐廳分類</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;height:170px">
    <c:url value="StoreGetClassstore" var="riceURL">
    <c:param name="sclass" value="中式"/>
@@ -392,7 +393,8 @@ a.mobile-show {
 <%-- <sql:query dataSource="${ds}" var="rsbanner"> --%>
 <!--          select top(4) bannerurl,stname,id  from Store  ORDER BY NEWID() -->
 <%-- </sql:query> --%>
-		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Recommended carousel</div>
+<!-- 		<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Recommended carousel</div> -->
+          	<div class="container" style="font-family: 'Microsoft JhengHei', cursive;font-size:145%;font-weight:bold;">美食跑馬燈</div>
                 <div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;">
                 	    <div id="wrapper1" class="wrapper">
         <ul class="slides">
@@ -485,7 +487,8 @@ a.mobile-show {
 <%-- <sql:query dataSource="${ds}" var="rsphoto"> --%>
 <!--          select top(6) photourl,stname,id  from Store  ORDER BY NEWID() -->
 <%-- </sql:query> --%>
-           				<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Food recommendation</div>
+<!--            				<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Food recommendation</div> -->
+                		<div class="container" style="font-family: 'Microsoft JhengHei', cursive;font-size:145%;font-weight:bold">熱搜好店</div>
                 		<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 140%;font-family: 'Noto Sans TC', sans-serif;">
                 		
 	                		<c:forEach var="row" items="${ADP}">
@@ -497,27 +500,27 @@ a.mobile-show {
 	                  		</c:forEach>
                   		</div>
                   
-                <div class="row" style="color:black;" >
-                  <div class="col-sm-4">
-                    <h3>最新美食文章</h3>
-                    <p>The naturally fermented tofu is tender!</p>
-                    <p>
-Recommend Lin Kee Spicy Duck Blood Stinky Tofu, which features cabbage. The soup is sweet and not too strong. The naturally fermented tofu is tender! This home has its own characteristics! Lin Ji is great and the service is also very good
-</p>
-                  </div>
-                  <div class="col-sm-4">
-                    <h3>優質餐廳 x 優質部落客</h3>
-                    <p>Quality restaurant x quality blogger cooperation</p>
-                    <p>
-Hey son, eat cakes Taichung Tablet House│The popular check-in sweets and snacks in Tainan are now in Taichung! There are different tastes every day, just in the alley next to Zhongyou Department Store in Yizhong Business District~
-</p>
-                  </div>
-                  <div class="col-sm-4">
-                    <h3>部落客合作洽詢</h3>        
-                    <p>Blogger cooperation</p>
-                    <p>Triple PONDER COFFEE Ponder Coffee‧Ecstasy Back to Gan Coffee X New Zealand Dessert X Enjoy a Happy Time</p>
-                  </div>
-                </div>
+<!--                 <div class="row" style="color:black;" > -->
+<!--                   <div class="col-sm-4"> -->
+<!--                     <h3>最新美食文章</h3> -->
+<!--                     <p>The naturally fermented tofu is tender!</p> -->
+<!--                     <p> -->
+<!-- Recommend Lin Kee Spicy Duck Blood Stinky Tofu, which features cabbage. The soup is sweet and not too strong. The naturally fermented tofu is tender! This home has its own characteristics! Lin Ji is great and the service is also very good -->
+<!-- </p> -->
+<!--                   </div> -->
+<!--                   <div class="col-sm-4"> -->
+<!--                     <h3>優質餐廳 x 優質部落客</h3> -->
+<!--                     <p>Quality restaurant x quality blogger cooperation</p> -->
+<!--                     <p> -->
+<!-- Hey son, eat cakes Taichung Tablet House│The popular check-in sweets and snacks in Tainan are now in Taichung! There are different tastes every day, just in the alley next to Zhongyou Department Store in Yizhong Business District~ -->
+<!-- </p> -->
+<!--                   </div> -->
+<!--                   <div class="col-sm-4"> -->
+<!--                     <h3>部落客合作洽詢</h3>         -->
+<!--                     <p>Blogger cooperation</p> -->
+<!--                     <p>Triple PONDER COFFEE Ponder Coffee‧Ecstasy Back to Gan Coffee X New Zealand Dessert X Enjoy a Happy Time</p> -->
+<!--                   </div> -->
+<!--                 </div> -->
               </div>
     
 <!-- ---------------------------------------- -->

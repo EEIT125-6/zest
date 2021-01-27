@@ -1279,7 +1279,6 @@ public class WebUserController {
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
 			@PathVariable(value = "mode", required = false) String mode,
 			HttpServletRequest request) {
-		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
@@ -1324,7 +1323,7 @@ public class WebUserController {
 						if (operateResult == 1) {
 							Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
 							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常情況 */
-							if (userMap.isEmpty()) {
+							if (userMap == null) {
 								operateResult = 0;
 								operateMessage = "發生異常！請考慮重新登入本系統或聯絡技術人員";
 							} else {
@@ -1349,8 +1348,9 @@ public class WebUserController {
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
 					} catch (Exception e) {
+						e.printStackTrace();
 						String quitMessageTmp = e.getMessage();
-						operateMessage = quitMessageTmp.split(":")[1];
+						operateMessage = (quitMessageTmp.indexOf(":") == -1) ? quitMessageTmp : quitMessageTmp.split(":")[1];
 					}
 					break;
 				case "active":

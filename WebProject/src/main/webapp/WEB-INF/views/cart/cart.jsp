@@ -366,7 +366,8 @@ ul.slides li img {
 			 				  showCancelButton: true,
 			 				  confirmButtonColor: '#3085d6',
 			 				  cancelButtonColor: '#d33',
-			 				  confirmButtonText: '確定'
+			 				  confirmButtonText: '確定',
+			 				  cancelButtonText: '取消'
 			 				}).then((result) => {
 			 				  if (result.isConfirmed) {			 					  
 			 					 $("form").eq(1).attr("action","/WebProject/controller/checkout?purchaseInfo="+s+"&totalValue="+m).submit();	
@@ -416,7 +417,8 @@ ul.slides li img {
 		 				  showCancelButton: true,
 		 				  confirmButtonColor: '#3085d6',
 		 				  cancelButtonColor: '#d33',
-		 				  confirmButtonText: '確定'
+		 				  confirmButtonText: '確定',
+		 				  cancelButtonText: '取消',
 		 				}).then((result) => {
 		 					$.ajax({
 								url : "/WebProject/controller/itemremove",

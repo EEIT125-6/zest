@@ -255,7 +255,8 @@ ul.slides li img {
 				<td>${product.product_price}</td>
 				<td class="addtocart"
 					style="margin-top: 66px; display: block; text-align: center;">
-					<button id="addItem" onclick="itemAdd(${product.product_id});">加入購物車</button>
+					<span id="addItem" onclick="itemAdd(${product.product_id});">加入購物車</span>
+<%-- 					<button id="addItem" onclick="itemAdd(${product.product_id});">加入購物車</button> --%>
 				</td>
 			</tr>
 		</c:forEach>

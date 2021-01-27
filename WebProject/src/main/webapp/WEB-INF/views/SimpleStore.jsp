@@ -266,7 +266,8 @@ a.mobile-show {
             <div class="container-fluid" style="padding: 0%;background: url('Images/hero-bg.jpg');height:540px;padding-top: 220px;background-size:100%">
             </div>
 	<div class="container" style="margin-top:10px">
-	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div>
+<!-- 	<div class="container" style="font-family: 'Nerko One', cursive;font-size:145%;">Restaurant category</div> -->
+	<div class="container" style="font-family: 'Microsoft JhengHei', cursive;font-size:145%;font-weight:bold;">餐廳分類</div>
 	<div class="jumbotron row" style="padding: 25px; background-color: white;font-size: 150% ;height:170px">
 			<c:set var="storeClass" value="${sclass}"></c:set>
 
@@ -365,7 +366,7 @@ a.mobile-show {
 	        <!-- 用container -->
 	        <form action="############################" method="post" >
 	            <fieldset style="width: auto;margin:1px auto;">
-	                <legend>排序:</legend>
+	                <legend style="font-family: 'Microsoft JhengHei';font-weight:bold;">排序:</legend>
 	                <label>依據時間排序
 	                </label>
 	                <br>
@@ -390,7 +391,7 @@ a.mobile-show {
 	        <!-- 用container -->
 	        <form action="############################" method="post" >
 	            <fieldset style="width: auto;margin:1px auto;">
-	                <legend>篩選條件</legend>
+	                <legend style="font-family: 'Microsoft JhengHei';font-weight:bold;">篩選條件</legend>
 	                
 	                
 					<br>
@@ -410,7 +411,7 @@ a.mobile-show {
 	  					<label for="d5"><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i><i class="fas fa-dollar-sign" style = "font-size:20px;color:green"></i></label>
 	  				<br>
 	                <hr>
-	                <label>欲查詢幾顆星以上店家
+	                <label style="font-family: 'Microsoft JhengHei';font-weight:bold;">欲查詢幾顆星以上店家
 	                </label>
 					<br>
 						<input type="radio" id="star3.5" name="star" value='3.5' >
