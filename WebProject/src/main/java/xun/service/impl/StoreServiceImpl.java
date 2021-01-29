@@ -249,6 +249,12 @@ public class StoreServiceImpl implements StoreService {
 		return dao.getMemberAllStore(webUserData);
 	}
 	
+	@Transactional
+	@Override
+	public void removeComment(StoreBean sb) {
+		dao.removeComment(sb);
+	}
+	
 	/* 下架/上架商店(利用回傳值確認是否成功) By George017 2021/01/23 */
 	@Transactional
 	@Override

@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -20,76 +18,43 @@ public class GlobalService {
 	public static String SYSTEM_PHOTO_PATH;
 	
 	public static String getUploadProductPhotoPath() {
-		List<String> photourl =	Arrays.asList(
-				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
-				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
-				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
-				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\WEB-INF\\views\\images\\productInfo\\images\\"
-				);
-		for(String pUrl : photourl) {
-			File pUF = new File(pUrl);
-			if(pUF.exists()) {
-				return pUrl;			
-			}else {
-				String failUrl = "C:/photoTemp";
-				File fail = new File(failUrl);
-				if(!fail.exists()) {
-						fail.mkdirs();
-				failUrl = failUrl + "/";
-				return failUrl;
-				}
+		File productPhotoDir = new File("src/main/webapp/WEB-INF/views/images/productInfo/images");
+		if (productPhotoDir.exists()) {
+			return productPhotoDir.getAbsolutePath()+"/";
+		} else {
+			if(productPhotoDir.mkdir()) {
+				return productPhotoDir.getAbsolutePath()+"/";
+			} else {
+				return null;
 			}
 		}
-		return null;	
 	}
 	
 	public static String getUploadStorePhotoPath() {
-		List<String> photourl =	Arrays.asList(
-				"C:\\JavaMVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
-				,"C:\\ProjectGithub\\zest\\WebProject\\src\\main\\webapp\\Images\\"
-				,"H:\\MVCWorkspace\\WebProject\\src\\main\\webapp\\Images\\"
-				,"C:\\Users\\Tony Chi\\Desktop\\Programming\\JAVA Stuff\\AdvancedWork\\For Rehersal\\src\\main\\webapp\\Images\\"
-				);
-		for(String pUrl : photourl) {
-			File pUF = new File(pUrl);
-			if(pUF.exists()) {
-				return pUrl;			
-			}else {
-				String failUrl = "C:/photoTemp";
-				File fail = new File(failUrl);
-				if(!fail.exists()) {
-						fail.mkdirs();
-				failUrl = failUrl + "/";
-				return failUrl;
-				}
+		File storePhotoDir = new File("src/main/webapp/Images");
+		if (storePhotoDir.exists()) {
+			return storePhotoDir.getAbsolutePath()+"/";
+		} else {
+			if(storePhotoDir.mkdir()) {
+				return storePhotoDir.getAbsolutePath()+"/";
+			} else {
+				return null;
 			}
-		}
-		return null;	
+		}	
 	}
 	
 	/* 取得UserIcon的實體路徑 By George017 */
 	public static String getUploadUserIconPath() {
-		List<String> photourl =	Arrays.asList(
-				"C:/JavaMVCWorkspace/WebProject/src/main/webapp/WEB-INF/views"
-				,"C:/ProjectGithub/zest/WebProject/src/main/webapp/WEB-INF/views"
-				,"H:/MVCWorkspace/WebProject/src/main/webapp/WEB-INF/views"
-				,"C:/Users/Tony Chi/Desktop/Programming/JAVA Stuff/AdvancedWork/For Rehersal/src/main/webapp/WEB-INF/views"
-				);
-		for(String pUrl : photourl) {
-			File pUF = new File(pUrl);
-			if(pUF.exists()) {
-				return pUrl;			
-			}else {
-				String failUrl = "C:/photoTemp";
-				File fail = new File(failUrl);
-				if(!fail.exists()) {
-						fail.mkdirs();
-				failUrl = failUrl + "/";
-				return failUrl;
-				}
+		File iconDir = new File("src/main/webapp/Images");
+		if (iconDir.exists()) {
+			return iconDir.getAbsolutePath()+"/";
+		} else {
+			if(iconDir.mkdir()) {
+				return iconDir.getAbsolutePath()+"/";
+			} else {
+				return null;
 			}
 		}
-		return null;	
 	}
 	
 	/* 圖像檔案處理 */

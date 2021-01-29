@@ -30,8 +30,8 @@ public interface ProductDao {
 	/* 取出所有商品列表 By George017 2021/01/25 */
 	List<ProductInfoBean> getAllProduct();
 	
-	/* 取出所有此帳號的商店的商品列表 By George017 2021/01/25 */
-	List<ProductInfoBean> getAllProductByUserId(String userId);
+	/* 取出所有商品列表(分頁用) By George017 2021/01/29*/
+	List<ProductInfoBean> getAllProduct(String selectedParameters, Integer avPage, Integer startPage);
 	
 	/* 下架/上架商品(利用回傳值確認是否成功) By George017 2021/01/25 */
 	public Integer productChange(Integer productId, String status);

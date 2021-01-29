@@ -4,11 +4,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file = "../Link_Meta-Include.jsp" %>
-<title>訂位紀錄</title>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
 <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
+<%@include file = "../Link_Meta-Include.jsp" %>
+<title>訂位紀錄</title>
       <style>
       	/* Table cellpadding */
     	th, td { padding: 1; }
@@ -158,17 +158,17 @@
 <div align="center">
 <h2>訂位紀錄 : </h2>
 <p>請選擇欲修改之項目</p>
-<form name="form1" action="<c:url value='/booking/confirmUpd'/>" method="post" onSubmit="return egg();" >
+<form name="form1" method="post" >
 <input type="hidden" name="finalDecision" value="" > 
-<input type="hidden" name="purpose" value="${bean.purpose}">
+<input type="hidden" name="purpose" id="purpose" value="${bean.purpose}">
 <input type="hidden" name="status" value="${bean.status}">
+<input type="hidden" name="user_id" value="${bean.user_id}">
+<input type="hidden" name="bookingNo" id="bookingNo" value="${bean.bookingNo}">
+<input type="hidden" name="restaurant" id="restaurant" value="${bean.restaurant}">
 <c:if test="${bean.status == 0}">
 	<c:redirect url='updateResult'/>	
 </c:if>
 
-<input type="hidden" name="user_id" value="${bean.user_id}">
-<input type="hidden" name="bookingNo" value="${bean.bookingNo}">
-<input type="hidden" name="restaurant" value="${bean.restaurant}">
 
 <table border="1" style="border:8px #FFD382 groove;width:500px;">
 <tr bgcolor="#FFFFE1">
@@ -184,74 +184,155 @@
 	<td><input type="text" name="bookingdate" id="datepicker1" value="${bean.bookingdate}"></td></tr>
 <tr bgcolor="#F2F4FB">
     <td>時間:</td>
-    <td><input type="text" name="time" value="${bean.time}"></td>
-			
+    <td><input type="text" name="time" id="time" value="${bean.time}"></td>
 </tr>
 <tr bgcolor="#FFFFE1">
     <td>人數:</td>
-	<td><input type="text" name="number" value="${bean.number}"></td>   
+	<td><input type="text" name="number" id="number" value="${bean.number}"></td>   
 </tr>
 <tr bgcolor="#F2F4FB">
     <td>姓名:</td>
-    <td><input type="text" name="name" value="${bean.name}"></td>
+    <td><input type="text" name="name" id="name" value="${bean.name}"></td>
 </tr>
 <tr bgcolor="#FFFFE1">
     <td>手機:</td>
-    <td><input type="text" name="phone" value="${bean.phone}"></td>
-    
+    <td><input type="text" name="phone" id="phone" value="${bean.phone}"></td>    
 </tr>
 <tr bgcolor="#F2F4FB">
     <td>e-mail:</td>
-    <td><input type="text" name="mail" value="${bean.mail}"></td>
-    
+    <td><input type="text" name="mail" id="email" value="${bean.mail}"></td>    
 </tr>
 <tr bgcolor="#FFFFE1">
     <td>特殊需求:</td>
-    <td><input type="text" name="needs" value="${bean.needs}"></td>
-
+    <td><input type="text" name="needs" id="needs" value="${bean.needs}"></td>
 </tr>
-
 </table>
 <label class="aa">
-	<input type="submit" value="確認修改" name='confirmUpd' style="border-radius: 3px; border: none; outline: none;"> 
+	<button type='button' onclick='update()' style="border-radius: 3px; border: none; outline: none;" >確認修改</button>  
 </label>
 <label class="aa">
-	<input type="submit" value="刪除此筆訂位" name='cancel' id="cancel" style="border-radius: 3px; border: none; outline: none;">
+	<button type='button' onclick='cancel()' style="border-radius: 3px; border: none; outline: none;">刪除此筆訂位</button>
 </label>
 </form>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script >
-    $(document).ready(function(){
-      $.datepicker.regional['zh-TW']={
-        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
-        dayNamesMin:["日","一","二","三","四","五","六"],
-        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-        prevText:"上月",
-        nextText:"次月",
-        weekHeader:"週"
-        };
-      $.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
-      $("#datepicker1").datepicker({
-    	  minDate: new Date(),
-    	  dateFormat:'yy-mm-dd' });
-      });
- 
-</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script type="text/javascript">
+<script >
+	$(document).ready(function(){
+		$.datepicker.regional['zh-TW']={
+	        dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
+	        dayNamesMin:["日","一","二","三","四","五","六"],
+	        monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+	        monthNamesShort:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+	        prevText:"上月",
+	        nextText:"次月",
+	        weekHeader:"週"
+	    };
+		$.datepicker.setDefaults($.datepicker.regional["zh-TW"]);
+		$("#datepicker1").datepicker({
+	    	minDate: new Date(),
+	    	dateFormat:'yy-mm-dd' });
+	});
+
+	function update(){ 
+		var bookingNo=$("#bookingNo").val();
+			var restaurant=$("#restaurant").val();
+			var bookingdate=$("#datepicker1").val();
+			var time=$("#time").val();
+			var number=$("#number").val();
+			var name=$("#name").val();
+			var phone=$("#phone").val();
+			var mail=$("#email").val();
+			var name=$("#name").val();
+			var needs=$("#needs").val();
+			var purpose=$("#purpose").val();
+			if(egg()){
+		 	$.ajax({
+				type : "POST",
+				url : "<c:url value='/booking/confirmUpd'/>",
+				data : {
+					'bookingNo':bookingNo,
+					'restaurant':restaurant,
+					'bookingdate':bookingdate,
+					'time':time,
+					'number':number,
+					'name':name,
+					'phone':phone,
+					'mail':mail,
+					'needs':needs,
+					'purpose':purpose
+				},
+				dataType : "json",
+				success : function(resultObj) {
+					let result=resultObj;
+					if(result){ 
+						swal("訂位修改完成", "將會發送訂位資訊至您的e-mail", "success");
+						setTimeout(function(){
+							window.location.href="<c:url value='Page1'/>";
+						},3000);
+				 	}else{
+				 		swal("failed", "", "warning");
+				 	}
+				}
+			});  
+	 	}
+	}
+	
+	function cancel(){
+		var bookingNo=$("#bookingNo").val();
+			var restaurant=$("#restaurant").val();
+			var bookingdate=$("#datepicker1").val();
+			var time=$("#time").val();
+			var number=$("#number").val();
+			var name=$("#name").val();
+			var phone=$("#phone").val();
+			var mail=$("#email").val();
+			var name=$("#name").val();
+			var needs=$("#needs").val();
+			var purpose=$("#purpose").val();
+			if(egg()){
+		 	$.ajax({
+				type : "POST",
+				url : "<c:url value='/booking/cancel'/>",
+				data : {
+					'bookingNo':bookingNo,
+					'restaurant':restaurant,
+					'bookingdate':bookingdate,
+					'time':time,
+					'number':number,
+					'name':name,
+					'phone':phone,
+					'mail':mail,
+					'needs':needs,
+					'purpose':purpose
+				},
+				dataType : "json",
+				success : function(resultObj) {
+					let result=resultObj;
+					if(result){ 
+						swal("您的預約已取消！", "", "success");
+						setTimeout(function(){
+							window.location.href="<c:url value='Page1'/>";
+						},3000);
+				 	}else{
+				 		swal("failed", "", "warning");
+				 	}
+				}
+			});  
+		}
+	}
+	
 	function egg() {
-			var dateTime=new Date();
-			dateTime=dateTime.setDate(dateTime.getDate()+1);
-			dateTime=new Date(dateTime); //當天日期加一天
-			var bookingdate = document.forms["form1"].bookingdate.value;
-			if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
-				swal("已超過修改/取消訂位的時限！", "", "error");
-				return false;
-			} 
-			return true;
-} 
+		var dateTime=new Date();
+		dateTime=dateTime.setDate(dateTime.getDate()+1);
+		dateTime=new Date(dateTime); //當天日期加一天
+		var bookingdate = document.forms["form1"].bookingdate.value;
+		if ((Date.parse(dateTime)).valueOf()>=(Date.parse(bookingdate)).valueOf()) {
+			swal("已超過修改/取消訂位的時限！", "", "error");
+			return false;
+		} 
+		return true;
+	} 
 </script>        
 </div> 
   <!-- -------------------------------------------------------------- -->

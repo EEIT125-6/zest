@@ -148,7 +148,7 @@
             <%@include file = "Header-Include.jsp" %>
             <%@include file = "LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
                <c:if test="${userFullData.password != null}">
 					<c:redirect url="/webUser/WebUserMain" />
 				</c:if>
@@ -157,7 +157,7 @@
 						<legend>註冊相關資料</legend>
 						<hr />
                 		<div align="center">
-	                		<button type="button" id="userInput">一鍵輸入</button>
+	                		<button class="btn btn-primary" type="button" id="userInput" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px">一鍵輸入</button>
                 		</div>
                 		<c:if test="${id_token == null}">
                 			<c:redirect url="/WebUserLogin" />
@@ -291,9 +291,13 @@
 					    <hr />
 					</fieldset>
 					<div align="center">
-						<button type="submit" style="font-size:18px" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-						<a href="<c:url value='/WebUserLogin' /> "><button type="button" name="login" style="font-size:18px" >前往登入 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button class="btn btn-primary" type="submit" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="submit" name="register" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning"type="reset" id="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<a href="<c:url value='/WebUserLogin' /> ">
+							<button class="btn btn-success" type="button" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >前往登入 
+								<i class="material-icons" style="font-size:18px;color:white">undo</i>
+							</button>
+						</a>
 					</div>
 					<hr />
 				</form>
@@ -342,18 +346,15 @@
 										if (resultObj.resultCode == 1) {
 											accountStr = "此帳號已有人使用！";
 						            		accountIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(accountStr,"","error");
 										} else if (resultObj.resultCode == 0) {
 											accountStr = "可建立此帳號！";
 						            		accountIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											accountStr = "檢查途中遭遇錯誤！";
+											accountStr = resultObj.resultMessage;
 						            		accountIsOk = false;
+										if (!accountIsOk) {
 						            		/* 顯示彈窗訊息 */
 						            		swal(accountStr,"","error");
-										}
-										if (!accountIsOk) {
 						            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 						            		accountSpan.style.color = "red";
 						            		accountSpan.style.fontStyle = "italic";
@@ -402,18 +403,16 @@
 										if (resultObj.resultCode == 1) {
 											nicknameStr = "此稱呼已有人使用！";
 											nicknameIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(nicknameStr,"","error");
 										} else if (resultObj.resultCode == 0) {
 											nicknameStr = "可使用此稱呼！";
 											nicknameIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											nicknameStr = "檢查途中遭遇錯誤！";
+											nicknameStr = resultObj.resultMessage;
 											nicknameIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(nicknameStr,"","error");
 										}
 										if (!nicknameIsOk) {
+											/* 顯示彈窗訊息 */
+						            		swal(nicknameStr,"","error");
 											nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 											nicknameSpan.style.color = "red";
 											nicknameSpan.style.fontStyle = "italic";
@@ -462,18 +461,16 @@
 										if (resultObj.resultCode == 1) {
 											emailStr = "此電子信箱已有人使用！";
 						            		emailIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(emailStr,"","error");
 										} else if (resultObj.resultCode == 0) {
 											emailStr = "可使用此電子信箱！";
 						            		emailIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											emailStr = "檢查途中遭遇錯誤！";
+											emailStr = resultObj.resultMessage;
 						            		emailIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(emailStr,"","error");
 										}
 										if (!emailIsOk) {
+						            		/* 顯示彈窗訊息 */
+						            		swal(emailStr,"","error");
 						            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 						            		emailSpan.style.color = "red";
 						            		emailSpan.style.fontStyle = "italic";
@@ -530,24 +527,26 @@
 											emailCheckCodeStr = "驗證碼已成功寄出！";
 						            		emailCheckCodeIsOk = true;
 						            		checkCodeStr = resultObj.resultText;
-						            		/* 顯示彈窗訊息 */
-						            		swal(emailCheckCodeStr,"","success");
 										} else if (resultObj.resultCode == "false") {
 											emailCheckCodeStr = "遭遇錯誤！請稍後再試！";
 						            		emailCheckCodeIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(emailCheckCodeStr,"","error");
 										}
 										if (!emailCheckCodeIsOk) {
+						            		/* 顯示彈窗訊息 */
+						            		swal(emailCheckCodeStr,"","error");
 						            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailCheckCodeStr;
 						            		emailCheckCodeSpan.style.color = "red";
 						            		emailCheckCodeSpan.style.fontStyle = "italic";
 						            		checkCode.innerHTML = "";
 						            	} else {
-						            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
-						            		emailCheckCodeSpan.style.color = "black";
-						            		emailCheckCodeSpan.style.fontStyle = "normal";
-						            		document.getElementById("checkCode").value = checkCodeStr;
+						            		/* 顯示彈窗訊息 */
+						            		swal(emailCheckCodeStr,"","success");
+						            		setTimeout(function() {
+							            		emailCheckCodeSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + emailCheckCodeStr;
+							            		emailCheckCodeSpan.style.color = "black";
+							            		emailCheckCodeSpan.style.fontStyle = "normal";
+							            		document.getElementById("checkCode").value = checkCodeStr;
+						            		},1500);
 						            	}
 									} else {
 										emailCheckCodeStr = "發生錯誤，無法送出驗證碼";
@@ -589,18 +588,16 @@
 										if (resultObj.resultCode == 1) {
 											phoneStr = "此聯絡電話已有人使用！";
 						            		phoneIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(phoneStr,"","error");
 										} else if (resultObj.resultCode == 0) {
 											phoneStr = "可使用此聯絡電話！";
 						            		phoneIsOk = true;
 										} else if (resultObj.resultCode == -1) {
-											phoneStr = "檢查途中遭遇錯誤！";
+											phoneStr = resultObj.resultMessage;
 						            		phoneIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(phoneStr,"","error");
 										}
 										if (!phoneIsOk) {
+						            		/* 顯示彈窗訊息 */
+						            		swal(phoneStr,"","error");
 						            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 						            		phoneSpan.style.color = "red";
 						            		phoneSpan.style.fontStyle = "italic";

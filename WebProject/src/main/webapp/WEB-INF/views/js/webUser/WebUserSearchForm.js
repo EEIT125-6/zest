@@ -135,8 +135,17 @@ function checkNickname() {
 	if (nicknameObjValue != "" || nicknameObjValue.length != 0) {
 		nicknameStr = "稱呼填寫完畢";
 		nicknameIsOk = true;
+	} else if (nicknameObjValue.length > 25) {
+		nicknameStr = "稱呼長度過長";
+		nicknameIsOk = false;
 	} else if (nicknameObjValue.indexOf("<") != -1 || nicknameObjValue.indexOf(">") != -1) {
 		nicknameStr = "稱呼不可以包含<、>";
+		nicknameIsOk = false;
+	} else if (nicknameObjValue.indexOf("&") != -1) {
+		nicknameStr = "稱呼不可以包含&符號";
+		nicknameIsOk = false;
+	} else if (nicknameObjValue.indexOf("=") != -1) {
+		nicknameStr = "稱呼不可以包含等號";
 		nicknameIsOk = false;
 	} else {
 		nicknameStr = "";

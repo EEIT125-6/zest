@@ -148,7 +148,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
 				<form method="post">
 					<fieldset>
 						<legend>註冊資料如下，如果無誤請按「確認」</legend>
@@ -167,14 +167,14 @@
 										<c:out value = "*" />
 									</c:forEach>
 								</c:if>
-								<button type="button" name="showPassword" id="showPassword" style="font-size:18px" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+								<button class="btn btn-warning" type="button" name="showPassword" id="showPassword" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
 								<hr />
 							</c:if>
 						</c:if>
 						<c:if test="${extraAccount != null}">
 							<c:if test="${id_token != null}">
-								<button type="button" name="showPassword" id="showPassword" style="font-size:18px;display:none;" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red;">visibility</i></button>
+								<button type="button" name="showPassword" id="showPassword" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black;display:none;" >顯示密碼 <i class="material-icons" style="font-size:18px;color:red;">visibility</i></button>
 								<input type="hidden" readonly="readonly" name="password" id="password" value="${reg_webUser.password}">
 							</c:if>
 						</c:if>
@@ -230,8 +230,12 @@
 						<hr />
 					</fieldset>
 					<div align="center">
-						<button type="button" name="register" id="registerConfirm" style="font-size:18px" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<a href="<c:url value='/register/controller/DisplayWebUserInfo/undo' />"><button type="button" name="register" id="registerCancel" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+						<button class="btn btn-primary" type="button" name="register" id="registerConfirm" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >確認 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<a href="<c:url value='/register/controller/DisplayWebUserInfo/undo' />">
+							<button class="btn btn-success" type="button" name="register" id="registerCancel" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >取消 
+								<i class="material-icons" style="font-size:18px;color:white">undo</i>
+							</button>
+						</a>
 					</div>
 					<hr />
 					<span id="confirmSpan"></span>
@@ -268,15 +272,13 @@
 									if (resultObj.resultCode == 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = true;
-										/* 顯示彈窗訊息 */
-					            		swal(confirmStr,"","success");
 									} else if (resultObj.resultCode != 1) {
 										confirmStr = resultObj.resultMessage;
 										confirmIsOk = false;
-										/* 顯示彈窗訊息 */
-					            		swal(confirmStr,"","error");
 									}
 									if (!confirmIsOk) {
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","error");
 										confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmStr;
 										confirmSpan.style.color = "red";
 										confirmSpan.style.fontStyle = "italic";
@@ -284,8 +286,12 @@
 					            		confirmSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmStr;
 					            		confirmSpan.style.color = "black";
 					            		confirmSpan.style.fontStyle = "normal";
-					            		/* 跳轉 */
-					            		window.location.href = resultObj.nextPath;
+										/* 顯示彈窗訊息 */
+					            		swal(confirmStr,"","success");
+					            		setTimeout(function() {
+						            		/* 跳轉 */
+						            		window.location.href = resultObj.nextPath;
+					            		},1500);
 					            	}
 								},
 								error : function(err) {

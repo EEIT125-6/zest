@@ -23,6 +23,7 @@ import model.BookingBean;
 //import model.CartDetailBean;
 import service.BookingService;
 import service.CartService;
+import util.GeneralInputCheckService;
 //import util.GeneralInputCheckService;
 import webUser.model.CityInfo;
 import webUser.model.Gender;
@@ -58,7 +59,8 @@ import xun.util.sendJavaMail;
 	"bookingPurposeChartList",
 	"bookingTypeChartList",
 	"boardStarChartList",
-	"boardCountChartList"
+	"boardCountChartList",
+	"shopOwnerList"
 })
 public class dashborad_Controller {
 	/* By Mimicker0903 */
@@ -205,18 +207,21 @@ public class dashborad_Controller {
 	public String adminStore(Model model) {
 		List<String> sclassList = new ArrayList<>();
 		List<StoreBean> storeList = ss.getAllStore();
+		List<String> shopOwnerList = getShopOwnerList();
 		for (StoreBean storeData: storeList) {
 			if (!sclassList.contains(storeData.getSclass())) {
 				sclassList.add(storeData.getSclass());
 			}
 		}
 		model.addAttribute("sclassList", sclassList);
+		model.addAttribute("shopOwnerList", shopOwnerList);
 		return "adminAdminSystem-Store";
 	}
 	
 	@GetMapping("/adminProduct")
 	public String adminProduct(Model model) {
-		
+		List<String> shopOwnerList = getShopOwnerList();
+		model.addAttribute("shopOwnerList", shopOwnerList);
 		return "adminAdminSystem-Product";
 	}
 	//以上管理員管理資料//
@@ -1098,7 +1103,7 @@ public class dashborad_Controller {
 				}
 			}
 			/* 決定回傳的資料 */
-			if (storeList != null && finStoreList != null) {
+			if (storeList.size() > 0 && finStoreList.size() > 0) {
 				map.put("storeList", finStoreList);
 			} else {
 				map.put("storeList", storeList);
@@ -1126,10 +1131,12 @@ public class dashborad_Controller {
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
 			@RequestParam(value = "price", required = false, defaultValue = "-1") Integer price,
 			@RequestParam(value = "quantity", required = false, defaultValue = "-1") Integer quantity,
+			@RequestParam(value = "account", required = false, defaultValue = "") String account,
 			@RequestParam(value = "avPage", defaultValue = "5") Integer avPage,
 			@RequestParam(value = "startPage", required = false, defaultValue = "1") Integer startPage) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
+		String selectedParameters = "";
 		/* 分頁用 */
 		Long totalDataNums = 0L;
 		Integer totalDataPages = 1;
@@ -1144,10 +1151,33 @@ public class dashborad_Controller {
 			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
 			/* 管理員 */
 			if (nowUser.getAccountLv().getLv() == -1) {
-				productInfoList = ps.getAllProduct();
+				/* 組成參數 */
+				selectedParameters = name + ":"
+									+ shop + ":"
+									+ price.toString() + ":"
+									+ quantity.toString() + ":"
+									+ account + ":"
+									+ status + ":"
+									+ "?:"
+									+ nowUser.getAccountLv().getLv();
+				/* 檢查參數 */
+				
+				/* 檢查通過 */
+				productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
 			/* 店家 */
 			} else if (nowUser.getAccountLv().getLv() == 1) {
-				productInfoList = ps.getAllProductByUserId(nowUser.getUserId());
+				/* 組成參數 */
+				selectedParameters = name + ":"
+									+ shop + ":"
+									+ price.toString() + ":"
+									+ quantity.toString() + ":"
+									+ "?:-2:"
+									+ nowUser.getUserId() + ":"
+									+ nowUser.getAccountLv().getLv();
+				/* 檢查參數 */
+				
+				/* 檢查通過 */
+				productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
 			}
 			/* 有資料才做以下操作 */
 			if (productInfoList != null) {
@@ -1185,7 +1215,7 @@ public class dashborad_Controller {
 					/* 遍歷 */
 					for (int index = 0; index < productInfoList.size(); index++) {
 						if (productInfoList.get(index).getProduct_name().indexOf(name) == -1) {
-							productInfoList.remove(index);
+							productInfoList.remove(index--);
 						}
 					}
 				}
@@ -1193,7 +1223,15 @@ public class dashborad_Controller {
 					/* 遍歷 */
 					for (int index = 0; index < productInfoList.size(); index++) {
 						if (productInfoList.get(index).getProduct_shop().indexOf(shop) == -1) {
-							productInfoList.remove(index);
+							productInfoList.remove(index--);
+						}
+					}
+				}
+				if (!account.equals("")) {
+					/* 遍歷 */
+					for (int index = 0; index < productInfoList.size(); index++) {
+						if (!productInfoList.get(index).getStorebean().getWebUserData().getAccount().equals(account)) {
+							productInfoList.remove(index--);
 						}
 					}
 				}
@@ -1214,7 +1252,7 @@ public class dashborad_Controller {
 				}
 			}
 			/* 決定回傳的資料 */
-			if (productInfoList != null && finProductInfoList != null) {
+			if (productInfoList.size() > 0 && finProductInfoList.size() > 0) {
 				map.put("productInfoList", finProductInfoList);
 			} else {
 				map.put("productInfoList", productInfoList);
@@ -1223,7 +1261,7 @@ public class dashborad_Controller {
 		Integer resultCode = -1;
 		resultCode = (message.equals("") && productInfoList.size() >= 0) ? 1 : resultCode;
 		resultCode = (message.equals("") && productInfoList.size() < 0) ? 0 : resultCode;
-		message = (message.equals("") && productInfoList.size() > 0) ? "查詢到 " + totalDataNums + " 筆店家資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁" : message;
+		message = (message.equals("") && productInfoList.size() > 0) ? "查詢到 " + totalDataNums + " 筆商品資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁" : message;
 		message = (message.equals("") && productInfoList.size() <= 0) ? "沒有任何符合條件的資料！" : message;
 		
 		map.put("resultCode", resultCode.toString());
@@ -1283,17 +1321,17 @@ public class dashborad_Controller {
 									message = "已下架的商店不可再下架！";
 								} else if (mode.equals("active")) {
 									resultCode = ss.storeChange(storeId, "1");
-									message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
+									message = (resultCode == 1) ? "順利完成下架操作！" : "發生錯誤！無法完成下架操作！";
 								}
 								break;
 							case "1":
 								/* 已上架的不可再上架 */
 								if (mode.equals("active")) {
 									resultCode = -1;
-									message = "已下架的商店不可再下架！";
+									message = "已上架的商店不可再上架！";
 								} else if (mode.equals("quit")) {
 									resultCode = ss.storeChange(storeId, "0");
-									message = (resultCode == 1) ? "順利完成下架操作！" : "發生錯誤！無法完成下架操作！";
+									message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
 								}
 								break;
 							case "3":
@@ -1329,7 +1367,7 @@ public class dashborad_Controller {
 	@PostMapping(value = "/controller/adminProductOperate", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> adminProductOperate (
 			Model model,
-			@RequestParam("storeId") Integer storeId,
+			@RequestParam("productId") Integer productId,
 			@RequestParam("status") String status,
 			@RequestParam("mode") String mode) {
 		Map<String, Object> map = new HashMap<>();
@@ -1343,11 +1381,67 @@ public class dashborad_Controller {
 			switch(mode) {
 				/* 刪除 */
 				case "delete":
+					/* 由productId反查整個物件 */
+					ProductInfoBean deletedProduct = ps.get(productId);
+					/* 如有存在才繼續 */
+					if (deletedProduct == null) {
+						resultCode = -1;
+						message = "無效的商品代碼！";
+					} else {
+						/* 執行刪除 */
+						resultCode = ps.deleteProduct(deletedProduct);
+						message = (resultCode == 1) ? "順利完成刪除操作！" : "發生錯誤！無法完成刪除操作！";
+					}
 					break;
 					/* 上架 */
 				case "active":
 				/* 下架 */
 				case "quit":
+					/* 由productId反查整個物件 */
+					ProductInfoBean changedProduct = ps.get(productId);
+					/* 如有存在才繼續 */
+					if (changedProduct == null) {
+						resultCode = -1;
+						message = "無效的商品代碼！";
+					} else {
+						/* 判定status參數是否合理 */
+						switch (status) {
+						case "0":
+							/* 已下架的不可再下架 */
+							if (mode.equals("quit")) {
+								resultCode = -1;
+								message = "已下架的商品不可再下架！";
+							} else if (mode.equals("active")) {
+								resultCode = ps.productChange(productId, "1");
+								message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
+							}
+							break;
+						case "1":
+							/* 已上架的不可再上架 */
+							if (mode.equals("active")) {
+								resultCode = -1;
+								message = "已上架的商品不可再上架！";
+							} else if (mode.equals("quit")) {
+								resultCode = ps.productChange(productId, "-1");
+								message = (resultCode == 1) ? "順利完成下架操作！" : "發生錯誤！無法完成下架操作！";
+							}
+							break;
+						case "3":
+							/* 已移除的不可再下架 */
+							if (mode.equals("quit")) {
+								resultCode = -1;
+								message = "已移除的商品不可再下架！";
+							} else if (mode.equals("active")) {
+								resultCode = ps.productChange(productId, "1");
+								message = (resultCode == 1) ? "順利完成上架操作！" : "發生錯誤！無法完成上架操作！";
+							}
+							break;
+						default:
+							resultCode = -1;
+							message = "無效的商品狀態！";
+							break;
+					}
+					}
 					break;
 					/* 其他 */
 				default:
@@ -1361,7 +1455,7 @@ public class dashborad_Controller {
 		return map;
 	}
 	
-//	/* 取出購物車年份(下拉選單用) */
+	/* 取出購物車年份(下拉選單用) */
 //	private List<String> getCartYearList() {
 //		/* 取出所有購物車訂單資料 */
 //		List<String> cartYearList = new ArrayList<>();
@@ -1398,6 +1492,22 @@ public class dashborad_Controller {
 		return null;
 	}
 	
+	/* 取出商家擁有者帳號列表 */
+	private List<String> getShopOwnerList() {
+		/* 取出所有店家資料 */
+		List<String> shopOwnerList = new ArrayList<>();
+		List<StoreBean> allStoreList = ss.getAllStore();
+		if (allStoreList != null) {
+			for (StoreBean storeData: allStoreList) {
+				if (!shopOwnerList.contains(storeData.getWebUserData().getAccount())) {
+					shopOwnerList.add(storeData.getWebUserData().getAccount());
+				}
+			}
+			return shopOwnerList;
+		}
+		return null;
+	}
+	
 	/* 驗證管理員身分 */
 	private String checkAdminIdentity(Model model) {
 		String message = "";
@@ -1424,5 +1534,70 @@ public class dashborad_Controller {
 			message = "本帳號無法使用此功能！";
 		}
 		return message;
+	}
+	
+	private String doCheckSelectProductDataInput(String selectedParameters, WebUserData userData) {
+		String checkResult = "";
+		
+		Integer userLv = userData.getAccountLv().getLv();
+		
+		String selectedName = selectedParameters.split(":")[0];
+		if (checkResult.equals("")) {
+			if (selectedName.length() > 60) {
+				checkResult = "搜尋的商品名稱過長！";
+			} else if (selectedName.indexOf("<") != -1 || selectedName.indexOf(">") != -1) {
+				checkResult = "商品名稱不可以包含<、>";
+			} else if (selectedName.indexOf("&") != -1) {
+				checkResult = "商品名稱不可以包含&";
+			} else if (selectedName.indexOf("=") != -1) {
+				checkResult = "商品名稱不可以包含等號";
+			} 
+		}
+		
+		String selectedShop = selectedParameters.split(":")[1];
+		if (checkResult.equals("")) {
+			if (selectedShop.length() > 50) {
+				checkResult = "搜尋的店家名稱過長！";
+			} else if (selectedShop.indexOf("<") != -1 || selectedShop.indexOf(">") != -1) {
+				checkResult = "店家名稱不可以包含<、>";
+			} else if (selectedShop.indexOf("&") != -1) {
+				checkResult = "店家名稱不可以包含&";
+			} else if (selectedShop.indexOf("=") != -1) {
+				checkResult = "店家名稱不可以包含等號";
+			} 
+		}
+		
+		Integer selectedPrice = Integer.parseInt(selectedParameters.split(":")[2]);
+		if (checkResult.equals("")) {
+			if (selectedPrice < -1) {
+				checkResult = "價位不可為負";
+			} 
+		}
+		
+		Integer selectedQuantity = Integer.parseInt(selectedParameters.split(":")[3]);
+		if (checkResult.equals("")) {
+			if (selectedQuantity < -1) {
+				checkResult = "數量不可為負";
+			} 
+		}
+		
+		String selectedAccount = (userLv == -1) ? selectedParameters.split(":")[4] : "?";
+		if (checkResult.equals("")) {
+			String tmpResult = GeneralInputCheckService.doBasicCheckAccount(selectedAccount, "recovery");
+			checkResult = (tmpResult.split(",")[0].equals("?") && userLv == -1) ? "" : tmpResult.split(",")[1];
+			checkResult = (userLv == 1 && selectedAccount.equals("?")) ? "" : tmpResult.split(",")[1]; 
+		}
+		
+		String selectedStatus = (userLv == -1) ? selectedParameters.split(":")[5] : "?";
+		if (checkResult.equals("")) {
+			
+		}
+		
+		String selectedUserId = (userLv == 1) ? selectedParameters.split(":")[6] : "?";
+		if (checkResult.equals("")) {
+			
+		}
+		
+		return checkResult;
 	}
 }

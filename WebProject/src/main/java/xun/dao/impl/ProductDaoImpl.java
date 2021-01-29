@@ -134,10 +134,75 @@ public class ProductDaoImpl implements ProductDao{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ProductInfoBean> getAllProductByUserId(String userId) {
+	public List<ProductInfoBean> getAllProduct(String selectedParameters, Integer avPage, Integer startPage) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ProductInfoBean AS pi WHERE pi.storebean.webUserData.userId = :userId";
-		return session.createQuery(hql).setParameter("userId", userId).getResultList();
+		/* 取得開始的筆數 */
+		Integer startIndex = (startPage - 1) * avPage;
+		/* 開始組字串 */
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM ProductInfoBean AS pi WHERE ");
+		
+		String name = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String shop = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
+		Integer price = (selectedParameters.split(":")[2].equals("-1")) ? -1 : (Integer.parseInt(selectedParameters.split(":")[2]) / 100) * 100;
+		Integer quantity = (selectedParameters.split(":")[3].equals("-1")) ? -1 : (Integer.parseInt(selectedParameters.split(":")[3]) / 10) * 10;
+		String account = (selectedParameters.split(":")[4].equals("?")) ? "" : selectedParameters.split(":")[4];
+		String status = (selectedParameters.split(":")[5].equals("?")) ? "" : selectedParameters.split(":")[5];
+		String userId = (selectedParameters.split(":")[6].equals("?")) ? "" : selectedParameters.split(":")[6];
+		Integer lv = (selectedParameters.split(":")[7].equals("-2")) ? -2 : Integer.parseInt(selectedParameters.split(":")[7]) ;
+		
+		if (!name.equals("")) {
+			name = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append("pi.product_name LIKE " + name);
+		}
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !shop.equals("")) {
+			shop = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append("pi.product_shop LIKE " + shop);
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !shop.equals("")) {
+			shop = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND pi.product_shop LIKE " + shop);
+		}
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && price > -1) {
+			sb.append("pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && price > -1) {
+			sb.append(" AND pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
+		} 
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && quantity > -1) {
+			sb.append("pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && quantity > -1) {
+			sb.append(" AND pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
+		}
+		
+		if (lv == -1) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !account.equals("")) {
+				account = "'%" + selectedParameters.split(":")[4] + "%'";
+				sb.append("pi.storeBean.webUserData.account LIKE " + account);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !account.equals("")) {
+				account = "'%" + selectedParameters.split(":")[4] + "%'";
+				sb.append(" AND pi.storeBean.webUserData.account LIKE " + account);
+			}
+			
+			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !status.equals("")) {
+				sb.append("pi.product_status = " + status);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !status.equals("")) {
+				sb.append(" AND pi.product_status = " + status);
+			}
+		} else if (lv == 1) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ")) {
+				sb.append("pi.storeBean.webUserData.userId = " + userId);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ")) {
+				sb.append(" AND pi.storeBean.webUserData.userId = " + userId);
+			}
+		}
+		
+		String hql = sb.toString();
+		return session.createQuery(hql)
+				.setFirstResult(startIndex)
+                .setMaxResults(avPage)
+                .getResultList();
 	}
 	
 	@Override

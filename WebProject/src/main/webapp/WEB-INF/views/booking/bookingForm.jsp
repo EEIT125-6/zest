@@ -10,7 +10,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 %>
 <html>
 <head>
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/hot-sneaks/jquery-ui.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LoadingScreen.css"> 
   <link rel='stylesheet' href='${pageContext.request.contextPath}/css/test.css'  type="text/css" />
@@ -255,7 +255,7 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
     </fieldset>
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script type="text/javascript">
 		function checkPhone( strPhone ) { 
@@ -319,7 +319,6 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
   </script>
   <script>	
         function beforeAjax(){
-	    	 /* alert("aaa"); */
 	    	if($("#datepicker1").val()!="" && $("#time").val()!="" && $("#number").val()!=""){
 	    		seating();	
 	    	}else{
@@ -328,12 +327,11 @@ response.setDateHeader ("Expires", -1); // Prevents caching at the proxy server
 	    } 
 		
 		function seating(){
-			/* alert("aaaajjjjaaaxxx") */
-		var showSpan = document.getElementById("seating");
-		var bookingdate = document.getElementById("datepicker1").value;
-		var time = document.getElementById("time").value;
-		var number = document.getElementById("number").value;
-		var restaurant = document.getElementById("restaurant").value;
+			var showSpan = document.getElementById("seating");
+			var bookingdate = document.getElementById("datepicker1").value;
+			var time = document.getElementById("time").value;
+			var number = document.getElementById("number").value;
+			var restaurant = document.getElementById("restaurant").value;
 		
 			$.ajax({
 				type : "POST",

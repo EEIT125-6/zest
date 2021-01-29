@@ -24,6 +24,7 @@
 			</c:if>
 			<c:if test="${userFullData.account != null}">
 				<input type="hidden" id="account" value="${userFullData.account}" />
+				<input type="hidden" id="leavePath" value="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout" />
 				<a href="${pageContext.request.contextPath}/webUser/WebUserMain">
 				<c:if test="${userFullData.iconUrl == ''}">
 					<c:if test="${userFullData.accountLv.lv == -1}">
@@ -92,9 +93,7 @@
 					<span>|</span>
 				</c:if>
 				<i class="fas fa-door-open" style="font-size: 25px;color: yellow"></i>
-				<a href="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout">
-					<span id="logOutBtn" style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">登出</span>
-				</a>
+				<span id="logOutBtn" style="font-family: 'Ubuntu', sans-serif; color: #eae2b7; font-weight: 650;">登出</span>
 				<span>|</span>
 			</c:if>
 			<c:if test="${userFullData.account == null}">
@@ -103,13 +102,14 @@
 		</p>
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script>
-			window.onload = function() {
-				let logOutBtn = document.getElementById("logOutBtn");
-				logOutBtn.onclick = function() {
-					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
-					swal("謝謝您的使用，" + account + " ！", "", "success");
-				};
-			};
+			document.getElementById("logOutBtn").addEventListener("click",function() {
+				let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
+				swal("謝謝您的使用，" + account + " ！", "", "success");
+				setTimeout(function() {
+					/* 跳轉 */
+	        		window.location.href = document.getElementById("leavePath").value;
+				},1500);
+			});
 		</script>
 	</div>
 

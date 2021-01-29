@@ -98,7 +98,7 @@ public class GeneralEmailService {
 						+ "<br /><br />"
 						+ "如果您有其他需要告知的事項，請透過本網站提供的方法聯繫我方處理，謝謝！"
 						+ "<br /><br /><a href=\"" + contextPath + "\">橙皮官方網站</a>";
-		} else if (mode.equals("adminReactive")) {
+		} else if (mode.equals("adminReActive")) {
 			mailContext = "親愛的 "
 						+ account 
 						+ " ！<br /><br />" 
@@ -141,7 +141,7 @@ public class GeneralEmailService {
 				message.setSubject("您的橙皮重設連結在此");
 			} else if (mode.equals("adminActivate")) {
 				message.setSubject("您的橙皮帳號已由管理員啟用");
-			} else if (mode.equals("adminReactive")) {
+			} else if (mode.equals("adminReActive")) {
 				message.setSubject("您的橙皮帳號已由管理員重新啟用");
 			}
 			/* 設定email內容與編碼 */

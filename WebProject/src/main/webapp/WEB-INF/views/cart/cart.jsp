@@ -13,6 +13,7 @@ response.setCharacterEncoding("UTF-8");
 <html>
 
 <head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <%@include file="../Link_Meta-Include.jsp"%>
 <link rel='stylesheet'
 	href='${pageContext.request.contextPath}/css/test.css' type="text/css" />
@@ -24,6 +25,7 @@ response.setCharacterEncoding("UTF-8");
 
 <style>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
 *, *:before, *:after {
 	margin: 0;
 	padding: 0;
@@ -38,16 +40,19 @@ response.setCharacterEncoding("UTF-8");
 	background-color: #f44336;
 	color: white;
 }
+
 body {
 	background: #105469;
 	font-family: 'Open Sans', sans-serif;
 }
+
 table {
 	background: #012B39;
 	border-radius: 0.25em;
 	border-collapse: collapse;
 	margin: 1em;
 }
+
 th {
 	border-bottom: 1px solid #364043;
 	color: #E2B842;
@@ -56,31 +61,39 @@ th {
 	padding: 0.5em 1em;
 	text-align: left;
 }
+
 td {
 	color: #fff;
 	font-weight: 400;
 	padding: 0.65em 1em;
 }
+
 .disabled td {
 	color: #4F5F64;
 }
+
 tbody tr {
 	transition: background 0.25s ease;
 }
+
 tbody tr:hover {
 	background: #014055;
 }
+
 .classimg {
 	transition: 0.2s;
 	width: 80px
 }
+
 .classimg:hover {
 	transition: 0.2s;
 	width: 85px
 }
+
 body {
 	background-color: rgb(235, 159, 18);
 }
+
 .header {
 	height: 100px;
 	border-bottom: 3px solid #e76f51;
@@ -88,6 +101,7 @@ body {
 	padding-top: 5px;
 	background-color: #003049;
 }
+
 .photo {
 	padding: 0%;
 	background: url("Images/backbar2-1.jpg");
@@ -95,11 +109,13 @@ body {
 	padding-top: 220px;
 	background-size: 100%
 }
+
 .shopcar {
 	height: 40px;
 	margin: 0;
 	margin-left: 5px;
 }
+
 .wrapper {
 	position: relative;
 	width: 1000px;
@@ -108,44 +124,52 @@ body {
 	margin: 0 auto;
 	border-radius: 5px;
 }
+
 ul {
 	margin: 0;
 	padding: 0;
 	position: absolute;
 }
+
 li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
+
 ul.slides {
 	width: 4000px;
 	left: 0px;
 	transition: all .5s;
 }
+
 ul.slides li {
 	width: 1000px;
 	height: 400px;
 	overflow: hidden;
 	float: left;
 }
+
 ul.slides li img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 }
+
 .dot {
 	bottom: 10px;
 	width: 100%;
 	display: flex;
 	justify-content: center;
 }
+
 .dot li {
 	border: 1px solid #fff;
 	margin: 0 5px;
 	width: 24px;
 	height: 10px;
 }
+
 .slide_btn {
 	display: flex;
 	justify-content: center;
@@ -157,19 +181,24 @@ ul.slides li img {
 	position: absolute;
 	font-size: 24px;
 }
+
 #prevSlide {
 	left: 0;
 }
+
 #nextSlide {
 	right: 0;
 }
+
 .slide_btn i {
 	color: rgba(255, 255, 255, .6);
 	transition: .5s;
 }
+
 .slide_btn:hover i {
 	color: rgba(255, 255, 255, 1);
 }
+
 #gotop {
 	position: fixed;
 	z-index: 90;
@@ -187,6 +216,7 @@ ul.slides li img {
 	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0
 		rgba(0, 0, 0, 0.12);
 }
+
 #gotop :hover {
 	background: #0099CC;
 }
@@ -198,7 +228,7 @@ ul.slides li img {
 	<!-- -------------------------------------------------------------- -->
 	<div class="container" style="margin-top: 20px;">
 		<!-- 		<form> -->
-		
+
 		<table cellpadding="2" cellspacing="2" border="1" align="center">
 			<thead>
 				<th>清除</th>
@@ -216,7 +246,8 @@ ul.slides li img {
 				<c:set var="total" value="${total+thisCart.product.product_price}"></c:set>
 				<tr id="thing${thisCart.product.product_id}">
 					<td align="center">
-						<button id="clear${thisCart.product.product_id}" onclick="itemRemove(${thisCart.product.product_id})">刪除項目</button>
+						<button id="clear${thisCart.product.product_id}"
+							onclick="itemRemove(${thisCart.product.product_id})">刪除項目</button>
 						<%-- 						<a href="<c:url value="/controller/itemremove?id=${product.product_id}"/>"	onclick="return confirm('是否確定?')">刪除項目</a> --%>
 					</td>
 					<td>${thisCart.product.product_id}</td>
@@ -247,35 +278,60 @@ ul.slides li img {
 		<button type="button" class="continueShopping"
 			onclick="mallRedirector()">繼續購物</button>
 		<button type="button" class="checkOut" onclick="checkCart()">結帳</button>
-	    <button style="float:left" onclick="clearCart()">清除購物車</button>
-	    <div class="wrapper "></div>
+		<button style="float: left" onclick="clearCart()">清除購物車</button>
+		<div class="wrapper "></div>
 		<!-- 向後端送值用 -->
-		<form method="Post" action=""
-			style="display: none"></form>
+		<form method="Post" action="" style="display: none"></form>
 
 
 		<script>	
 			function clearCart(){
-				$.ajax({
-					url:"/WebProject/controller/clearCart",
-					type:"Get",
-					dataType:"TEXT",
-					success:function(){
-						$("table").eq(0).children("tbody").children("tr").each(function(){
-							$(this).html("");
-						})
-						window.alert('您的購物車已清空!')
-					},
-					error:function(xhr,ajaxOptions,thrownError){
-						console.log(xhr.status);
-						console.log(thrownError);
-					}
-				})
+				Swal.fire({
+	 				  title: '確定嗎?',
+	 				  text: "您的購物車即將清空",
+	 				  icon: 'warning',
+	 				  showCancelButton: true,
+	 				  confirmButtonColor: '#3085d6',
+	 				  cancelButtonColor: '#d33',
+	 				  confirmButtonText: '確定',
+	 				  cancelButtonText:'取消'
+	 				}).then((result) => {
+	 				  if (result.isConfirmed) {			 					  
+	 						$.ajax({
+	 							url:"/WebProject/controller/clearCart",
+	 							type:"Get",
+	 							dataType:"TEXT",
+	 							success:function(){
+	 								$("table").eq(0).children("tbody").children("tr").each(function(){
+	 									$(this).html("");
+	 									
+	 								})
+	 								
+	 							},
+	 							error:function(xhr,ajaxOptions,thrownError){
+	 								console.log(xhr.status);
+	 								console.log(thrownError);
+	 							}
+	 						})
+	 						
+	 				   
+	 				  }else{
+	 					  
+	 				  }
+	 				
+	 				  })
+			
+									
 			}
+				
+			
+			
+			
 			function mallRedirector() {
 				console.log('mallRedirector is now initialized');
 				window.location = "<c:url value='/controller/mallRedirector'/>;";
 			}
+			
 			function checkCart() {
 				console.log('checkCart method initialized');
 							
@@ -301,15 +357,38 @@ ul.slides li img {
 				console.log("s="+s);
 				console.log("m="+m);
 				if (K > 0) {													
-					let r = confirm('是否結帳');
-					if(r==true){
+// 					let r = confirm('是否結帳');
+// 					if(r==true){
+						Swal.fire({
+			 				  title: '是否結帳?',
+			 				  text: "您的訂單即將成立",
+			 				  icon: 'warning',
+			 				  showCancelButton: true,
+			 				  confirmButtonColor: '#3085d6',
+			 				  cancelButtonColor: '#d33',
+			 				  confirmButtonText: '確定',
+			 				  cancelButtonText: '取消'
+			 				}).then((result) => {
+			 				  if (result.isConfirmed) {			 					  
+			 					 $("form").eq(1).attr("action","/WebProject/controller/checkout?purchaseInfo="+s+"&totalValue="+m).submit();	
+			 				   
+			 				  }
+			 				})
 						console.log('AJAX initialized');
-						$("form").eq(1).attr("action","/WebProject/controller/checkout?purchaseInfo="+s+"&totalValue="+m).submit();						
+											
 					}else{
-						window.alert('您的購物車為空，請繼續購物後再結帳');
+						Swal.fire({
+							  icon: 'error',
+							  title: '哎呀！',
+							  text: '您的購物車為空，請繼續購物再結帳!',
+							})
+						
 					}
 				}
-			}
+				
+			
+			
+
 			
 // 			購物車總價值計算
 			$(".qu").change(function()  {
@@ -325,40 +404,62 @@ ul.slides li img {
 				$("#tot").html(total);
 			})
 			
+			
+			
+			
 			function itemRemove(id) {
-							console.log("testtest="+$(this).attr("id"));
-		        var K =confirm('是否確定刪除所選項目?')
-				if (K==true) {
-					$.ajax({
-						url : "/WebProject/controller/itemremove",
-						data : {
-							"id":id //id向後端發送
-						},
-						type:"Get",			
-						dataType:"TEXT",
-						success:function(obj) {
-							console.log("id="+id)		
-													
-							$("table").eq(0).children("tbody").children("tr").each(function(){
-								if($(this).children("td").eq(1).html() == id){		
-									$(this).html("");
+				console.log("testtest="+$(this).attr("id"));
+		       
+					Swal.fire({
+		 				  title: '是否確定?',
+		 				  text: "此購物項目即將刪除",
+		 				  icon: 'warning',
+		 				  showCancelButton: true,
+		 				  confirmButtonColor: '#3085d6',
+		 				  cancelButtonColor: '#d33',
+		 				  confirmButtonText: '確定',
+		 				  cancelButtonText: '取消',
+		 				}).then((result) => {
+		 					$.ajax({
+								url : "/WebProject/controller/itemremove",
+								data : {
+									"id":id //id向後端發送
+								},
+								type:"Get",			
+								dataType:"TEXT",
+								success:function(obj) {
+									console.log("id="+id);
+									Swal.fire({
+										  position: 'center',
+										  icon: 'success',
+										  title: '此商品已成功刪除',
+										  showConfirmButton: false,
+										  timer: 1500
+										})
 									
-									let total=0;
-									$(".re").each(function() {
-										total += parseInt($(this).text());
-										
+															
+									$("table").eq(0).children("tbody").children("tr").each(function(){
+										if($(this).children("td").eq(1).html() == id){		
+											$(this).html("");
+											
+											let total=0;
+											$(".re").each(function() {
+												total += parseInt($(this).text());
+												
+											})
+											$("#tot").html(total);
+										}
 									})
-									$("#tot").html(total);
+								},
+								error : function(xhr, ajaxOptions, thrownError) {
+									console.log(xhr.status);
+									console.log(thrownError);
 								}
-							})
-						},
-						error : function(xhr, ajaxOptions, thrownError) {
-							console.log(xhr.status);
-							console.log(thrownError);
-						}
-					});
-				}
-			}
+							});
+		 				  });
+		 				}
+					
+			
 		</script>
 	</div>
 	<!-- -------------------------------------------------------------------- -->

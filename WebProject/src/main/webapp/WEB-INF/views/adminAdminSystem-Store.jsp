@@ -14,7 +14,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -23,7 +24,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-					<div class="container" style="margin-top: 20px;background-color: #FFF;">
+					<div class="container" style="margin-top: 20px;background-color: #FFF;border-radius: 5px;">
 						<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 						<input type="hidden" id="pageNo" value="1" />
 						<input type="hidden" id="maxPage" value="1" />
@@ -35,13 +36,18 @@
 								<input type="hidden" name="userAccount" id="userAccount"
 									value=<c:out value="${userFullData.account}"></c:out> />
 								<hr />
-								<label>按店家名：</label> <input type="text" name="selectedStname"
+								<label>按店家名：</label> 
+								<input type="text" name="selectedStname"
 									id="selectedStname" size="50" maxlength="50" onblur="checkStname()"
 									placeholder="請輸入要查詢的店家名稱，最多50個字" /> 
 								<span id="stnameSpan"></span>
-								<label>按擁有者：</label> <input type="text" name="selectedOwner"
-									id="selectedOwner" size="30" maxlength="30" onblur="checkOwner()"
-									placeholder="請輸入要查詢的店家擁有者帳號" /> 
+								<label>按擁有者：</label>
+								<select name="selectedOwner" id="selectedOwner" onblur="checkOwner()" > 
+									<option value="">請選擇要查詢的帳號</option>
+									<c:forEach items="${shopOwnerList}" var="shopOwnerItem">
+										<option value="${shopOwnerItem}" label="${shopOwnerItem}" />
+									</c:forEach>
+								</select>
 								<span id="ownerSpan"></span>
 								<hr />
 								<label>依照類型：</label>
@@ -73,11 +79,14 @@
 									<option value="20" label="20">
 								</select>
 								<a href="adminBack">
-									<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+									<button class="btn btn-success" type="button" id="back" name="back" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回 
+										<i class="material-icons" style="font-size:18px;color:green">undo</i>
+									</button>
 								</a> 
-								<button type="button" id="search" name="select" style="font-size:18px" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
-								<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<button class="btn btn-primary" type="button" id="search" name="select" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+								<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 							</div>
+							<hr />
 						</form>
 						<div align="center">
 							<span id="searchSpan"></span>
@@ -129,7 +138,7 @@
 									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObjValue = document.getElementById("sSclass").value;
+									var sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
@@ -146,7 +155,7 @@
 									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObjValue = document.getElementById("sSclass").value;
+									var sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
@@ -163,7 +172,7 @@
 									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObjValue = document.getElementById("sSclass").value;
+									var sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let startPage = parseInt(document.getElementById("pageNo").value);
@@ -180,7 +189,7 @@
 									var userLv = document.getElementById("userLv").value;
 									var stnameObjValue = document.getElementById("selectedStname").value.trim();
 									var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-									var sclassObjValue = document.getElementById("sSclass").value;
+									var sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 									var selectedStatus = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 									
 									let maxPage = parseInt(document.getElementById("maxPage").value);
@@ -200,7 +209,7 @@
 								var userLv = document.getElementById("userLv").value.trim();
 								var stnameObjValue = document.getElementById("selectedStname").value.trim();
 								var ownerObjValue = document.getElementById("selectedOwner").value.trim();
-								var sclassObjValue = document.getElementById("sSclass").value;
+								var sclassObjValue = (userLv == -1) ? document.getElementById("sSclass").value : "";
 								var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
 								
 								if (checkForm()) {
@@ -210,16 +219,16 @@
 									if (ownerObjValue == "" || ownerObjValue.length == 0) {
 										counter++;
 									}
-									if (sclassObjValue == "" || sclassObjValue.length == 0) {
-										counter++;
-									}
 									if (userLv != -1) {
-										if (counter == 3){
+										if (counter == 2){
 											selectAllStore();
 										} else {
 											selectStore(stnameObjValue, ownerObjValue, sclassObjValue);
 										} 
 									} else {
+										if (sclassObjValue == "" || sclassObjValue.length == 0) {
+											counter++;
+										}
 										if (statusObjValue == "" || statusObjValue.length == 0) {
 											counter++;
 										}
@@ -257,28 +266,31 @@
 										success : function(resultObj) {
 											if (resultObj.resultCode == 1) {
 												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = true;
+											} else if (resultObj.resultCode == 0) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											} else if (resultObj.resultCode == -1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											}
+											if (!operateResultIsOk) {
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");												
+											} else {
 												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
 														+ operateResultStr;
 												operateResultSpan.style.color = "black";
 												operateResultSpan.style.fontStyle = "normal";
 												/* 顯示彈窗訊息 */
 												swal(operateResultStr,"","success");
-												/* 重新以Ajax寫出表格 */
-												selectAllStore();
-											} else if (resultObj.resultCode == 0) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗訊息 */
-												swal(operateResultStr,"","error");
-											} else if (resultObj.resultCode == -1) {
-												operateResultStr = resultObj.resultMessage;
-												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
-												operateResultSpan.style.color = "red";
-												operateResultSpan.style.fontStyle = "italic";
-												/* 顯示彈窗訊息 */
-												swal(operateResultStr,"","error");
+												setTimeout(function() {
+													/* 重新以Ajax寫出表格 */
+													selectAllStore();
+												},1500);
 											}
 										},
 										error : function(err) {
@@ -312,7 +324,7 @@
 									data : {
 										'stname':stnameObjValue,
 										'owner':ownerObjValue,
-										'sclass':sclassObjValue,
+										'type':sclassObjValue,
 										'status':statusObjValue,
 										'avPage':avgPage,
 										'startPage':startPage
@@ -486,6 +498,8 @@
 															+ "最末頁"
 															+ "</button>";
 												}
+												
+												content += "<hr />";
 											} 
 											
 											dataContainer.innerHTML = content;
@@ -507,7 +521,7 @@
 										}
 									},
 									error : function(err) {
-										searchStr = "發生錯誤，無法載入使用者資料";
+										searchStr = "發生錯誤，無法載入店家資料";
 										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
 												+ searchStr;
 										searchSpan.style.color = "red";
@@ -538,7 +552,9 @@
 									data : {
 										'avPage':avgPage,
 										'startPage':startPage
-									},success : function(resultObj) {
+									},
+									dataType : "json",
+									success : function(resultObj) {
 										if (resultObj.resultCode == 1) {
 											searchStr = resultObj.resultMessage;
 											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
@@ -708,6 +724,8 @@
 															+ "最末頁"
 															+ "</button>";
 												}
+												
+												content += "<hr />";
 											} 
 											
 											dataContainer.innerHTML = content;
@@ -729,7 +747,7 @@
 										}
 									},
 									error : function(err) {
-										searchStr = "發生錯誤，無法載入使用者資料";
+										searchStr = "發生錯誤，無法載入店家資料";
 										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
 												+ searchStr;
 										searchSpan.style.color = "red";

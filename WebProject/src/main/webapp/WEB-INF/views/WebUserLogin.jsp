@@ -148,7 +148,7 @@
             <%@include file = "Header-Include.jsp" %>
             <%@include file = "LoadingScreen.jsp" %>            
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
                 <form method="post">
                 	<fieldset>
                 		<legend>登入相關資料</legend>
@@ -161,7 +161,7 @@
 						<label>帳號密碼：</label> 
 						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>記住帳密：</label>
@@ -176,7 +176,8 @@
                				<option value="2">一般使用者二</option>
                				<option value="3">店家使用者一</option>
                				<option value="4">店家使用者二</option>
-               				<option value="5">網站管理員一</option>
+               				<option value="5">店家使用者三</option>
+               				<option value="6">網站管理員一</option>
                			</select>
 						<hr />
 						<span id="loginSpan">
@@ -189,17 +190,17 @@
                 	</fieldset>
                 	<div align="center">
                 		<a href="<c:url value='/WebUserForgetForm' /> ">
-                			<button type="button" style="font-size:18px" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button>
+                			<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="forget" name="forget" >忘記帳號或密碼 <i class="material-icons" style="font-size:18px;color:red">error</i></button>
                 		</a>
-               			<button type="button" style="font-size:18px" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="button" style="font-size:18px" id="cookieLogin" name="cookieLogin" >一鍵登入 <i class="material-icons" style="font-size:18px;color:blue">free_breakfast</i></button>
+               			<button class="btn btn-primary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="submit" name="login" >登入 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-secondary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="cookieLogin" name="cookieLogin" >一鍵登入 <i class="material-icons" style="font-size:18px;color:blue">free_breakfast</i></button>
 						<a href="<c:url value='/WebUserRegisterForm' /> ">
-							<button type="button" style="font-size:18px" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+							<button class="btn btn-success" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="register" name="register" >前往註冊 <i class="material-icons" style="font-size:18px;color:white">undo</i></button>
 						</a>
-						<button type="reset" style="font-size:18px" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<button class="btn btn-warning" type="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" name="reset" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 						<br /><br />
-						<button type="button" style="font-size:18px" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
-						<button type="button" style="font-size:18px" id="googleQuit" name="googleQuit" >Google斷連 <i class="material-icons" style="font-size:18px;color:blue">people_outline</i></button>
+						<button class="btn btn-info" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="googleLogin" name="googleLogin" >Google登入 <i class="material-icons" style="font-size:18px;color:blue">people</i></button>
+						<button class="btn btn-info" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="googleQuit" name="googleQuit" >Google斷連 <i class="material-icons" style="font-size:18px;color:blue">people_outline</i></button>
 					</div>
 					<hr />
                 </form>
@@ -239,6 +240,10 @@
 	                    			document.getElementById("password").value = "Doing0903";
 	                				break;
 	                			case '5':
+	                				document.getElementById("account").value = "George610787";
+	                    			document.getElementById("password").value = "Geo1rge6";
+	                				break;
+	                			case '6':
 	                				document.getElementById("account").value = "WebAdmin";
 	                    			document.getElementById("password").value = "WebAdmin2020";
 	                				break;
@@ -337,68 +342,56 @@
 										if (resultObj.resultCode == 6) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 5) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 4) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 3) {
 											loginStr = resultObj.resultMessage;
 											loginIsOk = false;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if (resultObj.resultCode == 2) {
 											loginStr = "驗證成功！將導向新畫面";
 											loginIsOk = true;
-											/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","success");
 										} else if (resultObj.resultCode == 1) {
 											loginStr = "登入成功！";
 						            		loginIsOk = true;
 						            		let loginSucMsg = resultObj.resultMessage;
 						            		if (resultObj.signInMessage != "") {
 						            			loginSucMsg += "\n" + resultObj.signInMessage;
-						            		} 
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginSucMsg,"","success");
+						            		}
+						            		/* 重新置換 */
+						            		loginStr = loginSucMsg;
 										} else if (resultObj.resultCode == 0) {
 											loginStr = "帳號或密碼錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 										} else if(resultObj.resultCode == -1) {
 						            		loginStr = "該帳號已停用！請重新註冊或聯絡網站管理員";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	} else if(resultObj.resultCode == -2) {
 						            		loginStr = "帳號錯誤！";
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	} else if(resultObj.resultCode == -3) {
-						            		loginStr = "檢查途中遭遇錯誤！";
+						            		loginStr = resultObj.resultMessage;
 						            		loginIsOk = false;
-						            		/* 顯示彈窗訊息 */
-						            		swal(loginStr,"","error");
 						            	}
 										if (!loginIsOk) {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + loginStr;
 						            		loginSpan.style.color = "red";
 						            		loginSpan.style.fontStyle = "italic";
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","error");
 						            	} else {
 						            		loginSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + loginStr;
 						            		loginSpan.style.color = "black";
 						            		loginSpan.style.fontStyle = "normal";
-						            		/* 跳轉 */
-						            		window.location.href = resultObj.nextPath;
+						            		/* 顯示彈窗訊息 */
+						            		swal(loginStr,"","success");
+						            		setTimeout(function() {
+						            			/* 跳轉 */
+						                		window.location.href = resultObj.nextPath;
+						            		},1500);
 						            	}
 									} else {
 										loginStr = "發生錯誤，無法執行檢查";

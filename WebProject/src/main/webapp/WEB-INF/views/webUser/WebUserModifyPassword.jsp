@@ -148,7 +148,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
                 <form method="post">
                 	<fieldset>
                 		<legend>密碼相關資料</legend>
@@ -159,25 +159,31 @@
 								<c:out value = "*" />
 							</c:forEach>
 						</c:if>
-						<button type="button" style="font-size:18px" id="showPassword" onclick="showOldPassword()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="showPassword" onclick="showOldPassword()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<input type="hidden" name="originalPassword" id="originalPassword" value="${userFullData.password}" readonly>
                 		<hr />
 						<label>帳號新密碼：</label> 
 						<input type="password" name="password" id="password" size="30" maxlength="30" onblur="checkAccountPassword()"
 							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="passwordSpan"></span>
 						<hr />
 						<label>確認新密碼：</label> 
 						<input type="password" name="confirmPassword" id="confirmPassword" size="30" maxlength="30" onblur="checkConfirmPassword()"
 							placeholder="請輸入密碼，6~30個字" required="required" />
-						<button type="button" style="font-size:18px" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+						<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch_confirm" onclick="changeConfirmVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 						<span id="confirmPasswordSpan"></span>
+						<hr />
                 	</fieldset>
                 	<div align="center">
-                		<a href="WebUserMain"><button type="button" name="update" style="font-size:18px" >取消 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
-						<button type="button" name="update" id="updateBtn" style="font-size:18px" >密碼修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-						<button type="reset" name="reset" style="font-size:18px" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+                		<a href="WebUserMain">
+                			<button class="btn btn-success" type="button" name="update" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >取消 
+                				<i class="material-icons" style="font-size:18px;color:white">undo</i>
+                			</button>
+                		</a>
+						<button class="btn btn-primary" type="button" name="update" id="updateBtn" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >密碼修改完畢 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+						<button class="btn btn-warning" type="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()" >重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+						<hr />
 					</div>
                 </form>
 				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -214,24 +220,26 @@
     											if (resultObj.resultCode == 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = true;
-    												/* 顯示彈窗訊息 */
-    												swal(confirmPasswordStr, "", "success");
     											} else if (resultObj.resultCode != 1) {
     												confirmPasswordStr = resultObj.resultMessage;
     												confirmPasswordIsOk = false;
-    												/* 顯示彈窗訊息 */
-    												swal(confirmPasswordStr, "", "error");
     											} 
     											if (!confirmPasswordIsOk) {
     												confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + confirmPasswordStr;
     												confirmPasswordSpan.style.color = "red";
     												confirmPasswordSpan.style.fontStyle = "italic";
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "error");
     							            	} else {
     							            		confirmPasswordSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + confirmPasswordStr;
     							            		confirmPasswordSpan.style.color = "black";
     							            		confirmPasswordSpan.style.fontStyle = "normal";
-    							            		/* 跳轉 */
-    							            		window.location.href = resultObj.nextPath;
+    												/* 顯示彈窗訊息 */
+    												swal(confirmPasswordStr, "", "success");
+    												setTimeout(function() {
+	    							            		/* 跳轉 */
+	    							            		window.location.href = resultObj.nextPath;
+    												},1500);
     							            	}
     										} else {
     											confirmPasswordStr = "發生錯誤，無法執行檢查";

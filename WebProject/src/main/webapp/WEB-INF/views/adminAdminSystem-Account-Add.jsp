@@ -13,7 +13,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -22,7 +23,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-		            <div class="container"  style="margin-top: 20px;background-color:#FFF;">
+		            <div class="container"  style="margin-top: 20px;background-color:#FFF;border-radius: 5px;">
 		               <c:if test="${userFullData.accountLv.lv != -1}">
 							<c:redirect url="WebUserLogin" />
 						</c:if>
@@ -55,7 +56,7 @@
 								<label>帳號密碼：</label> 
 								<input type="password" name="password" id="password" size="40" maxlength="20" onblur="checkAccountPassword()"
 									placeholder="請輸入密碼，6~30個字" required="required" />
-								<button type="button" style="font-size:18px" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
+								<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="visibility_switch" onclick="changeVisibility()">顯示密碼 <i class="material-icons" style="font-size:18px;color:red">visibility</i></button>
 								<span id="passwordSpan"></span>
 								<hr />
 								<label>中文姓氏：</label>
@@ -150,9 +151,9 @@
 							    <hr />
 							</fieldset>
 							<div align="center">
-								<button type="button" style="font-size:18px" id="add" name="add" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
-								<button type="reset" id="reset" name="reset" style="font-size:18px" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
-								<a href="<c:url value='/adminAccount' /> "><button type="button" name="login" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
+								<button class="btn btn-primary" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" id="add" name="add" >送出 <i class="material-icons" style="font-size:18px;color:blue">check</i></button>
+								<button class="btn btn-warning" type="reset" id="reset" name="reset" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<a href="<c:url value='/adminAccount' /> "><button class="btn btn-success" type="button" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button></a>
 								<span id="addResultSpan"></span>
 							</div>
 							<hr />
@@ -249,30 +250,32 @@
 												if (resultObj.resultCode == 1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = true;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","success");
 												} else if (resultObj.resultCode == 0) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","error");
 												} else if (resultObj.resultCode == -1) {
 													addResultStr = resultObj.resultMessage;
 													addResultIsOk = false;
-													/* 顯示彈窗訊息 */
-													swal(resultObj.resultMessage,"","error");
 												}
 												if (!addResultIsOk) {
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","error");
 													addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 													addResultSpan.style.color = "red";
 													addResultSpan.style.fontStyle = "italic";
 								            	} else {
-								            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
-								            		addResultSpan.style.color = "black";
-								            		addResultSpan.style.fontStyle = "normal";
+													/* 顯示彈窗訊息 */
+													swal(resultObj.resultMessage,"","success");
+													setTimeout(function() {
+									            		addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>" + addResultStr;
+									            		addResultSpan.style.color = "black";
+									            		addResultSpan.style.fontStyle = "normal";
+													},1500);
 								            	}
 											} else {
 												addResultStr = "發生錯誤，無法執行檢查";
+												/* 顯示彈窗訊息 */
+												swal(resultObj.resultMessage,"","error");
 												addResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + addResultStr;
 												addResultSpan.style.color = "red";
 												addResultSpan.style.fontStyle = "italic";
@@ -309,18 +312,16 @@
 												if (resultObj.resultCode == 1) {
 													accountStr = "此帳號已有人使用！";
 								            		accountIsOk = false;
-								            		/* 顯示彈窗訊息 */
-													swal(accountStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													accountStr = "可建立此帳號！";
 								            		accountIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													accountStr = "檢查途中遭遇錯誤！";
 								            		accountIsOk = false;
-								            		/* 顯示彈窗訊息 */
-													swal(accountStr,"","error");
 												}
 												if (!accountIsOk) {
+								            		/* 顯示彈窗訊息 */
+													swal(accountStr,"","error");
 								            		accountSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + accountStr;
 								            		accountSpan.style.color = "red";
 								            		accountSpan.style.fontStyle = "italic";
@@ -369,18 +370,16 @@
 												if (resultObj.resultCode == 1) {
 													nicknameStr = "此稱呼已有人使用！";
 													nicknameIsOk = false;
-													/* 顯示彈窗訊息 */
-								            		swal(resultObj.resultMessage,"","error");
 												} else if (resultObj.resultCode == 0) {
 													nicknameStr = "可使用此稱呼！";
 													nicknameIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													nicknameStr = "檢查途中遭遇錯誤！";
 													nicknameIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(resultObj.resultMessage,"","error");
 												}
 												if (!nicknameIsOk) {
+													/* 顯示彈窗訊息 */
+								            		swal(resultObj.resultMessage,"","error");
 													nicknameSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + nicknameStr;
 													nicknameSpan.style.color = "red";
 													nicknameSpan.style.fontStyle = "italic";
@@ -429,18 +428,16 @@
 												if (resultObj.resultCode == 1) {
 													emailStr = "此電子信箱已有人使用！";
 								            		emailIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(emailStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													emailStr = "可使用此電子信箱！";
 								            		emailIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													emailStr = "檢查途中遭遇錯誤！";
 								            		emailIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(emailStr,"","error");
 												}
 												if (!emailIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(emailStr,"","error");
 								            		emailSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + emailStr;
 								            		emailSpan.style.color = "red";
 								            		emailSpan.style.fontStyle = "italic";
@@ -489,18 +486,16 @@
 												if (resultObj.resultCode == 1) {
 													phoneStr = "此聯絡電話已有人使用！";
 								            		phoneIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(phoneStr,"","error");
 												} else if (resultObj.resultCode == 0) {
 													phoneStr = "可使用此聯絡電話！";
 								            		phoneIsOk = true;
 												} else if (resultObj.resultCode == -1) {
 													phoneStr = "檢查途中遭遇錯誤！";
 								            		phoneIsOk = false;
-								            		/* 顯示彈窗訊息 */
-								            		swal(phoneStr,"","error");
 												}
 												if (!phoneIsOk) {
+								            		/* 顯示彈窗訊息 */
+								            		swal(phoneStr,"","error");
 								            		phoneSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + phoneStr;
 								            		phoneSpan.style.color = "red";
 								            		phoneSpan.style.fontStyle = "italic";

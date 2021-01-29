@@ -96,8 +96,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Transactional
 	@Override
-	public List<ProductInfoBean> getAllProductByUserId(String userId) {
-		return pDao.getAllProductByUserId(userId);
+	public List<ProductInfoBean> getAllProduct(String selectedParameters, Integer avPage, Integer startPage) {
+		return pDao.getAllProduct(selectedParameters, avPage, startPage);
 	}
 	
 	@Transactional

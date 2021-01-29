@@ -177,6 +177,7 @@ public class StoreCUD_Controller {
 			@ModelAttribute("storeBean") StoreBean storeBean
 			) {
 		ps.deleteALLProduct(storeBean);
+		ss.removeComment(storeBean);
 		ss.deleteStore(storeBean);
 		//移除所有追蹤狀態
 		ts.removeAllBeTraceStore(storeBean.getId());

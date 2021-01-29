@@ -31,6 +31,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!--   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
@@ -231,9 +232,13 @@ a.mobile-show {
           "id":id //id向後端發送
          },
          type:"Get",
-         dataType:"JSON",
+         dataType:"TEXT",
          success:function(obj){ 
-          window.alert('商品已加入購物車!');
+  			Swal.fire({ position: 'center',
+				  icon: 'success',
+				  title: '您的商品已加入溝物車',
+				  showConfirmButton: false,
+				  timer: 1500})
          },
          error: function(xhr,ajaxOptions,thrownError){
           console.log(xhr.status);
@@ -551,7 +556,7 @@ function initMap() {
     
 	<div class="container" style="background-color:white; height: auto;margin-top: 20px;border-radius: 5px 5px 5px 5px; margin-bottom:5px;padding:5px 10px;padding-left:15px">
 		<a href="<c:url value='/booking/${stname1}'/> ">	
-			<span style="font-size: 140%">餐廳服務</span>
+			<span style="font-size: 140%">訂位服務</span>
 		</a>
 	</div>
 	

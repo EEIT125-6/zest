@@ -1279,7 +1279,6 @@ public class WebUserController {
 			@RequestParam(value = "status", required = false, defaultValue = "") String status,
 			@PathVariable(value = "mode", required = false) String mode,
 			HttpServletRequest request) {
-		
 		/* 宣告參數 */
 		Map<String, String> map = new HashMap<>();
 		String operateMessage = "";
@@ -1324,7 +1323,7 @@ public class WebUserController {
 						if (operateResult == 1) {
 							Map<String, Object> userMap = (Map<String, Object>) context.getAttribute("userMap");
 							/* 理論上該Map上至少要有操作的管理員帳號的相對物件，所以為空為異常情況 */
-							if (userMap.isEmpty()) {
+							if (userMap == null) {
 								operateResult = 0;
 								operateMessage = "發生異常！請考慮重新登入本系統或聯絡技術人員";
 							} else {
@@ -1349,8 +1348,9 @@ public class WebUserController {
 					} catch (SQLException sqlE) {
 						operateMessage = sqlE.getMessage();
 					} catch (Exception e) {
+						e.printStackTrace();
 						String quitMessageTmp = e.getMessage();
-						operateMessage = quitMessageTmp.split(":")[1];
+						operateMessage = (quitMessageTmp.indexOf(":") == -1) ? quitMessageTmp : quitMessageTmp.split(":")[1];
 					}
 					break;
 				case "active":
@@ -1973,7 +1973,7 @@ public class WebUserController {
 	}
 	
 	/* 使用者註冊資料檢查 */
-	public String doCheckRegisterInput(
+	private String doCheckRegisterInput(
 			WebUserData reg_webUser, 
 			Model model) {
 		
@@ -2136,7 +2136,7 @@ public class WebUserController {
 	}
 	
 	/* 使用者登入資料檢查 */
-	public String doCheckLoginInput(String account, String password) {
+	private String doCheckLoginInput(String account, String password) {
 		/* 傳回參數宣告 */
 		String message = "";	
 		
@@ -2155,50 +2155,50 @@ public class WebUserController {
 	}
 	
 	/* 使用者停用帳戶時的輸入檢查 */
-	public String doCheckQuitInput(WebUserData userData) {
-		String checkInputResult = "";
-		
-		/* 檢查JavaBean物件 */
-		if (userData == null) {
-			checkInputResult = "您似乎沒有登入本系統！請登入後再試一次";
-		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
-			checkInputResult = "身分驗證失敗，請登入後重試一次！";
-		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
-			checkInputResult = "本帳號無法使用此功能";
-		} else {
-			Integer checkResult = -1;
-			Integer checkResult2 = -1;
-			
-			/* 調用服務裡的方法 */
-			try {
-				checkResult = wus.checkAccountExist(userData.getAccount());
-			} catch (SQLException sqlE) {
-				String quitMessageTmp = sqlE.getMessage();
-				checkInputResult = quitMessageTmp.split(":")[1];
-			}
-			
-			/* 調用服務裡的方法 */
-			try {
-				checkResult2 = wus.checkUserIdQuit(userData.getUserId());
-			} catch (SQLException sqlE) {
-				String quitMessageTmp = sqlE.getMessage();
-				checkInputResult = quitMessageTmp.split(":")[1];
-			}
-			
-			if (checkResult != 1) {
-				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
-			} else if (checkResult2 == 0) {
-				checkInputResult = "異常的使用者資訊，本帳號已被停用！";
-			} else if (checkResult2 == -1) {
-				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
-			}
-		}		
-		
-		return checkInputResult;
-	}
+//	public String doCheckQuitInput(WebUserData userData) {
+//		String checkInputResult = "";
+//		
+//		/* 檢查JavaBean物件 */
+//		if (userData == null) {
+//			checkInputResult = "您似乎沒有登入本系統！請登入後再試一次";
+//		} else if (userData.getAccountLv().getLv() != Integer.parseInt(userData.getUserId().substring(0, 1)) - 1) {
+//			checkInputResult = "身分驗證失敗，請登入後重試一次！";
+//		} else if (userData.getStatus().equals("quit") || userData.getStatus().equals("inactive")) {
+//			checkInputResult = "本帳號無法使用此功能";
+//		} else {
+//			Integer checkResult = -1;
+//			Integer checkResult2 = -1;
+//			
+//			/* 調用服務裡的方法 */
+//			try {
+//				checkResult = wus.checkAccountExist(userData.getAccount());
+//			} catch (SQLException sqlE) {
+//				String quitMessageTmp = sqlE.getMessage();
+//				checkInputResult = quitMessageTmp.split(":")[1];
+//			}
+//			
+//			/* 調用服務裡的方法 */
+//			try {
+//				checkResult2 = wus.checkUserIdQuit(userData.getUserId());
+//			} catch (SQLException sqlE) {
+//				String quitMessageTmp = sqlE.getMessage();
+//				checkInputResult = quitMessageTmp.split(":")[1];
+//			}
+//			
+//			if (checkResult != 1) {
+//				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
+//			} else if (checkResult2 == 0) {
+//				checkInputResult = "異常的使用者資訊，本帳號已被停用！";
+//			} else if (checkResult2 == -1) {
+//				checkInputResult = "異常的使用者資訊，請確認您已成功登入本系統！";
+//			}
+//		}		
+//		
+//		return checkInputResult;
+//	}
 	
 	/* 使用者修改密碼時的輸入檢查 */
-	public String doCheckUpdatePasswordInput(WebUserData userData, String password, String confirmPassword) {
+	private String doCheckUpdatePasswordInput(WebUserData userData, String password, String confirmPassword) {
 		
 		String updateResultMessage = "";
 		
@@ -2240,7 +2240,7 @@ public class WebUserController {
 	}
 	
 	/* 使用者修改資料時的輸入檢查 */
-	public String doCheckUpdateDataInput(
+	private String doCheckUpdateDataInput(
 			WebUserData updatedUserData,
 			WebUserData selfData) {
 		
@@ -2375,23 +2375,47 @@ public class WebUserController {
 		return (count == 11) ? "11,沒有輸入任何有效的修改內容，請重新操作" : count.toString() + "," + updateResultMessage;
 	}
 	
-	public String doCheckSelectUserDataInput(String selectedParameters, WebUserData userData) {
+	private String doCheckSelectUserDataInput(String selectedParameters, WebUserData userData) {
 		String checkResult = "";
 		
 		String selectedAccount = selectedParameters.split(":")[0];
 		if (checkResult.equals("")) {
-			if (selectedAccount.length() > 20) {
+			if (selectedAccount.length() > 30) {
 				checkResult = "搜尋的帳號名稱過長！";
-			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,20}") && !selectedAccount.equals("?")) {
+			} else if (selectedAccount.indexOf("&") != -1) {
+				checkResult = "搜尋的帳號不可以包含&符號";
+			} else if (selectedAccount.indexOf("=") != -1) {
+				checkResult = "搜尋的帳號不可以包含等號";
+			} else if (selectedAccount.indexOf("_") != -1) {
+				checkResult = "搜尋的帳號不可以包含底線";
+			} else if (selectedAccount.indexOf("-") != -1) {
+				checkResult = "搜尋的帳號不可以包含破折號";
+			} else if (selectedAccount.indexOf("+") != -1) {
+				checkResult = "搜尋的帳號不可以包含加號";
+			} else if (selectedAccount.indexOf(",") != -1 || selectedAccount.indexOf("，") != -1) {
+				checkResult = "搜尋的帳號不可以包含逗號";
+			} else if (selectedAccount.indexOf(".") != -1 || selectedAccount.indexOf("。") != -1) {
+				checkResult = "搜尋的帳號不可以包含句號";
+			} else if (selectedAccount.indexOf("?") != -1 || selectedAccount.indexOf("？") != -1) {
+				checkResult = "帳號不可以包含問號";
+			} else if (selectedAccount.indexOf("<") != -1 || selectedAccount.indexOf(">") != -1) {
+				checkResult = "搜尋的帳號不可以包含<、>";
+			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,30}")) {
 				checkResult = "搜尋的帳號含有無效字元！";
 			} 
 		}
 		
 		String selectedNickname = selectedParameters.split(":")[1];
 		if (checkResult.equals("")) {
-			if (selectedNickname.length() > 20) {
+			if (selectedNickname.length() > 25) {
 				checkResult = "搜尋的稱呼名稱過長！";
-			}
+			} else if (selectedNickname.indexOf("<") != -1 || selectedNickname.indexOf(">") != -1) {
+				checkResult = "稱呼不可以包含<、>";
+			} else if (selectedNickname.indexOf("&") != -1) {
+				checkResult = "稱呼不可以包含&符號";
+			} else if (selectedNickname.indexOf("=") != -1) {
+				checkResult = "稱呼不可以包含等號";
+			} 
 		}
 		
 		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
@@ -2419,7 +2443,7 @@ public class WebUserController {
 		return checkResult;
 	}
 	
-	public String doCheckAdminInput(WebUserData userData, String userId, String account, String status, String mode) {
+	private String doCheckAdminInput(WebUserData userData, String userId, String account, String status, String mode) {
 		String checkMessage = "";	
 		
 		/* 檢查使用者身分 */
@@ -2471,7 +2495,7 @@ public class WebUserController {
 	}
 	
 	/* 檢查重設資訊 */
-	public String doCheckResetInput(String userId, String password) {
+	private String doCheckResetInput(String userId, String password) {
 		String checkMessage = "";
 		/* 檢查userId */
 		checkMessage = doCheckUserId(userId);
@@ -2481,138 +2505,9 @@ public class WebUserController {
 		return checkMessage;
 	}
 	
-	/* 統一檢查userId方法 */
-	public String doCheckUserId(String userId) {
-		String checkMessage = "";
-		
-		String resultTmp = GeneralInputCheckService.doBasicCheckUserId(userId);
-		checkMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
-		if (checkMessage.equals("")) {
-			Integer userIdCheckResult = -1;
-			/* 調用服務裡的方法 */
-			try {
-				userIdCheckResult = wus.checkUserIdExist(userId);
-			} catch (SQLException sqlE) {
-				checkMessage = sqlE.getMessage();
-			}
-			checkMessage = (userIdCheckResult == 0) ? "Id不存在" : checkMessage;
-		}
-		return checkMessage;
-	}
-	
-	/* 統一檢查帳號方法 */
-	public String doCheckAccount(String account, String mode) {
-		String submitMessage = "?";
-		Boolean inputIsOk = true;
-		
-		String resultTmp = GeneralInputCheckService.doCheckPassword(account, "register");
-		submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
-		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
-		/* 通過基礎檢查 */
-		if (submitMessage.equals("") && account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
-			Integer accountCheckResult = -1;
-			/* 調用服務裡的方法 */
-			try {
-				accountCheckResult = wus.checkAccountExist(account);
-			} catch (SQLException sqlE) {
-				submitMessage = sqlE.getMessage();
-				inputIsOk = false;
-			}
-			
-			if (mode.equals("submit")) {
-				if (accountCheckResult == 1) {
-					submitMessage = "帳號已存在，請挑選別的名稱作為帳號";
-					inputIsOk = false;
-				}
-			} 
-		}
-		return submitMessage + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查稱呼方法 */
-	public String doCheckNickname(String nickname, String lastName, String mode, String oldNickname) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		String resultTmp = GeneralInputCheckService.doBasicCheckNickname(nickname, lastName, oldNickname);
-		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
-		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
-		/* 通過基礎檢查 */
-		if (message.equals("")) {
-			Integer nicknameCheckResult = -1;
-			/* 調用服務裡的方法 */
-			try {
-				nicknameCheckResult = wus.checkNicknameExist(nickname);
-			} catch (SQLException sqlE) {
-				message = sqlE.getMessage();
-				inputIsOk = false;
-			}
-			
-			if ((nicknameCheckResult == 1 && !mode.equals("update")) || (!nickname.equals(oldNickname) && mode.equals("update") && nicknameCheckResult == 1)) {
-				message = "稱呼已存在，請挑選別的名稱作為稱呼";
-				inputIsOk = false;
-			}
-		}
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查Email方法 */
-	public String doCheckEmail(String email, String mode, String oldEmail) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		String resultTmp = GeneralInputCheckService.doBasicCheckEmail(email);
-		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
-		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
-		/* 通過基礎檢查 */
-		if (message.equals("")) {
-			Integer emailCheckResult = -1;
-			/* 調用服務裡的方法 */
-			try {
-				emailCheckResult = wus.checkEmailExist(email);
-			} catch (SQLException sqlE) {
-				message = sqlE.getMessage();
-				inputIsOk = false;
-			}
-			
-			if ((emailCheckResult == 1 && !mode.equals("update")) || (!oldEmail.equals(email) && mode.equals("update") && emailCheckResult == 1)){
-				message = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
-				inputIsOk = false;
-			} 
-		}
-		return message + "," + inputIsOk.toString();
-	}
-	
-	/* 統一檢查電話方法 */
-	public String doCheckPhone(String phone, String mode, String oldPhone) {
-		Boolean inputIsOk = true;
-		String message = "?";
-		
-		String resultTmp = GeneralInputCheckService.doBasicCheckPhone(phone);
-		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
-		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
-		/* 通過基礎檢查 */
-		if (message.equals("")) {
-			Integer phoneCheckResult = -1;
-			/* 調用服務裡的方法 */
-			try {
-				phoneCheckResult = wus.checkPhoneExist(phone);
-			} catch (SQLException sqlE) {
-				message = sqlE.getMessage();
-				inputIsOk = false;
-			}
-			
-			if ((!mode.equals("update") && phoneCheckResult == 1) || (!phone.equals(oldPhone) && mode.equals("update") && phoneCheckResult == 1)){
-				message = "該聯絡電話已被註冊，請輸入別的聯絡電話";
-				inputIsOk = false;
-			}
-		}
-		return message + "," + inputIsOk.toString();
-	}
-	
 	/* 使用者物件初始化 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> doCheckNewWebUserObj(
+	private Map<String, Object> doCheckNewWebUserObj(
 			Model model,
 			Integer lv,
 			String account,
@@ -2774,5 +2669,134 @@ public class WebUserController {
 		map.put("reg_webUser", reg_webUser);
 		map.put("submitMessage", submitMessage);
 		return map;
+	}
+	
+	/* 統一檢查userId方法 */
+	public String doCheckUserId(String userId) {
+		String checkMessage = "";
+		
+		String resultTmp = GeneralInputCheckService.doBasicCheckUserId(userId);
+		checkMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		if (checkMessage.equals("")) {
+			Integer userIdCheckResult = -1;
+			/* 調用服務裡的方法 */
+			try {
+				userIdCheckResult = wus.checkUserIdExist(userId);
+			} catch (SQLException sqlE) {
+				checkMessage = sqlE.getMessage();
+			}
+			checkMessage = (userIdCheckResult == 0) ? "Id不存在" : checkMessage;
+		}
+		return checkMessage;
+	}
+	
+	/* 統一檢查帳號方法 */
+	public String doCheckAccount(String account, String mode) {
+		String submitMessage = "?";
+		Boolean inputIsOk = true;
+		
+		String resultTmp = GeneralInputCheckService.doBasicCheckAccount(account, "register");
+		submitMessage = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (submitMessage.equals("") && account.matches("[a-zA-Z]{1}[0-9a-zA-Z]{5,29}")) {
+			Integer accountCheckResult = -1;
+			/* 調用服務裡的方法 */
+			try {
+				accountCheckResult = wus.checkAccountExist(account);
+			} catch (SQLException sqlE) {
+				submitMessage = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if (mode.equals("submit")) {
+				if (accountCheckResult == 1) {
+					submitMessage = "帳號已存在，請挑選別的名稱作為帳號";
+					inputIsOk = false;
+				}
+			} 
+		}
+		return submitMessage + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查稱呼方法 */
+	public String doCheckNickname(String nickname, String lastName, String mode, String oldNickname) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		
+		String resultTmp = GeneralInputCheckService.doBasicCheckNickname(nickname, lastName, oldNickname);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (message.equals("")) {
+			Integer nicknameCheckResult = -1;
+			/* 調用服務裡的方法 */
+			try {
+				nicknameCheckResult = wus.checkNicknameExist(nickname);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if ((nicknameCheckResult == 1 && !mode.equals("update")) || (!nickname.equals(oldNickname) && mode.equals("update") && nicknameCheckResult == 1)) {
+				message = "稱呼已存在，請挑選別的名稱作為稱呼";
+				inputIsOk = false;
+			}
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查Email方法 */
+	public String doCheckEmail(String email, String mode, String oldEmail) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		
+		String resultTmp = GeneralInputCheckService.doBasicCheckEmail(email);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (message.equals("")) {
+			Integer emailCheckResult = -1;
+			/* 調用服務裡的方法 */
+			try {
+				emailCheckResult = wus.checkEmailExist(email);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if ((emailCheckResult == 1 && !mode.equals("update")) || (!oldEmail.equals(email) && mode.equals("update") && emailCheckResult == 1)){
+				message = "該聯絡信箱已被註冊，請挑選別的聯絡信箱";
+				inputIsOk = false;
+			} 
+		}
+		return message + "," + inputIsOk.toString();
+	}
+	
+	/* 統一檢查電話方法 */
+	public String doCheckPhone(String phone, String mode, String oldPhone) {
+		Boolean inputIsOk = true;
+		String message = "?";
+		
+		String resultTmp = GeneralInputCheckService.doBasicCheckPhone(phone);
+		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
+		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
+		/* 通過基礎檢查 */
+		if (message.equals("")) {
+			Integer phoneCheckResult = -1;
+			/* 調用服務裡的方法 */
+			try {
+				phoneCheckResult = wus.checkPhoneExist(phone);
+			} catch (SQLException sqlE) {
+				message = sqlE.getMessage();
+				inputIsOk = false;
+			}
+			
+			if ((!mode.equals("update") && phoneCheckResult == 1) || (!phone.equals(oldPhone) && mode.equals("update") && phoneCheckResult == 1)){
+				message = "該聯絡電話已被註冊，請輸入別的聯絡電話";
+				inputIsOk = false;
+			}
+		}
+		return message + "," + inputIsOk.toString();
 	}
 }

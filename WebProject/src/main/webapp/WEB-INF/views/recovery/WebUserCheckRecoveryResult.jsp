@@ -146,7 +146,7 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
                 <p>${recoveryResult}</p>
                 <p>3秒後將移至</p>
                 <p id = "pPage">${redirectPage}</p>

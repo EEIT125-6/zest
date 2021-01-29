@@ -147,8 +147,9 @@
             <%@include file = "../Header-Include.jsp" %>
             <%@include file = "../LoadingScreen.jsp" %>
 <!-- -------------------------------------------------------------- -->
-            <div class="container"  style="margin-top: 20px;">
+            <div class="container"  style="margin-top: 20px;background-color: #F0F0F0;border-radius: 5px;">
 				<input type="hidden" id="password" value="${userFullData.password}" />
+				<input type="hidden" id="leavePath" value="${pageContext.request.contextPath}/webUser/controller/WebUserMain/Logout" />
                 <form action="<c:url value='/webUser/WebUserModifyData' />" method="POST">
                 	<fieldset>
                 		<legend>
@@ -161,34 +162,36 @@
                 			</c:if>
             			</legend>
                			<hr />
-               			<button type="submit" id="updateData" style="font-size:18px" >修改資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
+               			<button class="btn btn-primary" type="submit" id="updateData" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >修改資料 <i class="material-icons" style="font-size:18px;color:blue">build</i></button>
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
                 			<a href="<c:url value='/Insert' />">
-                				<button type="button" id="addShop" name="addShop" style="font-size:18px" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
+                				<button class="btn btn-info" type="button" id="addShop" name="addShop" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >新增店家 <i class="material-icons" style="font-size:18px;color:blue">add</i></button>
                 			</a>
                 		</c:if>
                 		<c:if test="${userFullData.password != null}">
 	                		<a href="<c:url value='/webUser/controller/WebUserModifyPassword' />">
-	                			<button type="button" name="updatePassword" style="font-size:18px" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
+	                			<button class="btn btn-warning" type="button" name="updatePassword" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >修改密碼 <i class="material-icons" style="font-size:18px;color:red">security</i></button>
 	               			</a>
                			</c:if>
                 		<a href="<c:url value='/booking/Page1' />">
-                			<button type="button" id="checkBooking" name="checkBooking" style="font-size:18px" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
+                			<button class="btn btn-secondary" type="button" id="checkBooking" name="checkBooking" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢訂位 <i class="material-icons" style="font-size:18px;color:blue">import_contacts</i></button>
                 		</a>
                 		<a href="<c:url value='/orange/ShowComment' />">
-                			<button type="button" id="checkComment" name="checkComment" style="font-size:18px" >查詢留言 <i class="material-icons" style="font-size:18px;color:blue">forum</i></button>
+                			<button class="btn btn-secondary" type="button" id="checkComment" name="checkComment" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >查詢留言 
+                				<i class="material-icons" style="font-size:18px;color:blue">forum</i>
+                			</button>
                 		</a>
                 		
 <!--                 	<button type="button" id="myFavorite" name="myFavorite" style="font-size:18px" >我的最愛 <i class="material-icons" style="font-size:18px;color:blue">favorite</i></button> -->
                 		
                 		<c:if test="${userFullData.accountLv.lv == 1}" >
                 			<a href="<c:url value='/booking/admin2'/>">
-                				<button type="button" id="manage" name="manage" style="font-size:18px" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
+                				<button class="btn btn-info" type="button" id="manage" name="manage" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >管理訂位 <i class="material-icons" style="font-size:18px;color:blue">cake</i></button>
                 			</a>
                 		</c:if>
-                		<a href="<c:url value='/webUser/controller/WebUserMain/Logout' />">
-                			<button type="button" id="logout" name="login" style="font-size:18px" >登出帳戶 <i class="material-icons" style="font-size:18px;color:green">power</i></button>
-                		</a>
+                			<button class="btn btn-success" type="button" id="logout" name="login" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >登出帳戶 
+                				<i class="material-icons" style="font-size:18px;color:white">power</i>
+                			</button>
 						<hr />
                 	</fieldset>
                 </form>
@@ -203,24 +206,16 @@
                 </div>
 				<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
                 <script>
+	                document.getElementById("logout").addEventListener("click",function() {
+	    				let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
+	    				swal("謝謝您的使用，" + account + " ！", "", "success");
+	    				setTimeout(function() {
+	    					/* 跳轉 */
+		            		window.location.href = document.getElementById("leavePath").value;
+	    				},1500);
+	    			});
                 	window.onload = function () {
-                		let logOutBtn = document.getElementById("logout");
-                		
-                		logOutBtn.onclick = function() {
-        					let account = (document.getElementById("account").value == null) ? "訪客" : document.getElementById("account").value;
-							swal("謝謝您的使用，" + account + " ！", "", "success");
-        				};
-        				
         				getSelfData();
-                	}
-                	
-                	function doubleCheck() {
-                		let highPrevPassword = prompt("如要繼續進行操作，請輸入您的密碼：", "");
-                		let inputPassword = document.getElementById("password").value;
-                		if (highPrevPassword != inputPassword) {
-                			return false;
-                		} 
-                		return true;
                 	}
                 	
                 	function getSelfData() {
@@ -248,10 +243,10 @@
 											getDataStr = resultObj.resultMessage;
 										} else {
 											getDataStr = "取得資料途中遭遇錯誤！";
-											/* 顯示彈窗異常訊息 */
-											swal(resultObj.resultMessage, "", "error");
 										}
 										if (!getDataIsOk) {
+											/* 顯示彈窗訊息 */
+											swal(resultObj.resultMessage, "", "error");
 											getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
 											getDataSpan.style.color = "red";
 											getDataSpan.style.fontStyle = "italic";
@@ -311,6 +306,7 @@
 						            	}
 									} else {
 										getDataStr = "發生錯誤，無法取得使用者個人資料";
+										swal(getDataStr, "", "error");
 										getDataSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + getDataStr;
 										getDataSpan.style.color = "red";
 										getDataSpan.style.fontStyle = "italic";
@@ -318,7 +314,7 @@
 								}
 							};
 						} else {
-							alert("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！");
+							swal("您的瀏覽器不支援Ajax技術或部分功能遭到關閉，請改用其他套瀏覽器使用本網站或洽詢您設備的管理人員！","","error");
 						}
 					}
                 </script>

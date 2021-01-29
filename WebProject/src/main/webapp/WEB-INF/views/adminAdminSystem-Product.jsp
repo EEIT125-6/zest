@@ -14,7 +14,8 @@
 	 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" data-integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" data-crossorigin="anonymous"/>
     <!-- CSS Files -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />	
+    <link href="css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/webUser/BackEndForm.css">	
 </head>
 <body>
     <div class="wrapper">
@@ -23,7 +24,7 @@
 			<div class="content" style="background-color: #F0F0F0;">
 				<div class="container-fluid">
 <!---------------------------------------------------------------------------->
-					<div class="container" style="margin-top: 20px;background-color: #FFF;">
+					<div class="container" style="margin-top: 20px;background-color: #FFF;border-radius: 5px;">
 						<input type="hidden" id="space" value="${pageContext.request.contextPath}" />
 						<input type="hidden" id="pageNo" value="1" />
 						<input type="hidden" id="maxPage" value="1" />
@@ -40,21 +41,32 @@
 									placeholder="輸入品名" /> 
 								<span id="productSpan"></span>
 								<hr />
-								<label>依店家：</label> <input type="text" name="store"
+								<label>依店家：</label> 
+								<input type="text" name="store"
 									id="store" size="60" maxlength="50" onblur="checkStore()"
 									placeholder="輸入店名" /> 
 								<span id="storeSpan"></span>
 								<hr />
-								<label>依價格：</label> <input type="text" name="price"
-									id="price" size="10" maxlength="10" onblur="checkPriceStore()"
+								<label>依價格：</label> 
+								<input type="number" name="price"
+									id="price" size="10" maxlength="10" onblur="checkPrice()"
 									placeholder="輸入價格" /> 
 								<span id="priceSpan"></span>
-								<label>依數量：</label> <input type="text" name="quantity"
+								<label>依數量：</label> 
+								<input type="number" name="quantity"
 									id="quantity" size="10" maxlength="10" onblur="checkQuantity()"
 									placeholder="輸入數量" /> 
 								<span id="quantitySpan"></span>
 								<hr />
 								<c:if test='${userFullData.accountLv.lv == -1}'>
+									<label>依帳號：</label> 
+									<select name="account" id="account" onblur="checkAccount()">
+										<option value="">請選擇要查詢的帳號</option>
+										<c:forEach items="${shopOwnerList}" var="shopOwner">
+											<option value="${shopOwner}" label="${shopOwner}" />
+										</c:forEach>
+									</select>
+									<span id="accountSpan"></span>
 									<label>依狀態：</label>
 									<select name="selectedStatus" id="selectedStatus" onblur="checkStatus()">
 										<option value="">請選擇要查詢的狀態</option>
@@ -75,11 +87,14 @@
 									<option value="20" label="20">
 								</select>
 								<a href="adminBack">
-									<button type="button" id="back" name="back" style="font-size:18px" >返回 <i class="material-icons" style="font-size:18px;color:green">undo</i></button>
+									<button class="btn btn-success" type="button" id="back" name="back" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >返回 
+										<i class="material-icons" style="font-size:18px;color:green">undo</i>
+									</button>
 								</a> 
-								<button type="button" id="search" name="select" style="font-size:18px" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
-								<button type="button" style="font-size:18px" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
+								<button class="btn btn-primary" type="button" id="search" name="select" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" >執行查詢 <i class="material-icons" style="font-size:18px;color:green">search</i></button>
+								<button class="btn btn-warning" type="button" style="box-shadow: 1px 1px 1px rgb(75, 75, 75);font-size:18px;color: black" onclick="clearMessage()">重設條件 <i class="material-icons" style="font-size:18px;color:blue">refresh</i></button>
 							</div>
+							<hr />
 						</form>
 						<div align="center">
 							<span id="searchSpan"></span>
@@ -127,11 +142,37 @@
 									document.getElementById("pageNo").value = 1;
 									selectAllProduct();
 								});
+								$("#dataContainer").on("click", ".pFirstBtn", function() {
+									var userLv = document.getElementById("userLv").value;
+									var productObjValue = document.getElementById("product").value.trim();
+									var storeObjValue = document.getElementById("store").value.trim();
+									var priceObjValue = document.getElementById("price").value.trim();
+									var quantityObjValue = document.getElementById("quantity").value.trim();
+									var accountObjValue = (userLv == -1) ? document.getElementById("account").value.trim() : "";
+									var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
+									
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = 1;
+									selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue);
+								});
 								/* 綁定上一頁按鈕 */
 								$("#dataContainer").on("click", ".pPrev", function() {
 									let startPage = parseInt(document.getElementById("pageNo").value);
 									document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
 									selectAllProduct();
+								});
+								$("#dataContainer").on("click", ".pPrevBtn", function() {
+									var userLv = document.getElementById("userLv").value;
+									var productObjValue = document.getElementById("product").value.trim();
+									var storeObjValue = document.getElementById("store").value.trim();
+									var priceObjValue = document.getElementById("price").value.trim();
+									var quantityObjValue = document.getElementById("quantity").value.trim();
+									var accountObjValue = (userLv == -1) ? document.getElementById("account").value.trim() : "";
+									var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
+									
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = (startPage > 1) ? startPage - 1 : 1;
+									selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue);
 								});
 								/* 綁定下一頁按鈕 */
 								$("#dataContainer").on("click", ".pNext", function() {
@@ -139,11 +180,37 @@
 									document.getElementById("pageNo").value = startPage + 1;
 									selectAllProduct();
 								});
+								$("#dataContainer").on("click", ".pNextBtn", function() {
+									var userLv = document.getElementById("userLv").value;
+									var productObjValue = document.getElementById("product").value.trim();
+									var storeObjValue = document.getElementById("store").value.trim();
+									var priceObjValue = document.getElementById("price").value.trim();
+									var quantityObjValue = document.getElementById("quantity").value.trim();
+									var accountObjValue = (userLv == -1) ? document.getElementById("account").value.trim() : "";
+									var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
+									
+									let startPage = parseInt(document.getElementById("pageNo").value);
+									document.getElementById("pageNo").value = startPage + 1;
+									selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue);
+								});
 								/* 綁定最末頁按鈕 */
 								$("#dataContainer").on("click", ".pLast", function() {
 									let maxPage = parseInt(document.getElementById("maxPage").value);
 									document.getElementById("pageNo").value = maxPage;
 									selectAllProduct();
+								});
+								$("#dataContainer").on("click", ".pLastBtn", function() {
+									var userLv = document.getElementById("userLv").value;
+									var productObjValue = document.getElementById("product").value.trim();
+									var storeObjValue = document.getElementById("store").value.trim();
+									var priceObjValue = document.getElementById("price").value.trim();
+									var quantityObjValue = document.getElementById("quantity").value.trim();
+									var accountObjValue = (userLv == -1) ? document.getElementById("account").value.trim() : "";
+									var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
+									
+									let maxPage = parseInt(document.getElementById("maxPage").value);
+									document.getElementById("pageNo").value = maxPage;
+									selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue);
 								});
 							};
 							
@@ -156,6 +223,48 @@
 								document.getElementById("maxPage").value = 1;
 								var counter = 0;
 								var userLv = document.getElementById("userLv").value.trim();
+								var productObjValue = document.getElementById("product").value.trim();
+								var storeObjValue = document.getElementById("store").value.trim();
+								var priceObjValue = document.getElementById("price").value.trim();
+								var quantityObjValue = document.getElementById("quantity").value.trim();
+								var accountObjValue = (userLv == -1) ? document.getElementById("account").value : "";
+								var statusObjValue = (userLv == -1) ? document.getElementById("selectedStatus").value : "";
+								
+								if (checkForm()) {
+									if (productObjValue == "" && productObjValue.length == 0) {
+										counter++;
+									}
+									if (storeObjValue == "" || storeObjValue.length == 0) {
+										counter++;
+									}
+									if (priceObjValue == "" || priceObjValue.length == 0) {
+										counter++;
+									}
+									if (quantityObjValue == "" || quantityObjValue.length == 0) {
+										counter++;
+									}
+									if (userLv != -1) {
+										if (counter == 4){
+											selectAllProduct();
+										} else {
+											selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue);
+										} 
+									} else {
+										if (statusObjValue == "" || statusObjValue.length == 0) {
+											counter++;
+										}
+										if (accountObjValue == "" || accountObjValue.length == 0) {
+											counter++;
+										}
+										if (counter == 6){
+											selectAllProduct();
+										} else {
+											selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue);
+										} 
+									}
+								} else {
+									swal("檢查失敗！","","error");
+								}
 							}
 							
 							function lastCheck(id, status, mode) {
@@ -169,94 +278,494 @@
 									operateResultSpan.style.color = "black";
 									operateResultSpan.style.fontStyle = "normal";
 									
-									
+									$.ajax({
+										type : "POST",
+										url : "<c:url value='/controller/adminProductOperate' />",
+										data : {
+											'productId':id,
+											'status':status,
+											'mode':mode
+										},
+										dataType : "json",
+										success : function(resultObj) {
+											if (resultObj.resultCode == 1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = true;
+											} else if (resultObj.resultCode == 0) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											} else if (resultObj.resultCode == -1) {
+												operateResultStr = resultObj.resultMessage;
+												operateResultIsOk = false;
+											}
+											if (!operateResultIsOk) {
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+												operateResultSpan.style.color = "red";
+												operateResultSpan.style.fontStyle = "italic";
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","error");												
+											} else {
+												operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+														+ operateResultStr;
+												operateResultSpan.style.color = "black";
+												operateResultSpan.style.fontStyle = "normal";
+												/* 顯示彈窗訊息 */
+												swal(operateResultStr,"","success");
+												setTimeout(function() {
+													/* 重新以Ajax寫出表格 */
+													selectAllStore();
+												},1500);	
+											}
+										},
+										error : function(err) {
+											operateResultStr = "發生錯誤，無法執行指定的操作！";
+											operateResultSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>" + operateResultStr;
+											operateResultSpan.style.color = "red";
+											operateResultSpan.style.fontStyle = "italic";
+											/* 顯示彈窗訊息 */
+											swal(operateResultStr,"","error");
+										}
+									});
 								}
 							}
 							
-							function selectProduct() {
+							function selectProduct(productObjValue, storeObjValue, priceObjValue, quantityObjValue, accountObjValue, statusObjValue) {
+								let startPage = parseInt(document.getElementById("pageNo").value);
+								let searchSpan = document.getElementById("searchSpan");
+								let searchStr = "...處理中，請稍後";
+								let searchIsOk = true;
+								let dataContainer = document.getElementById("dataContainer");
+								let avgPage = document.getElementById("avPage").value;
 								
+								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+									+ searchStr;
+								searchSpan.style.color = "black";
+								searchSpan.style.fontStyle = "normal";
+								
+								$.ajax({
+									type : "POST",
+									url : "<c:url value='/controller/getProductInfoList' />",
+									data : {
+										'name':productObjValue,
+										'shop':storeObjValue,
+										'price':priceObjValue,
+										'quantity':quantityObjValue,
+										'account':accountObjValue,
+										'status':statusObjValue,
+										'avPage':avgPage,
+										'startPage':startPage
+									},
+									dataType : "json",
+									success : function(resultObj) {
+										if (resultObj.resultCode == 1) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+													+ searchStr;
+											searchSpan.style.color = "black";
+											searchSpan.style.fontStyle = "normal";
+											
+											let content = "";
+											if (resultObj.productInfoList.length != 0) {
+												content = "<form method='post'>"
+														+ "<fieldset>"
+														+ "<table border='1'>";
+												
+												if (document.getElementById("userLv").value == -1) {
+													content += "<tr>"
+															+ "<th>項次</th>"
+															+ "<th>刪除</th>"
+															+ "<th>權限</th>"
+															+ "<th>商品名稱</th>"
+															+ "<th>販售店家</th>"
+															+ "<th>價格</th>"
+															+ "<th>數量</th>"
+															+ "<th>權責帳號</th>"
+															+ "<th>商品狀態</th>"
+															+ "</tr>";
+												} else if (document.getElementById("userLv").value == 1) {
+													content += "<tr>"
+															+ "<th>項次</th>"
+															+ "<th>權限</th>"
+															+ "<th>商品名稱</th>"
+															+ "<th>販售店家</th>"
+															+ "<th>價格</th>"
+															+ "<th>數量</th>"
+															+ "</tr>";
+												}
+												
+												let endPage = (resultObj.productInfoList.length < startPage * avgPage) ? resultObj.productInfoList.length : startPage * avgPage
+												for (let dataIndex = 0; dataIndex < endPage; dataIndex++) {
+													let productData = resultObj.productInfoList[dataIndex];
+													
+													content += "<tr>"
+															+ "<td>"
+															+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
+															+ "</td>";
+													
+													if (document.getElementById("userLv").value == -1) {
+														content += "<td>"
+																+ "<button type='button' class='deleteBtn' id='delBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+																+ "</button>"
+																+ "</td>";
+													}
+													
+													if (productData.product_status == "1") {
+														content += "<td>" 
+																+ "<button type='button' class='quitBtn' id='qutBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+																+ "</button>"
+													} else if (productData.product_status == "0") {
+														content += "<td>" 
+																+ "<button type='button' class='activeBtn' id='actBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																+ "</button>";
+													} else if (productData.product_status == "3") {
+														content += "<td>" 
+																+ "<button type='button' class='activeBtn' id='actBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:blue'>delete</i>"
+																+ "</button>";
+													}
+													
+													content += "</td>"
+															+ "<td>"
+															+ productData.product_name 
+															+ "</td>"
+															+ "<td>"
+															+ productData.product_shop 
+															+ "</td>"
+															+ "<td>"
+															+ productData.product_price 
+															+ "</td>";
+													
+													if (productData.product_quantity < 10) {
+														content += "<td>"
+																+ "<font color='red'>"
+																+ productData.product_quantity
+																+ "</font>"
+																+ "</td>";
+													} else {
+														content += "<td>"
+																+ productData.product_quantity
+																+ "</td>";
+													}
+													
+													if (document.getElementById("userLv").value == -1) {
+														content += "<td>"
+																+ productData.storebean.webUserData.account
+																+ "</td>";
+																
+														if (productData.product_status == "0") {
+															content += "<td>已下架</td>"
+																	+ "</tr>";
+														} else if (productData.product_status == "1") {
+															content += "<td>上架中</td>"
+																	+ "</tr>";
+														} else if (productData.product_status == "3") {
+															content += "<td>已移除</td>"
+																	+ "</tr>";
+														}
+													}
+												}
+												
+												content += "</table>"
+														+ "<hr />"
+														+ "</fieldset>" 
+														+ "</form>";
+												
+												document.getElementById("maxPage").value = resultObj.totalDataPages;
+												
+												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirstBtn'>"
+															+ "第一頁"
+															+ "</button>";
+												}
+												
+												if (startPage - 1 > 0) {
+													content +="<button type='button' style='background-color:#F0F0F0' class='pPrevBtn'>"
+															+ "上一頁"
+															+ "</button>";
+												} 
+												
+												if (resultObj.totalDataNums > startPage * avgPage) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNextBtn'>"
+															+ "下一頁"
+															+ "</button>";
+												}
+												
+												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLastBtn'>"
+															+ "最末頁"
+															+ "</button>";
+												}
+												
+												content += "<hr />";
+											}
+											
+											dataContainer.innerHTML = content;
+										} else if (resultObj.resultCode == 0) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+													+ searchStr;
+											searchSpan.style.color = "black";
+											searchSpan.style.fontStyle = "normal";
+										} else if (resultObj.resultCode == -1) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+													+ searchStr;
+											searchSpan.style.color = "red";
+											searchSpan.style.fontStyle = "italic";
+											dataContainer.innerHTML = "";
+											/* 顯示彈窗異常訊息 */
+											swal(searchStr,"","error");
+										}
+									},
+									error : function(err) {
+										searchStr = "發生錯誤，無法載入商品資料";
+										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+												+ searchStr;
+										searchSpan.style.color = "red";
+										searchSpan.style.fontStyle = "italic";
+										dataContainer.innerHTML = "";
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
+									}
+								});
 							}
 							
 							function selectAllProduct() {
+								let startPage = parseInt(document.getElementById("pageNo").value);
+								let searchSpan = document.getElementById("searchSpan");
+								let searchStr = "...處理中，請稍後";
+								let searchIsOk = true;
+								let dataContainer = document.getElementById("dataContainer");
+								let avgPage = document.getElementById("avPage").value;
 								
+								searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>autorenew</i>"
+									+ searchStr;
+								searchSpan.style.color = "black";
+								searchSpan.style.fontStyle = "normal";
+								
+								$.ajax({
+									type : "POST",
+									url : "<c:url value='/controller/getProductInfoList' />",
+									data : {
+										'avPage':avgPage,
+										'startPage':startPage
+									},
+									dataType : "json",
+									success : function(resultObj) {
+										if (resultObj.resultCode == 1) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+													+ searchStr;
+											searchSpan.style.color = "black";
+											searchSpan.style.fontStyle = "normal";
+											
+											let content = "";
+											if (resultObj.productInfoList.length != 0) {
+												content = "<form method='post'>"
+														+ "<fieldset>"
+														+ "<table border='1'>";
+												
+												if (document.getElementById("userLv").value == -1) {
+													content += "<tr>"
+															+ "<th>項次</th>"
+															+ "<th>刪除</th>"
+															+ "<th>權限</th>"
+															+ "<th>商品名稱</th>"
+															+ "<th>販售店家</th>"
+															+ "<th>價格</th>"
+															+ "<th>數量</th>"
+															+ "<th>權責帳號</th>"
+															+ "<th>商品狀態</th>"
+															+ "</tr>";	
+												} else if (document.getElementById("userLv").value == 1) {
+													content += "<tr>"
+															+ "<th>項次</th>"
+															+ "<th>權限</th>"
+															+ "<th>商品名稱</th>"
+															+ "<th>販售店家</th>"
+															+ "<th>價格</th>"
+															+ "<th>數量</th>"
+															+ "</tr>";
+												}
+												
+												let endPage = (resultObj.productInfoList.length < startPage * avgPage) ? resultObj.productInfoList.length : startPage * avgPage
+												for (let dataIndex = 0; dataIndex < endPage; dataIndex++) {
+													let productData = resultObj.productInfoList[dataIndex];
+													
+													content += "<tr>"
+															+ "<td>"
+															+ parseInt(parseInt(avgPage * (startPage - 1)) + parseInt(dataIndex + 1))
+															+ "</td>";
+													
+													if (document.getElementById("userLv").value == -1) {
+														content += "<td>"
+																+ "<button type='button' class='deleteBtn' id='delBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:red'>delete_forever</i>"
+																+ "</button>"
+																+ "</td>";
+													}
+													
+													if (productData.product_status == "1") {
+														content += "<td>" 
+																+ "<button type='button' class='quitBtn' id='qutBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:green'>lock_open</i>"
+																+ "</button>"
+													} else if (productData.product_status == "0") {
+														content += "<td>" 
+																+ "<button type='button' class='activeBtn' id='actBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:red'>lock</i>"
+																+ "</button>";
+													} else if (productData.product_status == "3") {
+														content += "<td>" 
+																+ "<button type='button' class='activeBtn' id='actBtn" 
+																+ productData.product_id  
+																+ "_" 
+																+ productData.product_status 
+																+ "' style='background-color:#F0F0F0'>" 
+																+ "<i class='material-icons' style='font-size:24px;color:blue'>delete</i>"
+																+ "</button>";
+													}
+													
+													content += "</td>"
+															+ "<td>"
+															+ productData.product_name 
+															+ "</td>"
+															+ "<td>"
+															+ productData.product_shop 
+															+ "</td>"
+															+ "<td>"
+															+ productData.product_price 
+															+ "</td>";
+													
+													if (productData.product_quantity < 10) {
+														content += "<td>"
+																+ "<font color='red'>"
+																+ productData.product_quantity
+																+ "</font>"
+																+ "</td>";
+													} else {
+														content += "<td>"
+																+ productData.product_quantity
+																+ "</td>";
+													}
+													
+													if (document.getElementById("userLv").value == -1) {
+														content += "<td>"
+																+ productData.storebean.webUserData.account
+																+ "</td>";
+																
+														if (productData.product_status == "0") {
+															content += "<td>已下架</td>"
+																	+ "</tr>";
+														} else if (productData.product_status == "1") {
+															content += "<td>上架中</td>"
+																	+ "</tr>";
+														} else if (productData.product_status == "3") {
+															content += "<td>已移除</td>"
+																	+ "</tr>";
+														}
+													}
+												}
+												
+												content += "</table>"
+														+ "<hr />"
+														+ "</fieldset>" 
+														+ "</form>";
+													
+												document.getElementById("maxPage").value = resultObj.totalDataPages;
+												
+												if (startPage - 1 > 0 && resultObj.totalDataPages > 2) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pFirst'>"
+															+ "第一頁"
+															+ "</button>";
+															
+												} 
+												
+												if (startPage - 1 > 0) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pPrev'>"
+															+ "上一頁"
+															+ "</button>";
+															
+												} 
+												
+												if (resultObj.totalDataNums > startPage * avgPage) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pNext'>"
+															+ "下一頁"
+															+ "</button>";
+												}
+												
+												if (resultObj.totalDataNums > startPage * avgPage && resultObj.totalDataPages > 2) {
+													content += "<button type='button' style='background-color:#F0F0F0' class='pLast'>"
+															+ "最末頁"
+															+ "</button>";
+												}
+												
+												content += "<hr />";
+											}
+											
+											dataContainer.innerHTML = content;
+										} else if (resultObj.resultCode == 0) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:green'>check_circle</i>"
+													+ searchStr;
+											searchSpan.style.color = "black";
+											searchSpan.style.fontStyle = "normal";
+										} else if (resultObj.resultCode == -1) {
+											searchStr = resultObj.resultMessage;
+											searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+													+ searchStr;
+											searchSpan.style.color = "red";
+											searchSpan.style.fontStyle = "italic";
+											dataContainer.innerHTML = "";
+											/* 顯示彈窗異常訊息 */
+											swal(searchStr,"","error");
+										}
+									},
+									error : function(err) {
+										searchStr = "發生錯誤，無法載入商品資料";
+										searchSpan.innerHTML = "<i class='material-icons' style='font-size:18px;color:red'>cancel</i>"
+												+ searchStr;
+										searchSpan.style.color = "red";
+										searchSpan.style.fontStyle = "italic";
+										dataContainer.innerHTML = "";
+										/* 顯示彈窗訊息 */
+										swal(searchStr,"","error");
+									}
+								});
 							}
 						</script>
 					</div>
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-12"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">使用者縣市分布圖</h4> -->
-<!--                                     <p class="card-category">使用者與地區依賴性</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="userAndarea" class="ct-chart "></div> -->
-<!--                                     <div class="legend"> -->
-<!--                                         <i class="fa fa-circle text-info"></i> 人數 -->
-<!--                                     </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div>						 -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-12"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">新會員增長率</h4> -->
-<!--                                     <p class="card-category">新會員增長率By月份</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="newAccount" class="ct-chart "></div> -->
-<!-- 	                                    <div class="legend"> -->
-<!-- 	                                        <i class="fa fa-circle text-info"></i> 增長人數 -->
-<!-- 	                                    </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="row"> -->
-<!-- 						<div class="col-md-6"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">使用者性別比率</h4> -->
-<!--                                     <p class="card-category">使用者性別比率</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="gender" class="ct-chart "></div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 						<div class="col-md-6"> -->
-<!--                             <div class="card "> -->
-<!--                                 <div class="card-header "> -->
-<!--                                     <h4 class="card-title">年齡x平均花費金額</h4> -->
-<!--                                     <p class="card-category">年齡與平均花費金額關係</p> -->
-<!--                                 </div> -->
-<!--                                 <div class="card-body "> -->
-<!--                                     <div id="ageAndCost" class="ct-chart "></div> -->
-<!--                                     <div class="legend"> -->
-<!--                                         <i class="fa fa-circle text-info"></i> 花費金額 -->
-<!--                                     </div> -->
-<!--                                     <hr> -->
-<!--                                     <div class="stats"> -->
-<!--                                         <i class="fa fa-clock-o"></i> 近期更新時間... -->
-<!--                                     </div> -->
-<!--                                 </div> -->
-<!--                             </div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
 <!---------------------------------------------------------------------------->				
 				</div>
 			</div>
