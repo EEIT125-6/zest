@@ -72,7 +72,16 @@ public interface StoreService {
 	/* 取得全部商店列表 By George017 2021/01/19 */
 	List<StoreBean> getAllStore();
 	
+	/* 取得查詢商店列表+分頁 By George017 2021/02/01 */
+	List<StoreBean> getAllStore(String selectedParameters, Integer avPage, Integer startPage);
+	
 	List<StoreBean> getMemberAllStore(WebUserData webUserData);
+	
+	/* 取得查詢商店總筆數 By George017 2021/02/01 */
+	Long getStoreRecordCounts(String selectedParameters);
+	
+	/* 取得查詢的最大頁數 By George017 2021/02/01 */
+	Integer getTotalStoreRecordCounts(String selectedParameters, Integer avPage);
 	
 	void removeComment(StoreBean sb);
 	

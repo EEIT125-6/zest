@@ -376,6 +376,123 @@ public class StoreHibernateDaoImpl implements StoreDao {
 		List<StoreBean> list = session.createQuery(hql).getResultList();
 		return list;
 	}
+	
+	/* 取得全部商店列表+分頁 By George017 2021/02/01 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<StoreBean> getAllStore(String selectedParameters, Integer avPage, Integer startPage) {
+		/* 取得開始的筆數 */
+		Integer startIndex = (startPage - 1) * avPage;
+		/* 開始組字串 */
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM StoreBean sb");
+		
+		Integer userLv = Integer.parseInt(selectedParameters.split(":")[4]);
+		String selectedShop = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String selectedOwner = (userLv == -1 && !selectedParameters.split(":")[1].equals("?")) ? selectedParameters.split(":")[1] : "";
+		String selectedStatus = (userLv == -1 && !selectedParameters.split(":")[2].equals("?")) ? selectedParameters.split(":")[2] : "";
+		String selectedType = (selectedParameters.split(":")[3].equals("?")) ? "" : selectedParameters.split(":")[3];
+		String selectedUserId = (userLv == 1) ? selectedParameters.split(":")[5] : ""; 
+		
+		if (!selectedShop.equals("")) {
+			selectedShop = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append(" WHERE sb.stname LIKE " + selectedShop);
+		}
+		
+		if (userLv == -1 && !selectedOwner.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			selectedOwner = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" WHERE sb.webUserData.account LIKE " + selectedOwner);
+		} else if (userLv == -1 && !selectedOwner.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			selectedOwner = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND sb.webUserData.account LIKE " + selectedOwner);
+		}
+		
+		if (userLv == -1 && !selectedStatus.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.status = " + selectedStatus);
+		} else if (userLv == -1 && !selectedStatus.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.status = " + selectedStatus);
+		}
+		
+		if (!selectedType.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.Type = " + selectedType);
+		} else if (!selectedType.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.Type = " + selectedType);
+		}
+		
+		if (userLv == 1 && !selectedUserId.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.webUserData.userId = " + selectedUserId);
+		} else if (userLv == 1 && !selectedUserId.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.webUserData.userId = " + selectedUserId);
+		}
+		
+		String hql = sb.toString();
+		Session session = factory.getCurrentSession();
+		List<StoreBean> list = session.createQuery(hql)
+									.setFirstResult(startIndex)
+									.setMaxResults(avPage)
+									.getResultList();
+		return list;
+	}
+	
+	/* 取得查詢商店總筆數 By George017 2021/02/01 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Long getStoreRecordCounts(String selectedParameters) {
+		/* 開始組字串 */
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM StoreBean sb");
+		
+		Integer userLv = Integer.parseInt(selectedParameters.split(":")[4]);
+		String selectedShop = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String selectedOwner = (userLv == -1 && !selectedParameters.split(":")[1].equals("?")) ? selectedParameters.split(":")[1] : "";
+		String selectedStatus = (userLv == -1 && !selectedParameters.split(":")[2].equals("?")) ? selectedParameters.split(":")[2] : "";
+		String selectedType = (selectedParameters.split(":")[3].equals("?")) ? "" : selectedParameters.split(":")[3];
+		String selectedUserId = (userLv == 1) ? selectedParameters.split(":")[5] : ""; 
+		
+		if (!selectedShop.equals("")) {
+			selectedShop = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append(" WHERE sb.stname LIKE " + selectedShop);
+		}
+		
+		if (userLv == -1 && !selectedOwner.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			selectedOwner = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" WHERE sb.webUserData.account LIKE " + selectedOwner);
+		} else if (userLv == -1 && !selectedOwner.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			selectedOwner = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND sb.webUserData.account LIKE " + selectedOwner);
+		}
+		
+		if (userLv == -1 && !selectedStatus.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.status = " + selectedStatus);
+		} else if (userLv == -1 && !selectedStatus.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.status = " + selectedStatus);
+		}
+		
+		if (!selectedType.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.Type = " + selectedType);
+		} else if (!selectedType.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.Type = " + selectedType);
+		}
+		
+		if (userLv == 1 && !selectedUserId.equals("") && sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" WHERE sb.webUserData.userId = " + selectedUserId);
+		} else if (userLv == 1 && !selectedUserId.equals("") && !sb.toString().equals("FROM StoreBean sb")) {
+			sb.append(" AND sb.webUserData.userId = " + selectedUserId);
+		}
+		
+		String hql = sb.toString();
+		Session session = factory.getCurrentSession();
+		List<StoreBean> list = session.createQuery(hql).getResultList();
+		
+		return Long.parseLong(String.valueOf(list.size()));
+	}
+	
+	/* 取得查詢的最大頁數 By George017 2021/02/01 */
+	@Override
+	public Integer getTotalStoreRecordCounts(String selectedParameters, Integer avPage) {
+		Integer totalPages = (int) (Math.ceil(getStoreRecordCounts(selectedParameters) / (double) avPage));
+		return totalPages;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

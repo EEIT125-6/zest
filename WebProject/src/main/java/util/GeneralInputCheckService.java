@@ -49,13 +49,13 @@ public class GeneralInputCheckService {
 		String submitMessage = "?";
 		Boolean inputIsOk = true;
 		
-		if (account.equals("") && mode.equals("recovery")) {
-			submitMessage = "";
+		if (account.length() < 30 && mode.equals("recovery")) {
+			submitMessage = "?";
 			inputIsOk = true;
 		} else if (account.equals("") && !mode.equals("recovery")) {
 			submitMessage = "帳號不可為空白";
 			inputIsOk = false;
-		} else if (account.length() < 6 || account.length() > 30) {
+		} else if ((account.length() < 6 || account.length() > 30) && !mode.equals("recovery")) {
 			submitMessage = "帳號長度不符格式，僅接受6~30個字元";
 			inputIsOk = false;
 		} else if (account.matches("[1-9]{1}.")) {
@@ -85,7 +85,7 @@ public class GeneralInputCheckService {
 		} else if (account.indexOf(".") != -1 || account.indexOf("。") != -1) {
 			submitMessage = "帳號不可以包含句號";
 			inputIsOk = false;
-		} else if (account.indexOf("?") != -1 || account.indexOf("？") != -1) {
+		} else if ((account.indexOf("?") != -1 || account.indexOf("？") != -1) && !mode.equals("recovery")) {
 			submitMessage = "帳號不可以包含問號";
 			inputIsOk = false;
 		} else if (account.indexOf("<") != -1 || account.indexOf(">") != -1) {
@@ -98,7 +98,7 @@ public class GeneralInputCheckService {
 			submitMessage = "?";
 			inputIsOk = true;
 		} else {
-			submitMessage = "無效的輸入密碼";
+			submitMessage = "無效的輸入帳號";
 			inputIsOk = false;
 		}
 		
@@ -240,14 +240,17 @@ public class GeneralInputCheckService {
 	}
 	
 	/* 統一檢查稱呼方法(不含驗證是否存在於DB) */
-	public static String doBasicCheckNickname(String nickname, String lastName, String oldNickname) {
+	public static String doBasicCheckNickname(String nickname, String lastName, String oldNickname, String mode) {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
-		if (nickname.equals("") && lastName.equals("")) {
+		if (nickname.equals("") && lastName.equals("") && !mode.equals("search")) {
 			message = "稱呼不可為空白";
 			inputIsOk = false;
-		} else if (nickname.equals("") && !lastName.equals("")) {
+		} else if (nickname.equals("") && lastName.equals("") && mode.equals("search")) {
+			message = "?";
+			inputIsOk = true;
+		} else if (nickname.equals("") && !lastName.equals("") && !mode.equals("search")) {
 			nickname = lastName;
 			inputIsOk = true;
 		} else if (nickname.length() > 25){

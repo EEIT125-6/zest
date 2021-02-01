@@ -2380,42 +2380,14 @@ public class WebUserController {
 		
 		String selectedAccount = selectedParameters.split(":")[0];
 		if (checkResult.equals("")) {
-			if (selectedAccount.length() > 30) {
-				checkResult = "搜尋的帳號名稱過長！";
-			} else if (selectedAccount.indexOf("&") != -1) {
-				checkResult = "搜尋的帳號不可以包含&符號";
-			} else if (selectedAccount.indexOf("=") != -1) {
-				checkResult = "搜尋的帳號不可以包含等號";
-			} else if (selectedAccount.indexOf("_") != -1) {
-				checkResult = "搜尋的帳號不可以包含底線";
-			} else if (selectedAccount.indexOf("-") != -1) {
-				checkResult = "搜尋的帳號不可以包含破折號";
-			} else if (selectedAccount.indexOf("+") != -1) {
-				checkResult = "搜尋的帳號不可以包含加號";
-			} else if (selectedAccount.indexOf(",") != -1 || selectedAccount.indexOf("，") != -1) {
-				checkResult = "搜尋的帳號不可以包含逗號";
-			} else if (selectedAccount.indexOf(".") != -1 || selectedAccount.indexOf("。") != -1) {
-				checkResult = "搜尋的帳號不可以包含句號";
-			} else if (selectedAccount.indexOf("?") != -1 || selectedAccount.indexOf("？") != -1) {
-				checkResult = "帳號不可以包含問號";
-			} else if (selectedAccount.indexOf("<") != -1 || selectedAccount.indexOf(">") != -1) {
-				checkResult = "搜尋的帳號不可以包含<、>";
-			} else if (!selectedAccount.matches("[0-9a-zA-Z]{1,30}")) {
-				checkResult = "搜尋的帳號含有無效字元！";
-			} 
+			String resultTmp = GeneralInputCheckService.doBasicCheckAccount(selectedAccount, "recovery");
+			checkResult = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
 		String selectedNickname = selectedParameters.split(":")[1];
 		if (checkResult.equals("")) {
-			if (selectedNickname.length() > 25) {
-				checkResult = "搜尋的稱呼名稱過長！";
-			} else if (selectedNickname.indexOf("<") != -1 || selectedNickname.indexOf(">") != -1) {
-				checkResult = "稱呼不可以包含<、>";
-			} else if (selectedNickname.indexOf("&") != -1) {
-				checkResult = "稱呼不可以包含&符號";
-			} else if (selectedNickname.indexOf("=") != -1) {
-				checkResult = "稱呼不可以包含等號";
-			} 
+			String resultTmp = GeneralInputCheckService.doBasicCheckNickname(selectedNickname, selectedAccount, "", "search");
+			checkResult = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		}
 		
 		Integer selectedLocationCode = Integer.parseInt(selectedParameters.split(":")[3]);
@@ -2724,7 +2696,7 @@ public class WebUserController {
 		Boolean inputIsOk = true;
 		String message = "?";
 		
-		String resultTmp = GeneralInputCheckService.doBasicCheckNickname(nickname, lastName, oldNickname);
+		String resultTmp = GeneralInputCheckService.doBasicCheckNickname(nickname, lastName, oldNickname, mode);
 		message = (resultTmp.split(",")[0].equals("?")) ? "": resultTmp.split(",")[0];
 		inputIsOk = Boolean.valueOf(resultTmp.split(",")[1]);
 		/* 通過基礎檢查 */

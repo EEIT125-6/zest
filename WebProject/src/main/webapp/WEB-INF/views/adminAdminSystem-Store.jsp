@@ -41,15 +41,6 @@
 									id="selectedStname" size="50" maxlength="50" onblur="checkStname()"
 									placeholder="請輸入要查詢的店家名稱，最多50個字" /> 
 								<span id="stnameSpan"></span>
-								<label>按擁有者：</label>
-								<select name="selectedOwner" id="selectedOwner" onblur="checkOwner()" > 
-									<option value="">請選擇要查詢的帳號</option>
-									<c:forEach items="${shopOwnerList}" var="shopOwnerItem">
-										<option value="${shopOwnerItem}" label="${shopOwnerItem}" />
-									</c:forEach>
-								</select>
-								<span id="ownerSpan"></span>
-								<hr />
 								<label>依照類型：</label>
 								<select name="selectedSclass" id="sSclass" onblur="checkSelectedSclass()">
 									<option value="">請選擇目前要查詢的餐廳類型</option>
@@ -57,8 +48,17 @@
 										<option value="${sclassItem}" label="${sclassItem}" />
 									</c:forEach>
 								</select> 
+								<hr />
 								<span id="sclassSpan"></span>
 								<c:if test='${userFullData.accountLv.lv == -1}'>
+									<label>按擁有者：</label>
+									<select name="selectedOwner" id="selectedOwner" onblur="checkOwner()" > 
+										<option value="">請選擇要查詢的帳號</option>
+										<c:forEach items="${shopOwnerList}" var="shopOwnerItem">
+											<option value="${shopOwnerItem}" label="${shopOwnerItem}" />
+										</c:forEach>
+									</select>
+									<span id="ownerSpan"></span>
 									<label>店家狀態：</label>
 									<select name="selectedStatus" id="selectedStatus" onblur="checkStatus()">
 										<option value="">請選擇要查詢的狀態</option>

@@ -242,11 +242,32 @@ public class StoreServiceImpl implements StoreService {
 	public List<StoreBean> getAllStore() {
 		return dao.getAllStore();
 	}
+	
+	/* 取得查詢商店列表+分頁 By George017 2021/02/01 */
+	@Transactional
+	@Override
+	public List<StoreBean> getAllStore(String selectedParameters, Integer avPage, Integer startPage) {
+		return dao.getAllStore(selectedParameters, avPage, startPage);
+	}
 
 	@Transactional
 	@Override
 	public List<StoreBean> getMemberAllStore(WebUserData webUserData) {
 		return dao.getMemberAllStore(webUserData);
+	}
+	
+	/* 取得查詢商店總筆數 By George017 2021/02/01 */
+	@Transactional
+	@Override
+	public Long getStoreRecordCounts(String selectedParameters) {
+		return dao.getStoreRecordCounts(selectedParameters);
+	}
+	
+	/* 取得查詢的最大頁數 By George017 2021/02/01 */
+	@Transactional
+	@Override
+	public Integer getTotalStoreRecordCounts(String selectedParameters, Integer avPage) {
+		return dao.getTotalStoreRecordCounts(selectedParameters, avPage);
 	}
 	
 	@Transactional

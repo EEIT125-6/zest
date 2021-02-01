@@ -140,7 +140,7 @@ public class ProductDaoImpl implements ProductDao{
 		Integer startIndex = (startPage - 1) * avPage;
 		/* 開始組字串 */
 		StringBuilder sb = new StringBuilder();
-		sb.append("FROM ProductInfoBean AS pi WHERE ");
+		sb.append("FROM ProductInfoBean AS pi");
 		
 		String name = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
 		String shop = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
@@ -153,46 +153,46 @@ public class ProductDaoImpl implements ProductDao{
 		
 		if (!name.equals("")) {
 			name = "'%" + selectedParameters.split(":")[0] + "%'";
-			sb.append("pi.product_name LIKE " + name);
+			sb.append(" WHERE pi.product_name LIKE " + name);
 		}
 		
-		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !shop.equals("")) {
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && !shop.equals("")) {
 			shop = "'%" + selectedParameters.split(":")[1] + "%'";
-			sb.append("pi.product_shop LIKE " + shop);
-		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !shop.equals("")) {
+			sb.append(" WHERE pi.product_shop LIKE " + shop);
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !shop.equals("")) {
 			shop = "'%" + selectedParameters.split(":")[1] + "%'";
 			sb.append(" AND pi.product_shop LIKE " + shop);
 		}
 		
-		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && price > -1) {
-			sb.append("pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && price > -1) {
+			sb.append(" WHERE pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
 		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && price > -1) {
 			sb.append(" AND pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
 		} 
 		
-		if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && quantity > -1) {
-			sb.append("pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && quantity > -1) {
+			sb.append(" WHERE pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
 		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && quantity > -1) {
 			sb.append(" AND pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
 		}
 		
 		if (lv == -1) {
-			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !account.equals("")) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi") && !account.equals("")) {
 				account = "'%" + selectedParameters.split(":")[4] + "%'";
-				sb.append("pi.storeBean.webUserData.account LIKE " + account);
-			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !account.equals("")) {
+				sb.append(" WHERE pi.storeBean.webUserData.account LIKE " + account);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !account.equals("")) {
 				account = "'%" + selectedParameters.split(":")[4] + "%'";
 				sb.append(" AND pi.storeBean.webUserData.account LIKE " + account);
 			}
 			
-			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !status.equals("")) {
-				sb.append("pi.product_status = " + status);
-			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ") && !status.equals("")) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi") && !status.equals("")) {
+				sb.append(" WHERE pi.product_status = " + status);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !status.equals("")) {
 				sb.append(" AND pi.product_status = " + status);
 			}
 		} else if (lv == 1) {
-			if (sb.toString().equals("FROM ProductInfoBean AS pi WHERE ")) {
-				sb.append("pi.storeBean.webUserData.userId = " + userId);
+			if (sb.toString().equals("FROM ProductInfoBean AS pi")) {
+				sb.append(" WHERE pi.storeBean.webUserData.userId = " + userId);
 			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi WHERE ")) {
 				sb.append(" AND pi.storeBean.webUserData.userId = " + userId);
 			}
@@ -203,6 +203,79 @@ public class ProductDaoImpl implements ProductDao{
 				.setFirstResult(startIndex)
                 .setMaxResults(avPage)
                 .getResultList();
+	}
+	
+	@Override
+	public Long getProductRecordCounts(String selectedParameters) {
+		Session session = factory.getCurrentSession();
+		/* 開始組字串 */
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM ProductInfoBean AS pi");
+		
+		String name = (selectedParameters.split(":")[0].equals("?")) ? "" : selectedParameters.split(":")[0];
+		String shop = (selectedParameters.split(":")[1].equals("?")) ? "" : selectedParameters.split(":")[1];
+		Integer price = (selectedParameters.split(":")[2].equals("-1")) ? -1 : (Integer.parseInt(selectedParameters.split(":")[2]) / 100) * 100;
+		Integer quantity = (selectedParameters.split(":")[3].equals("-1")) ? -1 : (Integer.parseInt(selectedParameters.split(":")[3]) / 10) * 10;
+		String account = (selectedParameters.split(":")[4].equals("?")) ? "" : selectedParameters.split(":")[4];
+		String status = (selectedParameters.split(":")[5].equals("?")) ? "" : selectedParameters.split(":")[5];
+		String userId = (selectedParameters.split(":")[6].equals("?")) ? "" : selectedParameters.split(":")[6];
+		Integer lv = (selectedParameters.split(":")[7].equals("-2")) ? -2 : Integer.parseInt(selectedParameters.split(":")[7]) ;
+		
+		if (!name.equals("")) {
+			name = "'%" + selectedParameters.split(":")[0] + "%'";
+			sb.append(" WHERE pi.product_name LIKE " + name);
+		}
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && !shop.equals("")) {
+			shop = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" WHERE pi.product_shop LIKE " + shop);
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !shop.equals("")) {
+			shop = "'%" + selectedParameters.split(":")[1] + "%'";
+			sb.append(" AND pi.product_shop LIKE " + shop);
+		}
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && price > -1) {
+			sb.append(" WHERE pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && price > -1) {
+			sb.append(" AND pi.product_price >= " + price + " AND pi.product_price < " + (price + 100));
+		} 
+		
+		if (sb.toString().equals("FROM ProductInfoBean AS pi") && quantity > -1) {
+			sb.append(" WHERE pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
+		} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && quantity > -1) {
+			sb.append(" AND pi.product_quantity >= " + quantity + " AND pi.product_quantity < " + (quantity + 10));
+		}
+		
+		if (lv == -1) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi") && !account.equals("")) {
+				account = "'%" + selectedParameters.split(":")[4] + "%'";
+				sb.append(" WHERE pi.storeBean.webUserData.account LIKE " + account);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !account.equals("")) {
+				account = "'%" + selectedParameters.split(":")[4] + "%'";
+				sb.append(" AND pi.storeBean.webUserData.account LIKE " + account);
+			}
+			
+			if (sb.toString().equals("FROM ProductInfoBean AS pi") && !status.equals("")) {
+				sb.append(" WHERE pi.product_status = " + status);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi") && !status.equals("")) {
+				sb.append(" AND pi.product_status = " + status);
+			}
+		} else if (lv == 1) {
+			if (sb.toString().equals("FROM ProductInfoBean AS pi")) {
+				sb.append(" WHERE pi.storeBean.webUserData.userId = " + userId);
+			} else if (!sb.toString().equals("FROM ProductInfoBean AS pi")) {
+				sb.append(" AND pi.storeBean.webUserData.userId = " + userId);
+			}
+		}
+		
+		String hql = sb.toString();
+		return Long.parseLong(String.valueOf(session.createQuery(hql).getResultList().size()));
+	}
+	
+	@Override
+	public Integer getTotalProductRecordCounts(String selectedParameters, Integer avPage) {
+		Integer totalPages = (int) (Math.ceil(getProductRecordCounts(selectedParameters) / (double) avPage));
+		return totalPages;
 	}
 	
 	@Override

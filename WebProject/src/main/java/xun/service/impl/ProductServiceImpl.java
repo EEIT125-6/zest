@@ -102,6 +102,18 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Transactional
 	@Override
+	public Long getProductRecordCounts(String selectedParameters) {
+		return pDao.getProductRecordCounts(selectedParameters);
+	}
+	
+	@Transactional
+	@Override
+	public Integer getTotalProductRecordCounts(String selectedParameters, Integer avPage) {
+		return pDao.getTotalProductRecordCounts(selectedParameters, avPage);
+	}
+	
+	@Transactional
+	@Override
 	public Integer productChange(Integer productId, String status) {
 		return pDao.productChange(productId, status);
 	}

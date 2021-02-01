@@ -430,7 +430,7 @@ public class dashborad_Controller {
 		String message = "";
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -477,7 +477,7 @@ public class dashborad_Controller {
 		String message = "";
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -524,7 +524,7 @@ public class dashborad_Controller {
 		String message = "";
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -579,7 +579,7 @@ public class dashborad_Controller {
 		String message = "";
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			try {
@@ -625,7 +625,7 @@ public class dashborad_Controller {
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		List<String> bookingNoList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有訂單資料 */
@@ -670,7 +670,7 @@ public class dashborad_Controller {
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		List<String> bookingNoList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有訂單資料 */
@@ -729,7 +729,7 @@ public class dashborad_Controller {
 		List<ChartBeanFloat> chartBeanList = new ArrayList<>();
 		List<String> boardidList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有評論資料 */
@@ -777,7 +777,7 @@ public class dashborad_Controller {
 		List<ChartBean> chartBeanList = new ArrayList<>();
 		List<String> boardidList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
 		if (message.equals("")) {
 			/* 取出所有評論資料 */
@@ -976,9 +976,9 @@ public class dashborad_Controller {
 		/* 留言列表 */
 		List<BoardBean> boardList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
-		if (message.equals("") || checkBossIdentity(model).equals("")) {
+		if (message.equals("") || doCheckBossIdentity(model).equals("")) {
 			/* 確認使用者身分 */
 			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
 			/* 管理員 */
@@ -1010,103 +1010,56 @@ public class dashborad_Controller {
 	@PostMapping(value = "/controller/getStoreList", produces = "application/json; charset=UTF-8")
 	public @ResponseBody Map<String, Object> getStoreList(
 			Model model,
-			@RequestParam(value = "stname", required = false, defaultValue = "") String stname,
-			@RequestParam(value = "owner", required = false, defaultValue = "") String owner,
-			@RequestParam(value = "status", required = false, defaultValue = "") String status,
-			@RequestParam(value = "type", required = false, defaultValue = "") String type,
+			@RequestParam(value = "stname", required = false, defaultValue = "?") String stname,
+			@RequestParam(value = "owner", required = false, defaultValue = "?") String owner,
+			@RequestParam(value = "status", required = false, defaultValue = "?") String status,
+			@RequestParam(value = "type", required = false, defaultValue = "?") String type,
 			@RequestParam(value = "avPage", defaultValue = "5") Integer avPage,
 			@RequestParam(value = "startPage", required = false, defaultValue = "1") Integer startPage) {
 		Map<String, Object> map = new HashMap<>();
 		String message = "";
+		String selectedParameters = "";
 		/* 分頁用 */
 		Long totalDataNums = 0L;
 		Integer totalDataPages = 1;
 		/* 回傳的商家資料 */
 		List<StoreBean> storeList = new ArrayList<>();
-		List<StoreBean> finStoreList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
-		if (message.equals("") || checkBossIdentity(model).equals("")) {
+		if (message.equals("") || doCheckBossIdentity(model).equals("")) {
 			/* 確認使用者身分 */
 			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
 			/* 管理員 */
 			if (nowUser.getAccountLv().getLv() == -1) {
-				storeList = ss.getAllStore();
+				/* 組成參數 */
+				selectedParameters = stname + ":" + owner + ":" + status + ":" + type + nowUser.getAccountLv().getLv() + "?";
+				/* 檢查參數 */
+				message = doCheckSelectStoreDataInput(selectedParameters, nowUser, model);
+				/* 檢查通過 */
+				if (message.equals("")) {
+					/* 取得資料 */
+					storeList = ss.getAllStore(selectedParameters, avPage, startPage);
+					/* 取得總筆數 */
+					totalDataNums = ss.getStoreRecordCounts(selectedParameters);
+					/* 取得總頁數 */
+					totalDataPages = ss.getTotalStoreRecordCounts(selectedParameters, avPage);
+				}
 			/* 店家 */
 			} else if (nowUser.getAccountLv().getLv() == 1) {
-				storeList = ss.getMemberAllStore(nowUser);
-			}
-			/* 有資料才做以下操作 */
-			if (storeList != null) {
-				switch(status) {
-					case "3":
-					case "1":
-					case "0":
-						/* 遍歷 */
-						for (int index = 0; index < storeList.size(); index++) {
-							if (!storeList.get(index).getStatus().equals(status)) {
-								storeList.remove(index--);
-							}
-						}
-						break;
-					default:
-						break;
+				/* 組成參數 */
+				selectedParameters = stname + ":?:?:" + type + nowUser.getAccountLv().getLv() + nowUser.getUserId();
+				/* 檢查參數 */
+				message = doCheckSelectStoreDataInput(selectedParameters, nowUser, model);
+				/* 檢查通過 */
+				if (message.equals("")) {
+					/* 取得資料 */
+					storeList = ss.getAllStore(selectedParameters, avPage, startPage);
+					/* 取得總筆數 */
+					totalDataNums = ss.getStoreRecordCounts(selectedParameters);
+					/* 取得總頁數 */
+					totalDataPages = ss.getTotalStoreRecordCounts(selectedParameters, avPage);
 				}
-				switch(type) {
-					case "中式":
-					case "快餐":
-					case "燒肉":
-					case "西式":
-					case "下午茶":
-					case "日式":
-						/* 遍歷 */
-						for (int index = 0; index < storeList.size(); index++) {
-							if (!storeList.get(index).getSclass().equals(type)) {
-								storeList.remove(index--);
-							}
-						}
-						break;
-					default:
-						break;
-				}
-				if (!stname.equals("")) {
-					/* 遍歷 */
-					for (int index = 0; index < storeList.size(); index++) {
-						if (storeList.get(index).getStname().indexOf(stname) == -1) {
-							storeList.remove(index--);
-						}
-					}
-				}
-				if (!owner.equals("")) {
-					/* 遍歷 */
-					for (int index = 0; index < storeList.size(); index++) {
-						if (storeList.get(index).getWebUserData().getAccount().indexOf(owner) == -1) {
-							storeList.remove(index--);
-						}
-					}
-				}
-				/* 計算出總共幾筆、共幾頁 */
-				totalDataNums = (long) storeList.size();
-				totalDataPages = (int) Math.ceil(totalDataNums / (avPage*1.0));
-			}
-			/* 開始算分頁，無資料或資料少於等於每頁筆數就不處理 */
-			if (storeList != null) {
-				if (storeList.size() > avPage) {
-					/* 定義起始筆數、結束筆數 */
-					Integer startIndex = (startPage - 1)*avPage;
-					Integer endIndex = (storeList.size() < startIndex + avPage) ? storeList.size() : startIndex + avPage;
-					/* 遍歷 */
-					for (int index = startIndex; index < endIndex; index++) {
-						finStoreList.add(storeList.get(index));
-					}
-				}
-			}
-			/* 決定回傳的資料 */
-			if (storeList.size() > 0 && finStoreList.size() > 0) {
-				map.put("storeList", finStoreList);
-			} else {
-				map.put("storeList", storeList);
 			}
 		} 
 		Integer resultCode = -1;
@@ -1115,6 +1068,7 @@ public class dashborad_Controller {
 		message = (message.equals("") && storeList.size() > 0) ? "查詢到 " + totalDataNums + " 筆店家資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁" : message;
 		message = (message.equals("") && storeList.size() <= 0) ? "沒有任何符合條件的資料！" : message;
 		
+		map.put("storeList", storeList);
 		map.put("resultCode", resultCode.toString());
 		map.put("resultMessage", message);
 		map.put("totalDataNums", totalDataNums);
@@ -1128,7 +1082,7 @@ public class dashborad_Controller {
 			Model model,
 			@RequestParam(value = "name", required = false, defaultValue = "") String name,
 			@RequestParam(value = "shop", required = false, defaultValue = "") String shop,
-			@RequestParam(value = "status", required = false, defaultValue = "") String status,
+			@RequestParam(value = "status", required = false, defaultValue = "?") String status,
 			@RequestParam(value = "price", required = false, defaultValue = "-1") Integer price,
 			@RequestParam(value = "quantity", required = false, defaultValue = "-1") Integer quantity,
 			@RequestParam(value = "account", required = false, defaultValue = "") String account,
@@ -1142,11 +1096,10 @@ public class dashborad_Controller {
 		Integer totalDataPages = 1;
 		/* 回傳的商品資料 */
 		List<ProductInfoBean> productInfoList = new ArrayList<>();
-		List<ProductInfoBean> finProductInfoList = new ArrayList<>();
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證通過 */
-		if (message.equals("") || checkBossIdentity(model).equals("")) {
+		if (message.equals("") || doCheckBossIdentity(model).equals("")) {
 			/* 確認使用者身分 */
 			WebUserData nowUser = (WebUserData) model.getAttribute("userFullData");
 			/* 管理員 */
@@ -1161,9 +1114,16 @@ public class dashborad_Controller {
 									+ "?:"
 									+ nowUser.getAccountLv().getLv();
 				/* 檢查參數 */
-				
+				message = doCheckSelectProductDataInput(selectedParameters, nowUser);
 				/* 檢查通過 */
-				productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
+				if (message.equals("")) {
+					/* 取得資料 */
+					productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
+					/* 取得總筆數 */
+					totalDataNums = ps.getProductRecordCounts(selectedParameters);
+					/* 取得總頁數 */
+					totalDataPages = ps.getTotalProductRecordCounts(selectedParameters, avPage);
+				}
 			/* 店家 */
 			} else if (nowUser.getAccountLv().getLv() == 1) {
 				/* 組成參數 */
@@ -1175,95 +1135,26 @@ public class dashborad_Controller {
 									+ nowUser.getUserId() + ":"
 									+ nowUser.getAccountLv().getLv();
 				/* 檢查參數 */
-				
+				message = doCheckSelectProductDataInput(selectedParameters, nowUser);
 				/* 檢查通過 */
-				productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
-			}
-			/* 有資料才做以下操作 */
-			if (productInfoList != null) {
-				switch(status) {
-					case "3":
-					case "1":
-					case "0":
-						/* 遍歷 */
-						for (int index = 0; index < productInfoList.size(); index++) {
-							if (!productInfoList.get(index).getProduct_status().equals(status)) {
-								productInfoList.remove(index--);
-							}
-						}
-						break;
-					default:
-						break;
+				if (message.equals("")) {
+					/* 取得資料 */
+					productInfoList = ps.getAllProduct(selectedParameters, avPage, startPage);
+					/* 取得總筆數 */
+					totalDataNums = ps.getProductRecordCounts(selectedParameters);
+					/* 取得總頁數 */
+					totalDataPages = ps.getTotalProductRecordCounts(selectedParameters, avPage);
 				}
-				if (price > -1) {
-					/* 遍歷 */
-					for (int index = 0; index < productInfoList.size(); index++) {
-						if ((productInfoList.get(index).getProduct_price()/100) != (price/100)) {
-							productInfoList.remove(index--);
-						}
-					}
-				}
-				if (quantity > -1) {
-					/* 遍歷 */
-					for (int index = 0; index < productInfoList.size(); index++) {
-						if ((productInfoList.get(index).getProduct_quantity()/10) != (quantity/10)) {
-							productInfoList.remove(index--);
-						}
-					}
-				}
-				if (!name.equals("")) {
-					/* 遍歷 */
-					for (int index = 0; index < productInfoList.size(); index++) {
-						if (productInfoList.get(index).getProduct_name().indexOf(name) == -1) {
-							productInfoList.remove(index--);
-						}
-					}
-				}
-				if (!shop.equals("")) {
-					/* 遍歷 */
-					for (int index = 0; index < productInfoList.size(); index++) {
-						if (productInfoList.get(index).getProduct_shop().indexOf(shop) == -1) {
-							productInfoList.remove(index--);
-						}
-					}
-				}
-				if (!account.equals("")) {
-					/* 遍歷 */
-					for (int index = 0; index < productInfoList.size(); index++) {
-						if (!productInfoList.get(index).getStorebean().getWebUserData().getAccount().equals(account)) {
-							productInfoList.remove(index--);
-						}
-					}
-				}
-				/* 計算出總共幾筆、共幾頁 */
-				totalDataNums = (long) productInfoList.size();
-				totalDataPages = (int) Math.ceil(totalDataNums / (avPage*1.0));
-			}
-			/* 開始算分頁，無資料或資料少於等於每頁筆數就不處理 */
-			if (productInfoList != null) {
-				if (productInfoList.size() > avPage) {
-					/* 定義起始筆數、結束筆數 */
-					Integer startIndex = (startPage - 1)*avPage;
-					Integer endIndex = (productInfoList.size() < startIndex + avPage) ? productInfoList.size() : startIndex + avPage;
-					/* 遍歷 */
-					for (int index = startIndex; index < endIndex; index++) {
-						finProductInfoList.add(productInfoList.get(index));
-					}
-				}
-			}
-			/* 決定回傳的資料 */
-			if (productInfoList.size() > 0 && finProductInfoList.size() > 0) {
-				map.put("productInfoList", finProductInfoList);
-			} else {
-				map.put("productInfoList", productInfoList);
 			}
 		}
+		
 		Integer resultCode = -1;
 		resultCode = (message.equals("") && productInfoList.size() >= 0) ? 1 : resultCode;
 		resultCode = (message.equals("") && productInfoList.size() < 0) ? 0 : resultCode;
 		message = (message.equals("") && productInfoList.size() > 0) ? "查詢到 " + totalDataNums + " 筆商品資料，共 " + totalDataPages + " 頁，此為第 " + startPage + " 頁" : message;
 		message = (message.equals("") && productInfoList.size() <= 0) ? "沒有任何符合條件的資料！" : message;
 		
+		map.put("productInfoList", productInfoList);
 		map.put("resultCode", resultCode.toString());
 		map.put("resultMessage", message);
 		map.put("totalDataNums", totalDataNums);
@@ -1282,7 +1173,7 @@ public class dashborad_Controller {
 		String message = "";
 		Integer resultCode = -1;
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證成功 */
 		if (message.equals("")) {
 			/* 按選擇的模式分流 */
@@ -1374,7 +1265,7 @@ public class dashborad_Controller {
 		String message = "";
 		Integer resultCode = -1;
 		/* 驗證身分 */
-		message = checkAdminIdentity(model);
+		message = doCheckAdminIdentity(model);
 		/* 驗證成功 */
 		if (message.equals("")) {
 			/* 按選擇的模式分流 */
@@ -1509,7 +1400,7 @@ public class dashborad_Controller {
 	}
 	
 	/* 驗證管理員身分 */
-	private String checkAdminIdentity(Model model) {
+	private String doCheckAdminIdentity(Model model) {
 		String message = "";
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		if (userData == null) {
@@ -1523,7 +1414,7 @@ public class dashborad_Controller {
 	}
 	
 	/* 驗證店家身分 */
-	private String checkBossIdentity(Model model) {
+	private String doCheckBossIdentity(Model model) {
 		String message = "";
 		WebUserData userData = (WebUserData) model.getAttribute("userFullData");
 		if (userData == null) {
@@ -1536,6 +1427,77 @@ public class dashborad_Controller {
 		return message;
 	}
 	
+	/* 店家查詢輸入檢查 */
+	@SuppressWarnings("unchecked")
+	private String doCheckSelectStoreDataInput(String selectedParameters, WebUserData userData, Model model) {
+		String checkResult = "";
+		
+		Integer userLv = userData.getAccountLv().getLv();
+		
+		List<String> storeTypeList = (List<String>) model.getAttribute("sclassList");
+		
+		String selectedShop = selectedParameters.split(":")[0];
+		if (checkResult.equals("")) {
+			if (selectedShop.length() > 50) {
+				checkResult = "搜尋的店家名稱過長！";
+			} else if (selectedShop.indexOf("<") != -1 || selectedShop.indexOf(">") != -1) {
+				checkResult = "店家名稱不可以包含<、>";
+			} else if (selectedShop.indexOf("&") != -1) {
+				checkResult = "店家名稱不可以包含&";
+			} else if (selectedShop.indexOf("=") != -1) {
+				checkResult = "店家名稱不可以包含等號";
+			} 
+		}
+		
+		String selectedOwner = (userLv == -1) ? selectedParameters.split(":")[1] : "?";
+		if (checkResult.equals("")) {
+			if (userLv == -1) {
+				String tmpResult = GeneralInputCheckService.doBasicCheckAccount(selectedOwner, "recovery");
+				checkResult = (tmpResult.split(",")[0].equals("?") && userLv == -1) ? "" : tmpResult.split(",")[1];
+				checkResult = (userLv == 1 && selectedOwner.equals("?")) ? "" : checkResult;
+			} else if (userLv != -1 && !selectedOwner.equals("?")) {
+				checkResult = "您的權限無法以此條件進行查詢！";
+			}
+		}
+		
+		String selectedStatus = (userLv == -1) ? selectedParameters.split(":")[2] : "?";
+		if (checkResult.equals("")) {
+			if (userLv == -1) {
+				switch(selectedStatus) {
+					case "?":
+					case "3":
+					case "1":
+					case "0":
+						break;
+					default:
+						checkResult = "無效的店家狀態";
+						break;
+				}
+			} else if (userLv != -1 && !selectedStatus.equals("?")) {
+				checkResult = "您的權限無法以此條件進行查詢！";
+			}		
+		}
+		
+		String selectedType = selectedParameters.split(":")[3];
+		if (checkResult.equals("")) {
+			if (!selectedType.equals("?")) {
+				Boolean found = false;
+				for (String storeType: storeTypeList) {
+					if (selectedType.equals(storeType)) {
+						checkResult = "";
+						found = true;
+					}
+				}
+				if (!found) {
+					checkResult = "無效的店家類型!";
+				}
+			}
+		}
+		
+		return checkResult;
+	}
+	
+	/* 商品查詢輸入檢查 */
 	private String doCheckSelectProductDataInput(String selectedParameters, WebUserData userData) {
 		String checkResult = "";
 		
@@ -1585,17 +1547,40 @@ public class dashborad_Controller {
 		if (checkResult.equals("")) {
 			String tmpResult = GeneralInputCheckService.doBasicCheckAccount(selectedAccount, "recovery");
 			checkResult = (tmpResult.split(",")[0].equals("?") && userLv == -1) ? "" : tmpResult.split(",")[1];
-			checkResult = (userLv == 1 && selectedAccount.equals("?")) ? "" : tmpResult.split(",")[1]; 
+			checkResult = (userLv == 1 && selectedAccount.equals("?")) ? "" : checkResult; 
 		}
 		
 		String selectedStatus = (userLv == -1) ? selectedParameters.split(":")[5] : "?";
 		if (checkResult.equals("")) {
-			
+			if (userLv == -1) {
+				switch(selectedStatus) {
+					case "?":
+					case "3":
+					case "1":
+					case "0":
+						break;
+					default:
+						checkResult = "無效的商品狀態";
+						break;
+				}
+			} else if (userLv != -1 && !selectedStatus.equals("?")) {
+				checkResult = "您的權限無法以此條件進行查詢！";
+			}		
 		}
 		
 		String selectedUserId = (userLv == 1) ? selectedParameters.split(":")[6] : "?";
 		if (checkResult.equals("")) {
-			
+			if (userLv == 1) {
+				String tmpResult = GeneralInputCheckService.doBasicCheckUserId(selectedUserId);
+				checkResult = (tmpResult.split(",")[0].equals("?") && userLv == -1) ? "" : tmpResult.split(",")[1];
+				checkResult = (userLv == 1 && selectedAccount.equals("?")) ? "" : checkResult;
+			} else if (userLv == -1 && !selectedUserId.equals("?")) {
+				checkResult = "您的權限不支援此條件進行查詢！";
+			} else if (userLv == -1 && selectedUserId.equals("?")) {
+				checkResult = "";
+			} else {
+				checkResult = "您的權限無法進行查詢！";
+			}
 		}
 		
 		return checkResult;
